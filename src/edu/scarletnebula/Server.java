@@ -2,9 +2,11 @@ package edu.scarletnebula;
 
 public class Server extends Instance
 {
+	org.dasein.cloud.services.server.Server serverImpl;
+	
 	public Server(org.dasein.cloud.services.server.Server server)
 	{
-		// TODO Auto-generated constructor stub
+		serverImpl = server;
 	}
 
 	public void sendFile(String filename)
@@ -12,10 +14,6 @@ public class Server extends Instance
 		
 	}
 	
-	public String getPublicIP()
-	{
-		return "0.0.0.0";
-	}
 	
 	public ServerStatisticsManager getServerStatistics()
 	{
@@ -25,5 +23,11 @@ public class Server extends Instance
 	CommandConnection getCommandConnection()
 	{
 		return null;		
+	}
+	
+	public String toString()
+	{
+		String rv = serverImpl.getProviderServerId() + " (" + serverImpl.getCurrentState() + ") @ " + serverImpl.getPublicDnsAddress();
+		return rv; 
 	}
 }
