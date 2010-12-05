@@ -3,6 +3,8 @@ package edu.scarletnebula;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -69,39 +71,21 @@ public class CloudProvider
 		assureSSHKey();
 	}
 	
+	Server getServer(String instancename) throws InternalException, CloudException, IOException
+	{
+		org.dasein.cloud.services.server.Server server = serverServices.getServer(instancename);
+		
+		if(server == null)
+			return null;
+		
+		return Server.load(serverServices.getServer(instancename), providerClassName);
+		
+	}
+	
 	private void createKey(org.dasein.cloud.services.access.AccessServices acs, String keyname) throws InternalException, CloudException
 	{
-		System.out.println("Creating default scarletnebula ssh key");
-		String key = acs.createKeypair(keyname);
-
-		// Write key to file
-		String dir = "keys/" + providerClassName + "/";
-		File dirFile = new File(dir);
-
-		// Check if the key dir already exists
-		if (!dirFile.exists())
-		{
-			// If it does not exist, create the directory
-			if (!dirFile.mkdirs())
-			{
-				System.out.println("Cannot make key directory!");
-				return;
-			}
-		}
-
-		// Now store the key to file
-		BufferedWriter out;
-		try
-		{
-			out = new BufferedWriter(new FileWriter(dir + "sndefault.key"));
-			out.write(key);
-			out.close();
-		}
-		catch (IOException e)
-		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		KeyManager.addKey(providerClassName, keyname, acs.createKeypair(keyname));
+		
 	}
 	
 	private void assureSSHKey() throws InternalException, CloudException
@@ -130,6 +114,7 @@ public class CloudProvider
 			if(fw.getName().equals("sshonly"))
 			{
 				sshOnly = fw;
+				break;
 			}
 		}
 		
@@ -146,7 +131,7 @@ public class CloudProvider
 	{	
 		ArrayList<Server> rv = new ArrayList<Server>();
 		for(org.dasein.cloud.services.server.Server server: serverServices.list())
-			rv.add(new Server(server));
+			rv.add(Server.load(server, providerClassName));
 		
 		return rv;
 	}
@@ -166,15 +151,12 @@ public class CloudProvider
 		String vlan = "";
 		String[] firewalls = new String[]{ "sshonly" }	;
 
-	
-			org.dasein.cloud.services.server.Server server = serverServices.launch(
-					imageId, new ServerSize(size), dataCenterId, serverName,
-					keypairOrPassword, vlan, false, firewalls);
+		org.dasein.cloud.services.server.Server daseinServer = serverServices
+				.launch(imageId, new ServerSize(size), dataCenterId,
+						serverName, keypairOrPassword, vlan, false, firewalls);
 
-			System.out
-					.println("New server ID: " + server.getProviderServerId());	
-			System.out.println("Is available at: "+ server.getPublicDnsAddress());
-	
+		Server server = new Server(daseinServer, providerClassName, keypairOrPassword, serverName);
+		server.store(providerClassName);
 
 		return null;
 	}
