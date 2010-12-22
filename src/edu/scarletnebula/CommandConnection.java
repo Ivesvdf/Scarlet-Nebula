@@ -9,4 +9,5 @@ abstract public class CommandConnection
 	 */
 	abstract public String executeCommand(String command);
 
+	abstract public void close();
 }

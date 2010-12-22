@@ -1,23 +1,53 @@
 package edu.scarletnebula;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Set;
 
-import org.dasein.cloud.CloudProvider;
+import edu.scarletnebula.CloudProvider.CloudProviderName;
 
 public class CloudManager
 {
-	public void load()
-	{
+	HashMap<String, CloudProvider> providers;
 	
+	CloudManager()
+	{
+		providers = new HashMap<String, CloudProvider>();
+		try
+		{
+			providers.put("Amazon Web Services", new CloudProvider(CloudProviderName.AWS));
+		}
+		catch (Exception e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 	}
 	
-	ArrayList<CloudProvider> getLinkedCloudProviders()
+	public void load()
 	{
-		return null;		
+		// TODO: Move ctor here, only load when a config file is present. 
+	}
+	
+	Set<String> getLinkedCloudProviderNames()
+	{
+		return providers.keySet();
+	}
+	
+	Collection<CloudProvider> getLinkedCloudProviders()
+	{
+		return providers.values();
 	}
 	
 	ArrayList<CloudProvider> getAllCloudProviders()
 	{
 		return null;
+	}
+	
+	CloudProvider getCloudProviderByName(String name)
+	{
+		return providers.get(name);
 	}
 }

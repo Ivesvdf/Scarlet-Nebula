@@ -13,7 +13,7 @@ public class Main
 
 			if (args.length == 1 && args[0].equals("start"))
 			{
-				c.addServer();
+				c.addServer("srv", "m1.small");
 				System.out.println("Instance started.");
 			}
 			else if(args.length == 2 && args[0].equals("stop"))
@@ -48,6 +48,7 @@ public class Main
 				CommandConnection cmd = srv.getCommandConnection();
 				System.out.println("System response:");
 				System.out.println(cmd.executeCommand(command));
+				cmd.close();
 			}
 			else
 			{

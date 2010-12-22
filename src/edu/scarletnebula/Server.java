@@ -130,6 +130,11 @@ public class Server extends Instance
 
 	}
 
+	public String getUnfriendlyName()
+	{
+		return serverImpl.getName();
+	}
+	
 	public String toString()
 	{
 		String rv = serverImpl.getProviderServerId() + " (" + serverImpl.getCurrentState() + ") @ " + serverImpl.getPublicDnsAddress();

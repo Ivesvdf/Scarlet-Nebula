@@ -9,7 +9,10 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.Properties;
+
+import javax.swing.ComboBoxModel;
 
 import org.dasein.cloud.CloudException;
 import org.dasein.cloud.InternalException;
@@ -31,10 +34,13 @@ public class CloudProvider
 	private ServerServices serverServices;
 	private String providerClassName;
 
+	private ArrayList<Server> servers;
+	
 	//TODO: Make this a class hierarchy
 	CloudProvider(CloudProviderName name) throws Exception
 	{
-
+		servers = new ArrayList<Server>();
+		
 		switch(name)
 		{
 			case AWS:
@@ -80,6 +86,23 @@ public class CloudProvider
 		
 		return Server.load(serverServices.getServer(instancename), providerClassName);
 		
+	}
+	
+	Collection<Server> loadLinkedServers() throws InternalException, CloudException, IOException
+	{
+		File dir = new File(Server.getSaveFileDir(providerClassName));
+
+		String[] files = dir.list();
+		
+		for(String file : files)
+		{
+			Server server = getServer(file);
+			
+			if(server != null)
+				servers.add(server);
+		}
+		
+		return servers;
 	}
 	
 	private void createKey(org.dasein.cloud.services.access.AccessServices acs, String keyname) throws InternalException, CloudException
@@ -141,12 +164,10 @@ public class CloudProvider
 		serverServices.stop(serverId);
 	}
 	
-	public Server addServer() throws InternalException, CloudException
+	public Server addServer(String serverName, String size) throws InternalException, CloudException
 	{
-		String imageId = "ami-d80a3fac";
-		String size = "m1.small";
+		String imageId = "ami-15765c61";
 		String dataCenterId = "eu-west-1b";
-		String serverName = "lovelyserver";
 		String keypairOrPassword = "sndefault";
 		String vlan = "";
 		String[] firewalls = new String[]{ "sshonly" }	;
@@ -196,6 +217,33 @@ public class CloudProvider
         context.setEndpoint(getPreferredEndpoint());
         
         return context;
+	}
+
+	public Collection<String> getPossibleInstanceSizes()
+	{
+		Collection<org.dasein.cloud.services.server.ServerSize> sizes = null;
+		try
+		{
+			sizes = serverServices.getSupportedSizes(org.dasein.cloud.services.server.Architecture.I32);
+		}
+		catch (InternalException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		catch (CloudException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		ArrayList<String> rv = new ArrayList<String>();
+		
+		for(org.dasein.cloud.services.server.ServerSize size : sizes)
+		{
+			rv.add(size.getSizeId());
+		}
+		return rv;
 	}
 
 }
