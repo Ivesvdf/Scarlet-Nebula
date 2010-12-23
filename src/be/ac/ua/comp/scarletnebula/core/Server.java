@@ -1,4 +1,4 @@
-package edu.scarletnebula;
+package be.ac.ua.comp.scarletnebula.core;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -10,7 +10,7 @@ import java.util.Properties;
 public class Server extends Instance
 {
 	org.dasein.cloud.services.server.Server serverImpl;
-	String friendlyName;
+	private String friendlyName;
 	String keypair;
 	String providerClassName;
 	
@@ -19,7 +19,7 @@ public class Server extends Instance
 		providerClassName = inputProviderClassName;
 		keypair = inputKeypair;
 		serverImpl = server;
-		friendlyName = inputFriendlyName; 
+		setFriendlyName(inputFriendlyName); 
 	}
 	
 
@@ -34,7 +34,7 @@ public class Server extends Instance
 		return null;
 	}
 	
-	CommandConnection getCommandConnection()
+	public CommandConnection getCommandConnection()
 	{
 		try
 		{
@@ -109,7 +109,7 @@ public class Server extends Instance
 		try
 		{
 			Properties properties = new Properties();
-			properties.setProperty("friendlyName", friendlyName);
+			properties.setProperty("friendlyName", getFriendlyName());
 			properties.setProperty("keypair", keypair);
 			properties.setProperty("providerClassName", providerClassName);
 			
@@ -139,5 +139,17 @@ public class Server extends Instance
 	{
 		String rv = serverImpl.getProviderServerId() + " (" + serverImpl.getCurrentState() + ") @ " + serverImpl.getPublicDnsAddress();
 		return rv; 
+	}
+
+
+	public void setFriendlyName(String friendlyName)
+	{
+		this.friendlyName = friendlyName;
+	}
+
+
+	public String getFriendlyName()
+	{
+		return friendlyName;
 	}
 }

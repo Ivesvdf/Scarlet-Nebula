@@ -1,17 +1,19 @@
-package edu.scarletnebula;
+package be.ac.ua.comp.scarletnebula.core;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Set;
 
-import edu.scarletnebula.CloudProvider.CloudProviderName;
+import be.ac.ua.comp.scarletnebula.core.CloudProvider.CloudProviderName;
+
+
 
 public class CloudManager
 {
 	HashMap<String, CloudProvider> providers;
 	
-	CloudManager()
+	public CloudManager()
 	{
 		providers = new HashMap<String, CloudProvider>();
 		try
@@ -36,7 +38,7 @@ public class CloudManager
 		return providers.keySet();
 	}
 	
-	Collection<CloudProvider> getLinkedCloudProviders()
+	public Collection<CloudProvider> getLinkedCloudProviders()
 	{
 		return providers.values();
 	}
@@ -46,7 +48,7 @@ public class CloudManager
 		return null;
 	}
 	
-	CloudProvider getCloudProviderByName(String name)
+	public CloudProvider getCloudProviderByName(String name)
 	{
 		return providers.get(name);
 	}

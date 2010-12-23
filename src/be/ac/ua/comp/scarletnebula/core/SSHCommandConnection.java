@@ -1,4 +1,4 @@
-package edu.scarletnebula;
+package be.ac.ua.comp.scarletnebula.core;
 
 import java.io.File;
 import java.io.IOException;

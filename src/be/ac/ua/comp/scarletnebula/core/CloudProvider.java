@@ -1,18 +1,11 @@
-package edu.scarletnebula;
+package be.ac.ua.comp.scarletnebula.core;
 
-import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 import java.util.Properties;
-
-import javax.swing.ComboBoxModel;
 
 import org.dasein.cloud.CloudException;
 import org.dasein.cloud.InternalException;
@@ -37,7 +30,7 @@ public class CloudProvider
 	private ArrayList<Server> servers;
 	
 	//TODO: Make this a class hierarchy
-	CloudProvider(CloudProviderName name) throws Exception
+	public CloudProvider(CloudProviderName name) throws Exception
 	{
 		servers = new ArrayList<Server>();
 		
@@ -77,7 +70,7 @@ public class CloudProvider
 		assureSSHKey();
 	}
 	
-	Server getServer(String instancename) throws InternalException, CloudException, IOException
+	public Server getServer(String instancename) throws InternalException, CloudException, IOException
 	{
 		org.dasein.cloud.services.server.Server server = serverServices.getServer(instancename);
 		
@@ -88,7 +81,7 @@ public class CloudProvider
 		
 	}
 	
-	Collection<Server> loadLinkedServers() throws InternalException, CloudException, IOException
+	public Collection<Server> loadLinkedServers() throws InternalException, CloudException, IOException
 	{
 		File dir = new File(Server.getSaveFileDir(providerClassName));
 
@@ -98,8 +91,17 @@ public class CloudProvider
 		{
 			Server server = getServer(file);
 			
-			if(server != null)
+			// If the server cannot be made it was deleted and the file referencing it
+			// should also be removed. 
+			if(server == null)
+			{
+				File toBeRemoved = new File(Server.getSaveFileDir(providerClassName) + file);
+				toBeRemoved.delete();
+			}
+			else
+			{
 				servers.add(server);
+			}
 		}
 		
 		return servers;

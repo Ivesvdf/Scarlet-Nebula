@@ -1,6 +1,11 @@
-package edu.scarletnebula;
+package be.ac.ua.comp.scarletnebula.cli;
 
 import java.util.List;
+
+import be.ac.ua.comp.scarletnebula.core.CloudProvider;
+import be.ac.ua.comp.scarletnebula.core.CommandConnection;
+import be.ac.ua.comp.scarletnebula.core.Server;
+
 
 public class Main
 {

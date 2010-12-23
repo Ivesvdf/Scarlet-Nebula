@@ -1,4 +1,4 @@
-package edu.scarletnebula;
+package be.ac.ua.comp.scarletnebula.core;
 
 abstract public class CommandConnection
 {
