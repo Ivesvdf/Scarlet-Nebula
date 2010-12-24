@@ -7,16 +7,20 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Properties;
 
+import org.dasein.cloud.CloudException;
+import org.dasein.cloud.InternalException;
+import org.dasein.cloud.services.server.ServerState;
+
 public class Server extends Instance
 {
 	org.dasein.cloud.services.server.Server serverImpl;
+	CloudProvider provider;
 	private String friendlyName;
 	String keypair;
-	String providerClassName;
 	
-	public Server(org.dasein.cloud.services.server.Server server, String inputProviderClassName, String inputKeypair, String inputFriendlyName)
+	public Server(org.dasein.cloud.services.server.Server server, CloudProvider inputProvider, String inputKeypair, String inputFriendlyName)
 	{
-		providerClassName = inputProviderClassName;
+		provider = inputProvider;
 		keypair = inputKeypair;
 		serverImpl = server;
 		setFriendlyName(inputFriendlyName); 
@@ -38,7 +42,7 @@ public class Server extends Instance
 	{
 		try
 		{
-			return new SSHCommandConnection(serverImpl.getPublicDnsAddress(), KeyManager.getKeyFilename(providerClassName, keypair));
+			return new SSHCommandConnection(serverImpl.getPublicDnsAddress(), KeyManager.getKeyFilename(provider.getUnderlyingClassname(), keypair));
 		}
 		catch (IOException e)
 		{
@@ -54,9 +58,9 @@ public class Server extends Instance
 	 * @throws IOException 
 	 * @throws FileNotFoundException 
 	 */
-	static Server load(org.dasein.cloud.services.server.Server server, String providerClassName)
+	static Server load(org.dasein.cloud.services.server.Server server, CloudProvider provider)
 	{
-		String propertiesfilename = getSaveFilename(providerClassName, server.getName());
+		String propertiesfilename = getSaveFilename(provider, server.getName());
 		Properties props = new Properties();
 		try
 		{
@@ -73,25 +77,25 @@ public class Server extends Instance
 			e.printStackTrace();
 		}
 		return new Server(server, 
-				providerClassName,
+				provider,
 				props.getProperty("keypair") != null ? props.getProperty("keypair") : "default",
 				props.getProperty("friendlyName") != null ? props.getProperty("friendlyName") : server.getName());
 	}
 	
-	static String getSaveFilename(String providerClassName, String instanceName)
+	static String getSaveFilename(CloudProvider provider, String instanceName)
 	{
-		return getSaveFileDir(providerClassName) + instanceName; 
+		return getSaveFileDir(provider) + instanceName; 
 	}
 	
-	static String getSaveFileDir(String providerClassName)
+	static String getSaveFileDir(CloudProvider provider)
 	{		
-		return "servers/" + providerClassName + "/";
+		return "servers/" + provider.getUnderlyingClassname().toString() + "/";
 	}
 	
-	void store(String providerClassName)
+	void store()
 	{
 		// Write key to file
-		String dir = getSaveFileDir(providerClassName);
+		String dir = getSaveFileDir(provider);
 		File dirFile = new File(dir);
 
 		// Check if the key dir already exists
@@ -111,9 +115,9 @@ public class Server extends Instance
 			Properties properties = new Properties();
 			properties.setProperty("friendlyName", getFriendlyName());
 			properties.setProperty("keypair", keypair);
-			properties.setProperty("providerClassName", providerClassName);
+			properties.setProperty("providerClassName", provider.getUnderlyingClassname());
 			
-			FileOutputStream outputstream = new FileOutputStream(getSaveFilename(providerClassName, serverImpl.getName()));
+			FileOutputStream outputstream = new FileOutputStream(getSaveFilename(provider, serverImpl.getName()));
 			properties.store(outputstream, null);
 			outputstream.close();
 		}
@@ -141,6 +145,20 @@ public class Server extends Instance
 		return rv; 
 	}
 
+	public String getPublicDnsAddress()
+	{
+		return serverImpl.getPublicDnsAddress();
+	}
+	
+	public String[] getPublicIpAddresses()
+	{
+		String[] addresses = serverImpl.getPublicIpAddresses();
+		
+		if(addresses == null)
+			return new String[0];
+		else
+			return addresses;
+	}
 
 	public void setFriendlyName(String friendlyName)
 	{
@@ -151,5 +169,28 @@ public class Server extends Instance
 	public String getFriendlyName()
 	{
 		return friendlyName;
+	}
+	
+	public void terminate() throws InternalException, CloudException
+	{
+		provider.terminateServer(getUnfriendlyName());
+	}
+
+
+	public ServerState getStatus()
+	{
+		return serverImpl.getCurrentState();
+	}
+	
+	/**
+	 * Pulls current information from the cloud this server is located in.
+	 * This just replaces the the dasein server object stored in this server.
+	 * I don't see any better way to do this in the Dasein API. 
+	 * @throws CloudException 
+	 * @throws InternalException 
+	 */
+	public void refresh() throws InternalException, CloudException
+	{
+		serverImpl = provider.getServerImpl(getUnfriendlyName());
 	}
 }

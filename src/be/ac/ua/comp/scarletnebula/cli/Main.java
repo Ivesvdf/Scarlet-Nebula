@@ -18,7 +18,7 @@ public class Main
 
 			if (args.length == 1 && args[0].equals("start"))
 			{
-				c.addServer("srv", "m1.small");
+				c.startServer("srv", "m1.small");
 				System.out.println("Instance started.");
 			}
 			else if(args.length == 2 && args[0].equals("stop"))

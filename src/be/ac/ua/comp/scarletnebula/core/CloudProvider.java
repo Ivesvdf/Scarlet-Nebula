@@ -72,20 +72,23 @@ public class CloudProvider
 	
 	public Server getServer(String instancename) throws InternalException, CloudException, IOException
 	{
-		org.dasein.cloud.services.server.Server server = serverServices.getServer(instancename);
+		org.dasein.cloud.services.server.Server server = getServerImpl(instancename);
 		
 		if(server == null)
 			return null;
 		
-		return Server.load(serverServices.getServer(instancename), providerClassName);
+		return Server.load(server, this);
 		
 	}
 	
 	public Collection<Server> loadLinkedServers() throws InternalException, CloudException, IOException
 	{
-		File dir = new File(Server.getSaveFileDir(providerClassName));
+		File dir = new File(Server.getSaveFileDir(this));
 
 		String[] files = dir.list();
+		
+		if(files == null)
+			return servers;
 		
 		for(String file : files)
 		{
@@ -95,7 +98,7 @@ public class CloudProvider
 			// should also be removed. 
 			if(server == null)
 			{
-				File toBeRemoved = new File(Server.getSaveFileDir(providerClassName) + file);
+				File toBeRemoved = new File(Server.getSaveFileDir(this) + file);
 				toBeRemoved.delete();
 			}
 			else
@@ -156,7 +159,7 @@ public class CloudProvider
 	{	
 		ArrayList<Server> rv = new ArrayList<Server>();
 		for(org.dasein.cloud.services.server.Server server: serverServices.list())
-			rv.add(Server.load(server, providerClassName));
+			rv.add(Server.load(server, this));
 		
 		return rv;
 	}
@@ -166,7 +169,7 @@ public class CloudProvider
 		serverServices.stop(serverId);
 	}
 	
-	public Server addServer(String serverName, String size) throws InternalException, CloudException
+	public Server startServer(String serverName, String size) throws InternalException, CloudException
 	{
 		String imageId = "ami-15765c61";
 		String dataCenterId = "eu-west-1b";
@@ -178,10 +181,10 @@ public class CloudProvider
 				.launch(imageId, new ServerSize(size), dataCenterId,
 						serverName, keypairOrPassword, vlan, false, firewalls);
 
-		Server server = new Server(daseinServer, providerClassName, keypairOrPassword, serverName);
-		server.store(providerClassName);
+		Server server = new Server(daseinServer, this, keypairOrPassword, serverName);
+		server.store();
 
-		return null;
+		return server;
 	}
 	
 
@@ -246,6 +249,17 @@ public class CloudProvider
 			rv.add(size.getSizeId());
 		}
 		return rv;
+	}
+
+	public String getUnderlyingClassname()
+	{
+		return providerClassName;
+	}
+
+	public org.dasein.cloud.services.server.Server getServerImpl(
+			String unfriendlyName) throws InternalException, CloudException
+	{
+		return serverServices.getServer(unfriendlyName);
 	}
 
 }

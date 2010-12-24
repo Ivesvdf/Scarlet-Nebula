@@ -1,6 +1,7 @@
 package be.ac.ua.comp.scarletnebula.gui;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -27,6 +28,8 @@ public class ServerListModel extends AbstractListModel
 	@Override
 	public Object getElementAt(int index)
 	{
+		if(index >= visibleServers.size() || visibleServers.get(index) == null)
+			return null;
 		return visibleServers.get(index).getFriendlyName();
 	}
 	
@@ -82,11 +85,26 @@ public class ServerListModel extends AbstractListModel
 		return (String)getElementAt(index);
 	}
 	
+	public Server getVisibleServerAtIndex(int index)
+	{
+		return visibleServers.get(index);
+	}
+	
 	public void clear()
 	{
 		invisibleServers.addAll(visibleServers);
 		visibleServers.clear();
 		fireContentsChanged(this, 0, visibleServers.size()-1);
+	}
+
+	public Collection<Server> getVisibleServersAtIndices(int[] indices)
+	{
+		Collection<Server> servers = new ArrayList<Server>();
+		
+		for(int i : indices)
+			servers.add(getVisibleServerAtIndex(i));
+		
+		return servers;
 	}
 	
 }
