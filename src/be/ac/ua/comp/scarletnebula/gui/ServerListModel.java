@@ -6,6 +6,8 @@ import java.util.LinkedList;
 import java.util.List;
 
 import javax.swing.AbstractListModel;
+import javax.swing.ImageIcon;
+import javax.swing.JLabel;
 
 import be.ac.ua.comp.scarletnebula.core.Server;
 
@@ -15,7 +17,6 @@ public class ServerListModel extends AbstractListModel
 	LinkedList<Server> visibleServers = new LinkedList<Server>();
 	LinkedList<Server> invisibleServers = new LinkedList<Server>();
 
-	
 	@Override
 	public int getSize()
 	{
@@ -23,23 +24,36 @@ public class ServerListModel extends AbstractListModel
 	}
 
 	/**
-	 * This needs to return the string that will be visible in the arraylist. 
+	 * This needs to return the string that will be visible in the arraylist.
 	 */
 	@Override
 	public Object getElementAt(int index)
 	{
-		if(index >= visibleServers.size() || visibleServers.get(index) == null)
+		if (index >= visibleServers.size() || visibleServers.get(index) == null)
 			return null;
-		return visibleServers.get(index).getFriendlyName();
+		return new JLabel(visibleServers.get(index).getFriendlyName(),
+				getServerIcon(getVisibleServerAtIndex(index)),
+				javax.swing.SwingConstants.LEFT);
 	}
-	
+
+	private ImageIcon getServerIcon(Server server)
+	{
+		return new ImageIcon(getClass().getResource("/images/add.png"));
+	}
+
+	public void refreshIndex(int index)
+	{
+		fireContentsChanged(this, index, index);
+	}
+
 	public void addServer(Server server)
 	{
 		visibleServers.add(server);
-		
-		fireContentsChanged(this, visibleServers.size()-2, visibleServers.size()-1);
+
+		fireContentsChanged(this, visibleServers.size() - 2,
+				visibleServers.size() - 1);
 	}
-	
+
 	public void makeInvisible(int index)
 	{
 		Server tmp = visibleServers.get(index);
@@ -52,22 +66,23 @@ public class ServerListModel extends AbstractListModel
 	{
 		Server tmp = invisibleServers.get(index);
 		visibleServers.add(tmp);
-		fireContentsChanged(this, visibleServers.size()-1, visibleServers.size()-1);
+		fireContentsChanged(this, visibleServers.size() - 1,
+				visibleServers.size() - 1);
 	}
-	
+
 	public void filter(String filterString)
 	{
 		LinkedList<Server> allServers = new LinkedList<Server>();
-		
+
 		allServers.addAll(visibleServers);
 		allServers.addAll(invisibleServers);
-		
+
 		visibleServers.clear();
 		invisibleServers.clear();
-		
-		for(Server server : allServers)
+
+		for (Server server : allServers)
 		{
-			if(server.getFriendlyName().contains(filterString))
+			if (server.getFriendlyName().contains(filterString))
 			{
 				visibleServers.add(server);
 			}
@@ -76,35 +91,35 @@ public class ServerListModel extends AbstractListModel
 				invisibleServers.add(server);
 			}
 		}
-		
-		fireContentsChanged(this, 0, visibleServers.size()-1);
+
+		fireContentsChanged(this, 0, visibleServers.size() - 1);
 	}
 
-	public String elementAt(int index)
+	public JLabel elementAt(int index)
 	{
-		return (String)getElementAt(index);
+		return (JLabel) getElementAt(index);
 	}
-	
+
 	public Server getVisibleServerAtIndex(int index)
 	{
 		return visibleServers.get(index);
 	}
-	
+
 	public void clear()
 	{
 		invisibleServers.addAll(visibleServers);
 		visibleServers.clear();
-		fireContentsChanged(this, 0, visibleServers.size()-1);
+		fireContentsChanged(this, 0, visibleServers.size() - 1);
 	}
 
 	public Collection<Server> getVisibleServersAtIndices(int[] indices)
 	{
 		Collection<Server> servers = new ArrayList<Server>();
-		
-		for(int i : indices)
+
+		for (int i : indices)
 			servers.add(getVisibleServerAtIndex(i));
-		
+
 		return servers;
 	}
-	
+
 }

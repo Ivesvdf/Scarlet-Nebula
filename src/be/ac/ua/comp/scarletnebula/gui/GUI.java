@@ -173,7 +173,7 @@ public class GUI extends JFrame implements ListSelectionListener
 	{
 		// Create the list and put it in a scroll pane.
 		serverListModel = new ServerListModel();
-		serverList = new JList(serverListModel);
+		serverList = new LabeledJList(serverListModel);
 		serverList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		serverList.setSelectedIndex(0);
 		serverList.addListSelectionListener(this);
