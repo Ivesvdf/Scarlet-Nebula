@@ -193,4 +193,22 @@ public class Server extends Instance
 	{
 		serverImpl = provider.getServerImpl(getUnfriendlyName());
 	}
+
+
+	public CloudProvider getCloud()
+	{
+		return provider;
+	}
+
+
+	public String getSize()
+	{
+		return serverImpl.getSize();
+	}
+
+
+	public String getImage()
+	{
+		return serverImpl.getImageId();
+	}
 }

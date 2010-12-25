@@ -31,6 +31,7 @@ public class ServerListModel extends AbstractListModel
 	{
 		if (index >= visibleServers.size() || visibleServers.get(index) == null)
 			return null;
+		
 		return new JLabel(visibleServers.get(index).getFriendlyName(),
 				getServerIcon(getVisibleServerAtIndex(index)),
 				javax.swing.SwingConstants.LEFT);
@@ -38,7 +39,24 @@ public class ServerListModel extends AbstractListModel
 
 	private ImageIcon getServerIcon(Server server)
 	{
-		return new ImageIcon(getClass().getResource("/images/add.png"));
+		String filename = new String("/images/add.png");
+		
+		switch(server.getStatus())
+		{
+			case PAUSED:
+			case PENDING:
+			case RUNNING:
+			case REBOOTING:
+			case STOPPING:
+				break;
+			case TERMINATED:
+				filename = "/images/terminated.png";
+				break;
+				
+		}
+		
+		ImageIcon icon = new ImageIcon(getClass().getResource(filename));
+		return icon;
 	}
 
 	public void refreshIndex(int index)

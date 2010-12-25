@@ -4,8 +4,10 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
 import java.io.IOException;
 import java.util.Collection;
+import java.util.Random;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
@@ -38,6 +40,10 @@ public class GUI extends JFrame implements ListSelectionListener
 	private JLabel statusLabel;
 	private JLabel dnsLabel;
 	private JLabel ipLabel;
+	private JLabel cloudLabel;
+	private JLabel unfriendlyNameLabel;
+	private JLabel sizeLabel;
+	private JLabel imageLabel;
 
 	public GUI()
 	{
@@ -83,6 +89,66 @@ public class GUI extends JFrame implements ListSelectionListener
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 
 		addInitialServers();
+		addMenubar();
+	}
+
+	private void addMenubar()
+	{
+		JMenuBar menuBar = new JMenuBar();
+		JMenu providerMenu = new JMenu("Providers");
+		providerMenu.setMnemonic(KeyEvent.VK_P);
+		providerMenu.getAccessibleContext().setAccessibleDescription(
+				"Managing cloud providers.");
+
+		JMenuItem manageProvidersItem = new JMenuItem("Manage Providers");
+		providerMenu.add(manageProvidersItem);
+
+		Collection<CloudProvider> providers = cloudManager
+				.getLinkedCloudProviders();
+
+		for (final CloudProvider prov : providers)
+		{
+			JMenu providerSpecificSubMenu = new JMenu(prov.getName());
+			JMenuItem detectUnlinkedItem = new JMenuItem(
+					"Detect Unlinked Instances");
+			detectUnlinkedItem.addActionListener(new ActionListener()
+			{
+				@Override
+				public void actionPerformed(ActionEvent e)
+				{
+					System.out
+							.println("Detecting unlinked instances for provider"
+									+ prov.getName());
+				}
+			});
+			providerSpecificSubMenu.add(detectUnlinkedItem);
+
+			providerMenu.add(providerSpecificSubMenu);
+		}
+		menuBar.add(providerMenu);
+
+		JMenu helpMenu = new JMenu("Help");
+		helpMenu.setMnemonic(KeyEvent.VK_H);
+
+		// Pick a random message to display in the help menu
+		String messages[] = { "(You won't find any help here)",
+				"(Nobody can help you)", "(Keep on lookin' if you need help)",
+				"(Heeeeelp!)", "(You might want to try google for help)",
+				"(Try yelling loudly if you need help)" };
+
+		Random generator = new Random(System.currentTimeMillis());
+
+		JMenuItem noHelpItem = new JMenuItem(
+				messages[generator.nextInt(messages.length)]);
+		noHelpItem.setEnabled(false);
+		helpMenu.add(noHelpItem);
+
+		JMenuItem aboutItem = new JMenuItem("About...");
+		helpMenu.add(aboutItem);
+
+		menuBar.add(helpMenu);
+
+		setJMenuBar(menuBar);
 	}
 
 	private JPanel setupRightPartition()
@@ -118,22 +184,31 @@ public class GUI extends JFrame implements ListSelectionListener
 		// add rows dynamically
 		DefaultFormBuilder builder = new DefaultFormBuilder(layout);
 		builder.setDefaultDialogBorder();
-		builder.appendSeparator("Server Information");
+		builder.appendSeparator("General Information");
 
 		statusLabel = new JLabel();
 		builder.append("Status", statusLabel);
+		cloudLabel = new JLabel();
+		builder.append("Provider", cloudLabel);
 		builder.nextLine();
 
 		dnsLabel = new JLabel();
 		builder.append("DNS Address", dnsLabel);
-
 		ipLabel = new JLabel();
 		builder.append("IP Address", ipLabel);
-
 		builder.nextLine();
+		
+		builder.appendSeparator("Cloud Specific Information");
+		unfriendlyNameLabel = new JLabel();
+		builder.append("Name", unfriendlyNameLabel);
+		sizeLabel = new JLabel();
+		builder.append("Size", sizeLabel);
+		builder.nextLine();
+		
+		imageLabel = new JLabel();
+		builder.append("Image", imageLabel);
+		
 
-		builder.append("PTI", new JTextField());
-		builder.append("Power", new JTextField());
 
 		overviewTab.add(builder.getPanel());
 
@@ -167,6 +242,10 @@ public class GUI extends JFrame implements ListSelectionListener
 				e.printStackTrace();
 			}
 		}
+		
+		// Once the servers are terminated, their icons need to be changed
+		for(int index : indices)
+			serverListModel.refreshIndex(index);
 	}
 
 	private JPanel setupLeftPartition()
@@ -224,12 +303,13 @@ public class GUI extends JFrame implements ListSelectionListener
 
 		leftPanel.add(topLeftPane, BorderLayout.PAGE_START);
 		leftPanel.add(serverScrollPane, BorderLayout.CENTER);
-		
+
 		JPanel bottom = new JPanel();
 		bottom.setLayout(new BoxLayout(bottom, BoxLayout.X_AXIS));
-		
+
 		// The button need to take up the full width of the bar on the left
-		// In a boxlayout, this is apparently computed from their maximum widths.
+		// In a boxlayout, this is apparently computed from their maximum
+		// widths.
 		addButton.setMaximumSize(new Dimension(50000000, 500));
 		refreshButton.setMaximumSize(new Dimension(50000000, 500));
 
@@ -238,15 +318,21 @@ public class GUI extends JFrame implements ListSelectionListener
 		bottom.add(refreshButton, BorderLayout.EAST);
 		leftPanel.add(bottom, BorderLayout.PAGE_END);
 
-
 		return leftPanel;
 	}
 
 	protected void refreshSelectedServers()
 	{
-		Collection<Server> servers = serverListModel.getVisibleServersAtIndices(serverList.getSelectedIndices());
-		
-		for(Server server : servers)
+		int indices[] = serverList.getSelectedIndices();
+
+		// Refresh the icons in the serverlist
+		for (int index : indices)
+			serverListModel.refreshIndex(index);
+
+		Collection<Server> servers = serverListModel
+				.getVisibleServersAtIndices(indices);
+
+		for (Server server : servers)
 		{
 			try
 			{
@@ -329,6 +415,10 @@ public class GUI extends JFrame implements ListSelectionListener
 			ipString += ip + "\n";
 
 		ipLabel.setText(ipString);
+		cloudLabel.setText(selectedServer.getCloud().getName());
+		sizeLabel.setText(selectedServer.getSize());
+		unfriendlyNameLabel.setText(selectedServer.getUnfriendlyName());
+		imageLabel.setText(selectedServer.getImage());
 	}
 
 	void startAddServerWizard()

@@ -66,8 +66,9 @@ public class CloudProvider
 					+ " does not support compute instances.");
 			return;
 		}
-		assureSSHOnlyFirewall();
-		assureSSHKey();
+		// TODO: place these somewhere? maybe a menu option
+		//assureSSHOnlyFirewall();
+		//assureSSHKey();
 	}
 	
 	public Server getServer(String instancename) throws InternalException, CloudException, IOException
@@ -260,6 +261,11 @@ public class CloudProvider
 			String unfriendlyName) throws InternalException, CloudException
 	{
 		return serverServices.getServer(unfriendlyName);
+	}
+
+	public String getName()
+	{
+		return getCloudName();
 	}
 
 }
