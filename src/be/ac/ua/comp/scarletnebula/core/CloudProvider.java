@@ -107,8 +107,7 @@ public class CloudProvider
 			// should also be removed.
 			if (server == null)
 			{
-				File toBeRemoved = new File(Server.getSaveFileDir(this) + file);
-				toBeRemoved.delete();
+				deleteServerSaveFile(file);
 			}
 			else
 			{
@@ -117,6 +116,12 @@ public class CloudProvider
 		}
 
 		return servers;
+	}
+	
+	private void deleteServerSaveFile(String unfriendlyName)
+	{
+		File toBeRemoved = new File(Server.getSaveFileDir(this) + unfriendlyName);
+		toBeRemoved.delete();
 	}
 
 	private void createKey(org.dasein.cloud.services.access.AccessServices acs,
@@ -325,5 +330,11 @@ public class CloudProvider
 	void reboot(Server server) throws CloudException, InternalException
 	{
 		serverServices.reboot(server.getUnfriendlyName());
+	}
+
+	public void unlink(Server selectedServer)
+	{
+		servers.remove(selectedServer);
+		deleteServerSaveFile(selectedServer.getUnfriendlyName());
 	}
 }

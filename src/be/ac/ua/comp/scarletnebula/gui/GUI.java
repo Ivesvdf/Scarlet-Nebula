@@ -25,9 +25,11 @@ import com.jgoodies.forms.layout.FormLayout;
 import be.ac.ua.comp.scarletnebula.core.CloudManager;
 import be.ac.ua.comp.scarletnebula.core.CloudProvider;
 import be.ac.ua.comp.scarletnebula.core.Server;
+import be.ac.ua.comp.scarletnebula.core.ServerChangedObserver;
 import be.ac.ua.comp.scarletnebula.core.ServerDisappearedException;
 
-public class GUI extends JFrame implements ListSelectionListener
+public class GUI extends JFrame implements ListSelectionListener,
+		ServerChangedObserver
 {
 	private static Log log = LogFactory.getLog(AddServerWizard.class);
 
@@ -194,7 +196,7 @@ public class GUI extends JFrame implements ListSelectionListener
 				for (Server server : unlinkedServers)
 				{
 					prov.registerUnlinkedServer(server);
-					serverListModel.addServer(server);
+					addServer(server);
 				}
 			}
 			catch (Exception e)
@@ -291,6 +293,7 @@ public class GUI extends JFrame implements ListSelectionListener
 			try
 			{
 				server.terminate();
+				server.refresh();
 			}
 			catch (CloudException e)
 			{
@@ -300,11 +303,11 @@ public class GUI extends JFrame implements ListSelectionListener
 			{
 				e.printStackTrace();
 			}
+			catch (ServerDisappearedException e)
+			{
+			
+			}
 		}
-
-		// Once the servers are terminated, their icons need to be changed
-		for (int index : indices)
-			serverListModel.refreshIndex(index);
 	}
 
 	private JPanel setupLeftPartition()
@@ -381,19 +384,16 @@ public class GUI extends JFrame implements ListSelectionListener
 	{
 		int indices[] = serverList.getSelectedIndices();
 
-		// Refresh the icons in the serverlist
-		for (int index : indices)
-			serverListModel.refreshIndex(index);
-
 		Collection<Server> servers = serverListModel
 				.getVisibleServersAtIndices(indices);
+
+		fillRightPartition();
 
 		for (Server server : servers)
 		{
 			try
 			{
 				server.refresh();
-				fillRightPartition(server);
 			}
 			catch (InternalException e)
 			{
@@ -429,7 +429,7 @@ public class GUI extends JFrame implements ListSelectionListener
 
 				for (Server s : servers)
 				{
-					serverListModel.addServer(s);
+					addServer(s);
 				}
 			}
 			catch (InternalException e1)
@@ -454,19 +454,18 @@ public class GUI extends JFrame implements ListSelectionListener
 	{
 		if (e.getValueIsAdjusting() == false)
 		{
-			int indices[] = serverList.getSelectedIndices();
 
-			for (int index : indices)
-			{
-				Server selectedServer = serverListModel
-						.getVisibleServerAtIndex(index);
-				fillRightPartition(selectedServer);
-			}
+			fillRightPartition();
+
 		}
 	}
 
-	private void fillRightPartition(Server selectedServer)
+	private void fillRightPartition()
 	{
+		int index = serverList.getSelectedIndex();
+
+		Server selectedServer = serverListModel.getVisibleServerAtIndex(index);
+
 		statusLabel.setText(selectedServer.getStatus().toString());
 		dnsLabel.setText(selectedServer.getPublicDnsAddress());
 
@@ -509,7 +508,7 @@ public class GUI extends JFrame implements ListSelectionListener
 		try
 		{
 			Server server = provider.startServer(instancename, instancesize);
-			serverListModel.addServer(server);
+			addServer(server);
 		}
 		catch (InternalException e)
 		{
@@ -521,5 +520,19 @@ public class GUI extends JFrame implements ListSelectionListener
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+
+	private void addServer(Server server)
+	{
+		serverListModel.addServer(server);
+		server.addServerChangedObserver(this);
+	}
+
+	@Override
+	public void serverChanged(Server server)
+	{
+		// Update the list on the left
+		serverListModel.refreshServer(server);
+		fillRightPartition();
 	}
 }

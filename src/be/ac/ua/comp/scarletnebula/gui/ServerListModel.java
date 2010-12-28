@@ -29,7 +29,7 @@ public class ServerListModel extends AbstractListModel
 	{
 		if (index >= visibleServers.size() || visibleServers.get(index) == null)
 			return null;
-		
+
 		return new JLabel(visibleServers.get(index).getFriendlyName(),
 				getServerIcon(getVisibleServerAtIndex(index)),
 				javax.swing.SwingConstants.LEFT);
@@ -38,8 +38,8 @@ public class ServerListModel extends AbstractListModel
 	private ImageIcon getServerIcon(Server server)
 	{
 		String filename = new String("/images/add.png");
-		
-		switch(server.getStatus())
+
+		switch (server.getStatus())
 		{
 			case PAUSED:
 				filename = "/images/paused.png";
@@ -57,9 +57,9 @@ public class ServerListModel extends AbstractListModel
 			case TERMINATED:
 				filename = "/images/terminated.png";
 				break;
-				
+
 		}
-		
+
 		ImageIcon icon = new ImageIcon(getClass().getResource(filename));
 		return icon;
 	}
@@ -67,6 +67,24 @@ public class ServerListModel extends AbstractListModel
 	public void refreshIndex(int index)
 	{
 		fireContentsChanged(this, index, index);
+	}
+
+	/**
+	 * Searches for "server" in the list of visibleservers. If this server is
+	 * found, this element is refreshed.
+	 * 
+	 * @param server
+	 */
+	public void refreshServer(Server server)
+	{
+		for (int i = 0; i < visibleServers.size(); i++)
+		{
+			if (visibleServers.get(i) == server)
+			{
+				refreshIndex(i);
+				return;
+			}
+		}
 	}
 
 	public void addServer(Server server)
@@ -145,9 +163,22 @@ public class ServerListModel extends AbstractListModel
 		return servers;
 	}
 
+	private int visibleServerToIndex(Server server)
+	{
+		for(int i = 0; i < visibleServers.size(); i++)
+		{
+			if(visibleServers.get(i) == server)
+			{
+				return i;
+			}
+		}
+		// Todo: throw an exception when not found
+		return -1;
+	}
 	public void removeServer(Server server)
 	{
 		visibleServers.remove(server);
+		fireContentsChanged(this, visibleServerToIndex(server), visibleServerToIndex(server));
 	}
 
 }

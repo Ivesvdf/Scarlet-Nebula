@@ -5,15 +5,24 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Properties;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.dasein.cloud.CloudException;
 import org.dasein.cloud.InternalException;
 import org.dasein.cloud.services.server.ServerState;
 
+import be.ac.ua.comp.scarletnebula.gui.AddServerWizard;
+
 public class Server extends Instance
 {
+	private static Log log = LogFactory.getLog(Server.class);
+
 	org.dasein.cloud.services.server.Server serverImpl;
+	Collection<ServerChangedObserver> serverChangedObservers;
 	CloudProvider provider;
 	private String friendlyName;
 	String keypair;
@@ -22,6 +31,7 @@ public class Server extends Instance
 			CloudProvider inputProvider, String inputKeypair,
 			String inputFriendlyName)
 	{
+		serverChangedObservers = new ArrayList<ServerChangedObserver>();
 		provider = inputProvider;
 		keypair = inputKeypair;
 		serverImpl = server;
@@ -30,7 +40,6 @@ public class Server extends Instance
 
 	public void sendFile(String filename)
 	{
-
 	}
 
 	public ServerStatisticsManager getServerStatistics()
@@ -196,16 +205,22 @@ public class Server extends Instance
 	 * 
 	 * @throws CloudException
 	 * @throws InternalException
-	 * @throws ServerDisappearedException 
+	 * @throws ServerDisappearedException
 	 */
-	public void refresh() throws InternalException, CloudException, ServerDisappearedException
+	public void refresh() throws InternalException, CloudException,
+			ServerDisappearedException
 	{
 		org.dasein.cloud.services.server.Server refreshedServer = provider
 				.getServerImpl(getUnfriendlyName());
 
 		// If the sever disappeared in the mean while, throw an Exception
 		if (refreshedServer != null)
+		{
 			serverImpl = refreshedServer;
+
+			// if(!serverImpl.equals(refreshedServer))
+			serverChanged();
+		}
 		else
 			throw new ServerDisappearedException(this);
 	}
@@ -233,5 +248,37 @@ public class Server extends Instance
 	public void reboot() throws CloudException, InternalException
 	{
 		provider.reboot(this);
+	}
+
+	/**
+	 * Add a ServerChangedObserver that will be notified when the server
+	 * changes.
+	 * 
+	 * @param sco
+	 *            The observer that will be notified when the server changes.
+	 */
+	public void addServerChangedObserver(ServerChangedObserver sco)
+	{
+		serverChangedObservers.add(sco);
+	}
+
+	/**
+	 * Removes an observer from the list of observers
+	 * 
+	 * @param sco
+	 *            The observer that will be deleted.
+	 */
+	public void removeServerChangedObserver(ServerChangedObserver sco)
+	{
+		serverChangedObservers.remove(sco);
+	}
+
+	/**
+	 * Notify all observers the server has changed.
+	 */
+	private void serverChanged()
+	{
+		for (ServerChangedObserver obs : serverChangedObservers)
+			obs.serverChanged(this);
 	}
 }
