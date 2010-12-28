@@ -3,8 +3,6 @@ package be.ac.ua.comp.scarletnebula.gui;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedList;
-import java.util.List;
-
 import javax.swing.AbstractListModel;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
@@ -44,10 +42,17 @@ public class ServerListModel extends AbstractListModel
 		switch(server.getStatus())
 		{
 			case PAUSED:
+				filename = "/images/paused.png";
+				break;
 			case PENDING:
-			case RUNNING:
+				filename = "/images/pending.png";
+				break;
+			case RUNNING: // This needs to be made load-dependent...
+				filename = "/images/running_ok.png";
+				break;
 			case REBOOTING:
 			case STOPPING:
+				filename = "/images/stopping.png";
 				break;
 			case TERMINATED:
 				filename = "/images/terminated.png";
@@ -138,6 +143,11 @@ public class ServerListModel extends AbstractListModel
 			servers.add(getVisibleServerAtIndex(i));
 
 		return servers;
+	}
+
+	public void removeServer(Server server)
+	{
+		visibleServers.remove(server);
 	}
 
 }

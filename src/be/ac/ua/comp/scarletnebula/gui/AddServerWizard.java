@@ -12,8 +12,7 @@ import javax.swing.JLabel;
 import javax.swing.JComboBox;
 import javax.swing.JTextField;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+
 import org.ciscavate.cjwizard.*;
 import org.ciscavate.cjwizard.pagetemplates.DefaultPageTemplate;
 
@@ -25,7 +24,6 @@ public class AddServerWizard extends JDialog
 {
 
 	private static final long serialVersionUID = 4523932653698865313L;
-	private static Log log = LogFactory.getLog(AddServerWizard.class);
 
 	String instancename;
 	String providername;
@@ -92,9 +90,6 @@ public class AddServerWizard extends JDialog
 		private final WizardPage[] pages = {
 				new WizardPage("Cloud Type", "Cloud Type")
 				{
-					/**
-					 * 
-					 */
 					private static final long serialVersionUID = 1L;
 
 					{

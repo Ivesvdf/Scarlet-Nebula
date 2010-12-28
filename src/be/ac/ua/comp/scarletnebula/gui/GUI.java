@@ -10,10 +10,11 @@ import java.util.Collection;
 import java.util.Random;
 
 import javax.swing.*;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import org.dasein.cloud.CloudException;
 import org.dasein.cloud.InternalException;
@@ -24,9 +25,12 @@ import com.jgoodies.forms.layout.FormLayout;
 import be.ac.ua.comp.scarletnebula.core.CloudManager;
 import be.ac.ua.comp.scarletnebula.core.CloudProvider;
 import be.ac.ua.comp.scarletnebula.core.Server;
+import be.ac.ua.comp.scarletnebula.core.ServerDisappearedException;
 
 public class GUI extends JFrame implements ListSelectionListener
 {
+	private static Log log = LogFactory.getLog(AddServerWizard.class);
+
 	private static final long serialVersionUID = 1L;
 	private JList serverList;
 	private ServerListModel serverListModel;
@@ -87,6 +91,9 @@ public class GUI extends JFrame implements ListSelectionListener
 		setSize(600, 400);
 		setLocationRelativeTo(null);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
+		ImageIcon icon = new ImageIcon(getClass().getResource(
+				"/images/icon48.png"));
+		setIconImage(icon.getImage());
 
 		addInitialServers();
 		addMenubar();
@@ -103,6 +110,17 @@ public class GUI extends JFrame implements ListSelectionListener
 		JMenuItem manageProvidersItem = new JMenuItem("Manage Providers");
 		providerMenu.add(manageProvidersItem);
 
+		JMenuItem detectAllUnlinkedInstances = new JMenuItem(
+				"Detect all unlinked instances");
+		detectAllUnlinkedInstances.addActionListener(new ActionListener()
+		{
+			@Override
+			public void actionPerformed(ActionEvent e)
+			{
+				detectAllUnlinkedInstances();
+			}
+		});
+		providerMenu.add(detectAllUnlinkedInstances);
 		Collection<CloudProvider> providers = cloudManager
 				.getLinkedCloudProviders();
 
@@ -144,11 +162,54 @@ public class GUI extends JFrame implements ListSelectionListener
 		helpMenu.add(noHelpItem);
 
 		JMenuItem aboutItem = new JMenuItem("About...");
+		aboutItem.addActionListener(new ActionListener()
+		{
+			@Override
+			public void actionPerformed(ActionEvent e)
+			{
+				openAboutBox();
+			}
+		});
+
 		helpMenu.add(aboutItem);
 
 		menuBar.add(helpMenu);
 
 		setJMenuBar(menuBar);
+	}
+
+	protected void detectAllUnlinkedInstances()
+	{
+		Collection<CloudProvider> providers = cloudManager
+				.getLinkedCloudProviders();
+
+		for (final CloudProvider prov : providers)
+		{
+			try
+			{
+				Collection<Server> unlinkedServers = prov.listUnlinkedServers();
+				log.debug("Provider " + prov.getName() + " has "
+						+ unlinkedServers.size() + " unlinked instances.");
+
+				for (Server server : unlinkedServers)
+				{
+					prov.registerUnlinkedServer(server);
+					serverListModel.addServer(server);
+				}
+			}
+			catch (Exception e)
+			{
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+		}
+	}
+
+	private void openAboutBox()
+	{
+		AboutWindow aboutWindow = new AboutWindow(this);
+		aboutWindow.setVisible(true);
 	}
 
 	private JPanel setupRightPartition()
@@ -197,18 +258,16 @@ public class GUI extends JFrame implements ListSelectionListener
 		ipLabel = new JLabel();
 		builder.append("IP Address", ipLabel);
 		builder.nextLine();
-		
+
 		builder.appendSeparator("Cloud Specific Information");
 		unfriendlyNameLabel = new JLabel();
 		builder.append("Name", unfriendlyNameLabel);
 		sizeLabel = new JLabel();
 		builder.append("Size", sizeLabel);
 		builder.nextLine();
-		
+
 		imageLabel = new JLabel();
 		builder.append("Image", imageLabel);
-		
-
 
 		overviewTab.add(builder.getPanel());
 
@@ -242,9 +301,9 @@ public class GUI extends JFrame implements ListSelectionListener
 				e.printStackTrace();
 			}
 		}
-		
+
 		// Once the servers are terminated, their icons need to be changed
-		for(int index : indices)
+		for (int index : indices)
 			serverListModel.refreshIndex(index);
 	}
 
@@ -252,11 +311,8 @@ public class GUI extends JFrame implements ListSelectionListener
 	{
 		// Create the list and put it in a scroll pane.
 		serverListModel = new ServerListModel();
-		serverList = new LabeledJList(serverListModel);
-		serverList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		serverList.setSelectedIndex(0);
+		serverList = new ServerList(serverListModel);
 		serverList.addListSelectionListener(this);
-		// serverList.setVisibleRowCount(5);
 		JScrollPane serverScrollPane = new JScrollPane(serverList);
 
 		ImageIcon addIcon = new ImageIcon(getClass().getResource(
@@ -290,7 +346,7 @@ public class GUI extends JFrame implements ListSelectionListener
 
 		JTextField searchField = new JTextField(10);
 		SearchFieldListener searchFieldListener = new SearchFieldListener(
-				searchField);
+				searchField, serverListModel);
 		searchField.addActionListener(searchFieldListener);
 		searchField.getDocument().addDocumentListener(searchFieldListener);
 
@@ -348,6 +404,11 @@ public class GUI extends JFrame implements ListSelectionListener
 			{
 				// TODO Auto-generated catch block
 				e.printStackTrace();
+			}
+			catch (ServerDisappearedException e)
+			{
+				log.info(e.toString());
+				serverListModel.removeServer(server);
 			}
 		}
 	}
@@ -425,51 +486,6 @@ public class GUI extends JFrame implements ListSelectionListener
 	{
 		AddServerWizard wizard = new AddServerWizard(this, cloudManager, this);
 		wizard.setVisible(true);
-	}
-
-	class SearchFieldListener implements ActionListener, DocumentListener
-	{
-		private JTextField searchField;
-
-		public SearchFieldListener(JTextField inputSearchField)
-		{
-			this.searchField = inputSearchField;
-		}
-
-		// Search on ENTER press
-		public void actionPerformed(ActionEvent e)
-		{
-			String servername = searchField.getText();
-
-			// listModel.insertElementAt(searchField.getText(), index);
-			// If we just wanted to add to the end, we'd do this:
-			serverListModel.filter(servername);
-
-			// Reset the text field.
-			// searchField.requestFocusInWindow();
-			searchField.setText("");
-
-		}
-
-		// Required by DocumentListener.
-		@Override
-		public void removeUpdate(DocumentEvent e)
-		{
-		}
-
-		@Override
-		public void insertUpdate(DocumentEvent e)
-		{
-			// TODO Auto-generated method stub
-
-		}
-
-		@Override
-		public void changedUpdate(DocumentEvent e)
-		{
-			// TODO Auto-generated method stub
-
-		}
 	}
 
 	public static void main(String[] args)
