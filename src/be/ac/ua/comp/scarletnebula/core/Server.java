@@ -281,4 +281,15 @@ public class Server extends Instance
 		for (ServerChangedObserver obs : serverChangedObservers)
 			obs.serverChanged(this);
 	}
+
+	/**
+	 * Unlinks this server. This will remove the save file for this server and
+	 * will remove it from the list of linked servers the cloudprovider
+	 * maintains. This obviously does not affect the server's running state in
+	 * any way.
+	 */
+	public void unlink()
+	{
+		getCloud().unlink(this);
+	}
 }

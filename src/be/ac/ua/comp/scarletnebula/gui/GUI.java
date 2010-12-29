@@ -18,6 +18,7 @@ import org.apache.commons.logging.LogFactory;
 
 import org.dasein.cloud.CloudException;
 import org.dasein.cloud.InternalException;
+import org.dasein.cloud.services.server.ServerState;
 
 import com.jgoodies.forms.builder.DefaultFormBuilder;
 import com.jgoodies.forms.layout.FormLayout;
@@ -31,7 +32,7 @@ import be.ac.ua.comp.scarletnebula.core.ServerDisappearedException;
 public class GUI extends JFrame implements ListSelectionListener,
 		ServerChangedObserver
 {
-	private static Log log = LogFactory.getLog(AddServerWizard.class);
+	private static Log log = LogFactory.getLog(GUI.class);
 
 	private static final long serialVersionUID = 1L;
 	private JList serverList;
@@ -180,6 +181,85 @@ public class GUI extends JFrame implements ListSelectionListener,
 		setJMenuBar(menuBar);
 	}
 
+	protected void clearSelection()
+	{
+		serverList.clearSelection();
+		fillRightPartition();
+	}
+
+	/**
+	 * The method you should call when you want to keep refreshing until Server
+	 * "server" has state "state".
+	 * 
+	 * TODO Keep some kind of a map for each state, which can be checked whem
+	 * manually refreshing. Suppose a server is refreshed and it's state is
+	 * PAUSED. The user can then resume. Later, the server's timer that checks
+	 * server state will fire, and the state will show as RUNNING. The timer
+	 * will keep on firing until the count is high enough and it gives up, which
+	 * sucks. Therefore, when manually refreshing a server S, all timers for
+	 * that server should be checked. If there's a timer waiting for S's current
+	 * state, that timer should be cancelled.
+	 * 
+	 * @param server
+	 * @param state
+	 */
+	private void refreshUntilServerHasState(final Server server,
+			final ServerState state)
+	{
+		refreshUntilServerHasState(server, state, 1);
+	}
+
+	private void refreshUntilServerHasState(final Server server,
+			final ServerState state, final int attempt)
+	{
+		if (server.getStatus() == state || attempt > 20)
+			return;
+
+		try
+		{
+			server.refresh();
+		}
+		catch (InternalException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		catch (CloudException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		catch (ServerDisappearedException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		if (server.getStatus() == state)
+			return;
+
+		// If the server's state still isn't the one we want it to be, try
+		// again, but only after waiting
+		// a logarithmic amount of time.
+		double wait = 15.0 * (Math.log10(attempt) + 1.0);
+
+		java.util.Timer timer = new java.util.Timer();
+		timer.schedule(new java.util.TimerTask()
+		{
+			@Override
+			public void run()
+			{
+				refreshUntilServerHasState(server, state, attempt + 1);
+				log.debug("Refreshing state for server "
+						+ server.getFriendlyName()
+						+ " because timer fired, waiting for state "
+						+ state.toString());
+				cancel();
+			}
+		}, (long) (wait * 1000));
+
+	}
+
 	protected void detectAllUnlinkedInstances()
 	{
 		Collection<CloudProvider> providers = cloudManager
@@ -284,16 +364,14 @@ public class GUI extends JFrame implements ListSelectionListener,
 
 	protected void terminateSelectedServers()
 	{
-		int indices[] = serverList.getSelectedIndices();
-		Collection<Server> servers = serverListModel
-				.getVisibleServersAtIndices(indices);
+		Collection<Server> servers = getSelectedServers();
 
 		for (Server server : servers)
 		{
 			try
 			{
 				server.terminate();
-				server.refresh();
+				refreshUntilServerHasState(server, ServerState.TERMINATED);
 			}
 			catch (CloudException e)
 			{
@@ -303,10 +381,6 @@ public class GUI extends JFrame implements ListSelectionListener,
 			{
 				e.printStackTrace();
 			}
-			catch (ServerDisappearedException e)
-			{
-			
-			}
 		}
 	}
 
@@ -314,8 +388,7 @@ public class GUI extends JFrame implements ListSelectionListener,
 	{
 		// Create the list and put it in a scroll pane.
 		serverListModel = new ServerListModel();
-		serverList = new ServerList(serverListModel);
-		serverList.addListSelectionListener(this);
+		serverList = new ServerList(serverListModel, this);
 		JScrollPane serverScrollPane = new JScrollPane(serverList);
 
 		ImageIcon addIcon = new ImageIcon(getClass().getResource(
@@ -454,15 +527,17 @@ public class GUI extends JFrame implements ListSelectionListener,
 	{
 		if (e.getValueIsAdjusting() == false)
 		{
-
 			fillRightPartition();
-
 		}
 	}
 
 	private void fillRightPartition()
 	{
 		int index = serverList.getSelectedIndex();
+
+		// When nothing is selected, return
+		if (index < 0)
+			return;
 
 		Server selectedServer = serverListModel.getVisibleServerAtIndex(index);
 
@@ -509,6 +584,7 @@ public class GUI extends JFrame implements ListSelectionListener,
 		{
 			Server server = provider.startServer(instancename, instancesize);
 			addServer(server);
+			refreshUntilServerHasState(server, ServerState.RUNNING);
 		}
 		catch (InternalException e)
 		{
@@ -535,4 +611,65 @@ public class GUI extends JFrame implements ListSelectionListener,
 		serverListModel.refreshServer(server);
 		fillRightPartition();
 	}
+
+	public void pauseSelectedServers()
+	{
+		Collection<Server> selectedServers = getSelectedServers();
+
+		try
+		{
+			for (Server server : selectedServers)
+			{
+				server.pause();
+				refreshUntilServerHasState(server, ServerState.PAUSED);
+			}
+		}
+		catch (CloudException e)
+		{
+			e.printStackTrace();
+		}
+		catch (InternalException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+	public void rebootSelectedServers()
+	{
+		Collection<Server> selectedServers = getSelectedServers();
+
+		try
+		{
+			for (Server server : selectedServers)
+				server.reboot();
+		}
+		catch (CloudException e)
+		{
+			e.printStackTrace();
+		}
+		catch (InternalException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+	private Collection<Server> getSelectedServers()
+	{
+		int indices[] = serverList.getSelectedIndices();
+		return serverListModel.getVisibleServersAtIndices(indices);
+	}
+
+	public void unlinkSelectedServers()
+	{
+		Collection<Server> selectedServers = getSelectedServers();
+
+		for (Server server : selectedServers)
+		{
+			serverListModel.removeServer(server);
+			server.unlink();
+		}
+	}
+
 }
