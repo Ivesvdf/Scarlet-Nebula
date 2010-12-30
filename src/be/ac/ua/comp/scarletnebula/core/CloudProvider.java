@@ -76,10 +76,19 @@ public class CloudProvider
 		assureSSHKey();
 	}
 
-	public Server getServer(String instancename) throws InternalException,
+	/**
+	 * Loads a server (from file!) and returns it
+	 * 
+	 * @param unfriendlyName
+	 * @return
+	 * @throws InternalException
+	 * @throws CloudException
+	 * @throws IOException
+	 */
+	public Server loadServer(String unfriendlyName) throws InternalException,
 			CloudException, IOException
 	{
-		org.dasein.cloud.services.server.Server server = getServerImpl(instancename);
+		org.dasein.cloud.services.server.Server server = getServerImpl(unfriendlyName);
 
 		if (server == null)
 			return null;
@@ -100,7 +109,7 @@ public class CloudProvider
 
 		for (String file : files)
 		{
-			Server server = getServer(file);
+			Server server = loadServer(file);
 
 			// If the server cannot be made it was deleted and the file
 			// referencing it
@@ -336,5 +345,19 @@ public class CloudProvider
 	{
 		servers.remove(selectedServer);
 		deleteServerSaveFile(selectedServer.getUnfriendlyName());
+	}
+
+	/**
+	 * Returns true if this cloudprovider owns an instance named "friendlyName"
+	 * @param friendlyName The name of the instance
+	 * @return True if a linked server with name "friendlyName" exists, otherwise false
+	 */
+	public boolean hasServer(String friendlyName)
+	{
+		for(Server s : servers)
+			if(s.getFriendlyName().equals(friendlyName))
+				return true;
+		
+		return false;
 	}
 }

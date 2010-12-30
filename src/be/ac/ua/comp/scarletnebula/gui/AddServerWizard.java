@@ -29,14 +29,11 @@ public class AddServerWizard extends JDialog
 	String providername;
 	String instancesize;
 
-	CloudManager cloudManager;
 	CloudProvider cloudProvider;
 
-	public AddServerWizard(JFrame frame, CloudManager inputCloudManager,
-			final GUI gui)
+	public AddServerWizard(JFrame frame, final GUI gui)
 	{
 		super(frame);
-		cloudManager = inputCloudManager;
 
 		// first, build the wizard. The TestFactory defines the
 		// wizard content and behavior.
@@ -106,7 +103,7 @@ public class AddServerWizard extends JDialog
 							{
 								providername = (String) providerList
 										.getSelectedItem();
-								cloudProvider = cloudManager
+								cloudProvider = CloudManager.get()
 										.getCloudProviderByName(providername);
 							}
 						});

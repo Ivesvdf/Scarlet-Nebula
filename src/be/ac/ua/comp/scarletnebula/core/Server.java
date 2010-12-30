@@ -292,4 +292,9 @@ public class Server extends Instance
 	{
 		getCloud().unlink(this);
 	}
+	
+	public static boolean exists(String name)
+	{
+		return CloudManager.get().serverExists(name);
+	}
 }

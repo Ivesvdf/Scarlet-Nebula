@@ -49,7 +49,7 @@ public class Main
 				String instancename = args[1];
 				String command = args[2];
 				
-				Server srv = c.getServer(instancename);
+				Server srv = c.loadServer(instancename);
 				CommandConnection cmd = srv.getCommandConnection();
 				System.out.println("System response:");
 				System.out.println(cmd.executeCommand(command));

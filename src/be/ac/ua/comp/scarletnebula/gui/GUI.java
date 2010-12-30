@@ -37,7 +37,6 @@ public class GUI extends JFrame implements ListSelectionListener,
 	private static final long serialVersionUID = 1L;
 	private JList serverList;
 	private ServerListModel serverListModel;
-	private CloudManager cloudManager;
 
 	private JPanel configurationTab;
 	private JPanel overviewTab;
@@ -78,8 +77,6 @@ public class GUI extends JFrame implements ListSelectionListener,
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-
-		cloudManager = new CloudManager();
 
 		JPanel leftPartition = setupLeftPartition();
 		JPanel rightPartition = setupRightPartition();
@@ -124,7 +121,7 @@ public class GUI extends JFrame implements ListSelectionListener,
 			}
 		});
 		providerMenu.add(detectAllUnlinkedInstances);
-		Collection<CloudProvider> providers = cloudManager
+		Collection<CloudProvider> providers = CloudManager.get()
 				.getLinkedCloudProviders();
 
 		for (final CloudProvider prov : providers)
@@ -262,7 +259,7 @@ public class GUI extends JFrame implements ListSelectionListener,
 
 	protected void detectAllUnlinkedInstances()
 	{
-		Collection<CloudProvider> providers = cloudManager
+		Collection<CloudProvider> providers = CloudManager.get()
 				.getLinkedCloudProviders();
 
 		for (final CloudProvider prov : providers)
@@ -488,7 +485,7 @@ public class GUI extends JFrame implements ListSelectionListener,
 
 	private void addInitialServers()
 	{
-		Collection<CloudProvider> providers = cloudManager
+		Collection<CloudProvider> providers = CloudManager.get()
 				.getLinkedCloudProviders();
 
 		for (CloudProvider prov : providers)
@@ -558,7 +555,7 @@ public class GUI extends JFrame implements ListSelectionListener,
 
 	void startAddServerWizard()
 	{
-		AddServerWizard wizard = new AddServerWizard(this, cloudManager, this);
+		AddServerWizard wizard = new AddServerWizard(this, this);
 		wizard.setVisible(true);
 	}
 
