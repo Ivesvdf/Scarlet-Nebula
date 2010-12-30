@@ -570,13 +570,24 @@ public class GUI extends JFrame implements ListSelectionListener,
 			}
 		});
 	}
+	
+	public void error(String errorMessage)
+	{
+		JOptionPane.showMessageDialog(this, errorMessage, "An unexpected error occured.", JOptionPane.ERROR_MESSAGE);
+	}
 
-	public void addWizardClosed(AddServerWizard wiz)
+	public void addServerWizardClosed(AddServerWizard wiz)
 	{
 		final String instancename = wiz.instancename;
 		final String instancesize = wiz.instancesize;
 		final CloudProvider provider = wiz.cloudProvider;
 
+		if(Server.exists(instancename))
+		{
+			JOptionPane.showMessageDialog(this, "A server with this name already exists.", "Server already exists", JOptionPane.ERROR_MESSAGE);
+			return;
+		}
+		
 		try
 		{
 			Server server = provider.startServer(instancename, instancesize);
@@ -623,7 +634,7 @@ public class GUI extends JFrame implements ListSelectionListener,
 		}
 		catch (CloudException e)
 		{
-			e.printStackTrace();
+			error(e.getMessage());
 		}
 		catch (InternalException e)
 		{

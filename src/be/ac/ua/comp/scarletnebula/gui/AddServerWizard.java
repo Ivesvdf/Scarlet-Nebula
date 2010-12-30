@@ -57,7 +57,7 @@ public class AddServerWizard extends JDialog
 				providername = (String) settings.get("provider");
 				instancesize = (String) settings.get("instancesize");
 
-				gui.addWizardClosed(AddServerWizard.this);
+				gui.addServerWizardClosed(AddServerWizard.this);
 				AddServerWizard.this.dispose();
 			}
 

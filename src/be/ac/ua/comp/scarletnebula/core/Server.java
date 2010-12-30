@@ -293,6 +293,11 @@ public class Server extends Instance
 		getCloud().unlink(this);
 	}
 	
+	/**
+	 * Checks with the CloudManager if a server by this name is linked in *any* CloudProvider
+	 * @param name
+	 * @return
+	 */
 	public static boolean exists(String name)
 	{
 		return CloudManager.get().serverExists(name);
