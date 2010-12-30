@@ -52,7 +52,7 @@ public class CloudManager
 		// TODO: Move ctor here, only load when a config file is present.
 	}
 
-	Set<String> getLinkedCloudProviderNames()
+	public Set<String> getLinkedCloudProviderNames()
 	{
 		return providers.keySet();
 	}

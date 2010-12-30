@@ -28,6 +28,8 @@ import be.ac.ua.comp.scarletnebula.core.CloudProvider;
 import be.ac.ua.comp.scarletnebula.core.Server;
 import be.ac.ua.comp.scarletnebula.core.ServerChangedObserver;
 import be.ac.ua.comp.scarletnebula.core.ServerDisappearedException;
+import be.ac.ua.comp.scarletnebula.gui.addserverwizard.AddServerWizard;
+import be.ac.ua.comp.scarletnebula.gui.addserverwizard.AddServerWizardDataRecorder;
 
 public class GUI extends JFrame implements ListSelectionListener,
 		ServerChangedObserver
@@ -576,11 +578,11 @@ public class GUI extends JFrame implements ListSelectionListener,
 		JOptionPane.showMessageDialog(this, errorMessage, "An unexpected error occured.", JOptionPane.ERROR_MESSAGE);
 	}
 
-	public void addServerWizardClosed(AddServerWizard wiz)
+	public void addServerWizardClosed(AddServerWizardDataRecorder rec)
 	{
-		final String instancename = wiz.instancename;
-		final String instancesize = wiz.instancesize;
-		final CloudProvider provider = wiz.cloudProvider;
+		final String instancename = rec.instanceName;
+		final String instancesize = rec.instanceSize;
+		final CloudProvider provider = rec.provider;
 
 		if(Server.exists(instancename))
 		{

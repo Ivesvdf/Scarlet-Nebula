@@ -15,8 +15,6 @@ import org.dasein.cloud.CloudException;
 import org.dasein.cloud.InternalException;
 import org.dasein.cloud.services.server.ServerState;
 
-import be.ac.ua.comp.scarletnebula.gui.AddServerWizard;
-
 public class Server extends Instance
 {
 	private static Log log = LogFactory.getLog(Server.class);
