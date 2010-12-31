@@ -2,26 +2,14 @@ package be.ac.ua.comp.scarletnebula.gui;
 
 import java.awt.Color;
 import java.awt.Component;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 
 import javax.swing.JLabel;
 import javax.swing.JList;
-import javax.swing.JMenuItem;
-import javax.swing.JPopupMenu;
 import javax.swing.ListCellRenderer;
 import javax.swing.ListSelectionModel;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.dasein.cloud.CloudException;
-import org.dasein.cloud.InternalException;
-import org.dasein.cloud.services.server.ServerState;
-
-import be.ac.ua.comp.scarletnebula.core.Server;
-import be.ac.ua.comp.scarletnebula.core.ServerDisappearedException;
 
 /**
  * JList that displays JLabels as items in the list. This will allow me to

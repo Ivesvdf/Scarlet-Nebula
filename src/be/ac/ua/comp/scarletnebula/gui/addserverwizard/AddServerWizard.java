@@ -7,6 +7,7 @@ import javax.swing.JFrame;
 
 import be.ac.ua.comp.scarletnebula.gui.GUI;
 import be.ac.ua.comp.scarletnebula.wizard.DataRecorder;
+import be.ac.ua.comp.scarletnebula.wizard.SimpleWizardTemplate;
 import be.ac.ua.comp.scarletnebula.wizard.Wizard;
 import be.ac.ua.comp.scarletnebula.wizard.WizardListener;
 
@@ -25,7 +26,7 @@ public class AddServerWizard extends JDialog implements WizardListener
 		this.setLocationRelativeTo(null);
 		this.pack();
 
-		Wizard wiz = new Wizard(new ChooseProviderPage(), new AddServerWizardDataRecorder());
+		Wizard wiz = new Wizard(new ChooseProviderPage(), new AddServerWizardDataRecorder(), new SimpleWizardTemplate());
 		wiz.addWizardListener(this);
 		wiz.start(this);
 	}

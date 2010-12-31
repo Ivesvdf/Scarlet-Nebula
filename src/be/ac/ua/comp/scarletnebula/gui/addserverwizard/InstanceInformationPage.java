@@ -7,20 +7,24 @@ import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 
-import org.dasein.cloud.aws.Instances;
-
 import be.ac.ua.comp.scarletnebula.core.CloudProvider;
 import be.ac.ua.comp.scarletnebula.wizard.DataRecorder;
 import be.ac.ua.comp.scarletnebula.wizard.WizardPage;
 
 class InstanceInformationPage extends WizardPage
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	final JTextField instanceNameField = new JTextField();
 	final JComboBox instanceSizeList = new JComboBox();
 
 
 	InstanceInformationPage(CloudProvider provider)
 	{
+		instanceNameField.setText(provider.getName() + "-" + provider.listLinkedServers().size());
+		instanceNameField.selectAll();
 		instanceNameField.setPreferredSize(new Dimension(100, 25));
 		add(new JLabel("Instance name:"));
 		add(instanceNameField);

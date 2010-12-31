@@ -20,16 +20,12 @@ public class Wizard
 	JDialog window;
 	WizardListener listener = null;
 
-	final JButton previousButton = new JButton("< Prev");
-	final JButton nextButton = new JButton("Next >");
-	final JButton finishButton = new JButton("Finish");
-	final JButton cancelButton = new JButton("Cancel");
-	
-	JPanel container = new JPanel();
+	WizardTemplate wizardTemplate = null;
 
-	public Wizard(WizardPage startPage, DataRecorder recorder)
+	public Wizard(WizardPage startPage, DataRecorder recorder, WizardTemplate wizardTemplate)
 	{
 		this.recorder = recorder;
+		this.wizardTemplate = wizardTemplate;
 		visitedPages.push(startPage);
 	}
 	
@@ -37,7 +33,7 @@ public class Wizard
 	{
 		this.window = window;
 
-		initializeButtons();
+		initializeButtons(window);
 		displayPage();
 	}
 
@@ -46,9 +42,11 @@ public class Wizard
 		renderPage(visitedPages.peek());
 	}
 
-	private void initializeButtons()
+	private void initializeButtons(JDialog window)
 	{
-		previousButton.addActionListener(new ActionListener()
+		wizardTemplate.setupWindow(window);
+		
+		wizardTemplate.previousButton.addActionListener(new ActionListener()
 		{
 			@Override
 			public void actionPerformed(ActionEvent e)
@@ -57,7 +55,7 @@ public class Wizard
 			}
 		});
 
-		nextButton.addActionListener(new ActionListener()
+		wizardTemplate.nextButton.addActionListener(new ActionListener()
 		{
 			@Override
 			public void actionPerformed(ActionEvent e)
@@ -66,7 +64,7 @@ public class Wizard
 			}
 		});
 
-		finishButton.addActionListener(new ActionListener()
+		wizardTemplate.finishButton.addActionListener(new ActionListener()
 		{
 			@Override
 			public void actionPerformed(ActionEvent e)
@@ -75,7 +73,7 @@ public class Wizard
 			}
 		});
 
-		cancelButton.addActionListener(new ActionListener()
+		wizardTemplate.cancelButton.addActionListener(new ActionListener()
 		{
 			@Override
 			public void actionPerformed(ActionEvent e)
@@ -83,25 +81,6 @@ public class Wizard
 				cancel();
 			}
 		});
-
-		final JPanel buttonPanel = new JPanel();
-		buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.LINE_AXIS));
-		buttonPanel.add(Box.createHorizontalGlue());
-		buttonPanel.add(previousButton);
-		buttonPanel.add(Box.createHorizontalStrut(5));
-		buttonPanel.add(nextButton);
-		buttonPanel.add(Box.createHorizontalStrut(10));
-		buttonPanel.add(finishButton);
-		buttonPanel.add(Box.createHorizontalStrut(10));
-		buttonPanel.add(cancelButton);
-
-		buttonPanel.setBorder(BorderFactory.createEmptyBorder(5, 15, 5, 15));
-		window.setLayout(new BorderLayout());
-
-		container.setLayout(new BorderLayout());
-		
-		window.add(container, BorderLayout.CENTER);
-		window.add(buttonPanel, BorderLayout.SOUTH);
 	}
 
 	private void renderPage(WizardPage page)
@@ -109,23 +88,23 @@ public class Wizard
 		if(page == null)
 			return;
 		
-		nextButton.setEnabled(page.nextIsEnabled());
-		finishButton.setEnabled(page.finishIsEnabled());
-		previousButton.setEnabled(visitedPages.size() > 1);
+		wizardTemplate.nextButton.setEnabled(page.nextIsEnabled());
+		wizardTemplate.finishButton.setEnabled(page.finishIsEnabled());
+		wizardTemplate.previousButton.setEnabled(visitedPages.size() > 1);
 		
-		for(Component c : container.getComponents())
+		for(Component c : wizardTemplate.container.getComponents())
 		{
-			container.remove(c);
+			wizardTemplate.container.remove(c);
 			System.out.println("Deleting one component"); 
 		}
 
 		for(Component c: page.getComponents())
 			c.setVisible(true);
 		
-		container.add(page);
+		wizardTemplate.container.add(page);
 		System.out.println("This page has " + page.getComponentCount() + " components.");
-		container.revalidate();
-		container.repaint();
+		wizardTemplate.container.revalidate();
+		wizardTemplate.container.repaint();
 	}
 
 	private void next()

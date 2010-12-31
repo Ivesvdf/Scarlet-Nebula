@@ -213,6 +213,11 @@ public class CloudProvider
 
 		return rv;
 	}
+	
+	public Collection<Server> listLinkedServers()
+	{
+		return servers;
+	}
 
 	public void terminateServer(String serverId) throws InternalException,
 			CloudException
