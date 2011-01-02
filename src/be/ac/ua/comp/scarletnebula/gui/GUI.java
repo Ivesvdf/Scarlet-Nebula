@@ -283,8 +283,9 @@ public class GUI extends JFrame implements ListSelectionListener,
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-
 		}
+		
+		fillRightPartition();
 	}
 
 	private void openAboutBox()
@@ -536,9 +537,22 @@ public class GUI extends JFrame implements ListSelectionListener,
 
 		// When nothing is selected, return
 		if (index < 0)
+		{
+			log.info("empty selection");
+			statusLabel.setText("");
+			dnsLabel.setText("");
+			ipLabel.setText("");
+			cloudLabel.setText("");
+			sizeLabel.setText("");
+			unfriendlyNameLabel.setText("");
+			imageLabel.setText("");
 			return;
+		}
 
-		Server selectedServer = serverListModel.getVisibleServerAtIndex(index);
+		final Server selectedServer = serverListModel.getVisibleServerAtIndex(index);
+		
+		if(selectedServer == null)
+			return;
 
 		statusLabel.setText(selectedServer.getStatus().toString());
 		dnsLabel.setText(selectedServer.getPublicDnsAddress());
@@ -680,6 +694,8 @@ public class GUI extends JFrame implements ListSelectionListener,
 			serverListModel.removeServer(server);
 			server.unlink();
 		}
+		
+		fillRightPartition();
 	}
 
 }

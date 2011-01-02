@@ -7,11 +7,16 @@ import javax.swing.AbstractListModel;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import be.ac.ua.comp.scarletnebula.core.Server;
 
 public class ServerListModel extends AbstractListModel
 {
 	private static final long serialVersionUID = 1L;
+	private static Log log = LogFactory.getLog(ServerListModel.class);
+
 	LinkedList<Server> visibleServers = new LinkedList<Server>();
 	LinkedList<Server> invisibleServers = new LinkedList<Server>();
 
@@ -91,7 +96,7 @@ public class ServerListModel extends AbstractListModel
 	{
 		visibleServers.add(server);
 
-		fireContentsChanged(this, visibleServers.size() - 2,
+		fireIntervalAdded(this, visibleServers.size() -1,
 				visibleServers.size() - 1);
 	}
 
@@ -118,9 +123,13 @@ public class ServerListModel extends AbstractListModel
 		allServers.addAll(visibleServers);
 		allServers.addAll(invisibleServers);
 
+		int oldVisibleCount = visibleServers.size();
+		
 		visibleServers.clear();
 		invisibleServers.clear();
 
+		fireIntervalRemoved(this, 0, oldVisibleCount-1);
+		
 		for (Server server : allServers)
 		{
 			if (server.getFriendlyName().contains(filterString))
@@ -133,7 +142,7 @@ public class ServerListModel extends AbstractListModel
 			}
 		}
 
-		fireContentsChanged(this, 0, visibleServers.size() - 1);
+		fireIntervalAdded(this, 0, visibleServers.size() - 1);
 	}
 
 	public JLabel elementAt(int index)
@@ -143,14 +152,18 @@ public class ServerListModel extends AbstractListModel
 
 	public Server getVisibleServerAtIndex(int index)
 	{
+		if(index >= visibleServers.size())
+			return null;
+		
 		return visibleServers.get(index);
 	}
 
 	public void clear()
 	{
 		invisibleServers.addAll(visibleServers);
+		int visibleServerCount = visibleServers.size();
 		visibleServers.clear();
-		fireContentsChanged(this, 0, visibleServers.size() - 1);
+		fireIntervalRemoved(this, 0, visibleServerCount-1);
 	}
 
 	public Collection<Server> getVisibleServersAtIndices(int[] indices)
@@ -177,8 +190,11 @@ public class ServerListModel extends AbstractListModel
 	}
 	public void removeServer(Server server)
 	{
+		int index = visibleServerToIndex(server);
+		log.debug("Server we're removing is at index" + index);
 		visibleServers.remove(server);
-		fireContentsChanged(this, visibleServerToIndex(server), visibleServerToIndex(server));
+		fireIntervalRemoved(this, index, index);
+
 	}
 
 }
