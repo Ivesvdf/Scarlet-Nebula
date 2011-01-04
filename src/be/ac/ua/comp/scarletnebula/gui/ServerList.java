@@ -39,6 +39,7 @@ public class ServerList extends javax.swing.JList
 		setCellRenderer(new JLabelCellRenderer());
 	}
 
+	@Override
 	public void clearSelection()
 	{
 		setSelectedIndices(new int[0]);

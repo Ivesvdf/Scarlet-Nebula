@@ -19,6 +19,7 @@ class SearchFieldListener implements ActionListener, DocumentListener
 	}
 
 	// Search on ENTER press
+	@Override
 	public void actionPerformed(ActionEvent e)
 	{
 		String servername = searchField.getText();

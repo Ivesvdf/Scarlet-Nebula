@@ -1,17 +1,11 @@
 package be.ac.ua.comp.scarletnebula.wizard;
 
-import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Stack;
 
-import javax.swing.BorderFactory;
-import javax.swing.Box;
-import javax.swing.BoxLayout;
-import javax.swing.JButton;
 import javax.swing.JDialog;
-import javax.swing.JPanel;
 
 public class Wizard
 {

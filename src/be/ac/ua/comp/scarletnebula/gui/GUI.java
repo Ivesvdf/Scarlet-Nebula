@@ -523,6 +523,7 @@ public class GUI extends JFrame implements ListSelectionListener,
 		}
 	}
 
+	@Override
 	public void valueChanged(ListSelectionEvent e)
 	{
 		if (e.getValueIsAdjusting() == false)
@@ -579,6 +580,7 @@ public class GUI extends JFrame implements ListSelectionListener,
 	{
 		SwingUtilities.invokeLater(new Runnable()
 		{
+			@Override
 			public void run()
 			{
 				GUI ex = new GUI();

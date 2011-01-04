@@ -3,9 +3,6 @@ package be.ac.ua.comp.scarletnebula.core;
 import java.io.File;
 import java.io.IOException;
 import java.security.PublicKey;
-import java.text.Format;
-import java.util.ArrayList;
-
 import net.schmizz.sshj.SSHClient;
 import net.schmizz.sshj.connection.ConnectionException;
 import net.schmizz.sshj.connection.channel.direct.Session;
@@ -13,7 +10,6 @@ import net.schmizz.sshj.connection.channel.direct.Session.Command;
 import net.schmizz.sshj.transport.TransportException;
 import net.schmizz.sshj.transport.verification.HostKeyVerifier;
 import net.schmizz.sshj.userauth.keyprovider.FileKeyProvider;
-import net.schmizz.sshj.userauth.method.AuthMethod;
 
 public class SSHCommandConnection extends CommandConnection
 {
@@ -115,6 +111,7 @@ public class SSHCommandConnection extends CommandConnection
 		return output;
 	}
 	
+	@Override
 	public void close()
 	{
 		try

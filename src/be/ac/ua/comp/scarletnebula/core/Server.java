@@ -116,7 +116,7 @@ public class Server extends Instance
 			// If it does not exist, create the directory
 			if (!dirFile.mkdirs())
 			{
-				System.out.println("Cannot make server directory!");
+				log.fatal("Cannot make server directory!");
 				return;
 			}
 		}
@@ -153,6 +153,7 @@ public class Server extends Instance
 		return serverImpl.getName();
 	}
 
+	@Override
 	public String toString()
 	{
 		String rv = serverImpl.getProviderServerId() + " ("
