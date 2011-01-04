@@ -9,5 +9,8 @@ abstract public class CommandConnection
 	 */
 	abstract public String executeCommand(String command);
 
+	/**
+	 * Closes this connection.
+	 */
 	abstract public void close();
 }
