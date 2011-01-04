@@ -15,7 +15,7 @@ import org.dasein.cloud.CloudException;
 import org.dasein.cloud.InternalException;
 import org.dasein.cloud.services.server.ServerState;
 
-public class Server extends Instance
+public class Server
 {
 	private static Log log = LogFactory.getLog(Server.class);
 
