@@ -40,6 +40,11 @@ public class ServerListModel extends AbstractListModel
 				javax.swing.SwingConstants.LEFT);
 	}
 
+	/**
+	 * Returns the icon that represents this server's status. 
+	 * @param server
+	 * @return
+	 */
 	private ImageIcon getServerIcon(Server server)
 	{
 		String filename = new String("/images/add.png");
@@ -69,6 +74,10 @@ public class ServerListModel extends AbstractListModel
 		return icon;
 	}
 
+	/**
+	 * Refreshes the server at index "index". 
+	 * @param index
+	 */
 	public void refreshIndex(int index)
 	{
 		fireContentsChanged(this, index, index);
@@ -92,6 +101,10 @@ public class ServerListModel extends AbstractListModel
 		}
 	}
 
+	/**
+	 * Adds a server to the model and makes it visible
+	 * @param server
+	 */
 	public void addServer(Server server)
 	{
 		visibleServers.add(server);
@@ -100,22 +113,22 @@ public class ServerListModel extends AbstractListModel
 				visibleServers.size() - 1);
 	}
 
+	/**
+	 * Makes the server at "index" invisible
+	 * @param index
+	 */
 	public void makeInvisible(int index)
 	{
 		Server tmp = visibleServers.get(index);
 		visibleServers.remove(index);
 		invisibleServers.add(tmp);
-		fireContentsChanged(this, index, index);
+		fireIntervalRemoved(this, index, index);
 	}
 
-	public void makeVisible(int index)
-	{
-		Server tmp = invisibleServers.get(index);
-		visibleServers.add(tmp);
-		fireContentsChanged(this, visibleServers.size() - 1,
-				visibleServers.size() - 1);
-	}
-
+	/**
+	 * Sets the model filter to "filterString"
+	 * @param filterString
+	 */
 	public void filter(String filterString)
 	{
 		LinkedList<Server> allServers = new LinkedList<Server>();
@@ -145,11 +158,21 @@ public class ServerListModel extends AbstractListModel
 		fireIntervalAdded(this, 0, visibleServers.size() - 1);
 	}
 
+	/**
+	 * Returns the label that represents the visible server at "index"
+	 * @param index
+	 * @return
+	 */
 	public JLabel elementAt(int index)
 	{
 		return (JLabel) getElementAt(index);
 	}
 
+	/**
+	 * Returns the visible server at "index"
+	 * @param index
+	 * @return
+	 */
 	public Server getVisibleServerAtIndex(int index)
 	{
 		if(index >= visibleServers.size())
@@ -158,6 +181,9 @@ public class ServerListModel extends AbstractListModel
 		return visibleServers.get(index);
 	}
 
+	/**
+	 * Makes all servers invisible
+	 */
 	public void clear()
 	{
 		invisibleServers.addAll(visibleServers);
@@ -166,6 +192,11 @@ public class ServerListModel extends AbstractListModel
 		fireIntervalRemoved(this, 0, visibleServerCount-1);
 	}
 
+	/**
+	 * Returns the visible servers at "indices". 
+	 * @param indices
+	 * @return
+	 */
 	public Collection<Server> getVisibleServersAtIndices(int[] indices)
 	{
 		Collection<Server> servers = new ArrayList<Server>();
@@ -176,6 +207,12 @@ public class ServerListModel extends AbstractListModel
 		return servers;
 	}
 
+	/**
+	 * Returns the index the Server "server" can be found at. This 
+	 * comparison will be made with the == operator. 
+	 * @param server
+	 * @return
+	 */
 	private int visibleServerToIndex(Server server)
 	{
 		for(int i = 0; i < visibleServers.size(); i++)
@@ -188,6 +225,11 @@ public class ServerListModel extends AbstractListModel
 		// Todo: throw an exception when not found
 		return -1;
 	}
+	
+	/**
+	 * Removes "server" from the model. 
+	 * @param server
+	 */
 	public void removeServer(Server server)
 	{
 		int index = visibleServerToIndex(server);
@@ -196,5 +238,4 @@ public class ServerListModel extends AbstractListModel
 		fireIntervalRemoved(this, index, index);
 
 	}
-
 }

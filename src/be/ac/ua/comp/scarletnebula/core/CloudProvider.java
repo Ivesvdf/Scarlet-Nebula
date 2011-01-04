@@ -97,6 +97,14 @@ public class CloudProvider
 
 	}
 
+	/**
+	 * Loads all servers that have a saved representation
+	 * 
+	 * @return
+	 * @throws InternalException
+	 * @throws CloudException
+	 * @throws IOException
+	 */
 	public Collection<Server> loadLinkedServers() throws InternalException,
 			CloudException, IOException
 	{
@@ -126,13 +134,27 @@ public class CloudProvider
 
 		return servers;
 	}
-	
+
+	/**
+	 * Delete's the server whose CloudProvider specific name is "unfriendlyName"
+	 * 
+	 * @param unfriendlyName
+	 */
 	private void deleteServerSaveFile(String unfriendlyName)
 	{
-		File toBeRemoved = new File(Server.getSaveFileDir(this) + unfriendlyName);
+		File toBeRemoved = new File(Server.getSaveFileDir(this)
+				+ unfriendlyName);
 		toBeRemoved.delete();
 	}
 
+	/**
+	 * Creates a new key with name "keyname"
+	 * 
+	 * @param acs
+	 * @param keyname
+	 * @throws InternalException
+	 * @throws CloudException
+	 */
 	private void createKey(org.dasein.cloud.services.access.AccessServices acs,
 			String keyname) throws InternalException, CloudException
 	{
@@ -141,6 +163,13 @@ public class CloudProvider
 
 	}
 
+	/**
+	 * Assures there's an SSH key with name "sndefault". If no such key exists,
+	 * it will be created
+	 * 
+	 * @throws InternalException
+	 * @throws CloudException
+	 */
 	private void assureSSHKey() throws InternalException, CloudException
 	{
 		org.dasein.cloud.services.access.AccessServices acs = providerImpl
@@ -153,6 +182,13 @@ public class CloudProvider
 
 	}
 
+	/**
+	 * Assures there's a rule that only allows SSH access. If no such rule
+	 * exists, it will be created.
+	 * 
+	 * @throws InternalException
+	 * @throws CloudException
+	 */
 	private void assureSSHOnlyFirewall() throws InternalException,
 			CloudException
 	{
@@ -185,13 +221,21 @@ public class CloudProvider
 		}
 	}
 
+	/**
+	 * Lists all servers the underlying Cloud Provider manages, but that are
+	 * *not* by listLinkedServers() i.e. the ones that aren't managed by Scarlet
+	 * Nebula at this moment.
+	 * 
+	 * @return
+	 * @throws Exception
+	 */
 	public ArrayList<Server> listUnlinkedServers() throws Exception
 	{
 		ArrayList<Server> rv = new ArrayList<Server>();
 		// List all servers
 		for (org.dasein.cloud.services.server.Server testServer : serverServices
 				.list())
-		{			
+		{
 			// For each server, check if this server is already registered. Do
 			// this based on his unfriendly id
 			boolean found = false;
@@ -204,7 +248,7 @@ public class CloudProvider
 					found = true;
 				}
 			}
-			
+
 			if (!found)
 			{
 				rv.add(Server.load(testServer, this));
@@ -213,18 +257,41 @@ public class CloudProvider
 
 		return rv;
 	}
-	
+
+	/**
+	 * Returns all servers that are currently being managed by this
+	 * CloudProvider
+	 * 
+	 * @return
+	 */
 	public Collection<Server> listLinkedServers()
 	{
 		return servers;
 	}
 
-	public void terminateServer(String serverId) throws InternalException,
-			CloudException
+	/**
+	 * Terminates the server with unfriendlyName "unfriendlyName". This method
+	 * will and should only be called by Server.terminate().
+	 * 
+	 * @param unfriendlyName
+	 * @throws InternalException
+	 * @throws CloudException
+	 */
+	public void terminateServer(String unfriendlyName)
+			throws InternalException, CloudException
 	{
-		serverServices.stop(serverId);
+		serverServices.stop(unfriendlyName);
 	}
 
+	/**
+	 * Starts a new server.
+	 * 
+	 * @param serverName
+	 * @param size
+	 * @return
+	 * @throws InternalException
+	 * @throws CloudException
+	 */
 	public Server startServer(String serverName, String size)
 			throws InternalException, CloudException
 	{
@@ -241,25 +308,44 @@ public class CloudProvider
 		Server server = new Server(daseinServer, this, keypairOrPassword,
 				serverName);
 
-		registerServer(server);
+		registerUnlinkedServer(server);
 		return server;
 	}
 
+	/**
+	 * Returns the ServerServices for this CloudProvider
+	 * 
+	 * @return
+	 */
 	org.dasein.cloud.services.server.ServerServices getServerServices()
 	{
 		return providerImpl.getServerServices();
 	}
 
+	/**
+	 * Returns the endpoint this CloudProvider uses.
+	 * 
+	 * @return
+	 */
 	String getPreferredEndpoint()
 	{
 		return providerSpecificProperties.getProperty("preferredendpoint");
 	}
 
+	/**
+	 * Returns this CloudProvider's userdefined name (the one uniquely
+	 * identifying the (Provider, Endpoint, Access) pair.
+	 * 
+	 * @return
+	 */
 	String getCloudName()
 	{
 		return providerImpl.getCloudName();
 	}
 
+	/**
+	 * Closes this CloudProvider (call it before the program ends)
+	 */
 	void close()
 	{
 		providerImpl.close();
@@ -281,6 +367,11 @@ public class CloudProvider
 		return context;
 	}
 
+	/**
+	 * Returns a collection of instance sizes that are possible.
+	 * 
+	 * @return
+	 */
 	public Collection<String> getPossibleInstanceSizes()
 	{
 		Collection<org.dasein.cloud.services.server.ServerSize> sizes = null;
@@ -309,6 +400,11 @@ public class CloudProvider
 		return rv;
 	}
 
+	/**
+	 * Returns the underlying class' name...
+	 * 
+	 * @return
+	 */
 	public String getUnderlyingClassname()
 	{
 		return providerClassName;
@@ -320,32 +416,49 @@ public class CloudProvider
 		return serverServices.getServer(unfriendlyName);
 	}
 
-	public String getName()
-	{
-		return getCloudName();
-	}
-
+	/**
+	 * Makes the unlinked Server "server" linked.
+	 * 
+	 * @param server
+	 */
 	public void registerUnlinkedServer(Server server)
-	{
-		registerServer(server);
-	}
-	
-	private void registerServer(Server server)
 	{
 		server.store();
 		servers.add(server);
 	}
-	
+
+	/**
+	 * Pauses the server in parameter. This method is only supposed to be called
+	 * by Server.pause()
+	 * 
+	 * @param server
+	 * @throws InternalException
+	 * @throws CloudException
+	 */
 	void pause(Server server) throws InternalException, CloudException
 	{
 		serverServices.pause(server.getUnfriendlyName());
 	}
 
+	/**
+	 * Reboots the server in parameter. This method is only supposed to be
+	 * called by Server.reboot()
+	 * 
+	 * @param server
+	 * @throws CloudException
+	 * @throws InternalException
+	 */
 	void reboot(Server server) throws CloudException, InternalException
 	{
 		serverServices.reboot(server.getUnfriendlyName());
 	}
 
+	/**
+	 * Unlinks the instance in parameter. After this call, this instance will no
+	 * longer be linked to this CloudProvider
+	 * 
+	 * @param selectedServer
+	 */
 	public void unlink(Server selectedServer)
 	{
 		servers.remove(selectedServer);
@@ -354,15 +467,30 @@ public class CloudProvider
 
 	/**
 	 * Returns true if this cloudprovider owns an instance named "friendlyName"
-	 * @param friendlyName The name of the instance
-	 * @return True if a linked server with name "friendlyName" exists, otherwise false
+	 * 
+	 * @param friendlyName
+	 *            The name of the instance
+	 * @return True if a linked server with name "friendlyName" exists,
+	 *         otherwise false
 	 */
 	public boolean hasServer(String friendlyName)
 	{
-		for(Server s : servers)
-			if(s.getFriendlyName().equals(friendlyName))
+		for (Server s : servers)
+			if (s.getFriendlyName().equals(friendlyName))
 				return true;
-		
+
 		return false;
+	}
+
+	/**
+	 * Returns the identifier that uniquely identifies this CloudProvider
+	 * instance.
+	 * 
+	 * @return
+	 */
+	public String getName()
+	{
+		// TODO: Change this to the CloudProvider's unique identifier
+		return getUnderlyingClassname();
 	}
 }
