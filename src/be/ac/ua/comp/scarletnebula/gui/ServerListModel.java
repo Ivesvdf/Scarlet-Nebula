@@ -236,6 +236,5 @@ public class ServerListModel extends AbstractListModel
 		log.debug("Server we're removing is at index" + index);
 		visibleServers.remove(server);
 		fireIntervalRemoved(this, index, index);
-
 	}
 }

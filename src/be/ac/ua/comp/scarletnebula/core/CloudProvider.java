@@ -108,7 +108,7 @@ public class CloudProvider
 	public Collection<Server> loadLinkedServers() throws InternalException,
 			CloudException, IOException
 	{
-		File dir = new File(Server.getSaveFileDir(this));
+		File dir = new File(getSaveFileDir());
 
 		String[] files = dir.list();
 
@@ -142,8 +142,7 @@ public class CloudProvider
 	 */
 	private void deleteServerSaveFile(String unfriendlyName)
 	{
-		File toBeRemoved = new File(Server.getSaveFileDir(this)
-				+ unfriendlyName);
+		File toBeRemoved = new File(getSaveFileDir() + unfriendlyName);
 		toBeRemoved.delete();
 	}
 
@@ -492,5 +491,14 @@ public class CloudProvider
 	{
 		// TODO: Change this to the CloudProvider's unique identifier
 		return getUnderlyingClassname();
+	}
+
+	/**
+	 * @return The directory (ending in "/") all servers with this CloudProvider
+	 *         should be saved in.
+	 */
+	String getSaveFileDir()
+	{
+		return "servers/" + getUnderlyingClassname().toString() + "/";
 	}
 }

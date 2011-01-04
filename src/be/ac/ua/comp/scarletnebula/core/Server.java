@@ -45,7 +45,10 @@ public class Server
 		return null;
 	}
 
-	public CommandConnection getCommandConnection()
+	/**
+	 * @return A new CommandConnection to this server
+	 */
+	public CommandConnection newCommandConnection()
 	{
 		try
 		{
@@ -94,20 +97,26 @@ public class Server
 						.getProperty("friendlyName") : server.getName());
 	}
 
+	/**
+	 * Returns the filename (with directory) a new instance with name
+	 * "instanceName" for CloudProvider "provider" should get.
+	 * 
+	 * @param provider
+	 * @param instanceName
+	 * @return
+	 */
 	static String getSaveFilename(CloudProvider provider, String instanceName)
 	{
-		return getSaveFileDir(provider) + instanceName;
+		return provider.getSaveFileDir() + instanceName;
 	}
 
-	static String getSaveFileDir(CloudProvider provider)
-	{
-		return "servers/" + provider.getUnderlyingClassname().toString() + "/";
-	}
-
+	/**
+	 * Saves this server to its savefile.
+	 */
 	void store()
 	{
 		// Write key to file
-		String dir = getSaveFileDir(provider);
+		String dir = provider.getSaveFileDir();
 		File dirFile = new File(dir);
 
 		// Check if the key dir already exists
@@ -148,6 +157,11 @@ public class Server
 
 	}
 
+	/**
+	 * Returns the server implementation's cloud specific (unfriendly) name.
+	 * 
+	 * @return
+	 */
 	public String getUnfriendlyName()
 	{
 		return serverImpl.getName();
@@ -162,11 +176,18 @@ public class Server
 		return rv;
 	}
 
+	/**
+	 * @return A public DNS address for this server, null if none is available.
+	 */
 	public String getPublicDnsAddress()
 	{
 		return serverImpl.getPublicDnsAddress();
 	}
 
+	/**
+	 * @return A list of public IP address for this server, empty array if none
+	 *         is available.
+	 */
 	public String[] getPublicIpAddresses()
 	{
 		String[] addresses = serverImpl.getPublicIpAddresses();
@@ -177,21 +198,38 @@ public class Server
 			return addresses;
 	}
 
+	/**
+	 * Sets the friendly name for this server
+	 * 
+	 * @param friendlyName
+	 */
 	public void setFriendlyName(String friendlyName)
 	{
 		this.friendlyName = friendlyName;
 	}
 
+	/**
+	 * @return This server's friendly name
+	 */
 	public String getFriendlyName()
 	{
 		return friendlyName;
 	}
 
+	/**
+	 * Terminates this server
+	 * 
+	 * @throws InternalException
+	 * @throws CloudException
+	 */
 	public void terminate() throws InternalException, CloudException
 	{
 		provider.terminateServer(getUnfriendlyName());
 	}
 
+	/**
+	 * @return This server's status
+	 */
 	public ServerState getStatus()
 	{
 		return serverImpl.getCurrentState();
@@ -224,26 +262,47 @@ public class Server
 			throw new ServerDisappearedException(this);
 	}
 
+	/**
+	 * @return The CloudProvider this server was started on
+	 */
 	public CloudProvider getCloud()
 	{
 		return provider;
 	}
 
+	/**
+	 * @return This server's size string
+	 */
 	public String getSize()
 	{
 		return serverImpl.getSize();
 	}
 
+	/**
+	 * @return This server's image id
+	 */
 	public String getImage()
 	{
 		return serverImpl.getImageId();
 	}
 
+	/**
+	 * Pauses this server
+	 * 
+	 * @throws InternalException
+	 * @throws CloudException
+	 */
 	public void pause() throws InternalException, CloudException
 	{
 		provider.pause(this);
 	}
 
+	/**
+	 * Reboots this server
+	 * 
+	 * @throws CloudException
+	 * @throws InternalException
+	 */
 	public void reboot() throws CloudException, InternalException
 	{
 		provider.reboot(this);
@@ -291,9 +350,11 @@ public class Server
 	{
 		getCloud().unlink(this);
 	}
-	
+
 	/**
-	 * Checks with the CloudManager if a server by this name is linked in *any* CloudProvider
+	 * Checks with the CloudManager if a server by this name is linked in *any*
+	 * CloudProvider
+	 * 
 	 * @param name
 	 * @return
 	 */
