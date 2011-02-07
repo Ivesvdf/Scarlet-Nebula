@@ -8,9 +8,6 @@ import javax.swing.JList;
 import javax.swing.ListCellRenderer;
 import javax.swing.ListSelectionModel;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 /**
  * JList that displays JLabels as items in the list. This will allow me to
  * display an image next to the text (for server status).
@@ -21,7 +18,6 @@ import org.apache.commons.logging.LogFactory;
 public class ServerList extends javax.swing.JList
 {
 	private static final long serialVersionUID = 1L;
-	private static Log log = LogFactory.getLog(ServerList.class);
 
 	ServerListModel serverListModel;
 	GUI gui;

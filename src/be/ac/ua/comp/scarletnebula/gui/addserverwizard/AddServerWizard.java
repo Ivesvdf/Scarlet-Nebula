@@ -40,7 +40,7 @@ public class AddServerWizard extends JDialog implements WizardListener
 				//TODO: handle zero cloudproviders
 				//throw new Exception("No CloudProviders linked!");
 				break;
-			case 1:
+			case 1: // One provider -- user has to pick this one so skip the page
 				CloudProvider prov = (CloudProvider)CloudManager.get().getLinkedCloudProviders().toArray()[0];
 				rec.provider = prov;
 				firstPage = new InstanceInformationPage(prov);
