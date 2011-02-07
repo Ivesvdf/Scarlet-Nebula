@@ -96,7 +96,6 @@ public class Wizard
 			c.setVisible(true);
 		
 		wizardTemplate.container.add(page);
-		System.out.println("This page has " + page.getComponentCount() + " components.");
 		wizardTemplate.container.revalidate();
 		wizardTemplate.container.repaint();
 	}
