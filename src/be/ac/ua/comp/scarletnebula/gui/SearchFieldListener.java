@@ -12,7 +12,8 @@ class SearchFieldListener implements ActionListener, DocumentListener
 	private JTextField searchField;
 	ServerListModel serverListModel;
 
-	public SearchFieldListener(JTextField inputSearchField, ServerListModel serverListModel)
+	public SearchFieldListener(JTextField inputSearchField,
+			ServerListModel serverListModel)
 	{
 		this.searchField = inputSearchField;
 		this.serverListModel = serverListModel;

@@ -6,7 +6,6 @@ import be.ac.ua.comp.scarletnebula.core.CloudProvider;
 import be.ac.ua.comp.scarletnebula.core.CommandConnection;
 import be.ac.ua.comp.scarletnebula.core.Server;
 
-
 public class Main
 {
 	public static void main(String[] args)
@@ -21,10 +20,10 @@ public class Main
 				c.startServer("srv", "m1.small");
 				System.out.println("Instance started.");
 			}
-			else if(args.length == 2 && args[0].equals("stop"))
+			else if (args.length == 2 && args[0].equals("stop"))
 			{
 				c.terminateServer(args[1]);
-				System.out.println("Instance "+ args[1]+ " is terminated.");
+				System.out.println("Instance " + args[1] + " is terminated.");
 			}
 			else if (args.length == 1 && args[0].equals("list"))
 			{
@@ -48,7 +47,7 @@ public class Main
 			{
 				String instancename = args[1];
 				String command = args[2];
-				
+
 				Server srv = c.loadServer(instancename);
 				CommandConnection cmd = srv.newCommandConnection();
 				System.out.println("System response:");
@@ -59,11 +58,14 @@ public class Main
 			{
 				System.out.println("* * * Scarlet Nebula * * *");
 				System.out.println("USAGE: ");
-				System.out.println("Listing instances: \t\t scarletnebula list");
+				System.out
+						.println("Listing instances: \t\t scarletnebula list");
 				System.out
 						.println("Starting a new instance: \t scarletnebula start");
-				System.out.println("Terminating an instance: \t scarletnebula stop <instanceid>");
-				System.out.println("Executing command on instance: \t scarletnebula cmd <instanceid> \"some command\"");
+				System.out
+						.println("Terminating an instance: \t scarletnebula stop <instanceid>");
+				System.out
+						.println("Executing command on instance: \t scarletnebula cmd <instanceid> \"some command\"");
 
 				return;
 			}

@@ -1,6 +1,8 @@
 package be.ac.ua.comp.scarletnebula.wizard;
 
 import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.Frame;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Stack;
@@ -16,19 +18,50 @@ public class Wizard
 
 	WizardTemplate wizardTemplate = null;
 
-	public Wizard(WizardPage startPage, DataRecorder recorder, WizardTemplate wizardTemplate)
+	public Wizard(WizardPage startPage, DataRecorder recorder,
+			WizardTemplate wizardTemplate)
 	{
 		this.recorder = recorder;
 		this.wizardTemplate = wizardTemplate;
 		visitedPages.push(startPage);
 	}
-	
+
+	/**
+	 * Start the Wizard in the window in parameter
+	 * 
+	 * @param window
+	 */
 	public void start(JDialog window)
 	{
 		this.window = window;
 
 		initializeButtons(window);
 		displayPage();
+	}
+
+	/**
+	 * Start the wizard, and do so in a window the Wizard creates itself
+	 * 
+	 * @param width
+	 *            Width of the window
+	 * @param height
+	 *            Height of the window
+	 * @param parent
+	 *            Owner of the window, null if no owner
+	 */
+	public void start(String title, int width, int height, Frame parent)
+	{
+		JDialog dialog = new JDialog(parent);
+		dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+		dialog.setPreferredSize(new Dimension(width, height));
+		dialog.setLocation(0, 0);
+		dialog.setLocationRelativeTo(null);
+		dialog.setTitle(title);
+		dialog.pack();
+
+		start(dialog);
+
+		dialog.setVisible(true);
 	}
 
 	private void displayPage()
@@ -39,7 +72,7 @@ public class Wizard
 	private void initializeButtons(JDialog window)
 	{
 		wizardTemplate.setupWindow(window);
-		
+
 		wizardTemplate.previousButton.addActionListener(new ActionListener()
 		{
 			@Override
@@ -79,22 +112,22 @@ public class Wizard
 
 	private void renderPage(WizardPage page)
 	{
-		if(page == null)
+		if (page == null)
 			return;
-		
+
 		wizardTemplate.nextButton.setEnabled(page.nextIsEnabled());
 		wizardTemplate.finishButton.setEnabled(page.finishIsEnabled());
 		wizardTemplate.previousButton.setEnabled(visitedPages.size() > 1);
-		
-		for(Component c : wizardTemplate.container.getComponents())
+
+		for (Component c : wizardTemplate.container.getComponents())
 		{
 			wizardTemplate.container.remove(c);
-			System.out.println("Deleting one component"); 
+			System.out.println("Deleting one component");
 		}
 
-		for(Component c: page.getComponents())
+		for (Component c : page.getComponents())
 			c.setVisible(true);
-		
+
 		wizardTemplate.container.add(page);
 		wizardTemplate.container.revalidate();
 		wizardTemplate.container.repaint();
@@ -110,7 +143,7 @@ public class Wizard
 	private void previous()
 	{
 		visitedPages.pop();
-		
+
 		System.out.println(visitedPages.size());
 		System.out.println(visitedPages.peek().toString());
 		displayPage();

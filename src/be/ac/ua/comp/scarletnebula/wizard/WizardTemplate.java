@@ -10,8 +10,8 @@ public abstract class WizardTemplate
 	public JButton nextButton = new JButton("Next >");
 	public JButton finishButton = new JButton("Finish");
 	public JButton cancelButton = new JButton("Cancel");
-	
+
 	public JPanel container = new JPanel();
-	
+
 	abstract void setupWindow(JDialog window);
 }

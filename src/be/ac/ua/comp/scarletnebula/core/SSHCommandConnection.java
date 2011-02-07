@@ -14,30 +14,37 @@ import net.schmizz.sshj.userauth.keyprovider.FileKeyProvider;
 public class SSHCommandConnection extends CommandConnection
 {
 	final SSHClient ssh;
-	
-	SSHCommandConnection(String address, String keypairfilename) throws IOException
+
+	SSHCommandConnection(String address, String keypairfilename)
+			throws IOException
 	{
 		System.out.println("Keypair is " + keypairfilename);
 
 		ssh = new SSHClient();
 		ssh.loadKnownHosts();
-		
+
 		HostKeyVerifier verifier = new HostKeyVerifier()
 		{
 			@Override
 			public boolean verify(String arg0, int arg1, PublicKey arg2)
 			{
-				// I can hear the people that invented SSH drop dead just so they can start
-				// spinning in their graves. Problem is that there really is no way to know
-				// this is really the good server -- it's not like you can actually request the 
-				// fingerprint through some sort of a secure API (everything goes through plain
-				// old http anyways so nobody could prevent someone from intercepting). 
-				
-				// In short, yes, you could be man-in-the-middled but you probably won't.
+				// I can hear the people that invented SSH drop dead just so
+				// they can start
+				// spinning in their graves. Problem is that there really is no
+				// way to know
+				// this is really the good server -- it's not like you can
+				// actually request the
+				// fingerprint through some sort of a secure API (everything
+				// goes through plain
+				// old http anyways so nobody could prevent someone from
+				// intercepting).
+
+				// In short, yes, you could be man-in-the-middled but you
+				// probably won't.
 				return true;
 			}
 		};
-		
+
 		ssh.addHostKeyVerifier(verifier);
 
 		ssh.connect(address);
@@ -45,9 +52,10 @@ public class SSHCommandConnection extends CommandConnection
 		FileKeyProvider.Format fmt = net.schmizz.sshj.userauth.keyprovider.KeyProviderUtil
 				.detectKeyFileFormat(new File(keypairfilename));
 
-		if(fmt != FileKeyProvider.Format.PKCS8)
+		if (fmt != FileKeyProvider.Format.PKCS8)
 		{
-			System.out.println("Unsupported key file format, ask Ives to put another if here...");
+			System.out
+					.println("Unsupported key file format, ask Ives to put another if here...");
 		}
 		net.schmizz.sshj.userauth.keyprovider.PKCS8KeyFile keyfile = new net.schmizz.sshj.userauth.keyprovider.PKCS8KeyFile();
 		keyfile.init(new File(keypairfilename));
@@ -55,22 +63,22 @@ public class SSHCommandConnection extends CommandConnection
 		ssh.authPublickey("ubuntu", keyfile);
 
 	}
-	
+
 	@Override
 	public String executeCommand(String command)
 	{
-		//ssh.auth(root, authmethods)
-		//ssh.authPassword("root", "fakepassword");
-	//	ssh.authPublickey(System.getProperty("user.name"));
-		
+		// ssh.auth(root, authmethods)
+		// ssh.authPassword("root", "fakepassword");
+		// ssh.authPublickey(System.getProperty("user.name"));
+
 		Session session = null;
 		String output = "";
 		try
 		{
-			 session = ssh.startSession();
+			session = ssh.startSession();
 
 			final Command cmd = session.exec(command);
-			//System.out.println("\n** exit status: " + cmd.getExitStatus());
+			// System.out.println("\n** exit status: " + cmd.getExitStatus());
 
 			output = cmd.getOutputAsString();
 		}
@@ -106,11 +114,10 @@ public class SSHCommandConnection extends CommandConnection
 				e.printStackTrace();
 			}
 		}
-	
-		
+
 		return output;
 	}
-	
+
 	@Override
 	public void close()
 	{
@@ -124,7 +131,5 @@ public class SSHCommandConnection extends CommandConnection
 			e.printStackTrace();
 		}
 	}
-	
-	
 
 }

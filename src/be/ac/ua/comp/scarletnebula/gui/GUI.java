@@ -28,6 +28,7 @@ import be.ac.ua.comp.scarletnebula.core.CloudProvider;
 import be.ac.ua.comp.scarletnebula.core.Server;
 import be.ac.ua.comp.scarletnebula.core.ServerChangedObserver;
 import be.ac.ua.comp.scarletnebula.core.ServerDisappearedException;
+import be.ac.ua.comp.scarletnebula.gui.addproviderwizard.AddProviderWizard;
 import be.ac.ua.comp.scarletnebula.gui.addserverwizard.AddServerWizard;
 import be.ac.ua.comp.scarletnebula.gui.addserverwizard.AddServerWizardDataRecorder;
 
@@ -110,6 +111,15 @@ public class GUI extends JFrame implements ListSelectionListener,
 				"Managing cloud providers.");
 
 		JMenuItem manageProvidersItem = new JMenuItem("Manage Providers");
+		manageProvidersItem.addActionListener(new ActionListener()
+		{
+			@Override
+			public void actionPerformed(ActionEvent e)
+			{
+				new AddProviderWizard(CloudManager.get().getTemplates());
+			}
+		});
+
 		providerMenu.add(manageProvidersItem);
 
 		JMenuItem detectAllUnlinkedInstances = new JMenuItem(
@@ -284,7 +294,7 @@ public class GUI extends JFrame implements ListSelectionListener,
 				e.printStackTrace();
 			}
 		}
-		
+
 		fillRightPartition();
 	}
 
@@ -550,9 +560,10 @@ public class GUI extends JFrame implements ListSelectionListener,
 			return;
 		}
 
-		final Server selectedServer = serverListModel.getVisibleServerAtIndex(index);
-		
-		if(selectedServer == null)
+		final Server selectedServer = serverListModel
+				.getVisibleServerAtIndex(index);
+
+		if (selectedServer == null)
 			return;
 
 		statusLabel.setText(selectedServer.getStatus().toString());
@@ -588,10 +599,11 @@ public class GUI extends JFrame implements ListSelectionListener,
 			}
 		});
 	}
-	
+
 	public void error(String errorMessage)
 	{
-		JOptionPane.showMessageDialog(this, errorMessage, "An unexpected error occured.", JOptionPane.ERROR_MESSAGE);
+		JOptionPane.showMessageDialog(this, errorMessage,
+				"An unexpected error occured.", JOptionPane.ERROR_MESSAGE);
 	}
 
 	public void addServerWizardClosed(AddServerWizardDataRecorder rec)
@@ -600,12 +612,14 @@ public class GUI extends JFrame implements ListSelectionListener,
 		final String instancesize = rec.instanceSize;
 		final CloudProvider provider = rec.provider;
 
-		if(Server.exists(instancename))
+		if (Server.exists(instancename))
 		{
-			JOptionPane.showMessageDialog(this, "A server with this name already exists.", "Server already exists", JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog(this,
+					"A server with this name already exists.",
+					"Server already exists", JOptionPane.ERROR_MESSAGE);
 			return;
 		}
-		
+
 		try
 		{
 			Server server = provider.startServer(instancename, instancesize);
@@ -696,7 +710,7 @@ public class GUI extends JFrame implements ListSelectionListener,
 			serverListModel.removeServer(server);
 			server.unlink();
 		}
-		
+
 		fillRightPartition();
 	}
 }

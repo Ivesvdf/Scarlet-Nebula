@@ -20,16 +20,15 @@ class InstanceInformationPage extends WizardPage
 	final JTextField instanceNameField = new JTextField();
 	final JComboBox instanceSizeList = new JComboBox();
 
-
 	InstanceInformationPage(CloudProvider provider)
 	{
-		instanceNameField.setText(provider.getName() + "-" + provider.listLinkedServers().size());
+		instanceNameField.setText(provider.getName() + "-"
+				+ provider.listLinkedServers().size());
 		instanceNameField.selectAll();
 		instanceNameField.setPreferredSize(new Dimension(100, 25));
 		add(new JLabel("Instance name:"));
 		add(instanceNameField);
 
-		
 		add(new JLabel("Instance size:"));
 		Collection<String> sizes = provider.getPossibleInstanceSizes();
 		for (String size : sizes)
@@ -38,7 +37,7 @@ class InstanceInformationPage extends WizardPage
 		instanceSizeList.setSelectedIndex(0);
 		add(instanceSizeList);
 	}
-	
+
 	@Override
 	public boolean nextIsEnabled()
 	{
@@ -50,14 +49,14 @@ class InstanceInformationPage extends WizardPage
 	{
 		return true;
 	}
-	
+
 	@Override
 	public WizardPage next(DataRecorder recorder)
 	{
-		AddServerWizardDataRecorder rec = (AddServerWizardDataRecorder)recorder;
-		
+		AddServerWizardDataRecorder rec = (AddServerWizardDataRecorder) recorder;
+
 		rec.instanceName = instanceNameField.getText();
-		rec.instanceSize = (String)instanceSizeList.getSelectedItem();
+		rec.instanceSize = (String) instanceSizeList.getSelectedItem();
 		return null;
 	}
 };

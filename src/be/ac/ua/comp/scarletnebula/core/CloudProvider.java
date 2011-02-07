@@ -72,8 +72,8 @@ public class CloudProvider
 			return;
 		}
 		// TODO: place these somewhere? maybe a menu option
-		assureSSHOnlyFirewall();
-		assureSSHKey();
+		// assureSSHOnlyFirewall();
+		// assureSSHKey();
 	}
 
 	/**

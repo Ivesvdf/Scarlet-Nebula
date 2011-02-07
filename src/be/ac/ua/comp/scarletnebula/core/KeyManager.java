@@ -8,13 +8,15 @@ import java.io.IOException;
 public class KeyManager
 {
 	/**
-	 * Takes a keyname, an actual key and a provider name (for which this key works) and then
-	 * stores the key on disk. 
+	 * Takes a keyname, an actual key and a provider name (for which this key
+	 * works) and then stores the key on disk.
+	 * 
 	 * @param providerClassName
 	 * @param keyname
 	 * @param keystring
 	 */
-	static void addKey(String providerClassName, String keyname, String keystring)
+	static void addKey(String providerClassName, String keyname,
+			String keystring)
 	{
 		// Write key to file
 		String dir = getKeyPath(providerClassName);
@@ -35,7 +37,8 @@ public class KeyManager
 		BufferedWriter out;
 		try
 		{
-			out = new BufferedWriter(new FileWriter(getKeyFilename(providerClassName, keyname)));
+			out = new BufferedWriter(new FileWriter(getKeyFilename(
+					providerClassName, keyname)));
 			out.write(keystring);
 			out.close();
 		}
@@ -45,12 +48,12 @@ public class KeyManager
 			e.printStackTrace();
 		}
 	}
-	
+
 	static String getKeyPath(String providerClassName)
 	{
 		return "keys/" + providerClassName + "/";
 	}
-	
+
 	static String getKeyFilename(String providerClassName, String keyname)
 	{
 		return getKeyPath(providerClassName) + keyname + ".key";

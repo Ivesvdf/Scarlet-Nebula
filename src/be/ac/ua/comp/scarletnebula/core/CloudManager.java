@@ -1,9 +1,11 @@
 package be.ac.ua.comp.scarletnebula.core;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 
 import be.ac.ua.comp.scarletnebula.core.CloudProvider.CloudProviderName;
+import be.ac.ua.comp.scarletnebula.gui.CloudProviderTemplate;
 
 /**
  * Singleton class that can be accessed through CloudManager.get(). E.g.
@@ -16,11 +18,13 @@ import be.ac.ua.comp.scarletnebula.core.CloudProvider.CloudProviderName;
  */
 public class CloudManager
 {
-	HashMap<String, CloudProvider> providers;
+	HashMap<String, CloudProvider> providers = new HashMap<String, CloudProvider>();
+	Collection<CloudProviderTemplate> providerTemplates = new ArrayList<CloudProviderTemplate>();
 
 	private CloudManager()
 	{
-		providers = new HashMap<String, CloudProvider>();
+		populateCloudProviderTemplates();
+
 		try
 		{
 			providers.put("Amazon Web Services", new CloudProvider(
@@ -31,6 +35,27 @@ public class CloudManager
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+
+	private void populateCloudProviderTemplates()
+	{
+		// AWS
+		CloudProviderTemplate aws = new CloudProviderTemplate(
+				"Amazon Elastic Compute Cloud", "org.dasein.cloud.aws.AWSCloud");
+		aws.addEndPoint("EU (Ireland)", "http://ec2.eu-west-1.amazonaws.com");
+		aws.addEndPoint("Asia Pacific (Singapore)",
+				"http://ec2.ap-southeast-1.amazonaws.com");
+		aws.addEndPoint("US-West (Northern California)",
+				"http://ec2.us-west-1.amazonaws.com");
+		aws.addEndPoint("US-East (Northern Virginia)",
+				"http://ec2.us-east-1.amazonaws.com");
+
+		providerTemplates.add(aws);
+
+		// Rackspace
+		CloudProviderTemplate rackspace = new CloudProviderTemplate(
+				"Rackspace (not implemented)", "org.dasein.cloud.aws.AWSCloud");
+		providerTemplates.add(rackspace);
 	}
 
 	/**
@@ -55,6 +80,7 @@ public class CloudManager
 
 	/**
 	 * Returns the names of all linked CloudProviders
+	 * 
 	 * @return
 	 */
 	public Collection<String> getLinkedCloudProviderNames()
@@ -64,6 +90,7 @@ public class CloudManager
 
 	/**
 	 * Returns all linked CloudProviders
+	 * 
 	 * @return
 	 */
 	public Collection<CloudProvider> getLinkedCloudProviders()
@@ -73,6 +100,7 @@ public class CloudManager
 
 	/**
 	 * Returns the CloudProvider with name "name"
+	 * 
 	 * @param name
 	 * @return
 	 */
@@ -82,7 +110,9 @@ public class CloudManager
 	}
 
 	/**
-	 * Returns true if the server with "name" exists in one of the CloudProviders, false otherwise
+	 * Returns true if the server with "name" exists in one of the
+	 * CloudProviders, false otherwise
+	 * 
 	 * @param name
 	 * @return
 	 */
@@ -93,5 +123,10 @@ public class CloudManager
 				return true;
 
 		return false;
+	}
+
+	public Collection<CloudProviderTemplate> getTemplates()
+	{
+		return providerTemplates;
 	}
 }

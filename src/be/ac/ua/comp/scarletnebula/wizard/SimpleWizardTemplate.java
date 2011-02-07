@@ -28,7 +28,7 @@ public class SimpleWizardTemplate extends WizardTemplate
 		window.setLayout(new BorderLayout());
 
 		container.setLayout(new BorderLayout());
-		
+
 		window.add(container, BorderLayout.CENTER);
 		window.add(buttonPanel, BorderLayout.SOUTH);
 	}

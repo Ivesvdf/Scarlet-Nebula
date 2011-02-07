@@ -1,7 +1,5 @@
 package be.ac.ua.comp.scarletnebula.gui.addserverwizard;
 
-import java.awt.Dimension;
-
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 
@@ -21,44 +19,40 @@ public class AddServerWizard extends JDialog implements WizardListener
 
 	public AddServerWizard(JFrame parent, final GUI gui)
 	{
-		super(parent);
 		this.gui = gui;
-		this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-		this.setPreferredSize(new Dimension(400, 300));
-		this.setLocation(0, 0);
-		this.setLocationRelativeTo(null);
-		this.pack();
 
-		// Only show the choose provider page if more than one provider is available. 
+		// Only show the choose provider page if more than one provider is
+		// available.
 		AddServerWizardDataRecorder rec = new AddServerWizardDataRecorder();
-		
+
 		WizardPage firstPage = null;
-		
-		switch(CloudManager.get().getLinkedCloudProviderNames().size())
+
+		switch (CloudManager.get().getLinkedCloudProviderNames().size())
 		{
 			case 0:
-				//TODO: handle zero cloudproviders
-				//throw new Exception("No CloudProviders linked!");
+				// TODO: handle zero cloudproviders
+				// throw new Exception("No CloudProviders linked!");
 				break;
-			case 1: // One provider -- user has to pick this one so skip the page
-				CloudProvider prov = (CloudProvider)CloudManager.get().getLinkedCloudProviders().toArray()[0];
+			case 1: // One provider -- user has to pick this one so skip the
+					// page
+				CloudProvider prov = (CloudProvider) CloudManager.get()
+						.getLinkedCloudProviders().toArray()[0];
 				rec.provider = prov;
 				firstPage = new InstanceInformationPage(prov);
 				break;
 			default:
 				firstPage = new ChooseProviderPage();
-				break;				
+				break;
 		}
 		Wizard wiz = new Wizard(firstPage, rec, new SimpleWizardTemplate());
 		wiz.addWizardListener(this);
-		wiz.start(this);
+		wiz.start("Start new server", 400, 300, parent);
 	}
-
 
 	@Override
 	public void onFinish(DataRecorder recorder)
 	{
-		gui.addServerWizardClosed((AddServerWizardDataRecorder)recorder);
+		gui.addServerWizardClosed((AddServerWizardDataRecorder) recorder);
 	}
 
 	@Override

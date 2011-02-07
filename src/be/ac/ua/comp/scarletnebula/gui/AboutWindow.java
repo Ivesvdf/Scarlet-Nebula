@@ -27,20 +27,17 @@ public class AboutWindow extends JDialog
 
 		JLabel compLogo = new JLabel(new ImageIcon(getClass().getResource(
 				"/images/comp.gif")));
-		compLogo.setBorder(new EmptyBorder(0,20,20,20));
-		
+		compLogo.setBorder(new EmptyBorder(0, 20, 20, 20));
+
 		JLabel progName = new JLabel("Scarlet Nebula");
 		progName.setFont(new Font("SansSerif", Font.PLAIN, 30));
-		progName.setBorder(new EmptyBorder(20,20,20,20));
+		progName.setBorder(new EmptyBorder(20, 20, 20, 20));
 
-		
-
-		
 		JPanel upperPane = new JPanel();
 		upperPane.setLayout(new BorderLayout());
 		upperPane.add(compLogo, BorderLayout.EAST);
 		upperPane.add(progName, BorderLayout.WEST);
-		
+
 		setLayout(new BorderLayout());
 		add(upperPane, BorderLayout.NORTH);
 	}
