@@ -56,4 +56,9 @@ public class AddProviderWizardDataRecorder implements DataRecorder
 		this.name = name;
 	}
 
+	public String getName()
+	{
+		return name;
+	}
+
 }

@@ -14,6 +14,7 @@ import com.jgoodies.forms.layout.FormLayout;
 
 public class ChooseNamePage extends WizardPage
 {
+	private static final long serialVersionUID = 1L;
 	JTextField name = new JTextField();
 
 	ChooseNamePage(AddProviderWizardDataRecorder recorder)
@@ -37,8 +38,8 @@ public class ChooseNamePage extends WizardPage
 
 		// Prefill the textfield with something useful
 
-		name.setText(recorder.getTemplate().getName() + " ("
-				+ recorder.getEndpoint().getName() + ")");
+		name.setText(recorder.getTemplate().getShortName() + " ("
+				+ recorder.getEndpoint().getShortName() + ")");
 		name.setPreferredSize(name.getMinimumSize());
 
 	}

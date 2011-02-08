@@ -41,20 +41,23 @@ public class CloudManager
 	{
 		// AWS
 		CloudProviderTemplate aws = new CloudProviderTemplate(
-				"Amazon Elastic Compute Cloud", "org.dasein.cloud.aws.AWSCloud");
-		aws.addEndPoint("EU (Ireland)", "http://ec2.eu-west-1.amazonaws.com");
-		aws.addEndPoint("Asia Pacific (Singapore)",
+				"Amazon Elastic Compute Cloud", "Amazon EC2",
+				"org.dasein.cloud.aws.AWSCloud");
+		aws.addEndPoint("EU (Ireland)", "EU",
+				"http://ec2.eu-west-1.amazonaws.com");
+		aws.addEndPoint("Asia Pacific (Singapore)", "Asia",
 				"http://ec2.ap-southeast-1.amazonaws.com");
-		aws.addEndPoint("US-West (Northern California)",
+		aws.addEndPoint("US-West (Northern California)", "US-West",
 				"http://ec2.us-west-1.amazonaws.com");
-		aws.addEndPoint("US-East (Northern Virginia)",
+		aws.addEndPoint("US-East (Northern Virginia)", "US-East",
 				"http://ec2.us-east-1.amazonaws.com");
 
 		providerTemplates.add(aws);
 
 		// Rackspace
 		CloudProviderTemplate rackspace = new CloudProviderTemplate(
-				"Rackspace (not implemented)", "org.dasein.cloud.aws.AWSCloud");
+				"Rackspace (not implemented)", "Rackspace",
+				"org.dasein.cloud.aws.AWSCloud");
 		providerTemplates.add(rackspace);
 	}
 
