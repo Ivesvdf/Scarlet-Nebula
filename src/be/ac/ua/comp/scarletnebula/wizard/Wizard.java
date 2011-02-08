@@ -135,6 +135,11 @@ public class Wizard
 	private void next()
 	{
 		WizardPage nextPage = visitedPages.peek().next(recorder);
+
+		// If no next page is given, the wizard shouldn't do anything
+		if (nextPage == null)
+			return;
+
 		visitedPages.push(nextPage);
 		displayPage();
 	}

@@ -31,10 +31,9 @@ public class ProvideAccessPage extends WizardPage
 		// And the textfields below
 		FormLayout layout = new FormLayout(
 				"right:max(40dlu;p), 4dlu, max(50dlu;p), 7dlu", "");
-		// add rows dynamically
+
 		DefaultFormBuilder builder = new DefaultFormBuilder(layout);
 		builder.setDefaultDialogBorder();
-		// builder.appendSeparator("General Information");
 
 		builder.append("API Key", apiKey);
 		builder.nextLine();
@@ -45,10 +44,20 @@ public class ProvideAccessPage extends WizardPage
 	}
 
 	@Override
-	public WizardPage next(DataRecorder recorder)
+	public boolean nextIsEnabled()
 	{
-		// TODO Auto-generated method stub
-		return null;
+		return false;
 	}
 
+	@Override
+	public boolean finishIsEnabled()
+	{
+		return true;
+	}
+
+	@Override
+	public WizardPage next(DataRecorder recorder)
+	{
+		return null;
+	}
 }

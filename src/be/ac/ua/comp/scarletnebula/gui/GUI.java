@@ -128,6 +128,7 @@ public class GUI extends JFrame implements ListSelectionListener,
 				"Managing cloud providers.");
 
 		JMenuItem manageProvidersItem = new JMenuItem("Manage Providers");
+		manageProvidersItem.setMnemonic(KeyEvent.VK_M);
 		manageProvidersItem.addActionListener(new ActionListener()
 		{
 			@Override
