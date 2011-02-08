@@ -58,6 +58,10 @@ public class ProvideAccessPage extends WizardPage
 	@Override
 	public WizardPage next(DataRecorder recorder)
 	{
+		AddProviderWizardDataRecorder rec = (AddProviderWizardDataRecorder) recorder;
+		rec.setApiKey(apiKey.getText());
+		rec.setApiSecret(apiSecret.getText());
+		
 		return null;
 	}
 }

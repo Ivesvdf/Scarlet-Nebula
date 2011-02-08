@@ -52,7 +52,7 @@ public class SelectProviderTemplatePage extends WizardPage
 		}
 
 		AddProviderWizardDataRecorder rec = (AddProviderWizardDataRecorder) recorder;
-		rec.template = template;
+		rec.setTemplate(template);
 		return new SelectEndpointPage(template);
 	}
 
