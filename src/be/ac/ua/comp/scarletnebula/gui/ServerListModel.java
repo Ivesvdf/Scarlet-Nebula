@@ -3,6 +3,7 @@ package be.ac.ua.comp.scarletnebula.gui;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedList;
+
 import javax.swing.AbstractListModel;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;

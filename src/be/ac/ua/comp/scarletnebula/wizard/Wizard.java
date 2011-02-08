@@ -122,7 +122,6 @@ public class Wizard
 		for (Component c : wizardTemplate.container.getComponents())
 		{
 			wizardTemplate.container.remove(c);
-			System.out.println("Deleting one component");
 		}
 
 		for (Component c : page.getComponents())
@@ -143,9 +142,6 @@ public class Wizard
 	private void previous()
 	{
 		visitedPages.pop();
-
-		System.out.println(visitedPages.size());
-		System.out.println(visitedPages.peek().toString());
 		displayPage();
 	}
 

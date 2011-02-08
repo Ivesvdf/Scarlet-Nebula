@@ -3,6 +3,7 @@ package be.ac.ua.comp.scarletnebula.core;
 import java.io.File;
 import java.io.IOException;
 import java.security.PublicKey;
+
 import net.schmizz.sshj.SSHClient;
 import net.schmizz.sshj.connection.ConnectionException;
 import net.schmizz.sshj.connection.channel.direct.Session;

@@ -18,7 +18,7 @@ public class SelectProviderTemplatePage extends WizardPage
 	private static final long serialVersionUID = 9100766686174798829L;
 
 	JList providerlist = null;
-	
+
 	SelectProviderTemplatePage()
 	{
 		Collection<String> names = new ArrayList<String>();
@@ -41,17 +41,17 @@ public class SelectProviderTemplatePage extends WizardPage
 	@Override
 	public WizardPage next(DataRecorder recorder)
 	{
-		String name = (String)providerlist.getSelectedValue();
+		String name = (String) providerlist.getSelectedValue();
 		CloudProviderTemplate template = null;
-		
+
 		// Retreive the classname from name
 		for (CloudProviderTemplate t : CloudManager.get().getTemplates())
 		{
-			if(t.getName().equals(name))
-				template = t;		
+			if (t.getName().equals(name))
+				template = t;
 		}
-		
-		AddProviderWizardDataRecorder rec = (AddProviderWizardDataRecorder)recorder;
+
+		AddProviderWizardDataRecorder rec = (AddProviderWizardDataRecorder) recorder;
 		rec.template = template;
 		return new SelectEndpointPage(template);
 	}

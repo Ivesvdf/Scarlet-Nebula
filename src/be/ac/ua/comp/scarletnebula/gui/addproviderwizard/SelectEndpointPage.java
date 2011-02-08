@@ -17,16 +17,16 @@ public class SelectEndpointPage extends WizardPage
 	private static final long serialVersionUID = 1253358185847124985L;
 	JList endpoints = null;
 	CloudProviderTemplate template = null;
-	
+
 	SelectEndpointPage(CloudProviderTemplate template)
 	{
 		this.template = template;
-		
+
 		Collection<String> endpointNames = new ArrayList<String>();
-		
-		for(CloudProviderTemplate.Endpoint e : template.getEndPoints())
+
+		for (CloudProviderTemplate.Endpoint e : template.getEndPoints())
 			endpointNames.add(e.getName());
-			
+
 		endpoints = new JList(endpointNames.toArray());
 		endpoints.setSelectedIndex(0);
 
@@ -37,28 +37,27 @@ public class SelectEndpointPage extends WizardPage
 		// providerlist.setPreferredSize(new Dimension(260, 20));
 		setLayout(new BorderLayout());
 		add(scrollPane);
-		
+
 	}
 
 	@Override
 	public WizardPage next(DataRecorder recorder)
 	{
 		CloudProviderTemplate.Endpoint endpoint = null;
-		
-		for(CloudProviderTemplate.Endpoint e : template.getEndPoints())
+
+		for (CloudProviderTemplate.Endpoint e : template.getEndPoints())
 		{
-			if(e.getName().equals((String)endpoints.getSelectedValue()))
+			if (e.getName().equals((String) endpoints.getSelectedValue()))
 			{
 				endpoint = e;
 				break;
 			}
 		}
-		
-		AddProviderWizardDataRecorder rec = (AddProviderWizardDataRecorder)recorder;
+
+		AddProviderWizardDataRecorder rec = (AddProviderWizardDataRecorder) recorder;
 		rec.endpoint = endpoint;
-		
-		System.out.println("Endpoint's url is " + rec.endpoint.getURL());
-		return null;
+
+		return new ProvideAccessPage();
 	}
 
 }
