@@ -1,12 +1,9 @@
 package be.ac.ua.comp.scarletnebula.gui.addproviderwizard;
 
 import java.awt.BorderLayout;
-import java.awt.Dimension;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import javax.swing.Box;
-import javax.swing.JComboBox;
 import javax.swing.JList;
 import javax.swing.JScrollPane;
 import javax.swing.border.EmptyBorder;
@@ -20,8 +17,8 @@ public class SelectProviderTemplatePage extends WizardPage
 {
 	private static final long serialVersionUID = 9100766686174798829L;
 
-	JComboBox combo = new JComboBox();
-
+	JList providerlist = null;
+	
 	SelectProviderTemplatePage()
 	{
 		Collection<String> names = new ArrayList<String>();
@@ -29,7 +26,9 @@ public class SelectProviderTemplatePage extends WizardPage
 		{
 			names.add(t.getName());
 		}
-		JList providerlist = new JList(names.toArray());
+		providerlist = new JList(names.toArray());
+		providerlist.setSelectedIndex(0);
+
 		JScrollPane scrollPane = new JScrollPane(providerlist);
 		scrollPane.setBorder(new EmptyBorder(20, 20, 20, 20));
 		scrollPane
@@ -42,8 +41,19 @@ public class SelectProviderTemplatePage extends WizardPage
 	@Override
 	public WizardPage next(DataRecorder recorder)
 	{
-		// TODO Auto-generated method stub
-		return null;
+		String name = (String)providerlist.getSelectedValue();
+		CloudProviderTemplate template = null;
+		
+		// Retreive the classname from name
+		for (CloudProviderTemplate t : CloudManager.get().getTemplates())
+		{
+			if(t.getName().equals(name))
+				template = t;		
+		}
+		
+		AddProviderWizardDataRecorder rec = (AddProviderWizardDataRecorder)recorder;
+		rec.template = template;
+		return new SelectEndpointPage(template);
 	}
 
 }

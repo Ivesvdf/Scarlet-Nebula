@@ -16,7 +16,6 @@ class ChooseProviderPage extends WizardPage
 
 	ChooseProviderPage()
 	{
-
 		// Create the combo box, select item at index 4.
 		// Indices start at 0, so 4 specifies the pig.
 		providerList.setName("provider");

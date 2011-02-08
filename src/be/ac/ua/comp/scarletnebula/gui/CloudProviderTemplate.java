@@ -5,15 +5,30 @@ import java.util.Collection;
 
 public class CloudProviderTemplate
 {
-	class Endpoint
+	public class Endpoint
 	{
-		String url;
-		String name;
+		private String url;
+		private String name;
 
 		public Endpoint(String name, String url)
 		{
-			this.name = name;
+			this.setName(name);
 			this.url = url;
+		}
+
+		public void setName(String name)
+		{
+			this.name = name;
+		}
+
+		public String getName()
+		{
+			return name;
+		}
+
+		public String getURL()
+		{
+			return url;
 		}
 	}
 
@@ -64,5 +79,10 @@ public class CloudProviderTemplate
 	public String getName()
 	{
 		return name;
+	}
+
+	public String getClassname()
+	{
+		return classname;
 	}
 }
