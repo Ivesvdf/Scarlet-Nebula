@@ -9,6 +9,7 @@ public class AddProviderWizardDataRecorder implements DataRecorder
 	private CloudProviderTemplate.Endpoint endpoint;
 	private String apiKey;
 	private String apiSecret;
+	private String name;
 
 	public CloudProviderTemplate getTemplate()
 	{
@@ -48,6 +49,11 @@ public class AddProviderWizardDataRecorder implements DataRecorder
 	public void setApiSecret(String apiSecret)
 	{
 		this.apiSecret = apiSecret;
+	}
+
+	public void setName(String name)
+	{
+		this.name = name;
 	}
 
 }

@@ -44,24 +44,12 @@ public class ProvideAccessPage extends WizardPage
 	}
 
 	@Override
-	public boolean nextIsEnabled()
-	{
-		return false;
-	}
-
-	@Override
-	public boolean finishIsEnabled()
-	{
-		return true;
-	}
-
-	@Override
 	public WizardPage next(DataRecorder recorder)
 	{
 		AddProviderWizardDataRecorder rec = (AddProviderWizardDataRecorder) recorder;
 		rec.setApiKey(apiKey.getText());
 		rec.setApiSecret(apiSecret.getText());
-		
-		return null;
+
+		return new ChooseNamePage(rec);
 	}
 }

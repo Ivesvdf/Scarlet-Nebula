@@ -22,13 +22,13 @@ public class AddProviderWizard extends Wizard implements WizardListener
 	@Override
 	public void onFinish(DataRecorder recorder)
 	{
-		
+
 	}
 
 	@Override
 	public void onCancel(DataRecorder recorder)
 	{
-		
+
 	}
 
 }
