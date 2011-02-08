@@ -4,8 +4,10 @@ import java.awt.BorderLayout;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import javax.swing.BorderFactory;
 import javax.swing.JList;
 import javax.swing.JScrollPane;
+import javax.swing.border.BevelBorder;
 import javax.swing.border.EmptyBorder;
 
 import be.ac.ua.comp.scarletnebula.gui.CloudProviderTemplate;
@@ -29,11 +31,11 @@ public class SelectEndpointPage extends WizardPage
 
 		endpoints = new JList(endpointNames.toArray());
 		endpoints.setSelectedIndex(0);
-
+		endpoints.setBorder(BorderFactory
+				.createBevelBorder(BevelBorder.LOWERED));
 		JScrollPane scrollPane = new JScrollPane(endpoints);
 		scrollPane.setBorder(new EmptyBorder(20, 20, 20, 20));
-		scrollPane
-				.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+
 		// providerlist.setPreferredSize(new Dimension(260, 20));
 		setLayout(new BorderLayout());
 		add(scrollPane);
@@ -47,7 +49,7 @@ public class SelectEndpointPage extends WizardPage
 
 		for (CloudProviderTemplate.Endpoint e : template.getEndPoints())
 		{
-			if (e.getName().equals((String) endpoints.getSelectedValue()))
+			if (e.getName().equals(endpoints.getSelectedValue()))
 			{
 				endpoint = e;
 				break;
