@@ -8,7 +8,7 @@ import be.ac.ua.comp.scarletnebula.core.Server;
 
 public class Main
 {
-	public static void main(String[] args)
+	/*public static void main(String[] args)
 	{
 		try
 		{
@@ -91,6 +91,6 @@ public class Main
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-	}
+	}*/
 
 }

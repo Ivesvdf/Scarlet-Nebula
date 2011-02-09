@@ -53,8 +53,7 @@ public class Server
 		try
 		{
 			return new SSHCommandConnection(serverImpl.getPublicDnsAddress(),
-					KeyManager.getKeyFilename(
-							provider.getUnderlyingClassname(), keypair));
+					KeyManager.getKeyFilename(provider.getName(), keypair));
 		}
 		catch (IOException e)
 		{

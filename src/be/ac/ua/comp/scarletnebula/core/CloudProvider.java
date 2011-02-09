@@ -2,12 +2,17 @@ package be.ac.ua.comp.scarletnebula.core;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.Properties;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.dasein.cloud.CloudException;
 import org.dasein.cloud.InternalException;
 import org.dasein.cloud.services.server.ServerServices;
@@ -22,45 +27,49 @@ import org.dasein.cloud.services.server.ServerSize;
  */
 public class CloudProvider
 {
+	private static Log log = LogFactory.getLog(CloudProvider.class);
+
 	public enum CloudProviderName
 	{
 		AWS
 	};
 
 	private org.dasein.cloud.CloudProvider providerImpl;
-	private Properties providerSpecificProperties;
 	private ServerServices serverServices;
-	private String providerClassName;
 
-	private ArrayList<Server> servers;
+	private String name;
+	private String providerClassName;
+	private String apiSecret;
+	private String apiKey;
+	private String endpoint;
+
+	private ArrayList<Server> servers = new ArrayList<Server>();
 
 	// TODO: Make this a class hierarchy
-	public CloudProvider(CloudProviderName name) throws Exception
+	public CloudProvider(String name)
 	{
-		servers = new ArrayList<Server>();
-
-		switch (name)
-		{
-			case AWS:
-				providerClassName = "org.dasein.cloud.aws.AWSCloud";
-				break;
-			default:
-				throw new Exception("Unsupported cloudprovider.");
-		}
+		load(name);
 
 		try
 		{
-			providerSpecificProperties = new Properties();
-			providerSpecificProperties.load(new FileInputStream(
-					providerClassName + ".properties"));
+			providerImpl = (org.dasein.cloud.CloudProvider) Class.forName(
+					providerClassName).newInstance();
 		}
-		catch (IOException e)
+		catch (InstantiationException e)
 		{
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-
-		providerImpl = (org.dasein.cloud.CloudProvider) Class.forName(
-				providerClassName).newInstance();
+		catch (IllegalAccessException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		catch (ClassNotFoundException e)
+		{
+			log.fatal("Underlying cloud provider class " + providerClassName
+					+ " failed creation.");
+		}
 
 		providerImpl.connect(getCurrentContext());
 
@@ -74,6 +83,28 @@ public class CloudProvider
 		// TODO: place these somewhere? maybe a menu option
 		// assureSSHOnlyFirewall();
 		// assureSSHKey();
+	}
+
+	private void load(String name)
+	{
+		Properties properties = null;
+
+		try
+		{
+			properties = new Properties();
+			properties.load(new FileInputStream("providers/" + name
+					+ ".properties"));
+		}
+		catch (IOException e)
+		{
+			e.printStackTrace();
+		}
+
+		this.name = name;
+		this.providerClassName = properties.getProperty("class");
+		this.apiKey = properties.getProperty("apikey");
+		this.apiSecret = properties.getProperty("apisecret");
+		this.endpoint = properties.getProperty("endpoint");
 	}
 
 	/**
@@ -326,9 +357,9 @@ public class CloudProvider
 	 * 
 	 * @return
 	 */
-	String getPreferredEndpoint()
+	String getEndpoint()
 	{
-		return providerSpecificProperties.getProperty("preferredendpoint");
+		return endpoint;
 	}
 
 	/**
@@ -353,15 +384,13 @@ public class CloudProvider
 	private org.dasein.cloud.ProviderContext getCurrentContext()
 	{
 		String accountNumber = "0";
-		String apiKey = providerSpecificProperties.getProperty("apikey");
-		String privateKey = providerSpecificProperties.getProperty("apisecret");
 
 		org.dasein.cloud.ProviderContext context = new org.dasein.cloud.ProviderContext();
 
 		context.setAccountNumber(accountNumber);
 		context.setAccessPublic(apiKey.getBytes());
-		context.setAccessPrivate(privateKey.getBytes());
-		context.setEndpoint(getPreferredEndpoint());
+		context.setAccessPrivate(apiSecret.getBytes());
+		context.setEndpoint(getEndpoint());
 
 		return context;
 	}
@@ -489,8 +518,7 @@ public class CloudProvider
 	 */
 	public String getName()
 	{
-		// TODO: Change this to the CloudProvider's unique identifier
-		return getUnderlyingClassname();
+		return name;
 	}
 
 	/**
@@ -499,6 +527,76 @@ public class CloudProvider
 	 */
 	String getSaveFileDir()
 	{
-		return "servers/" + getUnderlyingClassname().toString() + "/";
+		return "servers/" + getName() + "/";
+	}
+
+	/**
+	 * Saves the file describing this CloudProvider. If a cloudprovider by the
+	 * name "providername" already exists, the savefile will be overwritten.
+	 * 
+	 * @param providername
+	 *            The provider's name
+	 * @param providerclass
+	 *            The provider's class (e.g. org.dasein.cloud.aws.AWSCloud)
+	 * @param endpoint
+	 *            The endpoint the connection is based on
+	 * @param apikey
+	 *            Access id
+	 * @param apisecret
+	 *            Access key
+	 */
+	static void store(String providername, String providerclass,
+			String endpoint, String apikey, String apisecret)
+	{
+		// First assure the providers/ directory exists
+		File dir = new File("providers");
+
+		if (!dir.exists() || !dir.isDirectory())
+		{
+			if (!dir.mkdir())
+			{
+				log.error("Could not create providers/ directory.");
+			}
+		}
+
+		// Now write to the file properties file
+		Properties prop = new Properties();
+
+		prop.setProperty("class", providerclass);
+		prop.setProperty("apikey", apikey);
+		prop.setProperty("apisecret", apisecret);
+		prop.setProperty("endpoint", endpoint);
+
+		try
+		{
+			prop.store(new FileOutputStream("providers/" + providername
+					+ ".properties"), null);
+		}
+		catch (FileNotFoundException e)
+		{
+			log.error("Properties file describing cloud provider could not be created.");
+		}
+		catch (IOException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+	static Collection<String> getProviderNames()
+	{
+		File dir = new File("providers");
+
+		if (!dir.exists() || !dir.isDirectory())
+			return new ArrayList<String>();
+
+		Collection<String> files = Arrays.asList(dir.list());
+		Collection<String> rv = new ArrayList<String>(files.size());
+
+		for (String file : files)
+		{
+			rv.add(file.replaceFirst(".properties$", ""));
+		}
+		return rv;
 	}
 }

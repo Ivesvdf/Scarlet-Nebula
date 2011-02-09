@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 
-import be.ac.ua.comp.scarletnebula.core.CloudProvider.CloudProviderName;
 import be.ac.ua.comp.scarletnebula.gui.CloudProviderTemplate;
 
 /**
@@ -25,15 +24,10 @@ public class CloudManager
 	{
 		populateCloudProviderTemplates();
 
-		try
+		// Load all providers and put them in the list
+		for (String provname : CloudProvider.getProviderNames())
 		{
-			providers.put("Amazon Web Services", new CloudProvider(
-					CloudProviderName.AWS));
-		}
-		catch (Exception e)
-		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			providers.put(provname, new CloudProvider(provname));
 		}
 	}
 
@@ -131,5 +125,16 @@ public class CloudManager
 	public Collection<CloudProviderTemplate> getTemplates()
 	{
 		return providerTemplates;
+	}
+
+	public void registerNewCloudProvider(String name, String classname,
+			String endpoint, String apiKey, String apiSecret)
+	{
+		// Save to file and then read from file -- the easiest way to create a
+		// new CloudProvider
+		CloudProvider.store(name, classname, endpoint, apiKey, apiSecret);
+
+		CloudProvider prov = new CloudProvider(name);
+		providers.put(name, prov);
 	}
 }

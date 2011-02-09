@@ -2,6 +2,7 @@ package be.ac.ua.comp.scarletnebula.gui.addproviderwizard;
 
 import java.util.Collection;
 
+import be.ac.ua.comp.scarletnebula.core.CloudManager;
 import be.ac.ua.comp.scarletnebula.gui.CloudProviderTemplate;
 import be.ac.ua.comp.scarletnebula.wizard.DataRecorder;
 import be.ac.ua.comp.scarletnebula.wizard.SimpleWizardTemplate;
@@ -22,6 +23,11 @@ public class AddProviderWizard extends Wizard implements WizardListener
 	@Override
 	public void onFinish(DataRecorder recorder)
 	{
+		AddProviderWizardDataRecorder rec = (AddProviderWizardDataRecorder) recorder;
+
+		CloudManager.get().registerNewCloudProvider(rec.getName(),
+				rec.getTemplate().getClassname(), rec.getEndpoint().getURL(),
+				rec.getApiKey(), rec.getApiSecret());
 
 	}
 
