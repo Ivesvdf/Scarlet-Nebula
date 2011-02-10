@@ -10,6 +10,7 @@ import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JList;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.border.BevelBorder;
@@ -76,6 +77,25 @@ public class ManageProvidersWindow extends JDialog
 			public void actionPerformed(ActionEvent e)
 			{
 				int index = providerList.getSelectedIndex();
+
+				// No selection
+				if (index < 0)
+					return;
+
+				int answer = JOptionPane
+						.showConfirmDialog(
+								ManageProvidersWindow.this,
+								"Removing a CloudProvider will unlink all servers registered with "
+										+ "this CloudProvider (without terminating them!). \n"
+										+ "It will also permanently delete all configuration "
+										+ "information associated with this CloudProvider.\n "
+										+ "\nDo you wish to proceed?");
+
+				// Only proceed if the user clicked yes
+				if (answer != JOptionPane.YES_OPTION)
+				{
+					return;
+				}
 
 				String provname = (String) providerListModel.get(index);
 				CloudManager.get().deleteCloudProvider(provname);
