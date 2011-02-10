@@ -71,6 +71,8 @@ public class GUI extends JFrame implements ListSelectionListener,
 	private JLabel sizeLabel;
 	private JLabel imageLabel;
 
+	private Statusbar statusbar = new Statusbar();
+
 	public GUI()
 	{
 		try
@@ -105,7 +107,12 @@ public class GUI extends JFrame implements ListSelectionListener,
 				leftPartition, rightPartition);
 		splitPane.setDividerSize(4);
 		splitPane.setDividerLocation(160);
+
+		// setLayout(new BorderLayout());
 		add(splitPane);
+		add(statusbar, BorderLayout.SOUTH);
+
+		adjustStatusbar();
 
 		setTitle("Scarlet Nebula");
 		setSize(600, 400);
@@ -117,6 +124,11 @@ public class GUI extends JFrame implements ListSelectionListener,
 
 		addInitialServers();
 		addMenubar();
+	}
+
+	private void adjustStatusbar()
+	{
+		statusbar.setText("x servers running");
 	}
 
 	private void addMenubar()
