@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.Random;
 
+import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
@@ -415,6 +416,7 @@ public class GUI extends JFrame implements ListSelectionListener,
 		// Create the list and put it in a scroll pane.
 		serverListModel = new ServerListModel();
 		serverList = new ServerList(serverListModel, this);
+		serverList.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 		JScrollPane serverScrollPane = new JScrollPane(serverList);
 
 		ImageIcon addIcon = new ImageIcon(getClass().getResource(
