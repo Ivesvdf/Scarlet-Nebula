@@ -6,6 +6,7 @@ import java.awt.event.ActionListener;
 
 import javax.swing.BorderFactory;
 import javax.swing.DefaultListModel;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
@@ -45,7 +46,8 @@ public class ManageProvidersWindow extends JDialog
 
 		setLayout(new BorderLayout());
 
-		JButton addButton = new JButton("+");
+		JButton addButton = new JButton(new ImageIcon(getClass().getResource(
+				"/images/add22.png")));
 		addButton.addActionListener(new ActionListener()
 		{
 			@Override
@@ -67,10 +69,12 @@ public class ManageProvidersWindow extends JDialog
 			}
 		});
 
-		JButton modifyButton = new JButton("?");
+		JButton modifyButton = new JButton(new ImageIcon(getClass()
+				.getResource("/images/modify22.png")));
 		modifyButton.setEnabled(false);
 
-		JButton removeButton = new JButton("-");
+		JButton removeButton = new JButton(new ImageIcon(getClass()
+				.getResource("/images/remove22.png")));
 		removeButton.addActionListener(new ActionListener()
 		{
 			@Override
