@@ -41,7 +41,6 @@ import be.ac.ua.comp.scarletnebula.core.CloudProvider;
 import be.ac.ua.comp.scarletnebula.core.Server;
 import be.ac.ua.comp.scarletnebula.core.ServerChangedObserver;
 import be.ac.ua.comp.scarletnebula.core.ServerDisappearedException;
-import be.ac.ua.comp.scarletnebula.gui.addproviderwizard.AddProviderWizard;
 import be.ac.ua.comp.scarletnebula.gui.addserverwizard.AddServerWizard;
 import be.ac.ua.comp.scarletnebula.gui.addserverwizard.AddServerWizardDataRecorder;
 
@@ -145,7 +144,8 @@ public class GUI extends JFrame implements ListSelectionListener,
 			@Override
 			public void actionPerformed(ActionEvent e)
 			{
-				new AddProviderWizard(CloudManager.get().getTemplates());
+				new ManageProvidersWindow(GUI.this);
+				// new AddProviderWizard(CloudManager.get().getTemplates());
 			}
 		});
 
