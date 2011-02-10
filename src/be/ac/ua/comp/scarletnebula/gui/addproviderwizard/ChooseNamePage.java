@@ -3,8 +3,10 @@ package be.ac.ua.comp.scarletnebula.gui.addproviderwizard;
 import java.awt.BorderLayout;
 
 import javax.swing.BorderFactory;
+import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 
+import be.ac.ua.comp.scarletnebula.core.CloudManager;
 import be.ac.ua.comp.scarletnebula.gui.WrappableLabel;
 import be.ac.ua.comp.scarletnebula.wizard.DataRecorder;
 import be.ac.ua.comp.scarletnebula.wizard.WizardPage;
@@ -48,20 +50,28 @@ public class ChooseNamePage extends WizardPage
 	public WizardPage next(DataRecorder recorder)
 	{
 		AddProviderWizardDataRecorder rec = (AddProviderWizardDataRecorder) recorder;
-		rec.setName(name.getText());
+		String providerName = name.getText();
 
-		return null;
+		// Check to see if this name hasn't been taken
+		for (String aProviderName : CloudManager.get()
+				.getLinkedCloudProviderNames())
+		{
+			if (aProviderName.equals(providerName))
+			{
+				JOptionPane
+						.showMessageDialog(
+								this,
+								"The name you provided for this CloudProvider is already in use. Please choose another one.",
+								"CloudProvider name in use",
+								JOptionPane.ERROR_MESSAGE);
+				return null;
+			}
+
+		}
+
+		rec.setName(providerName);
+
+		return new FinishPage(rec);
 	}
 
-	@Override
-	public boolean nextIsEnabled()
-	{
-		return false;
-	}
-
-	@Override
-	public boolean finishIsEnabled()
-	{
-		return true;
-	}
 }
