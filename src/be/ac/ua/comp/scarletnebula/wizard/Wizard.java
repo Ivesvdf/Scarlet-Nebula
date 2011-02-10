@@ -1,6 +1,7 @@
 package be.ac.ua.comp.scarletnebula.wizard;
 
 import java.awt.Component;
+import java.awt.Dialog;
 import java.awt.Dimension;
 import java.awt.Frame;
 import java.awt.event.ActionEvent;
@@ -49,9 +50,31 @@ public class Wizard
 	 * @param parent
 	 *            Owner of the window, null if no owner
 	 */
-	public void start(String title, int width, int height, Frame parent)
+	public void startModal(String title, int width, int height, Dialog parent)
 	{
-		JDialog dialog = new JDialog(parent);
+		JDialog dialog = new JDialog(parent, true);
+		configureDialog(title, width, height, dialog);
+	}
+
+	/**
+	 * Start the wizard, and do so in a window the Wizard creates itself
+	 * 
+	 * @param width
+	 *            Width of the window
+	 * @param height
+	 *            Height of the window
+	 * @param parent
+	 *            Owner of the window, null if no owner
+	 */
+	public void startModal(String title, int width, int height, Frame parent)
+	{
+		JDialog dialog = new JDialog(parent, true);
+		configureDialog(title, width, height, dialog);
+	}
+
+	private void configureDialog(String title, int width, int height,
+			JDialog dialog)
+	{
 		dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 		dialog.setPreferredSize(new Dimension(width, height));
 		dialog.setLocation(0, 0);

@@ -145,7 +145,6 @@ public class GUI extends JFrame implements ListSelectionListener,
 			public void actionPerformed(ActionEvent e)
 			{
 				new ManageProvidersWindow(GUI.this);
-				// new AddProviderWizard(CloudManager.get().getTemplates());
 			}
 		});
 

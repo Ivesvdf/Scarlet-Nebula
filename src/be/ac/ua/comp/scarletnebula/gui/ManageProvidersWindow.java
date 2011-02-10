@@ -1,8 +1,11 @@
 package be.ac.ua.comp.scarletnebula.gui;
 
 import java.awt.BorderLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.BorderFactory;
+import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
@@ -10,6 +13,12 @@ import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.border.BevelBorder;
+
+import be.ac.ua.comp.scarletnebula.core.CloudManager;
+import be.ac.ua.comp.scarletnebula.gui.addproviderwizard.AddProviderWizard;
+import be.ac.ua.comp.scarletnebula.gui.addproviderwizard.AddProviderWizardDataRecorder;
+import be.ac.ua.comp.scarletnebula.wizard.DataRecorder;
+import be.ac.ua.comp.scarletnebula.wizard.WizardListener;
 
 public class ManageProvidersWindow extends JDialog
 {
@@ -23,9 +32,12 @@ public class ManageProvidersWindow extends JDialog
 		setLocationRelativeTo(null);
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 
-		JList providerList = new JList();
+		final DefaultListModel providerListModel = new DefaultListModel();
+		final JList providerList = new JList(providerListModel);
 		providerList.setBorder(BorderFactory
 				.createBevelBorder(BevelBorder.LOWERED));
+
+		fillProviderList(providerListModel);
 
 		JScrollPane providerListScrollPane = new JScrollPane(providerList);
 		providerListScrollPane.setBorder(BorderFactory.createEmptyBorder(20,
@@ -34,6 +46,42 @@ public class ManageProvidersWindow extends JDialog
 		setLayout(new BorderLayout());
 
 		JButton addButton = new JButton("+");
+		addButton.addActionListener(new ActionListener()
+		{
+			@Override
+			public void actionPerformed(ActionEvent e)
+			{
+				AddProviderWizard wiz = new AddProviderWizard(CloudManager
+						.get().getTemplates());
+
+				wiz.addWizardListener(new WizardListener()
+				{
+
+					@Override
+					public void onFinish(DataRecorder recorder)
+					{
+						AddProviderWizardDataRecorder rec = (AddProviderWizardDataRecorder) recorder;
+
+						CloudManager.get().registerNewCloudProvider(
+								rec.getName(),
+								rec.getTemplate().getClassname(),
+								rec.getEndpoint().getURL(), rec.getApiKey(),
+								rec.getApiSecret());
+
+						providerListModel.addElement(rec.getName());
+					}
+
+					@Override
+					public void onCancel(DataRecorder recorder)
+					{
+						// Do nothing...
+					}
+				});
+
+				wiz.startModal(ManageProvidersWindow.this);
+			}
+		});
+
 		JButton modifyButton = new JButton("?");
 		JButton removeButton = new JButton("-");
 
@@ -48,4 +96,11 @@ public class ManageProvidersWindow extends JDialog
 		setVisible(true);
 	}
 
+	private void fillProviderList(DefaultListModel providerListModel)
+	{
+		for (String name : CloudManager.get().getLinkedCloudProviderNames())
+		{
+			providerListModel.addElement(name);
+		}
+	}
 }

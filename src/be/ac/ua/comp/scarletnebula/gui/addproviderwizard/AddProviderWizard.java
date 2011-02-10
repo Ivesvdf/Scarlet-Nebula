@@ -2,39 +2,23 @@ package be.ac.ua.comp.scarletnebula.gui.addproviderwizard;
 
 import java.util.Collection;
 
-import be.ac.ua.comp.scarletnebula.core.CloudManager;
+import javax.swing.JDialog;
+
 import be.ac.ua.comp.scarletnebula.gui.CloudProviderTemplate;
-import be.ac.ua.comp.scarletnebula.wizard.DataRecorder;
 import be.ac.ua.comp.scarletnebula.wizard.SimpleWizardTemplate;
 import be.ac.ua.comp.scarletnebula.wizard.Wizard;
-import be.ac.ua.comp.scarletnebula.wizard.WizardListener;
 
-public class AddProviderWizard extends Wizard implements WizardListener
+public class AddProviderWizard extends Wizard
 {
 
 	public AddProviderWizard(Collection<CloudProviderTemplate> templates)
 	{
 		super(new SelectProviderTemplatePage(),
 				new AddProviderWizardDataRecorder(), new SimpleWizardTemplate());
-		start("Add a new Cloud Provider", 400, 300, null);
-		addWizardListener(this);
 	}
 
-	@Override
-	public void onFinish(DataRecorder recorder)
+	public void startModal(JDialog parent)
 	{
-		AddProviderWizardDataRecorder rec = (AddProviderWizardDataRecorder) recorder;
-
-		CloudManager.get().registerNewCloudProvider(rec.getName(),
-				rec.getTemplate().getClassname(), rec.getEndpoint().getURL(),
-				rec.getApiKey(), rec.getApiSecret());
-
+		startModal("Add a new Cloud Provider", 400, 300, parent);
 	}
-
-	@Override
-	public void onCancel(DataRecorder recorder)
-	{
-
-	}
-
 }

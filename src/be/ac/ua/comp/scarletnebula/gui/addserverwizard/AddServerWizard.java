@@ -46,7 +46,7 @@ public class AddServerWizard extends JDialog implements WizardListener
 		}
 		Wizard wiz = new Wizard(firstPage, rec, new SimpleWizardTemplate());
 		wiz.addWizardListener(this);
-		wiz.start("Start new server", 400, 300, parent);
+		wiz.startModal("Start new server", 400, 300, gui);
 	}
 
 	@Override
