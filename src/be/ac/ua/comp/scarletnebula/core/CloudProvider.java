@@ -92,8 +92,7 @@ public class CloudProvider
 		try
 		{
 			properties = new Properties();
-			properties.load(new FileInputStream("providers/" + name
-					+ ".properties"));
+			properties.load(new FileInputStream(getConfigfileName(name)));
 		}
 		catch (IOException e)
 		{
@@ -569,8 +568,7 @@ public class CloudProvider
 
 		try
 		{
-			prop.store(new FileOutputStream("providers/" + providername
-					+ ".properties"), null);
+			prop.store(new FileOutputStream(getConfigfileName(providername)), null);
 		}
 		catch (FileNotFoundException e)
 		{
@@ -581,6 +579,11 @@ public class CloudProvider
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+
+	static String getConfigfileName(String providername)
+	{
+		return "providers/" + providername + ".properties";
 	}
 
 	static Collection<String> getProviderNames()

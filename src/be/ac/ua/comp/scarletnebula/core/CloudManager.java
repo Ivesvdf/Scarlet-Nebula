@@ -1,5 +1,6 @@
 package be.ac.ua.comp.scarletnebula.core;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -136,5 +137,35 @@ public class CloudManager
 
 		CloudProvider prov = new CloudProvider(name);
 		providers.put(name, prov);
+	}
+
+	public void deleteCloudProvider(String provname)
+	{
+		CloudProvider provider = providers.get(provname);
+		providers.remove(provname);
+
+		// Remove all of his servers
+		for (Server server : provider.listLinkedServers())
+			server.unlink();
+
+		// Remove his server directory
+		File serverdir = new File("servers/" + provname);
+
+		if (serverdir.list() != null)
+		{
+			// If there are still files in the directory, delete them
+			for (String file : serverdir.list())
+			{
+				File f = new File(file);
+				f.delete();
+			}
+		}
+
+		// Now delete the dir itself
+		serverdir.delete();
+
+		// And delete his configfile
+		File config = new File(CloudProvider.getConfigfileName(provname));
+		config.delete();
 	}
 }

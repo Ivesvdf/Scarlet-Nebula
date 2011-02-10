@@ -36,6 +36,7 @@ public class ManageProvidersWindow extends JDialog
 				.createBevelBorder(BevelBorder.LOWERED));
 
 		fillProviderList(providerListModel);
+		providerList.setSelectedIndex(0);
 
 		JScrollPane providerListScrollPane = new JScrollPane(providerList);
 		providerListScrollPane.setBorder(BorderFactory.createEmptyBorder(20,
@@ -66,7 +67,22 @@ public class ManageProvidersWindow extends JDialog
 		});
 
 		JButton modifyButton = new JButton("?");
+		modifyButton.setEnabled(false);
+
 		JButton removeButton = new JButton("-");
+		removeButton.addActionListener(new ActionListener()
+		{
+			@Override
+			public void actionPerformed(ActionEvent e)
+			{
+				int index = providerList.getSelectedIndex();
+
+				String provname = (String) providerListModel.get(index);
+				CloudManager.get().deleteCloudProvider(provname);
+
+				providerListModel.remove(index);
+			}
+		});
 
 		JPanel buttonPanel = new JPanel();
 		buttonPanel.setBorder(BorderFactory.createEmptyBorder(0, 20, 20, 20));
