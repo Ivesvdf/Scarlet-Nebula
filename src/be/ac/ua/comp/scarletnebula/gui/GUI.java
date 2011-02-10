@@ -15,7 +15,6 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JList;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
@@ -55,21 +54,21 @@ public class GUI extends JFrame implements ListSelectionListener,
 	private static Log log = LogFactory.getLog(GUI.class);
 
 	private static final long serialVersionUID = 1L;
-	private JList serverList;
+	private ServerList serverList;
 	private ServerListModel serverListModel;
 
-	private JPanel configurationTab;
-	private JPanel overviewTab;
-	private JPanel statisticsTab;
-	private JPanel communicationTab;
+	private JPanel configurationTab = new JPanel();
+	private JPanel overviewTab = new JPanel();
+	private JPanel statisticsTab = new JPanel();
+	private JPanel communicationTab = new JPanel();
 
-	private JLabel statusLabel;
-	private JLabel dnsLabel;
-	private JLabel ipLabel;
-	private JLabel cloudLabel;
-	private JLabel unfriendlyNameLabel;
-	private JLabel sizeLabel;
-	private JLabel imageLabel;
+	private JLabel statusLabel = new JLabel();
+	private JLabel dnsLabel = new JLabel();
+	private JLabel ipLabel = new JLabel();
+	private JLabel cloudLabel = new JLabel();
+	private JLabel unfriendlyNameLabel = new JLabel();
+	private JLabel sizeLabel = new JLabel();
+	private JLabel imageLabel = new JLabel();
 
 	private Statusbar statusbar = new Statusbar();
 
@@ -341,11 +340,6 @@ public class GUI extends JFrame implements ListSelectionListener,
 
 		JTabbedPane tabbedPane = new JTabbedPane();
 
-		overviewTab = new JPanel();
-		configurationTab = new JPanel();
-		communicationTab = new JPanel();
-		statisticsTab = new JPanel();
-
 		ImageIcon stopIcon = new ImageIcon(getClass().getResource(
 				"/images/stop.png"));
 		JButton terminateButton = new JButton("Terminate Server", stopIcon);
@@ -369,26 +363,19 @@ public class GUI extends JFrame implements ListSelectionListener,
 		builder.setDefaultDialogBorder();
 		builder.appendSeparator("General Information");
 
-		statusLabel = new JLabel();
 		builder.append("Status", statusLabel);
-		cloudLabel = new JLabel();
 		builder.append("Provider", cloudLabel);
 		builder.nextLine();
 
-		dnsLabel = new JLabel();
 		builder.append("DNS Address", dnsLabel);
-		ipLabel = new JLabel();
 		builder.append("IP Address", ipLabel);
 		builder.nextLine();
 
 		builder.appendSeparator("Cloud Specific Information");
-		unfriendlyNameLabel = new JLabel();
 		builder.append("Name", unfriendlyNameLabel);
-		sizeLabel = new JLabel();
 		builder.append("Size", sizeLabel);
 		builder.nextLine();
 
-		imageLabel = new JLabel();
 		builder.append("Image", imageLabel);
 
 		overviewTab.add(builder.getPanel());

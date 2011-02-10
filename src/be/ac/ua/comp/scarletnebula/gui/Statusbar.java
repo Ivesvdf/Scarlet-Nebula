@@ -6,6 +6,8 @@ import javax.swing.border.BevelBorder;
 
 public class Statusbar extends JLabel
 {
+	private static final long serialVersionUID = 1L;
+
 	Statusbar()
 	{
 		super(" "); // Call JLabel ctor with a single space as text so the
