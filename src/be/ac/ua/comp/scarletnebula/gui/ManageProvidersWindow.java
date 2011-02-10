@@ -16,9 +16,7 @@ import javax.swing.border.BevelBorder;
 
 import be.ac.ua.comp.scarletnebula.core.CloudManager;
 import be.ac.ua.comp.scarletnebula.gui.addproviderwizard.AddProviderWizard;
-import be.ac.ua.comp.scarletnebula.gui.addproviderwizard.AddProviderWizardDataRecorder;
-import be.ac.ua.comp.scarletnebula.wizard.DataRecorder;
-import be.ac.ua.comp.scarletnebula.wizard.WizardListener;
+import be.ac.ua.comp.scarletnebula.gui.addproviderwizard.ProviderAddedListener;
 
 public class ManageProvidersWindow extends JDialog
 {
@@ -54,27 +52,12 @@ public class ManageProvidersWindow extends JDialog
 				AddProviderWizard wiz = new AddProviderWizard(CloudManager
 						.get().getTemplates());
 
-				wiz.addWizardListener(new WizardListener()
+				wiz.addProviderAddedListener(new ProviderAddedListener()
 				{
-
 					@Override
-					public void onFinish(DataRecorder recorder)
+					public void providerWasAdded(String name)
 					{
-						AddProviderWizardDataRecorder rec = (AddProviderWizardDataRecorder) recorder;
-
-						CloudManager.get().registerNewCloudProvider(
-								rec.getName(),
-								rec.getTemplate().getClassname(),
-								rec.getEndpoint().getURL(), rec.getApiKey(),
-								rec.getApiSecret());
-
-						providerListModel.addElement(rec.getName());
-					}
-
-					@Override
-					public void onCancel(DataRecorder recorder)
-					{
-						// Do nothing...
+						providerListModel.addElement(name);
 					}
 				});
 
