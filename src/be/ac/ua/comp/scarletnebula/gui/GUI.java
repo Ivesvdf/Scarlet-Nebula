@@ -114,7 +114,7 @@ public class GUI extends JFrame implements ListSelectionListener,
 		adjustStatusbar();
 
 		setTitle("Scarlet Nebula");
-		setSize(600, 400);
+		setSize(700, 400);
 		setLocationRelativeTo(null);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		ImageIcon icon = new ImageIcon(getClass().getResource(
