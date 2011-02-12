@@ -203,9 +203,9 @@ public class LinkUnlinkWindow extends JDialog
 		// aren't linked
 		for (Server server : linkedServerListModel.getVisibleServers())
 		{
-			if (!server.getCloud().isRegistered(server))
+			if (!server.getCloud().isLinked(server))
 			{
-				server.getCloud().registerUnlinkedServer(server);
+				server.getCloud().linkUnlinkedServer(server);
 			}
 		}
 		// ///////// TODO: Removals and additions need to be reflected in the
@@ -215,7 +215,7 @@ public class LinkUnlinkWindow extends JDialog
 		// that are linked
 		for (Server server : unlinkedServerListModel.getVisibleServers())
 		{
-			if (server.getCloud().isRegistered(server))
+			if (server.getCloud().isLinked(server))
 			{
 				server.getCloud().unlink(server);
 			}

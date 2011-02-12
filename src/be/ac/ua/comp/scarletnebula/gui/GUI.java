@@ -315,7 +315,7 @@ public class GUI extends JFrame implements ListSelectionListener,
 
 				for (Server server : unlinkedServers)
 				{
-					prov.registerUnlinkedServer(server);
+					prov.linkUnlinkedServer(server);
 					addServer(server);
 				}
 			}

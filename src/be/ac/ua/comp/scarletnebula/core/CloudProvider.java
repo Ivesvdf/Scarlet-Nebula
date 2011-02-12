@@ -268,13 +268,13 @@ public class CloudProvider
 		for (org.dasein.cloud.services.server.Server testServer : serverServices
 				.list())
 		{
-			// For each server, check if this server is already registered. Do
+			// For each server, check if this server is already linked. Do
 			// this based on his unfriendly id
 			boolean found = false;
-			for (Iterator<Server> registeredServerIterator = servers.iterator(); registeredServerIterator
+			for (Iterator<Server> linkedServerIterator = servers.iterator(); linkedServerIterator
 					.hasNext() && !found;)
 			{
-				if (registeredServerIterator.next().getUnfriendlyName()
+				if (linkedServerIterator.next().getUnfriendlyName()
 						.equals(testServer.getName()))
 				{
 					found = true;
@@ -340,7 +340,7 @@ public class CloudProvider
 		Server server = new Server(daseinServer, this, keypairOrPassword,
 				serverName);
 
-		registerUnlinkedServer(server);
+		linkUnlinkedServer(server);
 		return server;
 	}
 
@@ -451,7 +451,7 @@ public class CloudProvider
 	 * 
 	 * @param server
 	 */
-	public void registerUnlinkedServer(Server server)
+	public void linkUnlinkedServer(Server server)
 	{
 		server.store();
 		servers.add(server);
@@ -607,13 +607,13 @@ public class CloudProvider
 		return rv;
 	}
 
-	public boolean isRegistered(Server server)
+	public boolean isLinked(Server server)
 	{
 		// Not using servers.contains because this seems to use Server.equals
 		// which isn't implemented...
-		for (Server registeredServer : servers)
+		for (Server linkedServer : servers)
 		{
-			if (server == registeredServer)
+			if (server == linkedServer)
 				return true;
 		}
 
