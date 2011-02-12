@@ -256,9 +256,12 @@ public class CloudProvider
 	 * Nebula at this moment.
 	 * 
 	 * @return
+	 * @throws CloudException
+	 * @throws InternalException
 	 * @throws Exception
 	 */
-	public ArrayList<Server> listUnlinkedServers() throws Exception
+	public ArrayList<Server> listUnlinkedServers() throws InternalException,
+			CloudException
 	{
 		ArrayList<Server> rv = new ArrayList<Server>();
 		// List all servers
@@ -568,7 +571,8 @@ public class CloudProvider
 
 		try
 		{
-			prop.store(new FileOutputStream(getConfigfileName(providername)), null);
+			prop.store(new FileOutputStream(getConfigfileName(providername)),
+					null);
 		}
 		catch (FileNotFoundException e)
 		{

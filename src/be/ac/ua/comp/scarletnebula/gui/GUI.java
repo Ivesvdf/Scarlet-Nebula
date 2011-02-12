@@ -152,13 +152,14 @@ public class GUI extends JFrame implements ListSelectionListener,
 		providerMenu.add(manageProvidersItem);
 
 		JMenuItem detectAllUnlinkedInstances = new JMenuItem(
-				"Detect all unlinked instances");
+				"Link/Unlink Instances");
 		detectAllUnlinkedInstances.addActionListener(new ActionListener()
 		{
 			@Override
 			public void actionPerformed(ActionEvent e)
 			{
-				detectAllUnlinkedInstances();
+				new LinkUnlinkWindow(GUI.this);
+				// detectAllUnlinkedInstances();
 			}
 		});
 		providerMenu.add(detectAllUnlinkedInstances);
@@ -169,7 +170,7 @@ public class GUI extends JFrame implements ListSelectionListener,
 		{
 			JMenu providerSpecificSubMenu = new JMenu(prov.getName());
 			JMenuItem detectUnlinkedItem = new JMenuItem(
-					"Detect Unlinked Instances");
+					"Link/Unlink Instances");
 			detectUnlinkedItem.addActionListener(new ActionListener()
 			{
 				@Override
@@ -415,8 +416,12 @@ public class GUI extends JFrame implements ListSelectionListener,
 	{
 		// Create the list and put it in a scroll pane.
 		serverListModel = new ServerListModel();
-		serverList = new ServerList(serverListModel, this);
+		serverList = new ServerList(serverListModel);
 		serverList.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+		serverList.addMouseListener(new ServerListMouseListener(this,
+				serverListModel));
+		serverList.addListSelectionListener(this);
+
 		JScrollPane serverScrollPane = new JScrollPane(serverList);
 
 		ImageIcon addIcon = new ImageIcon(getClass().getResource(

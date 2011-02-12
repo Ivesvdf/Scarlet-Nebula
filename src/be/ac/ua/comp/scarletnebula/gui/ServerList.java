@@ -20,18 +20,13 @@ public class ServerList extends javax.swing.JList
 	private static final long serialVersionUID = 1L;
 
 	ServerListModel serverListModel;
-	GUI gui;
 
-	public ServerList(ServerListModel serverListModel, GUI gui)
+	public ServerList(ServerListModel serverListModel)
 	{
 		super(serverListModel);
 		this.serverListModel = serverListModel;
-		this.gui = gui;
 		setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		setSelectedIndex(0);
-
-		addMouseListener(new ServerListMouseListener(gui, serverListModel));
-		addListSelectionListener(gui);
 		setCellRenderer(new JLabelCellRenderer());
 	}
 
