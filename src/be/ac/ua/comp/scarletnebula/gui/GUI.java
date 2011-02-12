@@ -5,7 +5,6 @@ import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
-import java.io.IOException;
 import java.util.Collection;
 import java.util.Random;
 
@@ -42,6 +41,7 @@ import be.ac.ua.comp.scarletnebula.core.CloudProvider;
 import be.ac.ua.comp.scarletnebula.core.Server;
 import be.ac.ua.comp.scarletnebula.core.ServerChangedObserver;
 import be.ac.ua.comp.scarletnebula.core.ServerDisappearedException;
+import be.ac.ua.comp.scarletnebula.core.ServerLinkUnlinkObserver;
 import be.ac.ua.comp.scarletnebula.gui.addserverwizard.AddServerWizard;
 import be.ac.ua.comp.scarletnebula.gui.addserverwizard.AddServerWizardDataRecorder;
 
@@ -49,7 +49,7 @@ import com.jgoodies.forms.builder.DefaultFormBuilder;
 import com.jgoodies.forms.layout.FormLayout;
 
 public class GUI extends JFrame implements ListSelectionListener,
-		ServerChangedObserver
+		ServerChangedObserver, ServerLinkUnlinkObserver
 {
 	private static Log log = LogFactory.getLog(GUI.class);
 
@@ -121,8 +121,21 @@ public class GUI extends JFrame implements ListSelectionListener,
 				"/images/icon48.png"));
 		setIconImage(icon.getImage());
 
-		addInitialServers();
 		addMenubar();
+
+		// Last but not least, we construct a cloudmanager object, which will
+		// cause it to load all providers and thus servers.
+		// We also register ourselves as an observer for linking and unlinking
+		// servers so we can update the serverlist.
+		CloudManager.get().addServerLinkUnlinkObserver(this);
+		try
+		{
+			CloudManager.get().loadAllLinkedServers();
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+		}
 	}
 
 	private void adjustStatusbar()
@@ -515,44 +528,7 @@ public class GUI extends JFrame implements ListSelectionListener,
 			catch (ServerDisappearedException e)
 			{
 				log.info(e.toString());
-				serverListModel.removeServer(server);
-			}
-		}
-	}
-
-	private void addInitialServers()
-	{
-		Collection<CloudProvider> providers = CloudManager.get()
-				.getLinkedCloudProviders();
-
-		for (CloudProvider prov : providers)
-		{
-			try
-			{
-				Collection<Server> servers = prov.loadLinkedServers();
-
-				if (servers == null)
-					return;
-
-				for (Server s : servers)
-				{
-					addServer(s);
-				}
-			}
-			catch (InternalException e1)
-			{
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
-			catch (CloudException e1)
-			{
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
-			catch (IOException e1)
-			{
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
+				removeServer(server);
 			}
 		}
 	}
@@ -647,7 +623,6 @@ public class GUI extends JFrame implements ListSelectionListener,
 		try
 		{
 			Server server = provider.startServer(instancename, instancesize);
-			addServer(server);
 			refreshUntilServerHasState(server, ServerState.RUNNING);
 		}
 		catch (InternalException e)
@@ -731,10 +706,28 @@ public class GUI extends JFrame implements ListSelectionListener,
 
 		for (Server server : selectedServers)
 		{
-			serverListModel.removeServer(server);
+			// Server will be automatically removed from the view on the left
+			// because of the hooked observers
 			server.unlink();
 		}
 
 		fillRightPartition();
+	}
+
+	private void removeServer(Server server)
+	{
+		serverListModel.removeServer(server);
+	}
+
+	@Override
+	public void serverLinked(CloudProvider cloudProvider, Server srv)
+	{
+		addServer(srv);
+	}
+
+	@Override
+	public void serverUnlinked(CloudProvider cloudProvider, Server srv)
+	{
+		removeServer(srv);
 	}
 }

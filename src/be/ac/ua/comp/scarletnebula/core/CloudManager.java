@@ -1,9 +1,13 @@
 package be.ac.ua.comp.scarletnebula.core;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+
+import org.dasein.cloud.CloudException;
+import org.dasein.cloud.InternalException;
 
 import be.ac.ua.comp.scarletnebula.gui.CloudProviderTemplate;
 
@@ -20,6 +24,7 @@ public class CloudManager
 {
 	HashMap<String, CloudProvider> providers = new HashMap<String, CloudProvider>();
 	Collection<CloudProviderTemplate> providerTemplates = new ArrayList<CloudProviderTemplate>();
+	Collection<ServerLinkUnlinkObserver> linkUnlinkObservers = new ArrayList<ServerLinkUnlinkObserver>();
 
 	private CloudManager()
 	{
@@ -28,8 +33,23 @@ public class CloudManager
 		// Load all providers and put them in the list
 		for (String provname : CloudProvider.getProviderNames())
 		{
-			providers.put(provname, new CloudProvider(provname));
+			CloudProvider cloudProvider = new CloudProvider(provname);
+
+			for (ServerLinkUnlinkObserver obs : linkUnlinkObservers)
+				cloudProvider.addServerLinkUnlinkObserver(obs);
+
+			providers.put(provname, cloudProvider);
 		}
+	}
+
+	public void addServerLinkUnlinkObserver(ServerLinkUnlinkObserver obs)
+	{
+		linkUnlinkObservers.add(obs);
+
+		// Also add this observer to the cloudproviders that are already in the
+		// system.
+		for (CloudProvider prov : providers.values())
+			prov.addServerLinkUnlinkObserver(obs);
 	}
 
 	private void populateCloudProviderTemplates()
@@ -136,6 +156,10 @@ public class CloudManager
 		CloudProvider.store(name, classname, endpoint, apiKey, apiSecret);
 
 		CloudProvider prov = new CloudProvider(name);
+
+		for (ServerLinkUnlinkObserver obs : linkUnlinkObservers)
+			prov.addServerLinkUnlinkObserver(obs);
+
 		providers.put(name, prov);
 	}
 
@@ -167,5 +191,12 @@ public class CloudManager
 		// And delete his configfile
 		File config = new File(CloudProvider.getConfigfileName(provname));
 		config.delete();
+	}
+
+	public void loadAllLinkedServers() throws InternalException,
+			CloudException, IOException
+	{
+		for (CloudProvider prov : providers.values())
+			prov.loadLinkedServers();
 	}
 }

@@ -44,6 +44,7 @@ public class CloudProvider
 	private String endpoint;
 
 	private ArrayList<Server> servers = new ArrayList<Server>();
+	Collection<ServerLinkUnlinkObserver> linkUnlinkObservers = new ArrayList<ServerLinkUnlinkObserver>();
 
 	// TODO: Make this a class hierarchy
 	public CloudProvider(String name)
@@ -83,8 +84,30 @@ public class CloudProvider
 		// TODO: place these somewhere? maybe a menu option
 		// assureSSHOnlyFirewall();
 		// assureSSHKey();
+
 	}
 
+	private void notifyObserversBecauseServerLinked(Server srv)
+	{
+
+		for (ServerLinkUnlinkObserver obs : linkUnlinkObservers)
+		{
+			obs.serverLinked(this, srv);
+			log.warn("Cloudprovider is updating his observers");
+		}
+	}
+
+	private void notifyObserversBecauseServerUnlinked(Server srv)
+	{
+		for (ServerLinkUnlinkObserver obs : linkUnlinkObservers)
+			obs.serverUnlinked(this, srv);
+	}
+
+	/**
+	 * Loads a CloudProvider from file based on his name
+	 * 
+	 * @param name
+	 */
 	private void load(String name)
 	{
 		Properties properties = null;
@@ -123,7 +146,8 @@ public class CloudProvider
 		if (server == null)
 			return null;
 
-		return Server.load(server, this);
+		Server rv = Server.load(server, this);
+		return rv;
 
 	}
 
@@ -158,11 +182,17 @@ public class CloudProvider
 			}
 			else
 			{
-				servers.add(server);
+				addServer(server);
 			}
 		}
 
 		return servers;
+	}
+
+	private void addServer(Server server)
+	{
+		notifyObserversBecauseServerLinked(server);
+		servers.add(server);
 	}
 
 	/**
@@ -454,7 +484,7 @@ public class CloudProvider
 	public void linkUnlinkedServer(Server server)
 	{
 		server.store();
-		servers.add(server);
+		addServer(server);
 	}
 
 	/**
@@ -493,6 +523,7 @@ public class CloudProvider
 	{
 		servers.remove(selectedServer);
 		deleteServerSaveFile(selectedServer.getUnfriendlyName());
+		notifyObserversBecauseServerUnlinked(selectedServer);
 	}
 
 	/**
@@ -618,5 +649,10 @@ public class CloudProvider
 		}
 
 		return false;
+	}
+
+	public void addServerLinkUnlinkObserver(ServerLinkUnlinkObserver obs)
+	{
+		linkUnlinkObservers.add(obs);
 	}
 }
