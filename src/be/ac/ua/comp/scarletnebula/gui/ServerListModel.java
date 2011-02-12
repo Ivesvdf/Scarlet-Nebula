@@ -248,4 +248,9 @@ public class ServerListModel extends AbstractListModel
 		visibleServers.remove(server);
 		fireIntervalRemoved(this, index, index);
 	}
+
+	public Collection<Server> getVisibleServers()
+	{
+		return visibleServers;
+	}
 }

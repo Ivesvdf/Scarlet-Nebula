@@ -93,7 +93,8 @@ public class Server
 				props.getProperty("keypair") != null ? props
 						.getProperty("keypair") : "default",
 				props.getProperty("friendlyName") != null ? props
-						.getProperty("friendlyName") : server.getName());
+						.getProperty("friendlyName") : server.getName() + " ("
+						+ provider.getName() + ")");
 	}
 
 	/**

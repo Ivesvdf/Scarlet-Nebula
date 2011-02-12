@@ -606,4 +606,17 @@ public class CloudProvider
 		}
 		return rv;
 	}
+
+	public boolean isRegistered(Server server)
+	{
+		// Not using servers.contains because this seems to use Server.equals
+		// which isn't implemented...
+		for (Server registeredServer : servers)
+		{
+			if (server == registeredServer)
+				return true;
+		}
+
+		return false;
+	}
 }

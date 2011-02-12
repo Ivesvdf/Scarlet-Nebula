@@ -299,6 +299,7 @@ public class GUI extends JFrame implements ListSelectionListener,
 
 	}
 
+	// TODO: Remove this ftion?
 	protected void detectAllUnlinkedInstances()
 	{
 		Collection<CloudProvider> providers = CloudManager.get()
