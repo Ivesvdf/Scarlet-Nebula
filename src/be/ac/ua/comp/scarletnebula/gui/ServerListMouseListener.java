@@ -5,6 +5,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
+import javax.swing.ImageIcon;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 
@@ -55,7 +56,9 @@ class ServerListMouseListener implements MouseListener
 
 			JPopupMenu popup = new JPopupMenu();
 			JMenuItem pauseResume = new JMenuItem(
-					(status == ServerState.PAUSED) ? "Resume" : "Pause");
+					(status == ServerState.PAUSED) ? "Resume" : "Pause",
+					new ImageIcon(getClass().getResource("/images/paused.png")));
+
 			pauseResume.addActionListener(new ActionListener()
 			{
 				@Override
@@ -75,7 +78,8 @@ class ServerListMouseListener implements MouseListener
 				}
 			});
 
-			JMenuItem terminate = new JMenuItem("Terminate");
+			JMenuItem terminate = new JMenuItem("Terminate", new ImageIcon(
+					getClass().getResource("/images/terminated.png")));
 			terminate.addActionListener(new ActionListener()
 			{
 				@Override
@@ -85,7 +89,8 @@ class ServerListMouseListener implements MouseListener
 				}
 			});
 
-			JMenuItem refresh = new JMenuItem("Refresh");
+			JMenuItem refresh = new JMenuItem("Refresh", new ImageIcon(
+					getClass().getResource("/images/refresh16.png")));
 			refresh.addActionListener(new ActionListener()
 			{
 

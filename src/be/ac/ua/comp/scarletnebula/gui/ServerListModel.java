@@ -49,7 +49,7 @@ public class ServerListModel extends AbstractListModel
 	 */
 	private ImageIcon getServerIcon(Server server)
 	{
-		String filename = new String("/images/add.png");
+		String filename = null;
 
 		switch (server.getStatus())
 		{
