@@ -23,8 +23,8 @@ public class SSHCommandConnection extends CommandConnection
 		int port = 22;
 		String user = "ubuntu";
 
-		JSchSession jschsession = JSchSession.getSession("p080558",
-				"fakepassword", "radix.cmi.ua.ac.be", port, ui, null);
+		JSchSession jschsession = JSchSession.getSession("p080558", "",
+				"radix.cmi.ua.ac.be", port, ui, null);
 		java.util.Properties config = new java.util.Properties();
 
 		config.put("compression.s2c", "zlib,none");

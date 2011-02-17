@@ -29,6 +29,8 @@ import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
@@ -376,8 +378,47 @@ public class GUI extends JFrame implements ListSelectionListener,
 		tabbedPane.addTab("Communication", communicationTab);
 		tabbedPane.addTab("Statistics", statisticsTab);
 
+		tabbedPane.addChangeListener(new ChangeListener()
+		{
+
+			@Override
+			public void stateChanged(ChangeEvent e)
+			{
+				JTabbedPane tabSource = (JTabbedPane) e.getSource();
+				JPanel selectedPanel = (JPanel) tabSource
+						.getSelectedComponent();
+
+				if (selectedPanel == communicationTab)
+					GUI.this.communicationTabGotFocus();
+			}
+
+		});
+
 		total.add(tabbedPane);
 		return total;
+	}
+
+	protected void communicationTabGotFocus()
+	{
+		Collection<Server> selectedServers = getSelectedServers();
+
+		// This really needs to be here...
+		enableEvents(AWTEvent.KEY_EVENT_MASK);
+
+		// Remove all components on there
+		communicationTab.invalidate();
+		communicationTab.removeAll();
+
+		communicationTab.setLayout(new BorderLayout());
+
+		final Server selectedServer = selectedServers.iterator().next();
+
+		communicationTab.add(new SSHPanel(selectedServer), BorderLayout.CENTER);
+
+		// communicationTab.add();
+		// communicationTab.add(new JTextArea());
+		// communicationTab.add(new JButton("eeeey"));
+		communicationTab.validate();
 	}
 
 	private void createCommunicationPanel()
@@ -571,23 +612,7 @@ public class GUI extends JFrame implements ListSelectionListener,
 
 	private void updateCommunicationTab(Collection<Server> selectedServers)
 	{
-		// This really needs to be here...
-		enableEvents(AWTEvent.KEY_EVENT_MASK);
 
-		// Remove all components on there
-		communicationTab.invalidate();
-		communicationTab.removeAll();
-
-		communicationTab.setLayout(new BorderLayout());
-
-		final Server selectedServer = selectedServers.iterator().next();
-
-		communicationTab.add(new SSHPanel(selectedServer), BorderLayout.CENTER);
-
-		// communicationTab.add();
-		// communicationTab.add(new JTextArea());
-		// communicationTab.add(new JButton("eeeey"));
-		communicationTab.validate();
 	}
 
 	private void updateOverviewTab(Collection<Server> selectedServers)

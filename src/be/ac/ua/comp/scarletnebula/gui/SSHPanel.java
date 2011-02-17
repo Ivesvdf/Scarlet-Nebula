@@ -3,6 +3,7 @@ package be.ac.ua.comp.scarletnebula.gui;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Container;
+import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -19,6 +20,9 @@ import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import javax.swing.border.BevelBorder;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import be.ac.ua.comp.scarletnebula.core.SSHCommandConnection;
 import be.ac.ua.comp.scarletnebula.core.Server;
 
@@ -30,6 +34,9 @@ import com.jcraft.jsch.UserInfo;
 
 public class SSHPanel extends JPanel
 {
+	private static final long serialVersionUID = 1L;
+	private static Log log = LogFactory.getLog(SSHPanel.class);
+
 	SSHPanel(final Server server)
 	{
 		super();
@@ -233,7 +240,12 @@ public class SSHPanel extends JPanel
 				Connection connection = null;
 				try
 				{
+					beforeConnectionWasMade();
 					connection = commandConnection.getJSchConnection();
+					afterConnectionWasMade();
+
+					term.requestFocus();
+					term.start(connection);
 				}
 				catch (JSchException e)
 				{
@@ -245,12 +257,31 @@ public class SSHPanel extends JPanel
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
+				finally
+				{
+					afterConnectionWasTerminated();
+				}
 
-				term.requestFocus();
-				term.start(connection);
+				log.debug("before start");
 			}
 		};
 
 		connectionThread.start();
+	}
+
+	protected void afterConnectionWasTerminated()
+	{
+		getParent().setCursor(Cursor.getDefaultCursor());
+	}
+
+	protected void afterConnectionWasMade()
+	{
+		getParent().setCursor(Cursor.getDefaultCursor());
+	}
+
+	protected void beforeConnectionWasMade()
+	{
+		getParent().setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+
 	}
 }
