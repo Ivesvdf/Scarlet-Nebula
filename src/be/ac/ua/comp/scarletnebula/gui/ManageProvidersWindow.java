@@ -29,7 +29,7 @@ public class ManageProvidersWindow extends JDialog
 		super(parent, "Manage Providers", true);
 
 		setSize(400, 400);
-		setLocationRelativeTo(null);
+		setLocationRelativeTo(parent);
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 
 		final DefaultListModel providerListModel = new DefaultListModel();

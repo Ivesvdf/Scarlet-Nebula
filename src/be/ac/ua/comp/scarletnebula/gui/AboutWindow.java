@@ -22,7 +22,7 @@ public class AboutWindow extends JDialog
 		setMinimumSize(new Dimension(400, 400));
 
 		setSize(400, 400);
-		setLocationRelativeTo(null);
+		setLocationRelativeTo(parent);
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 
 		JLabel compLogo = new JLabel(new ImageIcon(getClass().getResource(

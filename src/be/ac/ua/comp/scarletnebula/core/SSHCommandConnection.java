@@ -23,7 +23,7 @@ public class SSHCommandConnection extends CommandConnection
 		int port = 22;
 		String user = "ubuntu";
 
-		JSchSession jschsession = JSchSession.getSession("p080558", "",
+		JSchSession jschsession = JSchSession.getSession("p080558", null,
 				"radix.cmi.ua.ac.be", port, ui, null);
 		java.util.Properties config = new java.util.Properties();
 

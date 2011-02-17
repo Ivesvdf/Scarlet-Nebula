@@ -53,7 +53,7 @@ public class Wizard
 	public void startModal(String title, int width, int height, Dialog parent)
 	{
 		JDialog dialog = new JDialog(parent, true);
-		configureDialog(title, width, height, dialog);
+		configureDialog(title, width, height, dialog, parent);
 	}
 
 	/**
@@ -69,16 +69,16 @@ public class Wizard
 	public void startModal(String title, int width, int height, Frame parent)
 	{
 		JDialog dialog = new JDialog(parent, true);
-		configureDialog(title, width, height, dialog);
+		configureDialog(title, width, height, dialog, parent);
 	}
 
 	private void configureDialog(String title, int width, int height,
-			JDialog dialog)
+			JDialog dialog, Component parent)
 	{
 		dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 		dialog.setPreferredSize(new Dimension(width, height));
 		dialog.setLocation(0, 0);
-		dialog.setLocationRelativeTo(null);
+		dialog.setLocationRelativeTo(parent);
 		dialog.setTitle(title);
 		dialog.pack();
 
