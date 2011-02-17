@@ -15,6 +15,8 @@ import org.dasein.cloud.CloudException;
 import org.dasein.cloud.InternalException;
 import org.dasein.cloud.services.server.ServerState;
 
+import com.jcraft.jsch.UserInfo;
+
 public class Server
 {
 	private static Log log = LogFactory.getLog(Server.class);
@@ -48,14 +50,19 @@ public class Server
 	/**
 	 * @return A new CommandConnection to this server
 	 */
-	public CommandConnection newCommandConnection()
+	public CommandConnection newCommandConnection(UserInfo ui)
 	{
 		try
 		{
 			return new SSHCommandConnection(serverImpl.getPublicDnsAddress(),
-					KeyManager.getKeyFilename(provider.getName(), keypair));
+					KeyManager.getKeyFilename(provider.getName(), keypair), ui);
 		}
 		catch (IOException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		catch (Exception e)
 		{
 			// TODO Auto-generated catch block
 			e.printStackTrace();

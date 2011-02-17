@@ -1,67 +1,38 @@
 package be.ac.ua.comp.scarletnebula.core;
 
-import java.io.File;
 import java.io.IOException;
-import java.security.PublicKey;
+import java.io.InputStream;
+import java.io.OutputStream;
 
-import net.schmizz.sshj.SSHClient;
-import net.schmizz.sshj.connection.ConnectionException;
-import net.schmizz.sshj.connection.channel.direct.Session;
-import net.schmizz.sshj.connection.channel.direct.Session.Command;
-import net.schmizz.sshj.transport.TransportException;
-import net.schmizz.sshj.transport.verification.HostKeyVerifier;
-import net.schmizz.sshj.userauth.keyprovider.FileKeyProvider;
+import com.jcraft.jcterm.Connection;
+import com.jcraft.jcterm.JSchSession;
+import com.jcraft.jcterm.Term;
+import com.jcraft.jsch.Channel;
+import com.jcraft.jsch.ChannelShell;
+import com.jcraft.jsch.JSchException;
+import com.jcraft.jsch.Session;
+import com.jcraft.jsch.UserInfo;
 
 public class SSHCommandConnection extends CommandConnection
 {
-	final SSHClient ssh;
+	Session session = null;
 
-	SSHCommandConnection(String address, String keypairfilename)
-			throws IOException
+	SSHCommandConnection(String address, String keypairfilename, UserInfo ui)
+			throws Exception
 	{
-		System.out.println("Keypair is " + keypairfilename);
+		int port = 22;
+		String user = "ubuntu";
 
-		ssh = new SSHClient();
-		ssh.loadKnownHosts();
+		JSchSession jschsession = JSchSession.getSession("", "", "", port, ui,
+				null);
+		java.util.Properties config = new java.util.Properties();
 
-		HostKeyVerifier verifier = new HostKeyVerifier()
-		{
-			@Override
-			public boolean verify(String arg0, int arg1, PublicKey arg2)
-			{
-				// I can hear the people that invented SSH drop dead just so
-				// they can start
-				// spinning in their graves. Problem is that there really is no
-				// way to know
-				// this is really the good server -- it's not like you can
-				// actually request the
-				// fingerprint through some sort of a secure API (everything
-				// goes through plain
-				// old http anyways so nobody could prevent someone from
-				// intercepting).
+		config.put("compression.s2c", "zlib,none");
+		config.put("compression.c2s", "zlib,none");
 
-				// In short, yes, you could be man-in-the-middled but you
-				// probably won't.
-				return true;
-			}
-		};
-
-		ssh.addHostKeyVerifier(verifier);
-
-		ssh.connect(address);
-
-		FileKeyProvider.Format fmt = net.schmizz.sshj.userauth.keyprovider.KeyProviderUtil
-				.detectKeyFileFormat(new File(keypairfilename));
-
-		if (fmt != FileKeyProvider.Format.PKCS8)
-		{
-			System.out
-					.println("Unsupported key file format, ask Ives to put another if here...");
-		}
-		net.schmizz.sshj.userauth.keyprovider.PKCS8KeyFile keyfile = new net.schmizz.sshj.userauth.keyprovider.PKCS8KeyFile();
-		keyfile.init(new File(keypairfilename));
-
-		ssh.authPublickey("ubuntu", keyfile);
+		session = jschsession.getSession();
+		session.setConfig(config);
+		session.rekey();
 
 	}
 
@@ -72,65 +43,74 @@ public class SSHCommandConnection extends CommandConnection
 		// ssh.authPassword("root", "fakepassword");
 		// ssh.authPublickey(System.getProperty("user.name"));
 
-		Session session = null;
-		String output = "";
-		try
-		{
-			session = ssh.startSession();
-
-			final Command cmd = session.exec(command);
-			// System.out.println("\n** exit status: " + cmd.getExitStatus());
-
-			output = cmd.getOutputAsString();
-		}
-		catch (ConnectionException e)
-		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		catch (TransportException e)
-		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		catch (IOException e)
-		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		finally
-		{
-			try
-			{
-				session.close();
-			}
-			catch (TransportException e)
-			{
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			catch (ConnectionException e)
-			{
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-
-		return output;
+		/*
+		 * String output = ""; try {
+		 * 
+		 * // final Command cmd = session.exec(command); //
+		 * System.out.println("\n** exit status: " + cmd.getExitStatus());
+		 * 
+		 * // output = cmd.getOutputAsString(); } catch (ConnectionException e)
+		 * { // TODO Auto-generated catch block e.printStackTrace(); } catch
+		 * (TransportException e) { // TODO Auto-generated catch block
+		 * e.printStackTrace(); } catch (IOException e) { // TODO Auto-generated
+		 * catch block e.printStackTrace(); } finally { close(); }
+		 * 
+		 * return output;
+		 */
+		return null;
 	}
 
 	@Override
 	public void close()
 	{
-		try
+		session.disconnect();
+	}
+
+	public Connection getJSchConnection() throws JSchException, IOException
+	{
+		Channel channel = session.openChannel("shell");
+
+		OutputStream out = channel.getOutputStream();
+		InputStream in = channel.getInputStream();
+
+		channel.connect();
+		final OutputStream fout = out;
+		final InputStream fin = in;
+		final Channel fchannel = channel;
+
+		Connection connection = new Connection()
 		{
-			ssh.disconnect();
-		}
-		catch (IOException e)
-		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+			@Override
+			public InputStream getInputStream()
+			{
+				return fin;
+			}
+
+			@Override
+			public OutputStream getOutputStream()
+			{
+				return fout;
+			}
+
+			@Override
+			public void requestResize(Term term)
+			{
+				if (fchannel instanceof ChannelShell)
+				{
+					int c = term.getColumnCount();
+					int r = term.getRowCount();
+					((ChannelShell) fchannel).setPtySize(c, r,
+							c * term.getCharWidth(), r * term.getCharHeight());
+				}
+			}
+
+			@Override
+			public void close()
+			{
+				fchannel.disconnect();
+			}
+		};
+		return connection;
 	}
 
 }
