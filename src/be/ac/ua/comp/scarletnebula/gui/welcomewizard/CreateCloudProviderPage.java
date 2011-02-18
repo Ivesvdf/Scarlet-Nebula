@@ -17,8 +17,7 @@ public class CreateCloudProviderPage extends WizardPage
 {
 	CreateCloudProviderPage()
 	{
-		AddProviderWizard w = new AddProviderWizard(CloudManager.get()
-				.getTemplates());
+		AddProviderWizard w = new AddProviderWizard();
 		w.startModal((JDialog) getParent());
 
 		if (CloudManager.get().getLinkedCloudProviders().size() > 0)
@@ -47,8 +46,8 @@ public class CreateCloudProviderPage extends WizardPage
 		{
 			setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
 			JLabel txt = new JLabel(
-					"<html>You chose not to create a new CloudProvider account. If you change your mind. You can always "
-							+ "create a new provider in menu Providers - Manage Providers.</html>");
+					"<html>You chose not to create a new CloudProvider account. If you change your mind, you can always "
+							+ "create a new provider in menu <b>Providers - Manage Providers</b>.</html>");
 			txt.setFont(new Font("Dialog", Font.PLAIN, txt.getFont().getSize()));
 			txt.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
 

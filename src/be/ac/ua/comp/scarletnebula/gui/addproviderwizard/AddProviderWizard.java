@@ -6,7 +6,6 @@ import java.util.Collection;
 import javax.swing.JDialog;
 
 import be.ac.ua.comp.scarletnebula.core.CloudManager;
-import be.ac.ua.comp.scarletnebula.gui.CloudProviderTemplate;
 import be.ac.ua.comp.scarletnebula.wizard.DataRecorder;
 import be.ac.ua.comp.scarletnebula.wizard.SimpleWizardTemplate;
 import be.ac.ua.comp.scarletnebula.wizard.Wizard;
@@ -16,7 +15,7 @@ public class AddProviderWizard extends Wizard implements WizardListener
 {
 	Collection<ProviderAddedListener> providerAddedListeners = new ArrayList<ProviderAddedListener>();
 
-	public AddProviderWizard(Collection<CloudProviderTemplate> templates)
+	public AddProviderWizard()
 	{
 		super(new SelectProviderTemplatePage(),
 				new AddProviderWizardDataRecorder(), new SimpleWizardTemplate());

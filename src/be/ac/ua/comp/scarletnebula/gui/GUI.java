@@ -428,13 +428,15 @@ public class GUI extends JFrame implements ListSelectionListener,
 
 		communicationTab.setLayout(new BorderLayout());
 
+		if (selectedServers.size() == 0)
+		{
+			communicationTab.validate();
+			return;
+		}
 		final Server selectedServer = selectedServers.iterator().next();
 
 		communicationTab.add(new SSHPanel(selectedServer), BorderLayout.CENTER);
 
-		// communicationTab.add();
-		// communicationTab.add(new JTextArea());
-		// communicationTab.add(new JButton("eeeey"));
 		communicationTab.validate();
 	}
 
@@ -680,8 +682,7 @@ public class GUI extends JFrame implements ListSelectionListener,
 							"No CloudProvider accounts found",
 							JOptionPane.ERROR_MESSAGE);
 
-			AddProviderWizard wiz = new AddProviderWizard(CloudManager.get()
-					.getTemplates());
+			AddProviderWizard wiz = new AddProviderWizard();
 			wiz.startModal(null);
 			return;
 		}

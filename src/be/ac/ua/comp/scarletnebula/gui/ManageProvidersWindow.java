@@ -53,8 +53,7 @@ public class ManageProvidersWindow extends JDialog
 			@Override
 			public void actionPerformed(ActionEvent e)
 			{
-				AddProviderWizard wiz = new AddProviderWizard(CloudManager
-						.get().getTemplates());
+				AddProviderWizard wiz = new AddProviderWizard();
 
 				wiz.addProviderAddedListener(new ProviderAddedListener()
 				{
