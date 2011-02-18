@@ -46,8 +46,10 @@ import be.ac.ua.comp.scarletnebula.core.Server;
 import be.ac.ua.comp.scarletnebula.core.ServerChangedObserver;
 import be.ac.ua.comp.scarletnebula.core.ServerDisappearedException;
 import be.ac.ua.comp.scarletnebula.core.ServerLinkUnlinkObserver;
+import be.ac.ua.comp.scarletnebula.gui.addproviderwizard.AddProviderWizard;
 import be.ac.ua.comp.scarletnebula.gui.addserverwizard.AddServerWizard;
 import be.ac.ua.comp.scarletnebula.gui.addserverwizard.AddServerWizardDataRecorder;
+import be.ac.ua.comp.scarletnebula.gui.welcomewizard.WelcomeWizard;
 
 import com.jgoodies.forms.builder.DefaultFormBuilder;
 import com.jgoodies.forms.layout.FormLayout;
@@ -139,6 +141,21 @@ public class GUI extends JFrame implements ListSelectionListener,
 		catch (Exception e)
 		{
 			e.printStackTrace();
+		}
+
+		// If there are no linked cloudproviders, start the new provider wizard
+		if (CloudManager.get().getLinkedCloudProviders().size() == 0)
+		{
+			Thread t = new Thread()
+			{
+				@Override
+				public void run()
+				{
+					new WelcomeWizard(GUI.this);
+				}
+			};
+
+			t.start();
 		}
 	}
 
@@ -653,8 +670,22 @@ public class GUI extends JFrame implements ListSelectionListener,
 
 	void startAddServerWizard()
 	{
-		AddServerWizard wizard = new AddServerWizard(this, this);
-		wizard.setVisible(true);
+		if (CloudManager.get().getLinkedCloudProviders().size() == 0)
+		{
+			JOptionPane
+					.showMessageDialog(
+							this,
+							"A CloudProvider account is required to add a new server, \n"
+									+ "and there don't seem to be any. Please add one before continuing.",
+							"No CloudProvider accounts found",
+							JOptionPane.ERROR_MESSAGE);
+
+			AddProviderWizard wiz = new AddProviderWizard(CloudManager.get()
+					.getTemplates());
+			wiz.startModal(null);
+			return;
+		}
+		new AddServerWizard(this, this);
 	}
 
 	public static void main(String[] args)
