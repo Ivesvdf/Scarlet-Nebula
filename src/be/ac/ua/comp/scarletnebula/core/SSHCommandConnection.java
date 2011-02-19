@@ -5,10 +5,10 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 import com.jcraft.jcterm.Connection;
-import com.jcraft.jcterm.JSchSession;
 import com.jcraft.jcterm.Term;
 import com.jcraft.jsch.Channel;
 import com.jcraft.jsch.ChannelShell;
+import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.Session;
 import com.jcraft.jsch.UserInfo;
@@ -20,19 +20,23 @@ public class SSHCommandConnection extends CommandConnection
 	SSHCommandConnection(String address, String keypairfilename, UserInfo ui)
 			throws Exception
 	{
-		int port = 22;
 		String user = "ubuntu";
 
-		JSchSession jschsession = JSchSession.getSession("p080558", null,
-				"radix.cmi.ua.ac.be", port, ui, null);
+		JSch jsch = new JSch();
+
+		jsch.addIdentity(keypairfilename);
+
+		session = jsch.getSession(user, address, 22);
+
 		java.util.Properties config = new java.util.Properties();
 
 		config.put("compression.s2c", "zlib,none");
 		config.put("compression.c2s", "zlib,none");
 
-		session = jschsession.getSession();
+		session.setUserInfo(ui);
 		session.setConfig(config);
-		session.rekey();
+		session.connect();
+		// session.rekey();
 
 	}
 

@@ -235,11 +235,13 @@ public class SSHPanel extends JPanel
 			@Override
 			public void run()
 			{
-				SSHCommandConnection commandConnection = (SSHCommandConnection) server
-						.newCommandConnection(new MyUserInfo());
+
 				Connection connection = null;
 				try
 				{
+					SSHCommandConnection commandConnection = (SSHCommandConnection) server
+							.newCommandConnection(new MyUserInfo());
+
 					beforeConnectionWasMade();
 					connection = commandConnection.getJSchConnection();
 					afterConnectionWasMade();

@@ -49,24 +49,23 @@ public class Server
 
 	/**
 	 * @return A new CommandConnection to this server
+	 * @throws Exception
+	 * @throws FileNotFoundException
 	 */
 	public CommandConnection newCommandConnection(UserInfo ui)
+			throws FileNotFoundException
 	{
 		try
 		{
 			return new SSHCommandConnection(serverImpl.getPublicDnsAddress(),
 					KeyManager.getKeyFilename(provider.getName(), keypair), ui);
 		}
-		catch (IOException e)
-		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 		catch (Exception e)
 		{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+
 		return null;
 	}
 

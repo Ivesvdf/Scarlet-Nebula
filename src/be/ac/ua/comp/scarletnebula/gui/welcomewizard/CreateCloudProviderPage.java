@@ -15,6 +15,8 @@ import be.ac.ua.comp.scarletnebula.wizard.WizardPage;
 
 public class CreateCloudProviderPage extends WizardPage
 {
+	private static final long serialVersionUID = 1L;
+
 	CreateCloudProviderPage()
 	{
 		AddProviderWizard w = new AddProviderWizard();

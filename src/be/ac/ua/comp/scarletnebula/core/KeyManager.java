@@ -2,6 +2,7 @@ package be.ac.ua.comp.scarletnebula.core;
 
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 
@@ -49,13 +50,21 @@ public class KeyManager
 		}
 	}
 
-	static String getKeyPath(String providerClassName)
+	static String getKeyPath(String providerName)
 	{
-		return "keys/" + providerClassName + "/";
+		return "keys/" + providerName + "/";
 	}
 
-	static String getKeyFilename(String providerClassName, String keyname)
+	static String getKeyFilename(String providerName, String keyname)
+			throws FileNotFoundException
 	{
-		return getKeyPath(providerClassName) + keyname + ".key";
+		String filename = getKeyPath(providerName) + keyname + ".key";
+
+		File f = new File(filename);
+		if (!f.exists())
+			throw new FileNotFoundException("No key by the name of " + keyname
+					+ " found for " + providerName);
+
+		return filename;
 	}
 }

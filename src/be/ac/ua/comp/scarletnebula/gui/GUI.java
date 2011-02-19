@@ -428,16 +428,38 @@ public class GUI extends JFrame implements ListSelectionListener,
 
 		communicationTab.setLayout(new BorderLayout());
 
-		if (selectedServers.size() == 0)
+		// If there are no servers, or none of the servers are running, do not
+		// display the ssh console
+		Collection<Server> connectableServers = new ArrayList<Server>();
+		for (Server s : selectedServers)
 		{
+			if (s.getStatus() == ServerState.RUNNING
+					&& s.getPublicDnsAddress() != null)
+			{
+				connectableServers.add(s);
+			}
+		}
+
+		// If there are no servers to connect to, don't draw the ssh console
+		if (connectableServers.size() == 0)
+		{
+			log.info("Connection tab clicked and no servers selected to connect to.");
+			BetterTextLabel txt = new BetterTextLabel(
+					"Please select at least one running server to connect to.");
+			txt.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+			communicationTab.add(txt, BorderLayout.NORTH);
 			communicationTab.validate();
+			communicationTab.repaint();
 			return;
 		}
-		final Server selectedServer = selectedServers.iterator().next();
 
-		communicationTab.add(new SSHPanel(selectedServer), BorderLayout.CENTER);
+		final Server connectServer = selectedServers.iterator().next();
+
+		communicationTab.add(new SSHPanel(connectServer), BorderLayout.CENTER);
 
 		communicationTab.validate();
+		communicationTab.repaint();
+
 	}
 
 	private void createCommunicationPanel()
