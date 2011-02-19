@@ -63,6 +63,8 @@ public class ServerListModel extends AbstractListModel
 				filename = "/images/running_ok.png";
 				break;
 			case REBOOTING:
+				filename = "/images/restarting.png";
+				break;
 			case STOPPING:
 				filename = "/images/stopping.png";
 				break;

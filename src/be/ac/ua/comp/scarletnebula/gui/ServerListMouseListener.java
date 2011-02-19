@@ -68,7 +68,8 @@ class ServerListMouseListener implements MouseListener
 				}
 			});
 
-			JMenuItem reboot = new JMenuItem("Reboot");
+			JMenuItem reboot = new JMenuItem("Reboot", new ImageIcon(getClass()
+					.getResource("/images/restarting.png")));
 			reboot.addActionListener(new ActionListener()
 			{
 				@Override
