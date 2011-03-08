@@ -15,8 +15,15 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.dasein.cloud.CloudException;
 import org.dasein.cloud.InternalException;
-import org.dasein.cloud.services.server.ServerServices;
-import org.dasein.cloud.services.server.ServerSize;
+import org.dasein.cloud.compute.Architecture;
+import org.dasein.cloud.compute.ComputeServices;
+import org.dasein.cloud.compute.VirtualMachine;
+import org.dasein.cloud.compute.VirtualMachineProduct;
+import org.dasein.cloud.compute.VirtualMachineSupport;
+import org.dasein.cloud.identity.ShellKeySupport;
+import org.dasein.cloud.network.Firewall;
+import org.dasein.cloud.network.FirewallSupport;
+import org.dasein.cloud.network.Protocol;
 
 /**
  * Class representing a cloud provider in Scarlet Nebula. This will contain a
@@ -35,7 +42,8 @@ public class CloudProvider
 	};
 
 	private org.dasein.cloud.CloudProvider providerImpl;
-	private ServerServices serverServices;
+	private ComputeServices computeServices;
+	private VirtualMachineSupport virtualMachineServices;
 
 	private String name;
 	private String providerClassName;
@@ -74,13 +82,21 @@ public class CloudProvider
 
 		providerImpl.connect(getCurrentContext());
 
-		serverServices = providerImpl.getServerServices();
-		if (serverServices == null)
+		computeServices = providerImpl.getComputeServices();
+		if (computeServices == null)
 		{
-			System.out.println(providerImpl.getCloudName()
+			log.error(providerImpl.getCloudName()
 					+ " does not support compute instances.");
 			return;
 		}
+		virtualMachineServices = computeServices.getVirtualMachineSupport();
+		if (computeServices == null)
+		{
+			log.error(providerImpl.getCloudName()
+					+ " does not support Virtual Machines.");
+			return;
+		}
+
 		// TODO: place these somewhere? maybe a menu option
 		// assureSSHOnlyFirewall();
 		// assureSSHKey();
@@ -141,7 +157,7 @@ public class CloudProvider
 	public Server loadServer(String unfriendlyName) throws InternalException,
 			CloudException, IOException
 	{
-		org.dasein.cloud.services.server.Server server = getServerImpl(unfriendlyName);
+		VirtualMachine server = getServerImpl(unfriendlyName);
 
 		if (server == null)
 			return null;
@@ -214,11 +230,11 @@ public class CloudProvider
 	 * @throws InternalException
 	 * @throws CloudException
 	 */
-	private void createKey(org.dasein.cloud.services.access.AccessServices acs,
-			String keyname) throws InternalException, CloudException
+	private void createKey(ShellKeySupport shellKeySupport, String keyname)
+			throws InternalException, CloudException
 	{
 		KeyManager.addKey(providerClassName, keyname,
-				acs.createKeypair(keyname));
+				shellKeySupport.createKeypair(keyname));
 
 	}
 
@@ -231,12 +247,12 @@ public class CloudProvider
 	 */
 	private void assureSSHKey() throws InternalException, CloudException
 	{
-		org.dasein.cloud.services.access.AccessServices acs = providerImpl
-				.getAccessServices();
+		ShellKeySupport shellKeySupport = providerImpl.getIdentityServices()
+				.getShellKeySupport();
 
-		if (!acs.list().contains("sndefault"))
+		if (!shellKeySupport.list().contains("sndefault"))
 		{
-			createKey(acs, "sndefault");
+			createKey(shellKeySupport, "sndefault");
 		}
 
 	}
@@ -251,18 +267,17 @@ public class CloudProvider
 	private void assureSSHOnlyFirewall() throws InternalException,
 			CloudException
 	{
-		org.dasein.cloud.services.firewall.FirewallServices fws = providerImpl
-				.getFirewallServices();
+		FirewallSupport fws = providerImpl.getNetworkServices()
+				.getFirewallSupport();
 
 		if (fws == null)
 			return;
 
-		Collection<org.dasein.cloud.services.firewall.Firewall> firewalls = fws
-				.list();
+		Collection<Firewall> firewalls = fws.list();
 
-		org.dasein.cloud.services.firewall.Firewall sshOnly = null;
+		Firewall sshOnly = null;
 
-		for (org.dasein.cloud.services.firewall.Firewall fw : firewalls)
+		for (Firewall fw : firewalls)
 		{
 			if (fw.getName().equals("sshonly"))
 			{
@@ -275,8 +290,7 @@ public class CloudProvider
 		{
 			System.out.println("Creating sshonly");
 			String sshonlyId = fws.create("sshonly", "Allow only ssh traffic");
-			fws.authorize(sshonlyId, "0.0.0.0/0",
-					org.dasein.cloud.services.firewall.Protocol.TCP, 22, 22);
+			fws.authorize(sshonlyId, "0.0.0.0/0", Protocol.TCP, 22, 22);
 		}
 	}
 
@@ -295,8 +309,8 @@ public class CloudProvider
 	{
 		ArrayList<Server> rv = new ArrayList<Server>();
 		// List all servers
-		for (org.dasein.cloud.services.server.Server testServer : serverServices
-				.list())
+		for (VirtualMachine testServer : virtualMachineServices
+				.listVirtualMachines())
 		{
 			// For each server, check if this server is already linked. Do
 			// this based on his unfriendly id
@@ -342,7 +356,7 @@ public class CloudProvider
 	public void terminateServer(String unfriendlyName)
 			throws InternalException, CloudException
 	{
-		serverServices.stop(unfriendlyName);
+		virtualMachineServices.terminate(unfriendlyName);
 	}
 
 	/**
@@ -354,7 +368,7 @@ public class CloudProvider
 	 * @throws InternalException
 	 * @throws CloudException
 	 */
-	public Server startServer(String serverName, String size)
+	public Server startServer(String serverName, String productName)
 			throws InternalException, CloudException
 	{
 		String imageId = "ami-15765c61";
@@ -363,9 +377,9 @@ public class CloudProvider
 		String vlan = "";
 		String[] firewalls = new String[] { "sshonly" };
 
-		org.dasein.cloud.services.server.Server daseinServer = serverServices
-				.launch(imageId, new ServerSize(size), dataCenterId,
-						serverName, keypairOrPassword, vlan, false, firewalls);
+		VirtualMachine daseinServer = virtualMachineServices.launch(imageId,
+				getVMProductWithName(productName), dataCenterId, serverName,
+				"", keypairOrPassword, vlan, false, false, firewalls);
 
 		Server server = new Server(daseinServer, this, keypairOrPassword,
 				serverName);
@@ -374,14 +388,41 @@ public class CloudProvider
 		return server;
 	}
 
+	public VirtualMachineProduct getVMProductWithName(String name)
+	{
+		try
+		{
+			Iterable<VirtualMachineProduct> products = virtualMachineServices
+					.listProducts(Architecture.I32);
+
+			for (VirtualMachineProduct product : products)
+			{
+				if (name == product.getName())
+					return product;
+			}
+			return null;
+		}
+		catch (InternalException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		catch (CloudException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
+	}
+
 	/**
 	 * Returns the ServerServices for this CloudProvider
 	 * 
 	 * @return
 	 */
-	org.dasein.cloud.services.server.ServerServices getServerServices()
+	VirtualMachineSupport getVirtualMachineServices()
 	{
-		return providerImpl.getServerServices();
+		return virtualMachineServices;
 	}
 
 	/**
@@ -434,11 +475,10 @@ public class CloudProvider
 	 */
 	public Collection<String> getPossibleInstanceSizes()
 	{
-		Collection<org.dasein.cloud.services.server.ServerSize> sizes = null;
+		Iterable<VirtualMachineProduct> products = null;
 		try
 		{
-			sizes = serverServices
-					.getSupportedSizes(org.dasein.cloud.services.server.Architecture.I32);
+			products = virtualMachineServices.listProducts(Architecture.I32);
 		}
 		catch (InternalException e)
 		{
@@ -453,9 +493,9 @@ public class CloudProvider
 
 		ArrayList<String> rv = new ArrayList<String>();
 
-		for (org.dasein.cloud.services.server.ServerSize size : sizes)
+		for (VirtualMachineProduct product : products)
 		{
-			rv.add(size.getSizeId());
+			rv.add(product.getName());
 		}
 		return rv;
 	}
@@ -470,10 +510,10 @@ public class CloudProvider
 		return providerClassName;
 	}
 
-	public org.dasein.cloud.services.server.Server getServerImpl(
-			String unfriendlyName) throws InternalException, CloudException
+	public VirtualMachine getServerImpl(String unfriendlyName)
+			throws InternalException, CloudException
 	{
-		return serverServices.getServer(unfriendlyName);
+		return virtualMachineServices.getVirtualMachine(unfriendlyName);
 	}
 
 	/**
@@ -497,7 +537,7 @@ public class CloudProvider
 	 */
 	void pause(Server server) throws InternalException, CloudException
 	{
-		serverServices.pause(server.getUnfriendlyName());
+		virtualMachineServices.pause(server.getUnfriendlyName());
 	}
 
 	/**
@@ -510,7 +550,7 @@ public class CloudProvider
 	 */
 	void reboot(Server server) throws CloudException, InternalException
 	{
-		serverServices.reboot(server.getUnfriendlyName());
+		virtualMachineServices.reboot(server.getUnfriendlyName());
 	}
 
 	/**

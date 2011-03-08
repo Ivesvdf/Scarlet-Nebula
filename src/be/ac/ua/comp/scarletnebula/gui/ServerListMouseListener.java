@@ -9,7 +9,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 
-import org.dasein.cloud.services.server.ServerState;
+import org.dasein.cloud.compute.VmState;
 
 import be.ac.ua.comp.scarletnebula.core.Server;
 
@@ -52,11 +52,11 @@ class ServerListMouseListener implements MouseListener
 			if (selectedServer == null)
 				return;
 
-			ServerState status = selectedServer.getStatus();
+			VmState status = selectedServer.getStatus();
 
 			JPopupMenu popup = new JPopupMenu();
 			JMenuItem pauseResume = new JMenuItem(
-					(status == ServerState.PAUSED) ? "Resume" : "Pause",
+					(status == VmState.PAUSED) ? "Resume" : "Pause",
 					new ImageIcon(getClass().getResource("/images/paused.png")));
 
 			pauseResume.addActionListener(new ActionListener()
@@ -112,7 +112,7 @@ class ServerListMouseListener implements MouseListener
 				}
 			});
 
-			if (status != ServerState.RUNNING && status != ServerState.PAUSED)
+			if (status != VmState.RUNNING && status != VmState.PAUSED)
 			{
 				pauseResume.setEnabled(false);
 				reboot.setEnabled(false);

@@ -13,7 +13,8 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.dasein.cloud.CloudException;
 import org.dasein.cloud.InternalException;
-import org.dasein.cloud.services.server.ServerState;
+import org.dasein.cloud.compute.VirtualMachine;
+import org.dasein.cloud.compute.VmState;
 
 import com.jcraft.jsch.UserInfo;
 
@@ -21,15 +22,14 @@ public class Server
 {
 	private static Log log = LogFactory.getLog(Server.class);
 
-	org.dasein.cloud.services.server.Server serverImpl;
+	VirtualMachine serverImpl;
 	Collection<ServerChangedObserver> serverChangedObservers;
 	CloudProvider provider;
 	private String friendlyName;
 	String keypair;
 
-	public Server(org.dasein.cloud.services.server.Server server,
-			CloudProvider inputProvider, String inputKeypair,
-			String inputFriendlyName)
+	public Server(VirtualMachine server, CloudProvider inputProvider,
+			String inputKeypair, String inputFriendlyName)
 	{
 		serverChangedObservers = new ArrayList<ServerChangedObserver>();
 		provider = inputProvider;
@@ -77,8 +77,7 @@ public class Server
 	 * @throws IOException
 	 * @throws FileNotFoundException
 	 */
-	static Server load(org.dasein.cloud.services.server.Server server,
-			CloudProvider provider)
+	static Server load(VirtualMachine server, CloudProvider provider)
 	{
 		String propertiesfilename = getSaveFilename(provider, server.getName());
 		Properties props = new Properties();
@@ -170,13 +169,13 @@ public class Server
 	 */
 	public String getUnfriendlyName()
 	{
-		return serverImpl.getName();
+		return serverImpl.getProviderVirtualMachineId();
 	}
 
 	@Override
 	public String toString()
 	{
-		String rv = serverImpl.getProviderServerId() + " ("
+		String rv = serverImpl.getProviderVirtualMachineId() + " ("
 				+ serverImpl.getCurrentState() + ") @ "
 				+ serverImpl.getPublicDnsAddress();
 		return rv;
@@ -236,7 +235,7 @@ public class Server
 	/**
 	 * @return This server's status
 	 */
-	public ServerState getStatus()
+	public VmState getStatus()
 	{
 		return serverImpl.getCurrentState();
 	}
@@ -253,19 +252,17 @@ public class Server
 	public void refresh() throws InternalException, CloudException,
 			ServerDisappearedException
 	{
-		org.dasein.cloud.services.server.Server refreshedServer = provider
+		VirtualMachine refreshedServer = provider
 				.getServerImpl(getUnfriendlyName());
 
 		// If the sever disappeared in the mean while, throw an Exception
-		if (refreshedServer != null)
-		{
-			serverImpl = refreshedServer;
-
-			// if(!serverImpl.equals(refreshedServer))
-			serverChanged();
-		}
-		else
+		if (refreshedServer == null)
 			throw new ServerDisappearedException(this);
+
+		serverImpl = refreshedServer;
+
+		// if(!serverImpl.equals(refreshedServer))
+		serverChanged();
 	}
 
 	/**
@@ -281,7 +278,7 @@ public class Server
 	 */
 	public String getSize()
 	{
-		return serverImpl.getSize();
+		return serverImpl.getProduct().getName();
 	}
 
 	/**
@@ -289,7 +286,7 @@ public class Server
 	 */
 	public String getImage()
 	{
-		return serverImpl.getImageId();
+		return serverImpl.getProviderMachineImageId();
 	}
 
 	/**

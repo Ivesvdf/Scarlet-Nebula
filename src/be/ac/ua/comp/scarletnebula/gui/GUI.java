@@ -38,7 +38,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.dasein.cloud.CloudException;
 import org.dasein.cloud.InternalException;
-import org.dasein.cloud.services.server.ServerState;
+import org.dasein.cloud.compute.VmState;
 
 import be.ac.ua.comp.scarletnebula.core.CloudManager;
 import be.ac.ua.comp.scarletnebula.core.CloudProvider;
@@ -197,28 +197,7 @@ public class GUI extends JFrame implements ListSelectionListener,
 			}
 		});
 		providerMenu.add(detectAllUnlinkedInstances);
-		Collection<CloudProvider> providers = CloudManager.get()
-				.getLinkedCloudProviders();
 
-		for (final CloudProvider prov : providers)
-		{
-			JMenu providerSpecificSubMenu = new JMenu(prov.getName());
-			JMenuItem detectUnlinkedItem = new JMenuItem(
-					"Link/Unlink Instances");
-			detectUnlinkedItem.addActionListener(new ActionListener()
-			{
-				@Override
-				public void actionPerformed(ActionEvent e)
-				{
-					System.out
-							.println("Detecting unlinked instances for provider"
-									+ prov.getName());
-				}
-			});
-			providerSpecificSubMenu.add(detectUnlinkedItem);
-
-			providerMenu.add(providerSpecificSubMenu);
-		}
 		menuBar.add(providerMenu);
 
 		JMenu helpMenu = new JMenu("Help");
@@ -277,13 +256,13 @@ public class GUI extends JFrame implements ListSelectionListener,
 	 * @param state
 	 */
 	private void refreshUntilServerHasState(final Server server,
-			final ServerState state)
+			final VmState state)
 	{
 		refreshUntilServerHasState(server, state, 1);
 	}
 
 	private void refreshUntilServerHasState(final Server server,
-			final ServerState state, final int attempt)
+			final VmState state, final int attempt)
 	{
 		if (server.getStatus() == state || attempt > 20)
 			return;
@@ -433,7 +412,7 @@ public class GUI extends JFrame implements ListSelectionListener,
 		Collection<Server> connectableServers = new ArrayList<Server>();
 		for (Server s : selectedServers)
 		{
-			if (s.getStatus() == ServerState.RUNNING
+			if (s.getStatus() == VmState.RUNNING
 					&& s.getPublicDnsAddress() != null)
 			{
 				connectableServers.add(s);
@@ -505,7 +484,7 @@ public class GUI extends JFrame implements ListSelectionListener,
 			try
 			{
 				server.terminate();
-				refreshUntilServerHasState(server, ServerState.TERMINATED);
+				refreshUntilServerHasState(server, VmState.TERMINATED);
 			}
 			catch (CloudException e)
 			{
@@ -747,7 +726,7 @@ public class GUI extends JFrame implements ListSelectionListener,
 		try
 		{
 			Server server = provider.startServer(instancename, instancesize);
-			refreshUntilServerHasState(server, ServerState.RUNNING);
+			refreshUntilServerHasState(server, VmState.RUNNING);
 		}
 		catch (InternalException e)
 		{
@@ -784,7 +763,7 @@ public class GUI extends JFrame implements ListSelectionListener,
 			for (Server server : selectedServers)
 			{
 				server.pause();
-				refreshUntilServerHasState(server, ServerState.PAUSED);
+				refreshUntilServerHasState(server, VmState.PAUSED);
 			}
 		}
 		catch (CloudException e)
