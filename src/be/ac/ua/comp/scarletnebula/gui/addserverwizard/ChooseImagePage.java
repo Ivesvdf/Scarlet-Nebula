@@ -27,13 +27,13 @@ import be.ac.ua.comp.scarletnebula.core.CloudProvider;
 import be.ac.ua.comp.scarletnebula.wizard.DataRecorder;
 import be.ac.ua.comp.scarletnebula.wizard.WizardPage;
 
-public class ImageChoicePage extends WizardPage
+public class ChooseImagePage extends WizardPage
 {
 
 	private static final long serialVersionUID = 1L;
-	private static Log log = LogFactory.getLog(ImageChoicePage.class);
+	private static Log log = LogFactory.getLog(ChooseImagePage.class);
 
-	ImageChoicePage(CloudProvider provider)
+	ChooseImagePage(CloudProvider provider)
 	{
 		setLayout(new BorderLayout());
 
@@ -56,18 +56,15 @@ public class ImageChoicePage extends WizardPage
 		c.gridx = 1;
 		top.add(architectureComboBox, c);
 
-		final JPanel searchPanel = new JPanel();
 		final JTextField searchField = new JTextField();
 
 		searchField.setBorder(BorderFactory
 				.createBevelBorder(BevelBorder.LOWERED));
-		searchPanel.setLayout(new BorderLayout());
-		searchPanel.add(searchField, BorderLayout.CENTER);
-		searchPanel.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
 
 		c.gridx = 2;
 		c.weightx = 1.0;
-		top.add(searchPanel, c);
+		c.insets = new Insets(0, 0, 0, 0);
+		top.add(searchField, c);
 
 		String[] columns = { "Name", "Platform", "Description" };
 		List<List<String>> rows = new ArrayList<List<String>>();
@@ -97,7 +94,6 @@ public class ImageChoicePage extends WizardPage
 				sorter.setSortKeys(null);
 			}
 		});
-		table.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
 		JScrollPane tableScrollPane = new JScrollPane(table);
 		tableScrollPane.setBorder(BorderFactory.createCompoundBorder(
 				BorderFactory.createEmptyBorder(0, 20, 20, 20),

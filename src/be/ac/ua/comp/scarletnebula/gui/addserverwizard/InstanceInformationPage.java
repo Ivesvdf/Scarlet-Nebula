@@ -51,6 +51,6 @@ class InstanceInformationPage extends WizardPage
 
 		rec.instanceName = instanceNameField.getText();
 		rec.instanceSize = (String) instanceSizeList.getSelectedItem();
-		return new ImageChoicePage(rec.provider);
+		return new ChooseImagePage(rec.provider);
 	}
 };
