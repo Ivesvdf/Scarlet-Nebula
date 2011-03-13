@@ -17,6 +17,8 @@ import org.dasein.cloud.CloudException;
 import org.dasein.cloud.InternalException;
 import org.dasein.cloud.compute.Architecture;
 import org.dasein.cloud.compute.ComputeServices;
+import org.dasein.cloud.compute.MachineImage;
+import org.dasein.cloud.compute.Platform;
 import org.dasein.cloud.compute.VirtualMachine;
 import org.dasein.cloud.compute.VirtualMachineProduct;
 import org.dasein.cloud.compute.VirtualMachineSupport;
@@ -460,7 +462,7 @@ public class CloudProvider
 
 		org.dasein.cloud.ProviderContext context = new org.dasein.cloud.ProviderContext();
 
-		context.setAccountNumber(accountNumber);
+		context.setAccountNumber("000000000000");
 		context.setAccessPublic(apiKey.getBytes());
 		context.setAccessPrivate(apiSecret.getBytes());
 		context.setEndpoint(getEndpoint());
@@ -514,6 +516,28 @@ public class CloudProvider
 			throws InternalException, CloudException
 	{
 		return virtualMachineServices.getVirtualMachine(unfriendlyName);
+	}
+
+	public Iterable<MachineImage> getAvailableMachineImages(Platform platform,
+			Architecture architecture)
+	{
+		Iterable<MachineImage> images = null;
+		try
+		{
+			images = computeServices.getImageSupport().searchMachineImages("",
+					platform, architecture);
+		}
+		catch (CloudException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		catch (InternalException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return images;
 	}
 
 	/**

@@ -17,9 +17,9 @@
 	<classpathentry kind="lib" path="lib/jsch-0.1.44.jar" sourcepath="/home/ives/scarletnebula/Scarlet Nebula/jsch-0.1.44.zip"/>
 	<classpathentry kind="lib" path="lib/jzlib-1.0.7.tar.gz"/>
 	<classpathentry kind="lib" path="lib/commons-codec-1.2.jar"/>
-	<classpathentry kind="lib" path="lib/dasein-cloud-aws-2011.02.jar"/>
+	<classpathentry kind="lib" path="lib/dasein-cloud-aws-2011.02.jar" sourcepath="/home/ives/dasein-cloud-2011.02/providers/aws/src/dasein-cloud-aws-2011.02-sources.jar"/>
 	<classpathentry kind="lib" path="lib/dasein-cloud-core-2011.02.jar"/>
-	<classpathentry kind="lib" path="lib/dasein-util-2011.02.jar"/>
+	<classpathentry kind="lib" path="lib/dasein-util-2011.02.jar" sourcepath="/home/ives/dasein-cloud-2011.02/api/src/dasein-cloud-core-2011.02-sources.jar"/>
 	<classpathentry kind="lib" path="lib/jsp-api-2.0.jar"/>
 	<classpathentry kind="lib" path="lib/jsr305-1.3.9.jar"/>
 	<classpathentry kind="lib" path="lib/junit-4.8.2.jar"/>

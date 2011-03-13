@@ -28,6 +28,7 @@ import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
+import javax.swing.UIManager.LookAndFeelInfo;
 import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -82,7 +83,19 @@ public class GUI extends JFrame implements ListSelectionListener,
 	{
 		try
 		{
-			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+			boolean found = false;
+			for (LookAndFeelInfo info : UIManager.getInstalledLookAndFeels())
+			{
+				if ("Nimbus".equals(info.getName()))
+				{
+					UIManager.setLookAndFeel(info.getClassName());
+					found = true;
+					break;
+				}
+			}
+			if (!found)
+				UIManager.setLookAndFeel(UIManager
+						.getSystemLookAndFeelClassName());
 		}
 		catch (ClassNotFoundException e)
 		{

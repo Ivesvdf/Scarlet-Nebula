@@ -45,24 +45,12 @@ class InstanceInformationPage extends WizardPage
 	}
 
 	@Override
-	public boolean nextIsEnabled()
-	{
-		return false;
-	}
-
-	@Override
-	public boolean finishIsEnabled()
-	{
-		return true;
-	}
-
-	@Override
 	public WizardPage next(DataRecorder recorder)
 	{
 		AddServerWizardDataRecorder rec = (AddServerWizardDataRecorder) recorder;
 
 		rec.instanceName = instanceNameField.getText();
 		rec.instanceSize = (String) instanceSizeList.getSelectedItem();
-		return null;
+		return new ImageChoicePage(rec.provider);
 	}
 };
