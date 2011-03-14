@@ -7,7 +7,6 @@ import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import javax.swing.BorderFactory;
@@ -22,6 +21,9 @@ import javax.swing.table.TableRowSorter;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.dasein.cloud.compute.Architecture;
+import org.dasein.cloud.compute.MachineImage;
+import org.dasein.cloud.compute.Platform;
 
 import be.ac.ua.comp.scarletnebula.core.CloudProvider;
 import be.ac.ua.comp.scarletnebula.wizard.DataRecorder;
@@ -32,8 +34,10 @@ public class ChooseImagePage extends WizardPage
 
 	private static final long serialVersionUID = 1L;
 	private static Log log = LogFactory.getLog(ChooseImagePage.class);
+	private Platform previousSelectedPlatform = null;
+	private Architecture previousSelectedArchitecture = null;
 
-	ChooseImagePage(CloudProvider provider)
+	ChooseImagePage(final CloudProvider provider)
 	{
 		setLayout(new BorderLayout());
 
@@ -41,7 +45,7 @@ public class ChooseImagePage extends WizardPage
 		top.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
 
 		add(top, BorderLayout.NORTH);
-		PlatformComboBox platformComboBox = new PlatformComboBox();
+		final PlatformComboBox platformComboBox = new PlatformComboBox();
 
 		GridBagConstraints c = new GridBagConstraints();
 		c.weightx = 0.0;
@@ -51,7 +55,7 @@ public class ChooseImagePage extends WizardPage
 		c.insets = new Insets(0, 0, 0, 5);
 
 		top.add(platformComboBox, c);
-		ArchitectureComboBox architectureComboBox = new ArchitectureComboBox();
+		final ArchitectureComboBox architectureComboBox = new ArchitectureComboBox();
 
 		c.gridx = 1;
 		top.add(architectureComboBox, c);
@@ -66,9 +70,6 @@ public class ChooseImagePage extends WizardPage
 		c.insets = new Insets(0, 0, 0, 0);
 		top.add(searchField, c);
 
-		String[] columns = { "Name", "Platform", "Description" };
-		List<List<String>> rows = new ArrayList<List<String>>();
-
 		/*
 		 * Iterable<MachineImage> images = provider.getAllMachineImages(); if
 		 * (images == null) log.error("No images available");
@@ -77,9 +78,9 @@ public class ChooseImagePage extends WizardPage
 		 * rows.add(Arrays.asList(image.getName(), image.getPlatform()
 		 * .toString(), image.getDescription())); }
 		 */
-		TableModel model = new ReadOnlyStringTableModel(Arrays.asList(columns),
-				rows);
-		JTable table = new JTable(model);
+		final MachineImageTableModel model = new MachineImageTableModel(
+				new ArrayList<MachineImage>());
+		final JTable table = new JTable(model);
 		final TableRowSorter<TableModel> sorter = new TableRowSorter<TableModel>(
 				model);
 		table.setRowSorter(sorter);
@@ -89,6 +90,32 @@ public class ChooseImagePage extends WizardPage
 			public void actionPerformed(ActionEvent e)
 			{
 				log.debug("Filtering table");
+				final Platform currentPlatform = platformComboBox
+						.getSelection();
+				final Architecture currentArchitecture = architectureComboBox
+						.getSelection();
+
+				if (!currentPlatform.equals(previousSelectedPlatform)
+						|| !currentArchitecture
+								.equals(previousSelectedArchitecture))
+				{
+					Iterable<MachineImage> images = provider
+							.getAvailableMachineImages(currentPlatform,
+									currentArchitecture);
+					if (images == null)
+						log.error("No images available");
+
+					model.clear();
+					final List<MachineImage> toAdd = new ArrayList<MachineImage>();
+					for (MachineImage image : images)
+					{
+						toAdd.add(image);
+					}
+					model.addImages(toAdd);
+
+					previousSelectedArchitecture = currentArchitecture;
+					previousSelectedPlatform = currentPlatform;
+				}
 				String expr = searchField.getText();
 				sorter.setRowFilter(RowFilter.regexFilter(expr));
 				sorter.setSortKeys(null);

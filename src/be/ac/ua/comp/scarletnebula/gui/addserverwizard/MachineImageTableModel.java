@@ -1,0 +1,87 @@
+package be.ac.ua.comp.scarletnebula.gui.addserverwizard;
+
+import java.util.Arrays;
+import java.util.List;
+
+import javax.swing.table.AbstractTableModel;
+
+import org.dasein.cloud.compute.MachineImage;
+
+public class MachineImageTableModel extends AbstractTableModel
+{
+	private static final long serialVersionUID = 1L;
+	private List<String> columnNames = null;
+	private List<MachineImage> rows = null;
+
+	MachineImageTableModel(List<MachineImage> rows)
+	{
+		final String[] columns = { "Name", "Description" };
+		this.columnNames = Arrays.asList(columns);
+		this.rows = rows;
+	}
+
+	@Override
+	public String getColumnName(int col)
+	{
+		return columnNames.get(col);
+	}
+
+	@Override
+	public boolean isCellEditable(int rowIndex, int columnIndex)
+	{
+		return false;
+	}
+
+	@Override
+	public int getRowCount()
+	{
+		return rows.size();
+	}
+
+	@Override
+	public int getColumnCount()
+	{
+		return columnNames.size();
+	}
+
+	@Override
+	public Class<?> getColumnClass(int c)
+	{
+		return String.class;
+	}
+
+	@Override
+	public Object getValueAt(int rowIndex, int columnIndex)
+	{
+		final MachineImage img = rows.get(rowIndex);
+
+		switch (columnIndex)
+		{
+			case 0:
+				return img.getName();
+			case 1:
+				return img.getDescription();
+		}
+
+		return null;
+	}
+
+	public void clear()
+	{
+		if (getRowCount() == 0)
+			return;
+
+		final int rowcount = getRowCount();
+		rows.clear();
+		fireTableRowsDeleted(0, rowcount - 1);
+	}
+
+	public void addImages(final List<MachineImage> images)
+	{
+		final int prevRowCount = getRowCount();
+		rows.addAll(images);
+		fireTableRowsInserted(prevRowCount - 1,
+				prevRowCount - 1 + images.size());
+	}
+
+}
