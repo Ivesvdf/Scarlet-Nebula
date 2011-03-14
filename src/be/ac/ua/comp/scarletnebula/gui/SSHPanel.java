@@ -84,6 +84,7 @@ public class SSHPanel extends JPanel
 				term.setPreferredSize(new Dimension(cw, ch));
 				// term.setMinimumSize(new Dimension(cw, ch));
 				term.setMaximumSize(new Dimension(cw, ch));
+				term.redraw(0, 0, term.getTermWidth(), term.getTermHeight());
 			}
 
 			@Override

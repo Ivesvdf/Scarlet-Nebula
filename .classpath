@@ -13,7 +13,7 @@
 	<classpathentry kind="lib" path="lib/webservices-api.jar"/>
 	<classpathentry kind="lib" path="lib/jgoodies-forms-1.4.0.jar"/>
 	<classpathentry kind="lib" path="lib/jgoodies-common-1.1.1.jar"/>
-	<classpathentry kind="lib" path="lib/jcterm-0.0.9.jar" sourcepath="/jcterm/src"/>
+	<classpathentry kind="lib" path="lib/jcterm-0.0.9.jar" sourcepath="/jcterm/src/com/jcraft/jcterm"/>
 	<classpathentry kind="lib" path="lib/jsch-0.1.44.jar" sourcepath="/home/ives/scarletnebula/Scarlet Nebula/jsch-0.1.44.zip"/>
 	<classpathentry kind="lib" path="lib/jzlib-1.0.7.tar.gz"/>
 	<classpathentry kind="lib" path="lib/commons-codec-1.2.jar"/>

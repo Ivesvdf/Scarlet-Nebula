@@ -6,8 +6,13 @@ import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 public class KeyManager
 {
+	private static Log log = LogFactory.getLog(KeyManager.class);
+
 	/**
 	 * Takes a keyname, an actual key and a provider name (for which this key
 	 * works) and then stores the key on disk.
@@ -29,8 +34,8 @@ public class KeyManager
 			// If it does not exist, create the directory
 			if (!dirFile.mkdirs())
 			{
+				log.error("Cannot make key directory!");
 				System.out.println("Cannot make key directory!");
-				return;
 			}
 		}
 

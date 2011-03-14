@@ -8,18 +8,18 @@ public class BetterTextLabel extends JLabel
 {
 	private static final long serialVersionUID = 1L;
 
-	BetterTextLabel(String text)
+	BetterTextLabel(String label)
 	{
 		super("");
 
-		boolean isAlreayHTML = (text.indexOf("<html>") == 0);
+		boolean isAlreayHTML = (label.indexOf("<html>") == 0);
 
 		if (!isAlreayHTML)
 		{
-			text = "<html>" + text.replace("\n", "<br />") + "</html>";
+			label = "<html>" + label.replace("\n", "<br />") + "</html>";
 		}
 
-		setText(text);
+		setText(label);
 		setFont(new Font("Dialog", Font.PLAIN, getFont().getSize()));
 	}
 }

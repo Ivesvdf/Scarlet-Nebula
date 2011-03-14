@@ -208,7 +208,7 @@ public class Server
 	 * 
 	 * @param friendlyName
 	 */
-	public void setFriendlyName(String friendlyName)
+	final public void setFriendlyName(String friendlyName)
 	{
 		this.friendlyName = friendlyName;
 	}
@@ -216,7 +216,7 @@ public class Server
 	/**
 	 * @return This server's friendly name
 	 */
-	public String getFriendlyName()
+	final public String getFriendlyName()
 	{
 		return friendlyName;
 	}

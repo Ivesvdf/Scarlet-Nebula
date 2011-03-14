@@ -118,8 +118,8 @@ public class GUI extends JFrame implements ListSelectionListener,
 			e.printStackTrace();
 		}
 
-		JPanel leftPartition = setupLeftPartition();
-		JPanel rightPartition = setupRightPartition();
+		final JPanel leftPartition = setupLeftPartition();
+		final JPanel rightPartition = setupRightPartition();
 
 		JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT,
 				leftPartition, rightPartition);
@@ -672,7 +672,7 @@ public class GUI extends JFrame implements ListSelectionListener,
 		statusLabel.setText(selectedServer.getStatus().toString());
 		dnsLabel.setText(selectedServer.getPublicDnsAddress());
 
-		String ipString = new String();
+		String ipString = "";
 
 		for (String ip : selectedServer.getPublicIpAddresses())
 			ipString += ip + "\n";

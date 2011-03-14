@@ -13,8 +13,8 @@ public class CloudProviderTemplate
 
 		public Endpoint(String name, String shortname, String url)
 		{
-			this.setName(name);
-			this.setShortName(shortname);
+			this.name = name;
+			this.shortname = shortname;
 			this.url = url;
 		}
 
