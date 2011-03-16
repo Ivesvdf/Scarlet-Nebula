@@ -7,8 +7,7 @@ import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
+import java.util.HashMap;
 
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
@@ -25,6 +24,7 @@ import be.ac.ua.comp.scarletnebula.core.Server;
 class ServerCellRenderer implements ListCellRenderer
 {
 	private static final long serialVersionUID = 1L;
+	public static HashMap<Server, JPanel> panelMapping = new HashMap<Server, JPanel>();
 
 	ServerCellRenderer()
 	{
@@ -62,48 +62,7 @@ class ServerCellRenderer implements ListCellRenderer
 		JLabel label = new JLabel(server.getFriendlyName(),
 				getServerIcon(server), SwingConstants.LEFT);
 		label.setOpaque(true);
-		label.addMouseListener(new MouseListener()
-		{
-			@Override
-			public void mouseClicked(MouseEvent e)
-			{
-				System.out.println("clicked at least once");
 
-			}
-
-			@Override
-			public void mousePressed(MouseEvent e)
-			{
-				System.out.println("clicked at least once");
-
-			}
-
-			@Override
-			public void mouseReleased(MouseEvent e)
-			{
-				System.out.println("clicked at least once");
-				if (e.getClickCount() == 2)
-				{
-					System.out.println("double clicked");
-					JLabel label = (JLabel) e.getSource();
-					label.setText("clicked");
-				}
-			}
-
-			@Override
-			public void mouseEntered(MouseEvent e)
-			{
-				System.out.println("entered at least once");
-
-			}
-
-			@Override
-			public void mouseExited(MouseEvent e)
-			{
-				System.out.println("exited at least once");
-
-			}
-		});
 		label.setBackground(background);
 		label.setForeground(foreground);
 
@@ -151,7 +110,7 @@ class ServerCellRenderer implements ListCellRenderer
 					BorderFactory.createEtchedBorder()));
 
 		}
-
+		panelMapping.put(server, p);
 		return p;
 
 	}

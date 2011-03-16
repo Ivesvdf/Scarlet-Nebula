@@ -1,11 +1,9 @@
 package be.ac.ua.comp.scarletnebula.gui;
 
-import java.awt.AWTEvent;
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Random;
 
@@ -13,21 +11,17 @@ import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.JTabbedPane;
 import javax.swing.JToolBar;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.UIManager.LookAndFeelInfo;
 import javax.swing.UnsupportedLookAndFeelException;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
@@ -48,9 +42,6 @@ import be.ac.ua.comp.scarletnebula.gui.addserverwizard.AddServerWizard;
 import be.ac.ua.comp.scarletnebula.gui.addserverwizard.AddServerWizardDataRecorder;
 import be.ac.ua.comp.scarletnebula.gui.welcomewizard.WelcomeWizard;
 
-import com.jgoodies.forms.builder.DefaultFormBuilder;
-import com.jgoodies.forms.layout.FormLayout;
-
 public class GUI extends JFrame implements ListSelectionListener,
 		ServerChangedObserver, ServerLinkUnlinkObserver
 {
@@ -59,19 +50,6 @@ public class GUI extends JFrame implements ListSelectionListener,
 	private static final long serialVersionUID = 1L;
 	private ServerList serverList;
 	private ServerListModel serverListModel;
-
-	private JPanel configurationTab = new JPanel();
-	private JPanel overviewTab = new JPanel();
-	private JPanel statisticsTab = new JPanel();
-	private JPanel communicationTab = new JPanel();
-
-	private JLabel statusLabel = new JLabel();
-	private JLabel dnsLabel = new JLabel();
-	private JLabel ipLabel = new JLabel();
-	private JLabel cloudLabel = new JLabel();
-	private JLabel unfriendlyNameLabel = new JLabel();
-	private JLabel sizeLabel = new JLabel();
-	private JLabel imageLabel = new JLabel();
 
 	private Statusbar statusbar = new Statusbar();
 
@@ -287,7 +265,7 @@ public class GUI extends JFrame implements ListSelectionListener,
 	protected void clearSelection()
 	{
 		serverList.clearSelection();
-		fillRightPartition();
+		// fillRightPartition();
 	}
 
 	/**
@@ -390,140 +368,13 @@ public class GUI extends JFrame implements ListSelectionListener,
 			}
 		}
 
-		fillRightPartition();
+		// fillRightPartition();
 	}
 
 	private void openAboutBox()
 	{
 		AboutWindow aboutWindow = new AboutWindow(this);
 		aboutWindow.setVisible(true);
-	}
-
-	private JPanel setupRightPartition()
-	{
-		JPanel total = new JPanel();
-		total.setLayout(new BorderLayout());
-
-		JTabbedPane tabbedPane = new JTabbedPane();
-
-		/*
-		 * ImageIcon stopIcon = new ImageIcon(getClass().getResource(
-		 * "/images/stop.png")); JButton terminateButton = new
-		 * JButton("Terminate Server", stopIcon);
-		 * terminateButton.addActionListener(new ActionListener() {
-		 * 
-		 * @Override public void actionPerformed(ActionEvent e) {
-		 * terminateSelectedServers(); } });
-		 * configurationTab.add(terminateButton);
-		 */
-
-		createOverviewPanel();
-		createCommunicationPanel();
-
-		tabbedPane.addTab("Overview", overviewTab);
-		tabbedPane.addTab("Configuration", configurationTab);
-		tabbedPane.addTab("Communication", communicationTab);
-		tabbedPane.addTab("Statistics", statisticsTab);
-
-		tabbedPane.addChangeListener(new ChangeListener()
-		{
-
-			@Override
-			public void stateChanged(ChangeEvent e)
-			{
-				JTabbedPane tabSource = (JTabbedPane) e.getSource();
-				JPanel selectedPanel = (JPanel) tabSource
-						.getSelectedComponent();
-
-				if (selectedPanel == communicationTab)
-					GUI.this.communicationTabGotFocus();
-			}
-
-		});
-
-		total.add(tabbedPane);
-		return total;
-	}
-
-	protected void communicationTabGotFocus()
-	{
-		Collection<Server> selectedServers = getSelectedServers();
-
-		// This really needs to be here...
-		enableEvents(AWTEvent.KEY_EVENT_MASK);
-
-		// Remove all components on there
-		communicationTab.invalidate();
-		communicationTab.removeAll();
-
-		communicationTab.setLayout(new BorderLayout());
-
-		// If there are no servers, or none of the servers are running, do not
-		// display the ssh console
-		Collection<Server> connectableServers = new ArrayList<Server>();
-		for (Server s : selectedServers)
-		{
-			if (s.getStatus() == VmState.RUNNING
-					&& s.getPublicDnsAddress() != null)
-			{
-				connectableServers.add(s);
-			}
-		}
-
-		// If there are no servers to connect to, don't draw the ssh console
-		if (connectableServers.size() == 0)
-		{
-			log.info("Connection tab clicked and no servers selected to connect to.");
-			BetterTextLabel txt = new BetterTextLabel(
-					"Please select at least one running server to connect to.");
-			txt.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
-			communicationTab.add(txt, BorderLayout.NORTH);
-			communicationTab.validate();
-			communicationTab.repaint();
-			return;
-		}
-
-		final Server connectServer = selectedServers.iterator().next();
-
-		communicationTab.add(new SSHPanel(connectServer), BorderLayout.CENTER);
-
-		communicationTab.validate();
-		communicationTab.repaint();
-
-	}
-
-	private void createCommunicationPanel()
-	{
-	}
-
-	private void createOverviewPanel()
-	{
-		overviewTab.setLayout(new BorderLayout());
-
-		FormLayout layout = new FormLayout(
-				"right:max(40dlu;p), 4dlu, min(50dlu;p):grow, 7dlu, "
-						+ "right:max(40dlu;p), 4dlu, min(50dlu;p):grow", "");
-		// add rows dynamically
-		DefaultFormBuilder builder = new DefaultFormBuilder(layout);
-		builder.setDefaultDialogBorder();
-		builder.appendSeparator("General Information");
-
-		builder.append("Status", statusLabel);
-		builder.append("Provider", cloudLabel);
-		builder.nextLine();
-
-		builder.append("DNS Address", dnsLabel);
-		builder.append("IP Address", ipLabel);
-		builder.nextLine();
-
-		builder.appendSeparator("Cloud Specific Information");
-		builder.append("Name", unfriendlyNameLabel);
-		builder.append("Size", sizeLabel);
-		builder.nextLine();
-
-		builder.append("Image", imageLabel);
-
-		overviewTab.add(builder.getPanel());
 	}
 
 	protected void terminateSelectedServers()
@@ -588,7 +439,7 @@ public class GUI extends JFrame implements ListSelectionListener,
 		Collection<Server> servers = serverListModel
 				.getVisibleServersAtIndices(indices);
 
-		fillRightPartition();
+		// fillRightPartition();
 
 		for (Server server : servers)
 		{
@@ -619,66 +470,29 @@ public class GUI extends JFrame implements ListSelectionListener,
 	{
 		if (e.getValueIsAdjusting() == false)
 		{
-			fillRightPartition();
+			// fillRightPartition();
 		}
 	}
 
-	private void fillRightPartition()
-	{
-		int selectedIndex = serverList.getSelectedIndex();
-
-		// When nothing is selected, return
-
-		log.debug("Filling right partition");
-		Collection<Server> selectedServers = new ArrayList<Server>();
-
-		if (selectedIndex >= 0)
-			selectedServers.add(serverListModel
-					.getVisibleServerAtIndex(selectedIndex));
-
-		updateOverviewTab(selectedServers);
-		updateCommunicationTab(selectedServers);
-	}
+	/*
+	 * private void fillRightPartition() { int selectedIndex =
+	 * serverList.getSelectedIndex();
+	 * 
+	 * // When nothing is selected, return
+	 * 
+	 * log.debug("Filling right partition"); Collection<Server> selectedServers
+	 * = new ArrayList<Server>();
+	 * 
+	 * if (selectedIndex >= 0) selectedServers.add(serverListModel
+	 * .getVisibleServerAtIndex(selectedIndex));
+	 * 
+	 * updateOverviewTab(selectedServers);
+	 * updateCommunicationTab(selectedServers); }
+	 */
 
 	private void updateCommunicationTab(Collection<Server> selectedServers)
 	{
 
-	}
-
-	private void updateOverviewTab(Collection<Server> selectedServers)
-	{
-		if (selectedServers.size() == 0)
-		{
-			log.info("No selected servers. Not filling overview tab.");
-			statusLabel.setText("");
-			dnsLabel.setText("");
-			ipLabel.setText("");
-			cloudLabel.setText("");
-			sizeLabel.setText("");
-			unfriendlyNameLabel.setText("");
-			imageLabel.setText("");
-			return;
-		}
-
-		// Until multiple selected servers are supported, pick the last server
-		Server selectedServer = null;
-
-		for (Server s : selectedServers)
-			selectedServer = s;
-
-		statusLabel.setText(selectedServer.getStatus().toString());
-		dnsLabel.setText(selectedServer.getPublicDnsAddress());
-
-		String ipString = "";
-
-		for (String ip : selectedServer.getPublicIpAddresses())
-			ipString += ip + "\n";
-
-		ipLabel.setText(ipString);
-		cloudLabel.setText(selectedServer.getCloud().getName());
-		sizeLabel.setText(selectedServer.getSize());
-		unfriendlyNameLabel.setText(selectedServer.getUnfriendlyName());
-		imageLabel.setText(selectedServer.getImage());
 	}
 
 	void startAddServerWizard()
@@ -761,7 +575,7 @@ public class GUI extends JFrame implements ListSelectionListener,
 	{
 		// Update the list on the left
 		serverListModel.refreshServer(server);
-		fillRightPartition();
+		// fillRightPartition();
 	}
 
 	public void pauseSelectedServers()
@@ -807,7 +621,7 @@ public class GUI extends JFrame implements ListSelectionListener,
 		}
 	}
 
-	private Collection<Server> getSelectedServers()
+	Collection<Server> getSelectedServers()
 	{
 		int indices[] = serverList.getSelectedIndices();
 		return serverListModel.getVisibleServersAtIndices(indices);
@@ -824,7 +638,7 @@ public class GUI extends JFrame implements ListSelectionListener,
 			server.unlink();
 		}
 
-		fillRightPartition();
+		// fillRightPartition();
 	}
 
 	private void removeServer(Server server)

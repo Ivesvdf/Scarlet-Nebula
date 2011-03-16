@@ -131,6 +131,11 @@ class ServerListMouseListener implements MouseListener
 
 			popup.show(e.getComponent(), e.getX(), e.getY());
 		}
+		else if (e.getClickCount() == 2)
+		{
+			new PropertiesWindow(gui, gui.getSelectedServers());
+		}
+
 	}
 
 	@Override
