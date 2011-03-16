@@ -2,7 +2,6 @@ package be.ac.ua.comp.scarletnebula.gui;
 
 import java.awt.AWTEvent;
 import java.awt.BorderLayout;
-import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -11,8 +10,6 @@ import java.util.Collection;
 import java.util.Random;
 
 import javax.swing.BorderFactory;
-import javax.swing.Box;
-import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -23,9 +20,8 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
-import javax.swing.JTextField;
+import javax.swing.JToolBar;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.UIManager.LookAndFeelInfo;
@@ -118,19 +114,22 @@ public class GUI extends JFrame implements ListSelectionListener,
 			e.printStackTrace();
 		}
 
-		final JPanel leftPartition = setupLeftPartition();
-		final JPanel rightPartition = setupRightPartition();
+		addToolbar();
 
-		JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT,
-				leftPartition, rightPartition);
-		splitPane.setDividerSize(4);
-		splitPane.setDividerLocation(160);
-
-		// setLayout(new BorderLayout());
-		add(splitPane);
-		add(statusbar, BorderLayout.SOUTH);
-
-		adjustStatusbar();
+		final JPanel serverListPanel = setupServerListPanel();
+		getContentPane().add(serverListPanel);
+		/*
+		 * final JPanel rightPartition = setupRightPartition();
+		 * 
+		 * JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT,
+		 * leftPartition, rightPartition); splitPane.setDividerSize(4);
+		 * splitPane.setDividerLocation(160);
+		 * 
+		 * // setLayout(new BorderLayout()); add(splitPane); add(statusbar,
+		 * BorderLayout.SOUTH);
+		 * 
+		 * adjustStatusbar();
+		 */
 
 		setTitle("Scarlet Nebula");
 		setSize(700, 400);
@@ -170,6 +169,45 @@ public class GUI extends JFrame implements ListSelectionListener,
 
 			t.start();
 		}
+	}
+
+	private void addToolbar()
+	{
+		JToolBar toolbar = new JToolBar();
+
+		ImageIcon addIcon = new ImageIcon(getClass().getResource(
+				"/images/add16.png"));
+
+		JButton addButton = new JButton(addIcon);
+		addButton.addActionListener(new ActionListener()
+		{
+			@Override
+			public void actionPerformed(ActionEvent e)
+			{
+				startAddServerWizard();
+			}
+		});
+		addButton.setBounds(10, 10, addIcon.getIconWidth(),
+				addIcon.getIconHeight());
+
+		ImageIcon refreshIcon = new ImageIcon(getClass().getResource(
+				"/images/refresh16.png"));
+		JButton refreshButton = new JButton(refreshIcon);
+		refreshButton.addActionListener(new ActionListener()
+		{
+			@Override
+			public void actionPerformed(ActionEvent e)
+			{
+				refreshSelectedServers();
+			}
+		});
+		refreshButton.setBounds(10, 10, refreshIcon.getIconWidth(),
+				refreshIcon.getIconHeight());
+
+		toolbar.add(addButton);
+		toolbar.add(refreshButton);
+		toolbar.setFloatable(false);
+		add(toolbar, BorderLayout.PAGE_START);
 	}
 
 	private void adjustStatusbar()
@@ -510,7 +548,7 @@ public class GUI extends JFrame implements ListSelectionListener,
 		}
 	}
 
-	private JPanel setupLeftPartition()
+	private JPanel setupServerListPanel()
 	{
 		// Create the list and put it in a scroll pane.
 		serverListModel = new ServerListModel();
@@ -519,67 +557,26 @@ public class GUI extends JFrame implements ListSelectionListener,
 		serverList.addMouseListener(new ServerListMouseListener(this,
 				serverListModel));
 		serverList.addListSelectionListener(this);
+		serverList.requestFocusInWindow();
 
 		JScrollPane serverScrollPane = new JScrollPane(serverList);
 
-		ImageIcon addIcon = new ImageIcon(getClass().getResource(
-				"/images/add.png"));
-
-		JButton addButton = new JButton(addIcon);
-		addButton.addActionListener(new ActionListener()
-		{
-			@Override
-			public void actionPerformed(ActionEvent e)
-			{
-				startAddServerWizard();
-			}
-		});
-		addButton.setBounds(10, 10, addIcon.getIconWidth(),
-				addIcon.getIconHeight());
-
-		ImageIcon refreshIcon = new ImageIcon(getClass().getResource(
-				"/images/refresh.png"));
-		JButton refreshButton = new JButton(refreshIcon);
-		refreshButton.addActionListener(new ActionListener()
-		{
-			@Override
-			public void actionPerformed(ActionEvent e)
-			{
-				refreshSelectedServers();
-			}
-		});
-		refreshButton.setBounds(10, 10, refreshIcon.getIconWidth(),
-				refreshIcon.getIconHeight());
-
-		JTextField searchField = new JTextField(10);
-		SearchFieldListener searchFieldListener = new SearchFieldListener(
-				searchField, serverListModel);
-		searchField.addActionListener(searchFieldListener);
-		searchField.getDocument().addDocumentListener(searchFieldListener);
-
-		JPanel topLeftPane = new JPanel();
-		topLeftPane.setLayout(new BoxLayout(topLeftPane, BoxLayout.LINE_AXIS));
-		topLeftPane.add(searchField);
+		/*
+		 * JTextField searchField = new JTextField(10); SearchFieldListener
+		 * searchFieldListener = new SearchFieldListener( searchField,
+		 * serverListModel); searchField.addActionListener(searchFieldListener);
+		 * searchField.getDocument().addDocumentListener(searchFieldListener);
+		 * 
+		 * JPanel topLeftPane = new JPanel(); topLeftPane.setLayout(new
+		 * BoxLayout(topLeftPane, BoxLayout.LINE_AXIS));
+		 * topLeftPane.add(searchField);
+		 */
 
 		JPanel leftPanel = new JPanel();
 		leftPanel.setLayout(new BorderLayout());
 
-		leftPanel.add(topLeftPane, BorderLayout.PAGE_START);
+		// leftPanel.add(topLeftPane, BorderLayout.PAGE_START);
 		leftPanel.add(serverScrollPane, BorderLayout.CENTER);
-
-		JPanel bottom = new JPanel();
-		bottom.setLayout(new BoxLayout(bottom, BoxLayout.X_AXIS));
-
-		// The button need to take up the full width of the bar on the left
-		// In a boxlayout, this is apparently computed from their maximum
-		// widths.
-		addButton.setMaximumSize(new Dimension(50000000, 500));
-		refreshButton.setMaximumSize(new Dimension(50000000, 500));
-
-		bottom.add(addButton, BorderLayout.WEST);
-		bottom.add(Box.createHorizontalGlue());
-		bottom.add(refreshButton, BorderLayout.EAST);
-		leftPanel.add(bottom, BorderLayout.PAGE_END);
 
 		return leftPanel;
 	}

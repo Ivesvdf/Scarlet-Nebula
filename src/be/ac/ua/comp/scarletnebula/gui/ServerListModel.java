@@ -5,8 +5,6 @@ import java.util.Collection;
 import java.util.LinkedList;
 
 import javax.swing.AbstractListModel;
-import javax.swing.ImageIcon;
-import javax.swing.JLabel;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -36,46 +34,7 @@ public class ServerListModel extends AbstractListModel
 		if (index >= visibleServers.size() || visibleServers.get(index) == null)
 			return null;
 
-		return new JLabel(visibleServers.get(index).getFriendlyName(),
-				getServerIcon(getVisibleServerAtIndex(index)),
-				javax.swing.SwingConstants.LEFT);
-	}
-
-	/**
-	 * Returns the icon that represents this server's status.
-	 * 
-	 * @param server
-	 * @return
-	 */
-	private ImageIcon getServerIcon(Server server)
-	{
-		String filename = null;
-
-		switch (server.getStatus())
-		{
-			case PAUSED:
-				filename = "/images/paused.png";
-				break;
-			case PENDING:
-				filename = "/images/pending.png";
-				break;
-			case RUNNING: // This needs to be made load-dependent...
-				filename = "/images/running_ok.png";
-				break;
-			case REBOOTING:
-				filename = "/images/restarting.png";
-				break;
-			case STOPPING:
-				filename = "/images/stopping.png";
-				break;
-			case TERMINATED:
-				filename = "/images/terminated.png";
-				break;
-
-		}
-
-		ImageIcon icon = new ImageIcon(getClass().getResource(filename));
-		return icon;
+		return visibleServers.get(index);
 	}
 
 	/**
@@ -172,9 +131,9 @@ public class ServerListModel extends AbstractListModel
 	 * @param index
 	 * @return
 	 */
-	public JLabel elementAt(int index)
+	public Server elementAt(int index)
 	{
-		return (JLabel) getElementAt(index);
+		return (Server) getElementAt(index);
 	}
 
 	/**

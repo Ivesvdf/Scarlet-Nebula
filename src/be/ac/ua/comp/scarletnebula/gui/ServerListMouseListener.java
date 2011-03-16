@@ -45,7 +45,10 @@ class ServerListMouseListener implements MouseListener
 			// server this will take effect on based on the current mouse
 			// position. If more servers are selected, apply action to all
 			// selected servers!
-			list.setSelectedIndex(indexOfSelectedServer);
+			if (list.getSelectedIndices().length <= 1)
+			{
+				list.setSelectedIndex(indexOfSelectedServer);
+			}
 			final Server selectedServer = serverListModel
 					.getVisibleServerAtIndex(indexOfSelectedServer);
 
@@ -102,7 +105,8 @@ class ServerListMouseListener implements MouseListener
 				}
 			});
 
-			JMenuItem unlink = new JMenuItem("Unlink Instance");
+			JMenuItem unlink = new JMenuItem("Unlink Instance", new ImageIcon(
+					getClass().getResource("/images/unlink16.png")));
 			unlink.addActionListener(new ActionListener()
 			{
 				@Override
