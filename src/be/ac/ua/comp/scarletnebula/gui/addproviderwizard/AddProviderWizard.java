@@ -6,6 +6,7 @@ import java.util.Collection;
 import javax.swing.JDialog;
 
 import be.ac.ua.comp.scarletnebula.core.CloudManager;
+import be.ac.ua.comp.scarletnebula.gui.keywizard.KeyWizard;
 import be.ac.ua.comp.scarletnebula.wizard.DataRecorder;
 import be.ac.ua.comp.scarletnebula.wizard.SimpleWizardTemplate;
 import be.ac.ua.comp.scarletnebula.wizard.Wizard;
@@ -44,6 +45,9 @@ public class AddProviderWizard extends Wizard implements WizardListener
 
 		for (ProviderAddedListener p : providerAddedListeners)
 			p.providerWasAdded(rec.getName());
+
+		new KeyWizard(null, CloudManager.get().getCloudProviderByName(
+				rec.getName()));
 	}
 
 	@Override

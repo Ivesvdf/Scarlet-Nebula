@@ -52,6 +52,14 @@ public class ChooseNamePage extends WizardPage
 		AddProviderWizardDataRecorder rec = (AddProviderWizardDataRecorder) recorder;
 		String providerName = name.getText();
 
+		if (providerName.length() == 0)
+		{
+			JOptionPane.showMessageDialog(this,
+					"Please enter a name for this provider.", "Enter name",
+					JOptionPane.ERROR_MESSAGE);
+			return null;
+		}
+
 		// Check to see if this name hasn't been taken
 		for (String aProviderName : CloudManager.get()
 				.getLinkedCloudProviderNames())
@@ -73,5 +81,4 @@ public class ChooseNamePage extends WizardPage
 
 		return new FinishPage(rec);
 	}
-
 }
