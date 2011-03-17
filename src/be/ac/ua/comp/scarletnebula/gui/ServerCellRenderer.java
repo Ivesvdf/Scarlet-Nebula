@@ -25,7 +25,7 @@ class ServerCellRenderer implements ListCellRenderer
 {
 	private static final long serialVersionUID = 1L;
 	public static HashMap<Server, JPanel> panelMapping = new HashMap<Server, JPanel>();
-
+	public static int serverWidth = 200;
 	ServerCellRenderer()
 	{
 	}
@@ -94,7 +94,7 @@ class ServerCellRenderer implements ListCellRenderer
 		p.add(new JLabel(), c);
 
 		p.setBackground(background);
-		p.setPreferredSize(new Dimension(250, 100));
+		p.setPreferredSize(new Dimension(serverWidth-4, 100));
 
 		if (isSelected)
 		{
