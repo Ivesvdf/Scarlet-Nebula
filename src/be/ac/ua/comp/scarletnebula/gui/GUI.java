@@ -7,7 +7,6 @@ import java.awt.event.KeyEvent;
 import java.util.Collection;
 import java.util.Random;
 
-import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -404,13 +403,13 @@ public class GUI extends JFrame implements ListSelectionListener,
 		// Create the list and put it in a scroll pane.
 		serverListModel = new ServerListModel();
 		serverList = new ServerList(serverListModel);
-		serverList.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+		// serverList.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 		serverList.addMouseListener(new ServerListMouseListener(this,
 				serverListModel));
 		serverList.addListSelectionListener(this);
 		serverList.requestFocusInWindow();
 
-		JScrollPane serverScrollPane = new JScrollPane(serverList);
+		final JScrollPane serverScrollPane = new JScrollPane(serverList);
 
 		/*
 		 * JTextField searchField = new JTextField(10); SearchFieldListener

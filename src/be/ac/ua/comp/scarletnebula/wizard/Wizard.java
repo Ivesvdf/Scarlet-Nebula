@@ -177,9 +177,10 @@ public class Wizard
 	{
 		// Run this for the side effects to recorder
 		visitedPages.peek().next(recorder);
+		window.dispose();
+
 		if (listener != null)
 			listener.onFinish(recorder);
-		window.dispose();
 	}
 
 	private void cancel()

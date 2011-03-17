@@ -59,7 +59,10 @@ public class ServerList extends javax.swing.JList implements ComponentListener
 		System.out.println("Server width = " + serverWidth);
 		System.out.println("Server count = " + serverCount);
 
-		ServerCellRenderer.serverWidth = serverWidth - 2 * serverCount;
+		ServerCellRenderer.serverWidth = serverWidth;
+
+		list.setFixedCellHeight(100);
+		list.setFixedCellWidth(serverWidth);
 
 		list.revalidate();
 		list.repaint();
