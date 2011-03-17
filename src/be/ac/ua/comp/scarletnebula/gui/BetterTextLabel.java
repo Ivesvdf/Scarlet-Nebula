@@ -8,7 +8,7 @@ public class BetterTextLabel extends JLabel
 {
 	private static final long serialVersionUID = 1L;
 
-	BetterTextLabel(String label)
+	public BetterTextLabel(String label)
 	{
 		super("");
 

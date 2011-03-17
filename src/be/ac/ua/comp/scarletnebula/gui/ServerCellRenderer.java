@@ -26,6 +26,7 @@ class ServerCellRenderer implements ListCellRenderer
 	private static final long serialVersionUID = 1L;
 	public static HashMap<Server, JPanel> panelMapping = new HashMap<Server, JPanel>();
 	public static int serverWidth = 200;
+
 	ServerCellRenderer()
 	{
 	}
@@ -57,6 +58,7 @@ class ServerCellRenderer implements ListCellRenderer
 		}
 
 		Server server = (Server) value;
+
 		JPanel p = new JPanel();
 
 		JLabel label = new JLabel(server.getFriendlyName(),
@@ -94,7 +96,6 @@ class ServerCellRenderer implements ListCellRenderer
 		p.add(new JLabel(), c);
 
 		p.setBackground(background);
-		p.setPreferredSize(new Dimension(serverWidth-4, 100));
 
 		if (isSelected)
 		{
@@ -110,7 +111,10 @@ class ServerCellRenderer implements ListCellRenderer
 					BorderFactory.createEtchedBorder()));
 
 		}
+		p.setPreferredSize(new Dimension(serverWidth, 100));
+
 		panelMapping.put(server, p);
+		System.out.println(p);
 		return p;
 
 	}

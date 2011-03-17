@@ -13,6 +13,8 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.dasein.cloud.CloudException;
 import org.dasein.cloud.InternalException;
+import org.dasein.cloud.compute.Architecture;
+import org.dasein.cloud.compute.Platform;
 import org.dasein.cloud.compute.VirtualMachine;
 import org.dasein.cloud.compute.VmState;
 
@@ -170,6 +172,16 @@ public class Server
 	public String getUnfriendlyName()
 	{
 		return serverImpl.getProviderVirtualMachineId();
+	}
+
+	public Architecture getArchitecture()
+	{
+		return serverImpl.getArchitecture();
+	}
+
+	public Platform getPlatform()
+	{
+		return serverImpl.getPlatform();
 	}
 
 	@Override

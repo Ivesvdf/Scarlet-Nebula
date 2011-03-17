@@ -20,6 +20,7 @@ import javax.swing.event.ChangeListener;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.dasein.cloud.compute.Platform;
 import org.dasein.cloud.compute.VmState;
 
 import be.ac.ua.comp.scarletnebula.core.Server;
@@ -46,6 +47,8 @@ public class PropertiesWindow extends JDialog
 	private JLabel unfriendlyNameLabel = new JLabel();
 	private JLabel sizeLabel = new JLabel();
 	private JLabel imageLabel = new JLabel();
+	private JLabel architectureLabel = new JLabel();
+	private JLabel platformLabel = new JLabel();
 
 	GUI gui;
 	Collection<Server> selectedServers;
@@ -134,6 +137,10 @@ public class PropertiesWindow extends JDialog
 
 		builder.append("Status", statusLabel);
 		builder.append("Provider", cloudLabel);
+		builder.nextLine();
+
+		builder.append("Architecture", architectureLabel);
+		builder.append("Platform", platformLabel);
 		builder.nextLine();
 
 		builder.append("DNS Address", dnsLabel);
@@ -229,6 +236,10 @@ public class PropertiesWindow extends JDialog
 		sizeLabel.setText(selectedServer.getSize());
 		unfriendlyNameLabel.setText(selectedServer.getUnfriendlyName());
 		imageLabel.setText(selectedServer.getImage());
+		architectureLabel.setText(selectedServer.getArchitecture().toString());
+		if (selectedServer.getPlatform() != Platform.UNKNOWN)
+			platformLabel.setText(selectedServer.getPlatform().toString());
+
 	}
 
 }

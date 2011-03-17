@@ -5,7 +5,7 @@ import java.awt.BorderLayout;
 import javax.swing.BorderFactory;
 import javax.swing.JTextField;
 
-import be.ac.ua.comp.scarletnebula.gui.WrappableLabel;
+import be.ac.ua.comp.scarletnebula.gui.BetterTextLabel;
 import be.ac.ua.comp.scarletnebula.wizard.DataRecorder;
 import be.ac.ua.comp.scarletnebula.wizard.WizardPage;
 
@@ -23,7 +23,7 @@ public class ProvideAccessPage extends WizardPage
 		setLayout(new BorderLayout());
 
 		// The text on top
-		WrappableLabel txt = new WrappableLabel(
+		BetterTextLabel txt = new BetterTextLabel(
 				"Please enter the API Access Key that identifies your account and the API Secret that represents your password.");
 
 		txt.setBorder(BorderFactory.createEmptyBorder(10, 10, 20, 10));
@@ -50,6 +50,6 @@ public class ProvideAccessPage extends WizardPage
 		rec.setApiKey(apiKey.getText());
 		rec.setApiSecret(apiSecret.getText());
 
-		return new ChooseNamePage(rec);
+		return new KeyHandlerPage();
 	}
 }

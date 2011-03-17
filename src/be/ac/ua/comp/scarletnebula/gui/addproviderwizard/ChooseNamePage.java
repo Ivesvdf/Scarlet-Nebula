@@ -7,7 +7,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 
 import be.ac.ua.comp.scarletnebula.core.CloudManager;
-import be.ac.ua.comp.scarletnebula.gui.WrappableLabel;
+import be.ac.ua.comp.scarletnebula.gui.BetterTextLabel;
 import be.ac.ua.comp.scarletnebula.wizard.DataRecorder;
 import be.ac.ua.comp.scarletnebula.wizard.WizardPage;
 
@@ -22,7 +22,7 @@ public class ChooseNamePage extends WizardPage
 	ChooseNamePage(AddProviderWizardDataRecorder recorder)
 	{
 		setLayout(new BorderLayout());
-		WrappableLabel text = new WrappableLabel(
+		BetterTextLabel text = new BetterTextLabel(
 				"What name would you like to use to describe this account with "
 						+ recorder.getTemplate().getName() + "?");
 		text.setBorder(BorderFactory.createEmptyBorder(10, 10, 20, 10));

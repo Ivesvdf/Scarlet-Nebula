@@ -3,7 +3,7 @@ package be.ac.ua.comp.scarletnebula.gui.addproviderwizard;
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 
-import be.ac.ua.comp.scarletnebula.gui.WrappableLabel;
+import be.ac.ua.comp.scarletnebula.gui.BetterTextLabel;
 import be.ac.ua.comp.scarletnebula.wizard.DataRecorder;
 import be.ac.ua.comp.scarletnebula.wizard.WizardPage;
 
@@ -15,7 +15,7 @@ public class FinishPage extends WizardPage
 	{
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
-		WrappableLabel toptext = new WrappableLabel(
+		BetterTextLabel toptext = new BetterTextLabel(
 				"Press the Finish button to create the CloudProvider "
 						+ recorder.getName()
 						+ ".\n\nThis CloudProvider connects to "
