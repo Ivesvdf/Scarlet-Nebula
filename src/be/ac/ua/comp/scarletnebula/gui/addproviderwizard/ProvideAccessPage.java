@@ -50,6 +50,6 @@ public class ProvideAccessPage extends WizardPage
 		rec.setApiKey(apiKey.getText());
 		rec.setApiSecret(apiSecret.getText());
 
-		return new KeyHandlerPage();
+		return new FinishPage(rec);
 	}
 }

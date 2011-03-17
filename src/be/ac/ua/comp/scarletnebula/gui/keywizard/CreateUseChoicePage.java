@@ -1,4 +1,4 @@
-package be.ac.ua.comp.scarletnebula.gui.addproviderwizard;
+package be.ac.ua.comp.scarletnebula.gui.keywizard;
 
 import java.awt.BorderLayout;
 
@@ -13,7 +13,7 @@ import be.ac.ua.comp.scarletnebula.gui.BetterTextLabel;
 import be.ac.ua.comp.scarletnebula.wizard.DataRecorder;
 import be.ac.ua.comp.scarletnebula.wizard.WizardPage;
 
-public class KeyHandlerPage extends WizardPage
+public class CreateUseChoicePage extends WizardPage
 {
 	private static final long serialVersionUID = 1L;
 
@@ -21,7 +21,7 @@ public class KeyHandlerPage extends WizardPage
 	final JRadioButton useButton = new JRadioButton("Use an existing key");
 	ButtonGroup group = new ButtonGroup();
 
-	KeyHandlerPage()
+	CreateUseChoicePage()
 	{
 		setLayout(new BorderLayout());
 
@@ -44,7 +44,7 @@ public class KeyHandlerPage extends WizardPage
 		buttonPanel.add(Box.createVerticalStrut(10));
 		buttonPanel.add(useButton);
 		buttonPanel.add(Box.createVerticalGlue());
-
+		buttonPanel.setBorder(BorderFactory.createEmptyBorder(0, 10, 0, 10));
 		add(buttonPanel, BorderLayout.CENTER);
 	}
 

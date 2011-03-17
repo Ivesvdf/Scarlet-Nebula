@@ -56,11 +56,28 @@ public class CloudProvider
 	private ArrayList<Server> servers = new ArrayList<Server>();
 	Collection<ServerLinkUnlinkObserver> linkUnlinkObservers = new ArrayList<ServerLinkUnlinkObserver>();
 
-	// TODO: Make this a class hierarchy
+	/**
+	 * Constructor for constructing a cloudprovider from file.
+	 * 
+	 * Don't forget to update the other ctor.
+	 * 
+	 * @param name
+	 *            Name of the provider. Used to search for a savefile.
+	 */
 	public CloudProvider(String name)
 	{
 		load(name);
 
+		connect();
+
+		// TODO: place these somewhere? maybe a menu option
+		// assureSSHOnlyFirewall();
+		// assureSSHKey();
+
+	}
+
+	private void connect()
+	{
 		try
 		{
 			providerImpl = (org.dasein.cloud.CloudProvider) Class.forName(
@@ -98,11 +115,6 @@ public class CloudProvider
 					+ " does not support Virtual Machines.");
 			return;
 		}
-
-		// TODO: place these somewhere? maybe a menu option
-		// assureSSHOnlyFirewall();
-		// assureSSHKey();
-
 	}
 
 	private void notifyObserversBecauseServerLinked(Server srv)
@@ -145,6 +157,29 @@ public class CloudProvider
 		this.apiKey = properties.getProperty("apikey");
 		this.apiSecret = properties.getProperty("apisecret");
 		this.endpoint = properties.getProperty("endpoint");
+	}
+
+	/**
+	 * Basic constructor for use when *not* loading from file. A provider made
+	 * in this fashion will probably not be linked with the cloudManager.
+	 * 
+	 * Don't forget to update the other constructor!
+	 * 
+	 * @param name
+	 * @param classname
+	 * @param endpoint
+	 * @param apikey
+	 * @param apisecret
+	 */
+	public CloudProvider(String name, String classname, String endpoint,
+			String apikey, String apisecret)
+	{
+		this.name = name;
+		this.providerClassName = classname;
+		this.apiKey = apikey;
+		this.apiSecret = apisecret;
+		this.endpoint = endpoint;
+		connect();
 	}
 
 	/**
@@ -718,5 +753,15 @@ public class CloudProvider
 	public void addServerLinkUnlinkObserver(ServerLinkUnlinkObserver obs)
 	{
 		linkUnlinkObservers.add(obs);
+	}
+
+	/**
+	 * Tests the current CloudProvider for connectivity.
+	 * 
+	 * @return True if a connection can be made, false otherwise.
+	 */
+	public boolean test()
+	{
+		return providerImpl.testContext() != null;
 	}
 }
