@@ -2,7 +2,6 @@ package be.ac.ua.comp.scarletnebula.gui;
 
 import java.awt.Color;
 import java.awt.Component;
-import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -35,31 +34,17 @@ class ServerCellRenderer implements ListCellRenderer
 	public Component getListCellRendererComponent(JList list, Object value,
 			int index, boolean isSelected, boolean cellHasFocus)
 	{
-		Color background;
-		Color foreground;
-
-		// check if this cell represents the current DnD drop location
-		JList.DropLocation dropLocation = list.getDropLocation();
-		if (dropLocation != null && !dropLocation.isInsert()
-				&& dropLocation.getIndex() == index)
-		{
-			background = Color.RED;
-			foreground = Color.WHITE;
-		}
-		else if (isSelected)
-		{
-			background = UIManager.getColor("Tree.selectionBackground");
-			foreground = UIManager.getColor("Tree.selectionForeground");
-		}
-		else
-		{
-			background = Color.WHITE;
-			foreground = Color.BLACK;
-		}
+		// Dirty hack: the last item in the serverlist is always a fake server
+		// that when double clicked produces an "add new server" wizard.
+		if (value == null)
+			return getNewServerServer(list, index, isSelected);
 
 		Server server = (Server) value;
 
-		JPanel p = new JPanel();
+		JPanel p = createServerPanel(list, index, isSelected);
+
+		final Color background = getBackgroundColor(list, index, isSelected);
+		final Color foreground = getForegroundColor(list, index, isSelected);
 
 		JLabel label = new JLabel(server.getFriendlyName(),
 				getServerIcon(server), SwingConstants.LEFT);
@@ -95,6 +80,64 @@ class ServerCellRenderer implements ListCellRenderer
 		c.gridy = 2;
 		p.add(new JLabel(), c);
 
+		panelMapping.put(server, p);
+		System.out.println(p);
+		return p;
+
+	}
+
+	Color getBackgroundColor(JList list, int index, boolean isSelected)
+	{
+		Color background;
+
+		// check if this cell represents the current DnD drop location
+		JList.DropLocation dropLocation = list.getDropLocation();
+		if (dropLocation != null && !dropLocation.isInsert()
+				&& dropLocation.getIndex() == index)
+		{
+			background = Color.RED;
+		}
+		else if (isSelected)
+		{
+			background = UIManager.getColor("Tree.selectionBackground");
+		}
+		else
+		{
+			background = Color.WHITE;
+		}
+
+		return background;
+	}
+
+	Color getForegroundColor(JList list, int index, boolean isSelected)
+	{
+		Color foreground;
+
+		// check if this cell represents the current DnD drop location
+		JList.DropLocation dropLocation = list.getDropLocation();
+		if (dropLocation != null && !dropLocation.isInsert()
+				&& dropLocation.getIndex() == index)
+		{
+			foreground = Color.WHITE;
+		}
+		else if (isSelected)
+		{
+			foreground = UIManager.getColor("Tree.selectionForeground");
+		}
+		else
+		{
+			foreground = Color.BLACK;
+		}
+		return foreground;
+	}
+
+	private JPanel createServerPanel(JList list, int index, boolean isSelected)
+	{
+		JPanel p = new JPanel();
+		p.setLayout(new GridBagLayout());
+
+		Color background = getBackgroundColor(list, index, isSelected);
+
 		p.setBackground(background);
 
 		if (isSelected)
@@ -111,12 +154,22 @@ class ServerCellRenderer implements ListCellRenderer
 					BorderFactory.createEtchedBorder()));
 
 		}
-		p.setPreferredSize(new Dimension(serverWidth, 100));
 
-		panelMapping.put(server, p);
-		System.out.println(p);
 		return p;
+	}
 
+	private Component getNewServerServer(JList list, int index,
+			boolean isSelected)
+	{
+		JPanel p = createServerPanel(list, index, isSelected);
+		JLabel label = new JLabel("Start a new server", new ImageIcon(
+				getClass().getResource("/images/add.png")), JLabel.LEFT);
+		label.setFont(new Font(label.getFont().getName(), Font.PLAIN, 16));
+		// Border for better horizontal alignment
+		label.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 12));
+		p.add(label);
+
+		return p;
 	}
 
 	/**

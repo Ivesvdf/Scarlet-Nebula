@@ -22,15 +22,19 @@ public class ServerListModel extends AbstractListModel
 	@Override
 	public int getSize()
 	{
-		return visibleServers.size();
+		// One extra element for the "create server" server
+		return visibleServers.size() + 1;
 	}
 
 	/**
-	 * This needs to return the string that will be visible in the arraylist.
+	 * Returns the actual Server at index. This may be null if this is a
+	 * "Create server" server.
 	 */
 	@Override
 	public Object getElementAt(int index)
 	{
+		// Returns null when returning the fake "create server" server, like it
+		// should
 		if (index >= visibleServers.size() || visibleServers.get(index) == null)
 			return null;
 

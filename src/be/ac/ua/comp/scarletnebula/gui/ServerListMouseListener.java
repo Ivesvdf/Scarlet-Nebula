@@ -12,6 +12,7 @@ import javax.swing.JPopupMenu;
 import org.dasein.cloud.compute.VmState;
 
 import be.ac.ua.comp.scarletnebula.core.Server;
+import be.ac.ua.comp.scarletnebula.gui.addserverwizard.AddServerWizard;
 
 class ServerListMouseListener implements MouseListener
 {
@@ -133,7 +134,18 @@ class ServerListMouseListener implements MouseListener
 		}
 		else if (e.getClickCount() == 2)
 		{
-			new PropertiesWindow(gui, gui.getSelectedServers());
+			// If the user double clicked a null server, this is taken as a hint
+			// to create a new server!
+			if (gui.getSelectedServers().size() > 0
+					&& gui.getSelectedServers().iterator().next() == null)
+			{
+				new AddServerWizard(gui, gui);
+			}
+			else
+			// Normal double click on a server
+			{
+				new PropertiesWindow(gui, gui.getSelectedServers());
+			}
 		}
 
 	}

@@ -4,6 +4,7 @@ import java.awt.Dimension;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 
+import javax.swing.BorderFactory;
 import javax.swing.JList;
 import javax.swing.JViewport;
 import javax.swing.ListSelectionModel;
@@ -29,6 +30,7 @@ public class ServerList extends javax.swing.JList implements ComponentListener
 		setVisibleRowCount(-1);
 		setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
 		setCellRenderer(new ServerCellRenderer());
+		setBorder(BorderFactory.createEmptyBorder(2, 2, 2, 2));
 		addComponentListener(this);
 	}
 
