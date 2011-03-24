@@ -24,7 +24,6 @@ class ServerCellRenderer implements ListCellRenderer
 {
 	private static final long serialVersionUID = 1L;
 	public static HashMap<Server, JPanel> panelMapping = new HashMap<Server, JPanel>();
-	public static int serverWidth = 200;
 
 	ServerCellRenderer()
 	{
@@ -80,8 +79,6 @@ class ServerCellRenderer implements ListCellRenderer
 		c.gridy = 2;
 		p.add(new JLabel(), c);
 
-		panelMapping.put(server, p);
-		System.out.println(p);
 		return p;
 
 	}

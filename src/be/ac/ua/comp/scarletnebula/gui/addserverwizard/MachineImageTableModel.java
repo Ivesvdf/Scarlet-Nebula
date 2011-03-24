@@ -50,6 +50,11 @@ public class MachineImageTableModel extends AbstractTableModel
 		return String.class;
 	}
 
+	public MachineImage getRow(int rowIndex)
+	{
+		return rows.get(rowIndex);
+	}
+
 	@Override
 	public Object getValueAt(int rowIndex, int columnIndex)
 	{

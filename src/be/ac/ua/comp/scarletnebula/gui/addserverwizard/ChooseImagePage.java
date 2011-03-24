@@ -36,6 +36,8 @@ public class ChooseImagePage extends WizardPage
 	private static Log log = LogFactory.getLog(ChooseImagePage.class);
 	private Platform previousSelectedPlatform = null;
 	private Architecture previousSelectedArchitecture = null;
+	final JTable table;
+	final MachineImageTableModel model;
 
 	ChooseImagePage(final CloudProvider provider)
 	{
@@ -78,9 +80,8 @@ public class ChooseImagePage extends WizardPage
 		 * rows.add(Arrays.asList(image.getName(), image.getPlatform()
 		 * .toString(), image.getDescription())); }
 		 */
-		final MachineImageTableModel model = new MachineImageTableModel(
-				new ArrayList<MachineImage>());
-		final JTable table = new JTable(model);
+		model = new MachineImageTableModel(new ArrayList<MachineImage>());
+		table = new JTable(model);
 		final TableRowSorter<TableModel> sorter = new TableRowSorter<TableModel>(
 				model);
 		table.setRowSorter(sorter);
@@ -133,7 +134,17 @@ public class ChooseImagePage extends WizardPage
 	@Override
 	public WizardPage next(DataRecorder recorder)
 	{
-		// TODO Auto-generated method stub
+		AddServerWizardDataRecorder rec = (AddServerWizardDataRecorder) recorder;
+
+		int selection = table.getSelectedRow();
+
+		if (selection < 0)
+		{
+			// Do something, need another page after this one to fix...
+			log.error("Need finish page!! Please write");
+		}
+		MachineImage image = model.getRow(selection);
+		rec.image = image.getProviderMachineImageId();
 		return null;
 	}
 

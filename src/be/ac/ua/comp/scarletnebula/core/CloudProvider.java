@@ -404,10 +404,9 @@ public class CloudProvider
 	 * @throws InternalException
 	 * @throws CloudException
 	 */
-	public Server startServer(String serverName, String productName)
-			throws InternalException, CloudException
+	public Server startServer(String serverName, String productName,
+			String imageId) throws InternalException, CloudException
 	{
-		String imageId = "ami-15765c61";
 		String dataCenterId = "eu-west-1b";
 		String keypairOrPassword = "sndefault";
 		String vlan = "";

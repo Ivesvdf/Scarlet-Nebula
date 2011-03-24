@@ -8,4 +8,5 @@ public class AddServerWizardDataRecorder implements DataRecorder
 	public CloudProvider provider;
 	public String instanceName;
 	public String instanceSize;
+	public String image;
 }

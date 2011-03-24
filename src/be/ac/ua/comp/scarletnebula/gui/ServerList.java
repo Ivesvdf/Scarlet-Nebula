@@ -47,7 +47,6 @@ public class ServerList extends javax.swing.JList implements ComponentListener
 		JViewport viewport = (JViewport) list.getParent();
 
 		Dimension newSize = viewport.getExtentSize();
-		System.out.println(list.getInsets());
 		final int totalWidth = newSize.width - list.getInsets().left
 				- list.getInsets().right - 1;
 		final int serverCount = totalWidth / 200;
@@ -57,20 +56,11 @@ public class ServerList extends javax.swing.JList implements ComponentListener
 
 		final int serverWidth = totalWidth / serverCount;
 
-		System.out.println("Total width = " + totalWidth);
-		System.out.println("Server width = " + serverWidth);
-		System.out.println("Server count = " + serverCount);
-
-		ServerCellRenderer.serverWidth = serverWidth;
-
 		list.setFixedCellHeight(100);
 		list.setFixedCellWidth(serverWidth);
 
 		list.revalidate();
 		list.repaint();
-
-		System.out.println(list);
-
 	}
 
 	@Override
