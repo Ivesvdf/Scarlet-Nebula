@@ -9,9 +9,13 @@ import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.ListCellRenderer;
+import javax.swing.ListSelectionModel;
 import javax.swing.SwingConstants;
 import javax.swing.UIManager;
 import javax.swing.border.BevelBorder;
+
+import org.dasein.cloud.CloudException;
+import org.dasein.cloud.InternalException;
 
 import be.ac.ua.comp.scarletnebula.core.CloudProvider;
 import be.ac.ua.comp.scarletnebula.core.KeyManager;
@@ -20,17 +24,18 @@ public class KeyList extends JList
 {
 	private static final long serialVersionUID = 1L;
 	DefaultListModel model;
+	CloudProvider provider;
 
-	KeyList(CloudProvider provider)
+	public KeyList(CloudProvider provider)
 	{
 		super(new DefaultListModel());
 		model = (DefaultListModel) getModel();
+		this.provider = provider;
 
 		setBorder(BorderFactory.createBevelBorder(BevelBorder.LOWERED));
 		setCellRenderer(new LabelCellRenderer());
+		setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
-		for (String keyname : KeyManager.getKeyNames(provider.getName()))
-			add(keyname);
 	}
 
 	public void add(String keyname)
@@ -58,27 +63,38 @@ public class KeyList extends JList
 		{
 
 			JLabel renderer = (JLabel) value;
+			renderer.setOpaque(true);
 
 			Color foreground;
 			Color background;
 
 			if (isSelected)
 			{
-				background = UIManager.getColor("List.selectionBackground");
-				foreground = UIManager.getColor("List.selectionForeground");
+				background = UIManager.getColor("Tree.selectionBackground");
+				foreground = UIManager.getColor("Tree.selectionForeground");
 			}
 			else
 			{
-				background = Color.WHITE;
 				foreground = Color.BLACK;
+				background = Color.WHITE;
 			}
-			if (!isSelected)
-			{
-				renderer.setForeground(foreground);
-				renderer.setBackground(background);
-			}
-
+			renderer.setBackground(background);
+			renderer.setForeground(foreground);
 			return renderer;
+		}
+	}
+
+	public void fillWithKnownKeys()
+	{
+		for (String keyname : KeyManager.getKeyNames(provider.getName()))
+			add(keyname);
+	}
+
+	public void fillWithUnknownKeys() throws InternalException, CloudException
+	{
+		for (String keyname : provider.getUnknownKeys())
+		{
+			add(keyname);
 		}
 	}
 }

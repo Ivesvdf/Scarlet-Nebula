@@ -2,10 +2,12 @@ package be.ac.ua.comp.scarletnebula.gui.addserverwizard;
 
 import javax.swing.JDialog;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 
 import be.ac.ua.comp.scarletnebula.core.CloudManager;
 import be.ac.ua.comp.scarletnebula.core.CloudProvider;
 import be.ac.ua.comp.scarletnebula.gui.GUI;
+import be.ac.ua.comp.scarletnebula.gui.addproviderwizard.AddProviderWizard;
 import be.ac.ua.comp.scarletnebula.wizard.DataRecorder;
 import be.ac.ua.comp.scarletnebula.wizard.SimpleWizardTemplate;
 import be.ac.ua.comp.scarletnebula.wizard.Wizard;
@@ -30,9 +32,14 @@ public class AddServerWizard extends JDialog implements WizardListener
 		switch (CloudManager.get().getLinkedCloudProviderNames().size())
 		{
 			case 0:
-				// TODO: handle zero cloudproviders
-				// throw new Exception("No CloudProviders linked!");
-				break;
+				JOptionPane
+						.showMessageDialog(
+								parent,
+								"Please add a new CloudProvider before starting new servers.",
+								"First add Provider", JOptionPane.ERROR_MESSAGE);
+				AddProviderWizard wiz = new AddProviderWizard();
+				wiz.startModal(parent);
+				return;
 			case 1: // One provider -- user has to pick this one so skip the
 					// page
 				CloudProvider prov = (CloudProvider) CloudManager.get()

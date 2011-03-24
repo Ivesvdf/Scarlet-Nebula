@@ -489,11 +489,6 @@ public class GUI extends JFrame implements ListSelectionListener,
 	 * updateCommunicationTab(selectedServers); }
 	 */
 
-	private void updateCommunicationTab(Collection<Server> selectedServers)
-	{
-
-	}
-
 	void startAddServerWizard()
 	{
 		if (CloudManager.get().getLinkedCloudProviders().size() == 0)
@@ -507,7 +502,7 @@ public class GUI extends JFrame implements ListSelectionListener,
 							JOptionPane.ERROR_MESSAGE);
 
 			AddProviderWizard wiz = new AddProviderWizard();
-			wiz.startModal(null);
+			wiz.startModal(this);
 			return;
 		}
 		new AddServerWizard(this, this);

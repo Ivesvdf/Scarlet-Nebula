@@ -101,9 +101,8 @@ public class ManageProvidersWindow extends JDialog
 				}
 
 				String provname = (String) providerListModel.get(index);
-				CloudManager.get().deleteCloudProvider(provname);
-
 				providerListModel.remove(index);
+				CloudManager.get().deleteCloudProvider(provname);
 			}
 		});
 

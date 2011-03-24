@@ -1,5 +1,6 @@
 package be.ac.ua.comp.scarletnebula.gui.keywizard;
 
+import be.ac.ua.comp.scarletnebula.core.CloudProvider;
 import be.ac.ua.comp.scarletnebula.gui.addproviderwizard.AddProviderWizardDataRecorder;
 import be.ac.ua.comp.scarletnebula.wizard.DataRecorder;
 import be.ac.ua.comp.scarletnebula.wizard.WizardPage;
@@ -14,7 +15,7 @@ public class AcceptKeyHandlerPage extends WizardPage
 		CREATE, USEEXISTING
 	};
 
-	AcceptKeyHandlerPage(Action action)
+	AcceptKeyHandlerPage(Action action, CloudProvider provider)
 	{
 		if (action == Action.CREATE)
 		{
@@ -22,7 +23,6 @@ public class AcceptKeyHandlerPage extends WizardPage
 		}
 		else
 		{
-			// new
 		}
 	}
 

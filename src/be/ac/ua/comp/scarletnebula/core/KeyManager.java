@@ -11,6 +11,8 @@ import java.util.Collection;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import be.ac.ua.comp.scarletnebula.misc.Utils;
+
 public class KeyManager
 {
 	private static Log log = LogFactory.getLog(KeyManager.class);
@@ -40,6 +42,26 @@ public class KeyManager
 		catch (IOException e)
 		{
 			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+	public static void addKey(String providerName, String keyname, File key)
+	{
+
+		if (assureDirectory(providerName) == null)
+			return;
+
+		try
+		{
+			Utils.copyFile(key, new File(getKeyFilename(providerName, keyname)));
+		}
+		catch (FileNotFoundException e)
+		{
+			e.printStackTrace();
+		}
+		catch (IOException e)
+		{
 			e.printStackTrace();
 		}
 	}

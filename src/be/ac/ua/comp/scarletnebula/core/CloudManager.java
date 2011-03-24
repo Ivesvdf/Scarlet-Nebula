@@ -167,9 +167,11 @@ public class CloudManager
 	{
 		CloudProvider provider = providers.get(provname);
 		providers.remove(provname);
+		System.out.println(getLinkedCloudProviders().size());
 
 		// Remove all of his servers
-		for (Server server : provider.listLinkedServers())
+		Collection<Server> linkedServers = provider.listLinkedServers();
+		for (Server server : linkedServers)
 			server.unlink();
 
 		// Remove his server directory

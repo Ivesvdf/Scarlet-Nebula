@@ -10,8 +10,9 @@ public class KeyWizard extends Wizard
 {
 	public KeyWizard(Frame parent, CloudProvider provider)
 	{
-		super(new CreateUseChoicePage(), null, new SimpleWizardTemplate());
+		super(new CreateUseChoicePage(provider), null,
+				new SimpleWizardTemplate());
 
-		startModal("Thanks for trying Scarlet Nebula", 400, 310, parent);
+		startModal("Manage SSH Keys", 400, 310, parent);
 	}
 }

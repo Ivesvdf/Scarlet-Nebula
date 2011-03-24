@@ -291,7 +291,6 @@ public class CloudProvider
 		{
 			createKey(shellKeySupport, "sndefault");
 		}
-
 	}
 
 	/**
@@ -763,5 +762,18 @@ public class CloudProvider
 	public boolean test()
 	{
 		return providerImpl.testContext() != null;
+	}
+
+	public Collection<String> getUnknownKeys() throws InternalException,
+			CloudException
+	{
+		ShellKeySupport shellKeySupport = providerImpl.getIdentityServices()
+				.getShellKeySupport();
+
+		Collection<String> keys = shellKeySupport.list();
+		Collection<String> knownKeys = KeyManager.getKeyNames(getName());
+		keys.removeAll(knownKeys);
+		return keys;
+
 	}
 }

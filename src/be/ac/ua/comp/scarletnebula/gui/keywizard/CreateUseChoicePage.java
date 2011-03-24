@@ -9,6 +9,7 @@ import javax.swing.ButtonGroup;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 
+import be.ac.ua.comp.scarletnebula.core.CloudProvider;
 import be.ac.ua.comp.scarletnebula.gui.BetterTextLabel;
 import be.ac.ua.comp.scarletnebula.wizard.DataRecorder;
 import be.ac.ua.comp.scarletnebula.wizard.WizardPage;
@@ -20,11 +21,12 @@ public class CreateUseChoicePage extends WizardPage
 	final JRadioButton createButton = new JRadioButton("Create a new key");
 	final JRadioButton useButton = new JRadioButton("Use an existing key");
 	ButtonGroup group = new ButtonGroup();
+	CloudProvider provider;
 
-	CreateUseChoicePage()
+	CreateUseChoicePage(CloudProvider provider)
 	{
 		setLayout(new BorderLayout());
-
+		this.provider = provider;
 		// The text on top
 		BetterTextLabel txt = new BetterTextLabel(
 				"After starting new servers, you'll connect to these servers through an SSH connection. "
@@ -53,12 +55,12 @@ public class CreateUseChoicePage extends WizardPage
 	{
 		if (group.getSelection() == createButton.getModel())
 		{
-			return new AcceptKeyHandlerPage(AcceptKeyHandlerPage.Action.CREATE);
+			return new AcceptKeyHandlerPage(AcceptKeyHandlerPage.Action.CREATE,
+					provider);
 		}
 		else
 		{
-			return new AcceptKeyHandlerPage(
-					AcceptKeyHandlerPage.Action.USEEXISTING);
+			return new UseExistingKeyPage(provider);
 		}
 
 	}
