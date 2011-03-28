@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.BorderFactory;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -140,23 +141,17 @@ public class ChooseImagePage extends WizardPage
 
 		if (selection < 0)
 		{
-			// Do something, need another page after this one to fix...
-			log.error("Need finish page!! Please write");
+			JOptionPane
+					.showMessageDialog(
+							this,
+							"Select an image by choosing a platform, architecture, "
+									+ "entering search terms in the search box and subsequently pressing the ENTER button.",
+							"Select image", JOptionPane.ERROR_MESSAGE);
+			return null;
 		}
 		MachineImage image = model.getRow(selection);
 		rec.image = image.getProviderMachineImageId();
-		return null;
+		return new TaggingPage();
 	}
 
-	@Override
-	public boolean nextIsEnabled()
-	{
-		return false;
-	}
-
-	@Override
-	public boolean finishIsEnabled()
-	{
-		return true;
-	}
 }
