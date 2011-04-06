@@ -533,6 +533,7 @@ public class GUI extends JFrame implements ListSelectionListener,
 		final String instancesize = rec.instanceSize;
 		final String image = rec.image;
 		final CloudProvider provider = rec.provider;
+		final Collection<String> tags = rec.tags;
 
 		if (Server.exists(instancename))
 		{
@@ -545,7 +546,7 @@ public class GUI extends JFrame implements ListSelectionListener,
 		try
 		{
 			Server server = provider.startServer(instancename, instancesize,
-					image);
+					image, tags);
 			refreshUntilServerHasState(server, VmState.RUNNING);
 		}
 		catch (InternalException e)

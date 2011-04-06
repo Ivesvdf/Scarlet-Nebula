@@ -6,7 +6,9 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 import java.util.Properties;
 
 import org.apache.commons.logging.Log;
@@ -18,6 +20,8 @@ import org.dasein.cloud.compute.Platform;
 import org.dasein.cloud.compute.VirtualMachine;
 import org.dasein.cloud.compute.VmState;
 
+import be.ac.ua.comp.scarletnebula.misc.Utils;
+
 import com.jcraft.jsch.UserInfo;
 
 public class Server
@@ -25,18 +29,20 @@ public class Server
 	private static Log log = LogFactory.getLog(Server.class);
 
 	VirtualMachine serverImpl;
-	Collection<ServerChangedObserver> serverChangedObservers;
+	Collection<ServerChangedObserver> serverChangedObservers = new ArrayList<ServerChangedObserver>();
 	CloudProvider provider;
 	private String friendlyName;
 	String keypair;
+	Collection<String> tags;
 
 	public Server(VirtualMachine server, CloudProvider inputProvider,
-			String inputKeypair, String inputFriendlyName)
+			String inputKeypair, String inputFriendlyName,
+			Collection<String> tags)
 	{
-		serverChangedObservers = new ArrayList<ServerChangedObserver>();
 		provider = inputProvider;
 		keypair = inputKeypair;
 		serverImpl = server;
+		this.tags = tags;
 		setFriendlyName(inputFriendlyName);
 	}
 
@@ -81,7 +87,7 @@ public class Server
 	 */
 	static Server load(VirtualMachine server, CloudProvider provider)
 	{
-		String propertiesfilename = getSaveFilename(provider, server.getName());
+		String propertiesfilename = getSaveFilename(provider, server);
 		Properties props = new Properties();
 		try
 		{
@@ -89,6 +95,7 @@ public class Server
 		}
 		catch (FileNotFoundException e)
 		{
+			log.error("Save file for server " + server + " not found");
 			// Just ignore if the file isn't found.
 		}
 		catch (IOException e)
@@ -96,12 +103,22 @@ public class Server
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		return new Server(server, provider,
-				props.getProperty("keypair") != null ? props
-						.getProperty("keypair") : "default",
-				props.getProperty("friendlyName") != null ? props
-						.getProperty("friendlyName") : server.getName() + " ("
-						+ provider.getName() + ")");
+		String keypair = props.getProperty("keypair") != null ? props
+				.getProperty("keypair") : "default";
+		String friendlyName = props.getProperty("friendlyName") != null ? props
+				.getProperty("friendlyName") : server.getName() + " ("
+				+ provider.getName() + ")";
+
+		List<String> daseinTags = new ArrayList<String>();
+		for (String key : server.getTags().keySet())
+		{
+			daseinTags.add(key + ":" + server.getTags().get(key));
+		}
+
+		System.out.println("properties tags: " + props.getProperty("tags"));
+		Collection<String> tags = (props.getProperty("tags") != null ? Arrays
+				.asList(props.getProperty("tags").split(",")) : daseinTags);
+		return new Server(server, provider, keypair, friendlyName, tags);
 	}
 
 	/**
@@ -112,9 +129,9 @@ public class Server
 	 * @param instanceName
 	 * @return
 	 */
-	static String getSaveFilename(CloudProvider provider, String instanceName)
+	static String getSaveFilename(CloudProvider provider, VirtualMachine server)
 	{
-		return provider.getSaveFileDir() + instanceName;
+		return provider.getSaveFileDir() + server.getProviderVirtualMachineId();
 	}
 
 	/**
@@ -145,9 +162,11 @@ public class Server
 			properties.setProperty("keypair", keypair);
 			properties.setProperty("providerClassName",
 					provider.getUnderlyingClassname());
+			properties.setProperty("tags",
+					Utils.implode(new ArrayList<String>(tags), ","));
 
 			FileOutputStream outputstream = new FileOutputStream(
-					getSaveFilename(provider, serverImpl.getName()));
+					getSaveFilename(provider, serverImpl));
 			properties.store(outputstream, null);
 			outputstream.close();
 		}
@@ -376,5 +395,10 @@ public class Server
 	public static boolean exists(String name)
 	{
 		return CloudManager.get().serverExists(name);
+	}
+
+	public Collection<String> getTags()
+	{
+		return tags;
 	}
 }

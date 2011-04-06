@@ -194,6 +194,7 @@ public class CloudProvider
 	public Server loadServer(String unfriendlyName) throws InternalException,
 			CloudException, IOException
 	{
+		log.warn("Getting for name " + unfriendlyName);
 		VirtualMachine server = getServerImpl(unfriendlyName);
 
 		if (server == null)
@@ -231,6 +232,8 @@ public class CloudProvider
 			// should also be removed.
 			if (server == null)
 			{
+				log.warn("Server from file " + file
+						+ " cannot be loaded. Discarting save file.");
 				deleteServerSaveFile(file);
 			}
 			else
@@ -405,19 +408,29 @@ public class CloudProvider
 	 * @throws CloudException
 	 */
 	public Server startServer(String serverName, String productName,
-			String imageId) throws InternalException, CloudException
+			String imageId, Collection<String> tags) throws InternalException,
+			CloudException
 	{
 		String dataCenterId = "eu-west-1b";
 		String keypairOrPassword = "sndefault";
-		String vlan = "";
+		String vlan = null;
 		String[] firewalls = new String[] { "sshonly" };
+
+		Collection<org.dasein.cloud.Tag> daseinTags = new ArrayList<org.dasein.cloud.Tag>();
+		int i = 0;
+
+		for (String tag : tags)
+		{
+			daseinTags.add(new org.dasein.cloud.Tag("tag" + (++i), tag));
+		}
 
 		VirtualMachine daseinServer = virtualMachineServices.launch(imageId,
 				getVMProductWithName(productName), dataCenterId, serverName,
-				"", keypairOrPassword, vlan, false, false, firewalls);
+				"", keypairOrPassword, vlan, false, false, firewalls,
+				daseinTags.toArray(new org.dasein.cloud.Tag[0]));
 
 		Server server = new Server(daseinServer, this, keypairOrPassword,
-				serverName);
+				serverName, tags);
 
 		linkUnlinkedServer(server);
 		return server;

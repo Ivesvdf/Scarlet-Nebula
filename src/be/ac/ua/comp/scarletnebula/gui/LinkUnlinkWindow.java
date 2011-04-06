@@ -6,6 +6,7 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowEvent;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -29,6 +30,8 @@ import be.ac.ua.comp.scarletnebula.core.Server;
 public class LinkUnlinkWindow extends JDialog
 {
 	private static final long serialVersionUID = 1L;
+	final ServerListModel unlinkedServerListModel;
+	final ServerListModel linkedServerListModel;
 
 	LinkUnlinkWindow(JFrame parent)
 	{
@@ -41,7 +44,7 @@ public class LinkUnlinkWindow extends JDialog
 		JPanel topPanel = new JPanel();
 		topPanel.setLayout(new GridBagLayout());
 
-		final ServerListModel linkedServerListModel = new ServerListModel();
+		linkedServerListModel = new ServerListModel();
 		final ServerList linkedServerList = new ServerList(
 				linkedServerListModel);
 		linkedServerList.setBorder(BorderFactory
@@ -63,7 +66,7 @@ public class LinkUnlinkWindow extends JDialog
 
 		topPanel.add(linkedServerScrollPane, c);
 
-		final ServerListModel unlinkedServerListModel = new ServerListModel();
+		unlinkedServerListModel = new ServerListModel();
 		final ServerList unlinkedServerList = new ServerList(
 				unlinkedServerListModel);
 		unlinkedServerList.setBorder(BorderFactory
@@ -179,8 +182,7 @@ public class LinkUnlinkWindow extends JDialog
 			@Override
 			public void actionPerformed(ActionEvent e)
 			{
-				actuallyLinkUnlink(linkedServerListModel,
-						unlinkedServerListModel);
+				actuallyLinkUnlink();
 				LinkUnlinkWindow.this.dispose();
 			}
 		});
@@ -196,8 +198,7 @@ public class LinkUnlinkWindow extends JDialog
 		setVisible(true);
 	}
 
-	protected void actuallyLinkUnlink(ServerListModel linkedServerListModel,
-			ServerListModel unlinkedServerListModel)
+	protected void actuallyLinkUnlink()
 	{
 		// Walk over all servers in the linked serverlist and link those that
 		// aren't linked
@@ -254,6 +255,17 @@ public class LinkUnlinkWindow extends JDialog
 			{
 				linkedServerListModel.addServer(server);
 			}
+		}
+	}
+
+	@Override
+	protected void processWindowEvent(WindowEvent e)
+	{
+		super.processWindowEvent(e);
+		if (e.getID() == WindowEvent.WINDOW_CLOSING)
+		{
+			actuallyLinkUnlink();
+			LinkUnlinkWindow.this.dispose();
 		}
 	}
 }

@@ -6,6 +6,7 @@ import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import javax.swing.BorderFactory;
@@ -19,6 +20,7 @@ import javax.swing.UIManager;
 import javax.swing.border.BevelBorder;
 
 import be.ac.ua.comp.scarletnebula.core.Server;
+import be.ac.ua.comp.scarletnebula.misc.Utils;
 
 class ServerCellRenderer implements ListCellRenderer
 {
@@ -54,9 +56,10 @@ class ServerCellRenderer implements ListCellRenderer
 
 		JLabel tags = new JLabel();
 
-		Font tagFont = new Font(tags.getFont().getName(), Font.PLAIN, 10);
+		Font tagFont = new Font(tags.getFont().getName(), Font.PLAIN, 11);
 		tags.setFont(tagFont);
-		tags.setText("dns, webserver");
+		tags.setText(Utils.implode(new ArrayList<String>(server.getTags()),
+				", "));
 		tags.setBackground(background);
 		tags.setForeground(foreground);
 

@@ -43,11 +43,12 @@ public class TaggingPage extends WizardPage
 		add(lbl, BorderLayout.NORTH);
 
 		JPanel bottomPanel = new JPanel();
+		bottomPanel.setLayout(new BorderLayout());
 
 		final JTextField inputField = new JTextField();
 		inputField.setBorder(BorderFactory
 				.createBevelBorder(BevelBorder.LOWERED));
-		inputField.addActionListener(new ActionListener()
+		ActionListener addTagActionListener = new ActionListener()
 		{
 			@Override
 			public void actionPerformed(ActionEvent e)
@@ -56,49 +57,40 @@ public class TaggingPage extends WizardPage
 				inputField.setText("");
 				taglist.addTag(new TagItem(tagTxt));
 			}
-		});
-		bottomPanel.setLayout(new BorderLayout());
+		};
+		inputField.addActionListener(addTagActionListener);
+
+		final JButton addButton = new JButton(new ImageIcon(getClass()
+				.getResource("/images/add16.png")));
+		addButton.addActionListener(addTagActionListener);
+		bottomPanel.add(inputField, BorderLayout.NORTH);
 
 		taglist.setBorder(BorderFactory.createBevelBorder(BevelBorder.LOWERED));
 
 		JScrollPane tagScrollPane = new JScrollPane(taglist);
-		bottomPanel.add(inputField, BorderLayout.NORTH);
 		bottomPanel.add(tagScrollPane, BorderLayout.CENTER);
 		bottomPanel.setBorder(BorderFactory.createEmptyBorder(0, 20, 20, 20));
 
+		bottomPanel.setBorder(BorderFactory.createEmptyBorder(0, 100, 0, 100));
 		add(bottomPanel, BorderLayout.CENTER);
 
-		inputField.requestFocus();
+		inputField.requestFocusInWindow();
 	}
 
 	@Override
 	public WizardPage next(DataRecorder recorder)
 	{
 		// Extract tags
-		Collection<String> tags = new ArrayList<String>();
-		for (Component c : taglist.getComponents())
-		{
-			TagItem tag = (TagItem) c;
-			tags.add(tag.getTagString());
-			log.debug("Tag:" + tag.getTagString());
-		}
-		return null;
-	}
-
-	@Override
-	public boolean nextIsEnabled()
-	{
-		return false;
-	}
-
-	@Override
-	public boolean finishIsEnabled()
-	{
-		return true;
+		Collection<String> tags = taglist.getTags();
+		AddServerWizardDataRecorder rec = (AddServerWizardDataRecorder) recorder;
+		rec.tags = tags;
+		return new FinalServerAddPage(rec);
 	}
 
 	class TagList extends JPanel
 	{
+		private static final long serialVersionUID = 1L;
+
 		TagList()
 		{
 			super();
@@ -113,6 +105,18 @@ public class TaggingPage extends WizardPage
 			add(tag);
 			revalidate();
 			repaint();
+		}
+
+		public Collection<String> getTags()
+		{
+			Collection<String> tags = new ArrayList<String>();
+			for (Component c : getComponents())
+			{
+				TagItem tag = (TagItem) c;
+				tags.add(tag.getTagString());
+				log.debug("Tag:" + tag.getTagString());
+			}
+			return tags;
 		}
 	}
 
@@ -151,5 +155,6 @@ public class TaggingPage extends WizardPage
 		{
 			return tag;
 		}
+
 	}
 }

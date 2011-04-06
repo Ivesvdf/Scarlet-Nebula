@@ -5,6 +5,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.channels.FileChannel;
+import java.util.List;
 
 public class Utils
 {
@@ -35,5 +36,19 @@ public class Utils
 				destination.close();
 			}
 		}
+	}
+
+	public static String implode(List<String> input, String delimiter)
+	{
+		String out = "";
+		for (int i = 0; i < input.size(); i++)
+		{
+			if (i != 0)
+			{
+				out += delimiter;
+			}
+			out += input.get(i);
+		}
+		return out;
 	}
 }
