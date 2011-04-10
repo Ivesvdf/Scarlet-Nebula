@@ -1,11 +1,17 @@
 package be.ac.ua.comp.scarletnebula.misc;
 
+import java.awt.Component;
+import java.awt.Window;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.channels.FileChannel;
 import java.util.List;
+
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
+import javax.swing.JOptionPane;
 
 public class Utils
 {
@@ -50,5 +56,35 @@ public class Utils
 			out += input.get(i);
 		}
 		return out;
+	}
+
+	public static Window findWindow(Component c)
+	{
+		if (c == null)
+		{
+			return JOptionPane.getRootFrame();
+		}
+		else if (c instanceof Window)
+		{
+			return (Window) c;
+		}
+		else
+		{
+			return findWindow(c.getParent());
+		}
+	}
+
+	/**
+	 * Returns an icon in the images/ directory for the name you provide
+	 * (including an extension). E.g. "stop.png" will return an Icon (actually
+	 * an ImageIcon) containing a stop symbol.
+	 * 
+	 * @param name
+	 *            Filename including extension excluding path
+	 * @return The icon described by name
+	 */
+	public static Icon icon(String name)
+	{
+		return new ImageIcon(Utils.class.getResource("/images/" + name));
 	}
 }

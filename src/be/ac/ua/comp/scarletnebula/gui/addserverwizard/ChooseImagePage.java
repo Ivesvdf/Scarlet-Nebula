@@ -4,8 +4,11 @@ import java.awt.BorderLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,6 +19,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.RowFilter;
+import javax.swing.SwingWorker;
 import javax.swing.border.BevelBorder;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
@@ -27,6 +31,8 @@ import org.dasein.cloud.compute.MachineImage;
 import org.dasein.cloud.compute.Platform;
 
 import be.ac.ua.comp.scarletnebula.core.CloudProvider;
+import be.ac.ua.comp.scarletnebula.gui.ThrobberBarWithText;
+import be.ac.ua.comp.scarletnebula.misc.Utils;
 import be.ac.ua.comp.scarletnebula.wizard.DataRecorder;
 import be.ac.ua.comp.scarletnebula.wizard.WizardPage;
 
@@ -39,15 +45,43 @@ public class ChooseImagePage extends WizardPage
 	private Architecture previousSelectedArchitecture = null;
 	final JTable table;
 	final MachineImageTableModel model;
+	private final CloudProvider provider;
+	private final JPanel throbberPanel = new JPanel(new BorderLayout());
 
 	ChooseImagePage(final CloudProvider provider)
 	{
+		this.provider = provider;
 		setLayout(new BorderLayout());
 
-		JPanel top = new JPanel(new GridBagLayout());
-		top.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+		model = new MachineImageTableModel(new ArrayList<MachineImage>());
+		table = new JTable(model);
+		final TableRowSorter<TableModel> sorter = new TableRowSorter<TableModel>(
+				model);
+		table.setRowSorter(sorter);
 
-		add(top, BorderLayout.NORTH);
+		JPanel aboveTable = new JPanel(new BorderLayout());
+		JPanel searchPanel = getSearchPanel(sorter);
+
+		aboveTable.add(searchPanel, BorderLayout.NORTH);
+		aboveTable.add(throbberPanel, BorderLayout.SOUTH);
+
+		add(aboveTable, BorderLayout.NORTH);
+
+		JScrollPane tableScrollPane = new JScrollPane(table);
+		tableScrollPane.setBorder(BorderFactory.createCompoundBorder(
+				BorderFactory.createEmptyBorder(10, 20, 20, 20),
+				BorderFactory.createBevelBorder(BevelBorder.LOWERED)));
+
+		add(tableScrollPane, BorderLayout.CENTER);
+
+	}
+
+	private JPanel getSearchPanel(final TableRowSorter<TableModel> sorter)
+	{
+		JPanel searchPanel = new JPanel(new GridBagLayout());
+		searchPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 10, 20));
+
+		add(searchPanel, BorderLayout.NORTH);
 		final PlatformComboBox platformComboBox = new PlatformComboBox();
 
 		GridBagConstraints c = new GridBagConstraints();
@@ -57,11 +91,11 @@ public class ChooseImagePage extends WizardPage
 		c.gridy = 0;
 		c.insets = new Insets(0, 0, 0, 5);
 
-		top.add(platformComboBox, c);
+		searchPanel.add(platformComboBox, c);
 		final ArchitectureComboBox architectureComboBox = new ArchitectureComboBox();
 
 		c.gridx = 1;
-		top.add(architectureComboBox, c);
+		searchPanel.add(architectureComboBox, c);
 
 		final JTextField searchField = new JTextField();
 
@@ -71,21 +105,8 @@ public class ChooseImagePage extends WizardPage
 		c.gridx = 2;
 		c.weightx = 1.0;
 		c.insets = new Insets(0, 0, 0, 0);
-		top.add(searchField, c);
+		searchPanel.add(searchField, c);
 
-		/*
-		 * Iterable<MachineImage> images = provider.getAllMachineImages(); if
-		 * (images == null) log.error("No images available");
-		 * 
-		 * for (MachineImage image : images) {
-		 * rows.add(Arrays.asList(image.getName(), image.getPlatform()
-		 * .toString(), image.getDescription())); }
-		 */
-		model = new MachineImageTableModel(new ArrayList<MachineImage>());
-		table = new JTable(model);
-		final TableRowSorter<TableModel> sorter = new TableRowSorter<TableModel>(
-				model);
-		table.setRowSorter(sorter);
 		searchField.addActionListener(new ActionListener()
 		{
 			@Override
@@ -101,19 +122,22 @@ public class ChooseImagePage extends WizardPage
 						|| !currentArchitecture
 								.equals(previousSelectedArchitecture))
 				{
-					Iterable<MachineImage> images = provider
-							.getAvailableMachineImages(currentPlatform,
-									currentArchitecture);
-					if (images == null)
-						log.error("No images available");
-
 					model.clear();
-					final List<MachineImage> toAdd = new ArrayList<MachineImage>();
-					for (MachineImage image : images)
-					{
-						toAdd.add(image);
-					}
-					model.addImages(toAdd);
+					log.warn("executing");
+
+					throbberPanel.removeAll();
+
+					ThrobberBarWithText throbber = new ThrobberBarWithText(
+							"Loading machine images");
+					throbberPanel.add(throbber, BorderLayout.CENTER);
+
+					throbberPanel.revalidate();
+
+					ImageModelFillerTask task = new ImageModelFillerTask(Utils
+							.findWindow(ChooseImagePage.this), table, model,
+							provider, currentPlatform, currentArchitecture);
+					log.warn("going to execute");
+					task.execute();
 
 					previousSelectedArchitecture = currentArchitecture;
 					previousSelectedPlatform = currentPlatform;
@@ -123,13 +147,8 @@ public class ChooseImagePage extends WizardPage
 				sorter.setSortKeys(null);
 			}
 		});
-		JScrollPane tableScrollPane = new JScrollPane(table);
-		tableScrollPane.setBorder(BorderFactory.createCompoundBorder(
-				BorderFactory.createEmptyBorder(0, 20, 20, 20),
-				BorderFactory.createBevelBorder(BevelBorder.LOWERED)));
 
-		add(tableScrollPane, BorderLayout.CENTER);
-
+		return searchPanel;
 	}
 
 	@Override
@@ -153,5 +172,66 @@ public class ChooseImagePage extends WizardPage
 		rec.image = image.getProviderMachineImageId();
 		return new TaggingPage();
 	}
+
+	class ImageModelFillerTask extends
+			SwingWorker<MachineImageTableModel, MachineImage>
+	{
+		MachineImageTableModel model;
+		CloudProvider provider;
+		Platform platform;
+		Architecture architecture;
+		JTable table;
+
+		ImageModelFillerTask(final Window win, JTable jtable,
+				MachineImageTableModel model, CloudProvider provider,
+				Platform platform, Architecture architecture)
+		{
+			this.model = model;
+			this.provider = provider;
+			this.platform = platform;
+			this.architecture = architecture;
+			this.table = jtable;
+
+			addPropertyChangeListener(new PropertyChangeListener()
+			{
+				@Override
+				public void propertyChange(PropertyChangeEvent evt)
+				{
+					if ("state".equals(evt.getPropertyName())
+							&& SwingWorker.StateValue.DONE == evt.getNewValue())
+					{
+						throbberPanel.removeAll();
+						throbberPanel.revalidate();
+					}
+				}
+
+			});
+
+		}
+
+		@Override
+		public MachineImageTableModel doInBackground()
+		{
+			Iterable<MachineImage> images = provider.getAvailableMachineImages(
+					platform, architecture);
+			if (images == null)
+				log.error("No images available");
+
+			for (MachineImage image : images)
+			{
+				if (isCancelled())
+					return model;
+				publish(image);
+			}
+
+			return model;
+		}
+
+		@Override
+		protected void process(List<MachineImage> toAdd)
+		{
+			model.addImages(toAdd);
+		}
+	};
 
 }
