@@ -7,8 +7,10 @@ import java.awt.event.KeyEvent;
 import java.util.Collection;
 import java.util.Random;
 
+import javax.swing.AbstractAction;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
@@ -17,6 +19,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JToolBar;
+import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.UIManager.LookAndFeelInfo;
@@ -117,6 +120,7 @@ public class GUI extends JFrame implements ListSelectionListener,
 		setIconImage(icon.getImage());
 
 		addMenubar();
+		setKeyboardAccelerators(serverListPanel);
 
 		// Last but not least, we construct a cloudmanager object, which will
 		// cause it to load all providers and thus servers.
@@ -146,6 +150,20 @@ public class GUI extends JFrame implements ListSelectionListener,
 
 			t.start();
 		}
+	}
+
+	private void setKeyboardAccelerators(JPanel serverListPanel)
+	{
+		serverListPanel.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
+				KeyStroke.getKeyStroke("control F"), "search");
+		serverListPanel.getActionMap().put("search", new AbstractAction()
+		{
+			@Override
+			public void actionPerformed(ActionEvent e)
+			{
+				JOptionPane.showInputDialog("oi");
+			}
+		});
 	}
 
 	private void addToolbar()
