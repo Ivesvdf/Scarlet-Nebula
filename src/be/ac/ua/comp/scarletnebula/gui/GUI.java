@@ -8,6 +8,7 @@ import java.util.Collection;
 import java.util.Random;
 
 import javax.swing.AbstractAction;
+import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComponent;
@@ -43,6 +44,7 @@ import be.ac.ua.comp.scarletnebula.gui.addproviderwizard.AddProviderWizard;
 import be.ac.ua.comp.scarletnebula.gui.addserverwizard.AddServerWizard;
 import be.ac.ua.comp.scarletnebula.gui.addserverwizard.AddServerWizardDataRecorder;
 import be.ac.ua.comp.scarletnebula.gui.welcomewizard.WelcomeWizard;
+import be.ac.ua.comp.scarletnebula.misc.Utils;
 
 public class GUI extends JFrame implements ListSelectionListener,
 		ServerChangedObserver, ServerLinkUnlinkObserver
@@ -161,7 +163,7 @@ public class GUI extends JFrame implements ListSelectionListener,
 			@Override
 			public void actionPerformed(ActionEvent e)
 			{
-				JOptionPane.showInputDialog("oi");
+				openSearch();
 			}
 		});
 	}
@@ -170,8 +172,7 @@ public class GUI extends JFrame implements ListSelectionListener,
 	{
 		JToolBar toolbar = new JToolBar();
 
-		ImageIcon addIcon = new ImageIcon(getClass().getResource(
-				"/images/add16.png"));
+		Icon addIcon = Utils.icon("add16.png");
 
 		JButton addButton = new JButton(addIcon);
 		addButton.addActionListener(new ActionListener()
@@ -185,8 +186,7 @@ public class GUI extends JFrame implements ListSelectionListener,
 		addButton.setBounds(10, 10, addIcon.getIconWidth(),
 				addIcon.getIconHeight());
 
-		ImageIcon refreshIcon = new ImageIcon(getClass().getResource(
-				"/images/refresh16.png"));
+		Icon refreshIcon = Utils.icon("refresh16.png");
 		JButton refreshButton = new JButton(refreshIcon);
 		refreshButton.addActionListener(new ActionListener()
 		{
@@ -199,8 +199,22 @@ public class GUI extends JFrame implements ListSelectionListener,
 		refreshButton.setBounds(10, 10, refreshIcon.getIconWidth(),
 				refreshIcon.getIconHeight());
 
+		Icon searchIcon = Utils.icon("search16.png");
+		JButton searchButton = new JButton(searchIcon);
+		searchButton.addActionListener(new ActionListener()
+		{
+			@Override
+			public void actionPerformed(ActionEvent e)
+			{
+				openSearch();
+			}
+		});
+		searchButton.setBounds(10, 10, searchIcon.getIconWidth(),
+				searchIcon.getIconHeight());
+
 		toolbar.add(addButton);
 		toolbar.add(refreshButton);
+		toolbar.add(searchButton);
 		toolbar.setFloatable(false);
 		add(toolbar, BorderLayout.PAGE_START);
 	}
@@ -213,6 +227,85 @@ public class GUI extends JFrame implements ListSelectionListener,
 	private void addMenubar()
 	{
 		JMenuBar menuBar = new JMenuBar();
+		JMenu providerMenu = getProviderMenu();
+		JMenu serverMenu = getServerMenu();
+		JMenu helpMenu = getHelpMenu();
+
+		menuBar.add(providerMenu);
+		menuBar.add(serverMenu);
+
+		menuBar.add(helpMenu);
+
+		setJMenuBar(menuBar);
+	}
+
+	private JMenu getServerMenu()
+	{
+		JMenu serverMenu = new JMenu("Servers");
+		serverMenu.setMnemonic(KeyEvent.VK_S);
+
+		JMenuItem startServerItem = new JMenuItem("Start new server",
+				Utils.icon("add16.png"));
+		startServerItem.setMnemonic(KeyEvent.VK_S);
+		startServerItem.addActionListener(new ActionListener()
+		{
+			@Override
+			public void actionPerformed(ActionEvent e)
+			{
+				startAddServerWizard();
+			}
+		});
+		serverMenu.add(startServerItem);
+
+		JMenuItem searchServerItem = new JMenuItem("Filter servers",
+				Utils.icon("search16.png"));
+		searchServerItem.setMnemonic(KeyEvent.VK_F);
+		searchServerItem.addActionListener(new ActionListener()
+		{
+			@Override
+			public void actionPerformed(ActionEvent e)
+			{
+				openSearch();
+			}
+		});
+		serverMenu.add(searchServerItem);
+		return serverMenu;
+	}
+
+	private JMenu getHelpMenu()
+	{
+		JMenu helpMenu = new JMenu("Help");
+		helpMenu.setMnemonic(KeyEvent.VK_H);
+
+		// Pick a random message to display in the help menu
+		String messages[] = { "(You won't find any help here)",
+				"(Nobody can help you)", "(Keep on lookin' if you need help)",
+				"(Heeeeelp!)", "(You might want to try google for help)",
+				"(Try yelling loudly if you need help)" };
+
+		Random generator = new Random(System.currentTimeMillis());
+
+		JMenuItem noHelpItem = new JMenuItem(
+				messages[generator.nextInt(messages.length)]);
+		noHelpItem.setEnabled(false);
+		helpMenu.add(noHelpItem);
+
+		JMenuItem aboutItem = new JMenuItem("About...");
+		aboutItem.addActionListener(new ActionListener()
+		{
+			@Override
+			public void actionPerformed(ActionEvent e)
+			{
+				openAboutBox();
+			}
+		});
+
+		helpMenu.add(aboutItem);
+		return helpMenu;
+	}
+
+	private JMenu getProviderMenu()
+	{
 		JMenu providerMenu = new JMenu("Providers");
 		providerMenu.setMnemonic(KeyEvent.VK_P);
 		providerMenu.getAccessibleContext().setAccessibleDescription(
@@ -243,40 +336,7 @@ public class GUI extends JFrame implements ListSelectionListener,
 			}
 		});
 		providerMenu.add(detectAllUnlinkedInstances);
-
-		menuBar.add(providerMenu);
-
-		JMenu helpMenu = new JMenu("Help");
-		helpMenu.setMnemonic(KeyEvent.VK_H);
-
-		// Pick a random message to display in the help menu
-		String messages[] = { "(You won't find any help here)",
-				"(Nobody can help you)", "(Keep on lookin' if you need help)",
-				"(Heeeeelp!)", "(You might want to try google for help)",
-				"(Try yelling loudly if you need help)" };
-
-		Random generator = new Random(System.currentTimeMillis());
-
-		JMenuItem noHelpItem = new JMenuItem(
-				messages[generator.nextInt(messages.length)]);
-		noHelpItem.setEnabled(false);
-		helpMenu.add(noHelpItem);
-
-		JMenuItem aboutItem = new JMenuItem("About...");
-		aboutItem.addActionListener(new ActionListener()
-		{
-			@Override
-			public void actionPerformed(ActionEvent e)
-			{
-				openAboutBox();
-			}
-		});
-
-		helpMenu.add(aboutItem);
-
-		menuBar.add(helpMenu);
-
-		setJMenuBar(menuBar);
+		return providerMenu;
 	}
 
 	protected void clearSelection()
@@ -671,5 +731,10 @@ public class GUI extends JFrame implements ListSelectionListener,
 	public void serverUnlinked(CloudProvider cloudProvider, Server srv)
 	{
 		removeServer(srv);
+	}
+
+	private void openSearch()
+	{
+		JOptionPane.showInputDialog("oi");
 	}
 }
