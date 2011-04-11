@@ -38,18 +38,18 @@ import be.ac.ua.comp.scarletnebula.wizard.WizardPage;
 
 public class ChooseImagePage extends WizardPage
 {
-
 	private static final long serialVersionUID = 1L;
-	private static Log log = LogFactory.getLog(ChooseImagePage.class);
+	private static final Log log = LogFactory.getLog(ChooseImagePage.class);
 	private Platform previousSelectedPlatform = null;
 	private Architecture previousSelectedArchitecture = null;
-	final JTable table;
-	final MachineImageTableModel model;
+	private final JTable table;
+	private final MachineImageTableModel model;
 	private final CloudProvider provider;
 	private final JPanel throbberPanel = new JPanel(new BorderLayout());
 
 	ChooseImagePage(final CloudProvider provider)
 	{
+		super();
 		this.provider = provider;
 		setLayout(new BorderLayout());
 
