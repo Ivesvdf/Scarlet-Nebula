@@ -2,6 +2,8 @@ package be.ac.ua.comp.scarletnebula.gui;
 
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -143,6 +145,7 @@ public class GUI extends JFrame implements ListSelectionListener,
 	{
 		final JPanel overlayPanel = new JPanel();
 		overlayPanel.setOpaque(false);
+		overlayPanel.setLayout(new GridBagLayout());
 		filterTextField.addKeyListener(new KeyListener()
 		{
 			@Override
@@ -183,11 +186,22 @@ public class GUI extends JFrame implements ListSelectionListener,
 		});
 
 		searchPanel.add(searchField);
-		overlayPanel.add(searchPanel);
 		searchPanel.add(closeButton);
 		// searchPanel.setBorder(BorderFactory
 		// .createBevelBorder(BevelBorder.RAISED));
 		searchPanel.setBorder(BorderFactory.createEtchedBorder());
+		searchPanel.setVisible(false);
+		searchPanel.setAlignmentX(RIGHT_ALIGNMENT);
+
+		GridBagConstraints c = new GridBagConstraints();
+		c.anchor = GridBagConstraints.LAST_LINE_END;
+		c.fill = GridBagConstraints.NONE;
+		c.gridx = 0;
+		c.gridy = 0;
+		c.weightx = 1.0;
+		c.weighty = 1.0;
+		c.insets = new Insets(3, 3, 3, 3);
+		overlayPanel.add(searchPanel, c);
 		return overlayPanel;
 	}
 
