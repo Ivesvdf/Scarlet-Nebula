@@ -47,6 +47,7 @@ import be.ac.ua.comp.scarletnebula.core.Server;
 import be.ac.ua.comp.scarletnebula.core.ServerChangedObserver;
 import be.ac.ua.comp.scarletnebula.core.ServerDisappearedException;
 import be.ac.ua.comp.scarletnebula.core.ServerLinkUnlinkObserver;
+import be.ac.ua.comp.scarletnebula.gui.ServerListModel.CreateNewServerServer;
 import be.ac.ua.comp.scarletnebula.gui.addproviderwizard.AddProviderWizard;
 import be.ac.ua.comp.scarletnebula.gui.addserverwizard.AddServerWizard;
 import be.ac.ua.comp.scarletnebula.gui.addserverwizard.AddServerWizardDataRecorder;
@@ -568,7 +569,7 @@ public class GUI extends JFrame implements ListSelectionListener,
 	private JPanel getServerListPanel()
 	{
 		// Create the list and put it in a scroll pane.
-		serverListModel = new ServerListModel();
+		serverListModel = new ServerListModel(CreateNewServerServer.DISPLAY_NEW_SERVER);
 		serverList = new ServerList(serverListModel);
 		// serverList.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 		serverList.addMouseListener(new ServerListMouseListener(this,

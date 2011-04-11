@@ -26,6 +26,7 @@ import org.dasein.cloud.InternalException;
 import be.ac.ua.comp.scarletnebula.core.CloudManager;
 import be.ac.ua.comp.scarletnebula.core.CloudProvider;
 import be.ac.ua.comp.scarletnebula.core.Server;
+import be.ac.ua.comp.scarletnebula.gui.ServerListModel.CreateNewServerServer;
 
 public class LinkUnlinkWindow extends JDialog
 {
@@ -44,7 +45,8 @@ public class LinkUnlinkWindow extends JDialog
 		JPanel topPanel = new JPanel();
 		topPanel.setLayout(new GridBagLayout());
 
-		linkedServerListModel = new ServerListModel();
+		linkedServerListModel = new ServerListModel(
+				CreateNewServerServer.NO_NEW_SERVER);
 		final ServerList linkedServerList = new ServerList(
 				linkedServerListModel);
 		linkedServerList.setBorder(BorderFactory
@@ -66,7 +68,8 @@ public class LinkUnlinkWindow extends JDialog
 
 		topPanel.add(linkedServerScrollPane, c);
 
-		unlinkedServerListModel = new ServerListModel();
+		unlinkedServerListModel = new ServerListModel(
+				CreateNewServerServer.NO_NEW_SERVER);
 		final ServerList unlinkedServerList = new ServerList(
 				unlinkedServerListModel);
 		unlinkedServerList.setBorder(BorderFactory

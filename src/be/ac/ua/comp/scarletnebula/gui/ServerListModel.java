@@ -13,17 +13,28 @@ import be.ac.ua.comp.scarletnebula.core.Server;
 
 public class ServerListModel extends AbstractListModel
 {
+	public static enum CreateNewServerServer
+	{
+		DISPLAY_NEW_SERVER, NO_NEW_SERVER
+	};
+
 	private static final long serialVersionUID = 1L;
 	private static Log log = LogFactory.getLog(ServerListModel.class);
+	private final boolean displayNewServer;
 
 	LinkedList<Server> visibleServers = new LinkedList<Server>();
 	LinkedList<Server> invisibleServers = new LinkedList<Server>();
+
+	ServerListModel(CreateNewServerServer displayNewServer)
+	{
+		this.displayNewServer = (displayNewServer == CreateNewServerServer.DISPLAY_NEW_SERVER);
+	}
 
 	@Override
 	public int getSize()
 	{
 		// One extra element for the "create server" server
-		return visibleServers.size() + 1;
+		return visibleServers.size() + (displayNewServer ? 1 : 0);
 	}
 
 	/**
