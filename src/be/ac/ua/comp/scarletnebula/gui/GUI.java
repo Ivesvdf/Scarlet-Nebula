@@ -1,13 +1,17 @@
 package be.ac.ua.comp.scarletnebula.gui;
 
 import java.awt.BorderLayout;
+import java.awt.FlowLayout;
+import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.util.Collection;
 import java.util.Random;
 
 import javax.swing.AbstractAction;
+import javax.swing.BorderFactory;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -19,12 +23,13 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JTextField;
 import javax.swing.JToolBar;
 import javax.swing.KeyStroke;
+import javax.swing.OverlayLayout;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.UIManager.LookAndFeelInfo;
-import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
@@ -57,61 +62,19 @@ public class GUI extends JFrame implements ListSelectionListener,
 
 	private Statusbar statusbar = new Statusbar();
 
+	private final JPanel searchPanel = new JPanel(new FlowLayout());
+
+	private final JTextField filterTextField = new JTextField(15);
+
 	public GUI()
 	{
-		try
-		{
-			boolean found = false;
-			for (LookAndFeelInfo info : UIManager.getInstalledLookAndFeels())
-			{
-				if ("Nimbus".equals(info.getName()))
-				{
-					UIManager.setLookAndFeel(info.getClassName());
-					found = true;
-					break;
-				}
-			}
-			if (!found)
-				UIManager.setLookAndFeel(UIManager
-						.getSystemLookAndFeelClassName());
-		}
-		catch (ClassNotFoundException e)
-		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		catch (InstantiationException e)
-		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		catch (IllegalAccessException e)
-		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		catch (UnsupportedLookAndFeelException e)
-		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		chooseLookAndFeel();
 
 		addToolbar();
 
-		final JPanel serverListPanel = setupServerListPanel();
-		getContentPane().add(serverListPanel);
-		/*
-		 * final JPanel rightPartition = setupRightPartition();
-		 * 
-		 * JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT,
-		 * leftPartition, rightPartition); splitPane.setDividerSize(4);
-		 * splitPane.setDividerLocation(160);
-		 * 
-		 * // setLayout(new BorderLayout()); add(splitPane); add(statusbar,
-		 * BorderLayout.SOUTH);
-		 * 
-		 * adjustStatusbar();
-		 */
+		final JPanel mainPanel = getMainPanel();
+
+		getContentPane().add(mainPanel);
 
 		setTitle("Scarlet Nebula");
 		setSize(700, 400);
@@ -122,7 +85,7 @@ public class GUI extends JFrame implements ListSelectionListener,
 		setIconImage(icon.getImage());
 
 		addMenubar();
-		setKeyboardAccelerators(serverListPanel);
+		setKeyboardAccelerators();
 
 		// Last but not least, we construct a cloudmanager object, which will
 		// cause it to load all providers and thus servers.
@@ -154,16 +117,128 @@ public class GUI extends JFrame implements ListSelectionListener,
 		}
 	}
 
-	private void setKeyboardAccelerators(JPanel serverListPanel)
+	private JPanel getMainPanel()
 	{
-		serverListPanel.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
-				KeyStroke.getKeyStroke("control F"), "search");
-		serverListPanel.getActionMap().put("search", new AbstractAction()
+		JPanel mainPanel = new JPanel()
+		{
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			public boolean isOptimizedDrawingEnabled()
+			{
+				return false;
+			}
+		};
+		mainPanel.setLayout(new OverlayLayout(mainPanel));
+
+		final JPanel serverListPanel = getServerListPanel();
+		final JPanel overlayPanel = getOverlayPanel();
+
+		mainPanel.add(overlayPanel);
+		mainPanel.add(serverListPanel);
+		return mainPanel;
+	}
+
+	private JPanel getOverlayPanel()
+	{
+		final JPanel overlayPanel = new JPanel();
+		overlayPanel.setOpaque(false);
+		filterTextField.addKeyListener(new KeyListener()
+		{
+			@Override
+			public void keyTyped(KeyEvent e)
+			{
+
+			}
+
+			@Override
+			public void keyReleased(KeyEvent e)
+			{
+			}
+
+			@Override
+			public void keyPressed(KeyEvent e)
+			{
+				if (e.getKeyCode() == KeyEvent.VK_ESCAPE)
+					hideFilter();
+			}
+		});
+
+		SearchField searchField = new SearchField(filterTextField);
+
+		ImageIcon closeIcon = (ImageIcon) Utils.icon("cross16.png");
+		JButton closeButton = new JButton(closeIcon);
+		closeButton.setBounds(10, 10, closeIcon.getIconWidth(),
+				closeIcon.getIconHeight());
+		closeButton.setMargin(new Insets(0, 0, 0, 0));
+		closeButton.setOpaque(false);
+		closeButton.setBorder(BorderFactory.createEmptyBorder(4, 4, 4, 4));
+		closeButton.addActionListener(new ActionListener()
 		{
 			@Override
 			public void actionPerformed(ActionEvent e)
 			{
-				openSearch();
+				hideFilter();
+			}
+		});
+
+		searchPanel.add(searchField);
+		overlayPanel.add(searchPanel);
+		searchPanel.add(closeButton);
+		// searchPanel.setBorder(BorderFactory
+		// .createBevelBorder(BevelBorder.RAISED));
+		searchPanel.setBorder(BorderFactory.createEtchedBorder());
+		return overlayPanel;
+	}
+
+	protected void hideFilter()
+	{
+		searchPanel.setVisible(false);
+		filterTextField.setText("");
+	}
+
+	private void showFilter()
+	{
+		searchPanel.setVisible(true);
+		filterTextField.requestFocusInWindow();
+	}
+
+	private void chooseLookAndFeel()
+	{
+		try
+		{
+			boolean found = false;
+			for (LookAndFeelInfo info : UIManager.getInstalledLookAndFeels())
+			{
+				if ("Nimbus".equals(info.getName()))
+				{
+					UIManager.setLookAndFeel(info.getClassName());
+					found = true;
+					break;
+				}
+			}
+			if (!found)
+				UIManager.setLookAndFeel(UIManager
+						.getSystemLookAndFeelClassName());
+		}
+		catch (Exception e)
+		{
+			log.error("Cannot set look and feel", e);
+		}
+	}
+
+	private void setKeyboardAccelerators()
+	{
+		serverList.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
+				KeyStroke.getKeyStroke("control F"), "search");
+		serverList.getActionMap().put("search", new AbstractAction()
+		{
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			public void actionPerformed(ActionEvent e)
+			{
+				showFilter();
 			}
 		});
 	}
@@ -206,7 +281,7 @@ public class GUI extends JFrame implements ListSelectionListener,
 			@Override
 			public void actionPerformed(ActionEvent e)
 			{
-				openSearch();
+				showFilter();
 			}
 		});
 		searchButton.setBounds(10, 10, searchIcon.getIconWidth(),
@@ -265,7 +340,7 @@ public class GUI extends JFrame implements ListSelectionListener,
 			@Override
 			public void actionPerformed(ActionEvent e)
 			{
-				openSearch();
+				showFilter();
 			}
 		});
 		serverMenu.add(searchServerItem);
@@ -476,7 +551,7 @@ public class GUI extends JFrame implements ListSelectionListener,
 		}
 	}
 
-	private JPanel setupServerListPanel()
+	private JPanel getServerListPanel()
 	{
 		// Create the list and put it in a scroll pane.
 		serverListModel = new ServerListModel();
@@ -731,10 +806,5 @@ public class GUI extends JFrame implements ListSelectionListener,
 	public void serverUnlinked(CloudProvider cloudProvider, Server srv)
 	{
 		removeServer(srv);
-	}
-
-	private void openSearch()
-	{
-		JOptionPane.showInputDialog("oi");
 	}
 }
