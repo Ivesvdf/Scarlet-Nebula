@@ -118,7 +118,7 @@ public class ServerListModel extends AbstractListModel
 		allServers.addAll(visibleServers);
 		allServers.addAll(invisibleServers);
 
-		int oldVisibleCount = visibleServers.size();
+		int oldVisibleCount = getSize();
 
 		visibleServers.clear();
 		invisibleServers.clear();
@@ -137,7 +137,7 @@ public class ServerListModel extends AbstractListModel
 			}
 		}
 
-		fireIntervalAdded(this, 0, visibleServers.size() - 1);
+		fireIntervalAdded(this, 0, getSize() - 1);
 	}
 
 	/**
@@ -171,7 +171,7 @@ public class ServerListModel extends AbstractListModel
 	public void clear()
 	{
 		invisibleServers.addAll(visibleServers);
-		int visibleServerCount = visibleServers.size();
+		int visibleServerCount = getSize();
 		visibleServers.clear();
 		fireIntervalRemoved(this, 0, visibleServerCount - 1);
 	}

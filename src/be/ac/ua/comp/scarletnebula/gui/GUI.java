@@ -32,6 +32,8 @@ import javax.swing.OverlayLayout;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.UIManager.LookAndFeelInfo;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
@@ -167,6 +169,33 @@ public class GUI extends JFrame implements ListSelectionListener,
 					hideFilter();
 			}
 		});
+		filterTextField.getDocument().addDocumentListener(
+				new DocumentListener()
+				{
+					@Override
+					public void removeUpdate(DocumentEvent e)
+					{
+						textChanged();
+
+					}
+
+					@Override
+					public void insertUpdate(DocumentEvent e)
+					{
+						textChanged();
+					}
+
+					@Override
+					public void changedUpdate(DocumentEvent e)
+					{
+
+					}
+
+					private void textChanged()
+					{
+						serverListModel.filter(filterTextField.getText());
+					}
+				});
 
 		SearchField searchField = new SearchField(filterTextField);
 
@@ -569,7 +598,8 @@ public class GUI extends JFrame implements ListSelectionListener,
 	private JPanel getServerListPanel()
 	{
 		// Create the list and put it in a scroll pane.
-		serverListModel = new ServerListModel(CreateNewServerServer.DISPLAY_NEW_SERVER);
+		serverListModel = new ServerListModel(
+				CreateNewServerServer.DISPLAY_NEW_SERVER);
 		serverList = new ServerList(serverListModel);
 		// serverList.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 		serverList.addMouseListener(new ServerListMouseListener(this,
