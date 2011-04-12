@@ -20,6 +20,7 @@ import org.dasein.cloud.compute.Platform;
 import org.dasein.cloud.compute.VirtualMachine;
 import org.dasein.cloud.compute.VmState;
 
+import be.ac.ua.comp.scarletnebula.gui.SearchHelper;
 import be.ac.ua.comp.scarletnebula.misc.Utils;
 
 import com.jcraft.jsch.UserInfo;
@@ -400,5 +401,47 @@ public class Server
 	public Collection<String> getTags()
 	{
 		return tags;
+	}
+
+	public boolean match(Collection<String> filterTerms)
+	{
+		for (String token : filterTerms)
+		{
+			final boolean negated = token.startsWith("-");
+
+			if (negated)
+				token = token.substring(1);
+
+			if (token.length() == 0)
+				continue;
+
+			final int colonPosition = token.indexOf(':');
+
+			// Prefix-based search term
+			if (colonPosition > 0)
+			{
+				final String prefix = token.substring(0, colonPosition);
+				final String term = token.substring(colonPosition + 1);
+
+				if (prefix == "tag")
+					return SearchHelper.matchTags(term, getTags(), negated);
+				else if (prefix == "name")
+					return SearchHelper.matchName(term, getFriendlyName(),
+							negated);
+				else if (prefix == "size")
+					return SearchHelper.matchSize(term, getSize(), negated);
+				else if (prefix == "status")
+					return SearchHelper.matchStatus(term, getStatus(), negated);
+				else
+					return false;
+			}
+			else
+			{
+				return SearchHelper
+						.matchName(token, getFriendlyName(), negated);
+			}
+
+		}
+		return true;
 	}
 }

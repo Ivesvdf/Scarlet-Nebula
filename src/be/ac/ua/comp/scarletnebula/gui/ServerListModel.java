@@ -125,9 +125,12 @@ public class ServerListModel extends AbstractListModel
 
 		fireIntervalRemoved(this, 0, oldVisibleCount - 1);
 
+		// Make a collection of tokens from a filterString, pass that to each
+		// server and ask it if matches.
+		Collection<String> filterTerms = SearchHelper.tokenize(filterString);
 		for (Server server : allServers)
 		{
-			if (server.getFriendlyName().contains(filterString))
+			if (server.match(filterTerms))
 			{
 				visibleServers.add(server);
 			}
