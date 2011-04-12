@@ -82,4 +82,17 @@ public class SearchHelperTest
 		assertFalse(SearchHelper.matchTags("FTP", testTags, true));
 		assertFalse(SearchHelper.matchTags("foo", testTags, false));
 	}
+
+	@Test
+	public void testMathCloudProvider()
+	{
+		assertTrue(SearchHelper.matchCloudProvider("amazon", "Amazon EC2 (EU)",
+				false));
+		assertFalse(SearchHelper.matchCloudProvider("rackspace",
+				"Amazon EC2 (EU)", false));
+		assertTrue(SearchHelper.matchCloudProvider("EC2", "Amazon EC2 (EU)",
+				false));
+		assertFalse(SearchHelper.matchCloudProvider("EC2", "Amazon EC2 (EU)",
+				true));
+	}
 }

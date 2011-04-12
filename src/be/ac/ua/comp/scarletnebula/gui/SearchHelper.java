@@ -119,4 +119,12 @@ public class SearchHelper
 		return !((negated && found) || (!negated && !found));
 	}
 
+	public static boolean matchCloudProvider(String term, String providerName,
+			boolean negated)
+	{
+		return foundToMatch(
+				providerName.toLowerCase().contains(term.toLowerCase()),
+				negated);
+	}
+
 }

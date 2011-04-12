@@ -432,13 +432,22 @@ public class Server
 					return SearchHelper.matchSize(term, getSize(), negated);
 				else if (prefix == "status")
 					return SearchHelper.matchStatus(term, getStatus(), negated);
+				else if (prefix == "provider")
+					return SearchHelper.matchCloudProvider(term, getCloud()
+							.getName(), negated);
 				else
 					return false;
 			}
 			else
 			{
 				return SearchHelper
-						.matchName(token, getFriendlyName(), negated);
+						.matchName(token, getFriendlyName(), negated)
+						|| SearchHelper.matchTags(token, getTags(), negated)
+						|| SearchHelper.matchSize(token, getSize(), negated)
+						|| SearchHelper
+								.matchStatus(token, getStatus(), negated)
+						|| SearchHelper.matchCloudProvider(token, getCloud()
+								.getName(), negated);
 			}
 
 		}
