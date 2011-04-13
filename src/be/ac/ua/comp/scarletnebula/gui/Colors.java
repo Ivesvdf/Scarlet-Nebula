@@ -90,7 +90,6 @@ public enum Colors
 
 	public String toHexString()
 	{
-		Color c = _myColor;
 		StringBuilder sb = new StringBuilder();
 		sb.append("#");
 		sb.append(Integer.toHexString(_myColor.getRed()));

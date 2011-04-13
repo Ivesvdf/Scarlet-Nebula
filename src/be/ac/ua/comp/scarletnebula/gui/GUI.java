@@ -340,11 +340,6 @@ public class GUI extends JFrame implements ListSelectionListener,
 		add(toolbar, BorderLayout.PAGE_START);
 	}
 
-	private void adjustStatusbar()
-	{
-		statusbar.setText("x servers running");
-	}
-
 	private void addMenubar()
 	{
 		JMenuBar menuBar = new JMenuBar();
@@ -498,19 +493,9 @@ public class GUI extends JFrame implements ListSelectionListener,
 		{
 			server.refresh();
 		}
-		catch (InternalException e)
+		catch (Exception e)
 		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		catch (CloudException e)
-		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		catch (ServerDisappearedException e)
-		{
-			// TODO Auto-generated catch block
+			log.error("Something happened while refreshing server " + server, e);
 			e.printStackTrace();
 		}
 
