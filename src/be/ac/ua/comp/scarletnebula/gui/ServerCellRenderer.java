@@ -149,7 +149,7 @@ class ServerCellRenderer implements ListCellRenderer
 		LinearGradientPaint gradientPaint = new LinearGradientPaint(0.0f, 0.0f,
 				250, 500, new float[] { 0.0f, 1.0f }, new Color[] { color1,
 						color2 });
-		MattePainter mattePainter = new MattePainter(gradientPaint);
+		MattePainter mattePainter = new MattePainter(gradientPaint, true);
 		p.setBackgroundPainter(mattePainter);
 
 		if (isSelected)
@@ -220,5 +220,19 @@ class ServerCellRenderer implements ListCellRenderer
 
 		ImageIcon icon = new ImageIcon(getClass().getResource(filename));
 		return icon;
+	}
+
+	public JXPanel onRollOver(JXPanel input)
+	{
+		Color color1 = Colors.White.color(0.5f);
+		Color color2 = Colors.Black.color(0.8f);
+		// Color color2 = Colors.Red.color(0.2f);
+
+		LinearGradientPaint gradientPaint = new LinearGradientPaint(0.0f, 0.0f,
+				250, 500, new float[] { 0.0f, 1.0f }, new Color[] { color1,
+						color2 });
+		MattePainter mattePainter = new MattePainter(gradientPaint, true);
+		input.setBackgroundPainter(mattePainter);
+		return input;
 	}
 }
