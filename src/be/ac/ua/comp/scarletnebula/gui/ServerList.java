@@ -54,7 +54,8 @@ public class ServerList extends JXList implements ComponentListener
 
 		});
 
-		getActionMap().remove("find");
+		getActionMap().remove("find"); // JXlist registers its own find, we'll
+										// provide our version later.
 	}
 
 	@Override

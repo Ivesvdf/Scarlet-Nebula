@@ -423,16 +423,17 @@ public class Server
 				final String prefix = token.substring(0, colonPosition);
 				final String term = token.substring(colonPosition + 1);
 
-				if (prefix == "tag")
+				if ("tag".equals(prefix))
 					return SearchHelper.matchTags(term, getTags(), negated);
-				else if (prefix == "name")
+				else if ("name".equals(prefix) || "inname".equals(prefix))
 					return SearchHelper.matchName(term, getFriendlyName(),
 							negated);
-				else if (prefix == "size")
+				else if ("size".equals(prefix))
 					return SearchHelper.matchSize(term, getSize(), negated);
-				else if (prefix == "status")
+				else if ("status".equals(prefix) || "state".equals(prefix))
 					return SearchHelper.matchStatus(term, getStatus(), negated);
-				else if (prefix == "provider")
+				else if ("provider".equals(prefix)
+						|| "inprovider".equals(prefix))
 					return SearchHelper.matchCloudProvider(term, getCloud()
 							.getName(), negated);
 				else
