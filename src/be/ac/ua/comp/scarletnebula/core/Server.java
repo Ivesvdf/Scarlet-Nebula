@@ -453,4 +453,65 @@ public class Server
 		}
 		return true;
 	}
+
+	/**
+	 * The method you should call when you want to keep refreshing until Server
+	 * "server" has state "state".
+	 * 
+	 * TODO Keep some kind of a map for each state, which can be checked whem
+	 * manually refreshing. Suppose a server is refreshed and it's state is
+	 * PAUSED. The user can then resume. Later, the server's timer that checks
+	 * server state will fire, and the state will show as RUNNING. The timer
+	 * will keep on firing until the count is high enough and it gives up, which
+	 * sucks. Therefore, when manually refreshing a server S, all timers for
+	 * that server should be checked. If there's a timer waiting for S's current
+	 * state, that timer should be cancelled.
+	 * 
+	 * @param server
+	 * @param state
+	 */
+	public void refreshUntilServerHasState(final VmState state)
+	{
+		refreshUntilServerHasState(state, 1);
+	}
+
+	private void refreshUntilServerHasState(final VmState state,
+			final int attempt)
+	{
+		if (getStatus() == state || attempt > 20)
+			return;
+
+		try
+		{
+			refresh();
+		}
+		catch (Exception e)
+		{
+			log.error("Something happened while refreshing server " + this, e);
+			e.printStackTrace();
+		}
+
+		if (getStatus() == state)
+			return;
+
+		// If the server's state still isn't the one we want it to be, try
+		// again, but only after waiting
+		// a logarithmic amount of time.
+		double wait = 15.0 * (Math.log10(attempt) + 1.0);
+
+		java.util.Timer timer = new java.util.Timer();
+		timer.schedule(new java.util.TimerTask()
+		{
+			@Override
+			public void run()
+			{
+				refreshUntilServerHasState(state, attempt + 1);
+				log.debug("Refreshing state for server " + getFriendlyName()
+						+ " because timer fired, waiting for state "
+						+ state.toString());
+				cancel();
+			}
+		}, (long) (wait * 1000));
+
+	}
 }

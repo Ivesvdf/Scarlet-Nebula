@@ -461,69 +461,6 @@ public class GUI extends JFrame implements ListSelectionListener,
 		// fillRightPartition();
 	}
 
-	/**
-	 * The method you should call when you want to keep refreshing until Server
-	 * "server" has state "state".
-	 * 
-	 * TODO Keep some kind of a map for each state, which can be checked whem
-	 * manually refreshing. Suppose a server is refreshed and it's state is
-	 * PAUSED. The user can then resume. Later, the server's timer that checks
-	 * server state will fire, and the state will show as RUNNING. The timer
-	 * will keep on firing until the count is high enough and it gives up, which
-	 * sucks. Therefore, when manually refreshing a server S, all timers for
-	 * that server should be checked. If there's a timer waiting for S's current
-	 * state, that timer should be cancelled.
-	 * 
-	 * @param server
-	 * @param state
-	 */
-	private void refreshUntilServerHasState(final Server server,
-			final VmState state)
-	{
-		refreshUntilServerHasState(server, state, 1);
-	}
-
-	private void refreshUntilServerHasState(final Server server,
-			final VmState state, final int attempt)
-	{
-		if (server.getStatus() == state || attempt > 20)
-			return;
-
-		try
-		{
-			server.refresh();
-		}
-		catch (Exception e)
-		{
-			log.error("Something happened while refreshing server " + server, e);
-			e.printStackTrace();
-		}
-
-		if (server.getStatus() == state)
-			return;
-
-		// If the server's state still isn't the one we want it to be, try
-		// again, but only after waiting
-		// a logarithmic amount of time.
-		double wait = 15.0 * (Math.log10(attempt) + 1.0);
-
-		java.util.Timer timer = new java.util.Timer();
-		timer.schedule(new java.util.TimerTask()
-		{
-			@Override
-			public void run()
-			{
-				refreshUntilServerHasState(server, state, attempt + 1);
-				log.debug("Refreshing state for server "
-						+ server.getFriendlyName()
-						+ " because timer fired, waiting for state "
-						+ state.toString());
-				cancel();
-			}
-		}, (long) (wait * 1000));
-
-	}
-
 	// TODO: Remove this ftion?
 	protected void detectAllUnlinkedInstances()
 	{
@@ -569,7 +506,7 @@ public class GUI extends JFrame implements ListSelectionListener,
 			try
 			{
 				server.terminate();
-				refreshUntilServerHasState(server, VmState.TERMINATED);
+				server.refreshUntilServerHasState(VmState.TERMINATED);
 			}
 			catch (CloudException e)
 			{
@@ -732,7 +669,7 @@ public class GUI extends JFrame implements ListSelectionListener,
 		{
 			Server server = provider.startServer(instancename, instancesize,
 					image, tags);
-			refreshUntilServerHasState(server, VmState.RUNNING);
+			server.refreshUntilServerHasState(VmState.RUNNING);
 		}
 		catch (InternalException e)
 		{
@@ -769,7 +706,7 @@ public class GUI extends JFrame implements ListSelectionListener,
 			for (Server server : selectedServers)
 			{
 				server.pause();
-				refreshUntilServerHasState(server, VmState.PAUSED);
+				server.refreshUntilServerHasState(VmState.PAUSED);
 			}
 		}
 		catch (CloudException e)
