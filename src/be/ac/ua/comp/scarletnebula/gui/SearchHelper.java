@@ -110,8 +110,17 @@ public class SearchHelper
 	public static boolean matchStatus(String term, VmState status,
 			boolean negated)
 	{
-		return foundToMatch(VmState.valueOf(term.toUpperCase()) == status,
-				negated);
+		boolean found = false;
+		try
+		{
+			VmState testState = VmState.valueOf(term.toUpperCase());
+			found = (testState == status);
+		}
+		catch (IllegalArgumentException e)
+		{
+
+		}
+		return foundToMatch(found, negated);
 	}
 
 	private static boolean foundToMatch(boolean found, boolean negated)

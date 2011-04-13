@@ -53,6 +53,8 @@ public class ServerList extends JXList implements ComponentListener
 			}
 
 		});
+
+		getActionMap().remove("find");
 	}
 
 	@Override

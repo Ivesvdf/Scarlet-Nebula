@@ -20,8 +20,8 @@ public class FinishPage extends WizardPage
 				+ rec.getName()
 				+ ".\n\nThis CloudProvider connects to "
 				+ rec.getTemplate().getName()
-				+ " on its "
-				+ rec.getEndpoint().getName() + " endpoint.";
+				+ (rec.getEndpoint() != null ? " on its "
+						+ rec.getEndpoint().getName() + " endpoint." : ".");
 
 		CloudProvider tmpProvider = new CloudProvider(rec.getName(), rec
 				.getTemplate().getClassname(), rec.getEndpoint().getURL(),

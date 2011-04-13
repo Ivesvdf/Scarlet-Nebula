@@ -40,8 +40,9 @@ public class ChooseNamePage extends WizardPage
 
 		// Prefill the textfield with something useful
 
-		name.setText(recorder.getTemplate().getShortName() + " ("
-				+ recorder.getEndpoint().getShortName() + ")");
+		name.setText(recorder.getTemplate().getShortName()
+				+ (recorder.getEndpoint() != null ? " ("
+						+ recorder.getEndpoint().getShortName() + ")" : ""));
 		name.setPreferredSize(name.getMinimumSize());
 
 	}

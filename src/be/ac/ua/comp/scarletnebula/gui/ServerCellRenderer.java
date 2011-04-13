@@ -52,7 +52,7 @@ class ServerCellRenderer implements ListCellRenderer
 
 		JLabel label = new JLabel(server.getFriendlyName(),
 				getServerIcon(server), SwingConstants.LEFT);
-		label.setOpaque(true);
+		label.setOpaque(false);
 
 		label.setBackground(background);
 		label.setForeground(foreground);

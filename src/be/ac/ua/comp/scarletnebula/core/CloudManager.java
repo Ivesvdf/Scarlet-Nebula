@@ -74,6 +74,12 @@ public class CloudManager
 				"Rackspace (not implemented)", "Rackspace",
 				"org.dasein.cloud.aws.AWSCloud");
 		providerTemplates.add(rackspace);
+
+		// Radix
+		CloudProviderTemplate radix = new CloudProviderTemplate("Radix",
+				"Radix", "be.ac.ua.comp.scarletnebula.misc.RadixCloudProvider");
+		radix.addEndPoint("default", "default", "radix.cmi.ua.ac.be");
+		providerTemplates.add(radix);
 	}
 
 	/**
