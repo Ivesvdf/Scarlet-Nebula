@@ -43,7 +43,6 @@ class ServerCellRenderer implements ListCellRenderer
 		Server server = (Server) value;
 
 		JPanel p = createServerPanel(list, index, isSelected);
-
 		final Color background = getBackgroundColor(list, index, isSelected);
 		final Color foreground = getForegroundColor(list, index, isSelected);
 
