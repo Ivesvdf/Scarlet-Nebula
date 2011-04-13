@@ -10,6 +10,7 @@ import javax.swing.JLabel;
 
 public class Tag extends JLabel
 {
+	private static final long serialVersionUID = 1L;
 
 	public Tag(String s)
 	{

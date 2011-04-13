@@ -66,8 +66,6 @@ public class GUI extends JFrame implements ListSelectionListener,
 	private ServerList serverList;
 	private ServerListModel serverListModel;
 
-	private Statusbar statusbar = new Statusbar();
-
 	private final JPanel searchPanel = new JPanel(new FlowLayout());
 
 	private final JTextField filterTextField = new JTextField(15);
