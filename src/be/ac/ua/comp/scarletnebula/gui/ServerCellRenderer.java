@@ -6,6 +6,7 @@ import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.awt.LinearGradientPaint;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -18,6 +19,9 @@ import javax.swing.ListCellRenderer;
 import javax.swing.SwingConstants;
 import javax.swing.UIManager;
 import javax.swing.border.BevelBorder;
+
+import org.jdesktop.swingx.JXPanel;
+import org.jdesktop.swingx.painter.MattePainter;
 
 import be.ac.ua.comp.scarletnebula.core.Server;
 import be.ac.ua.comp.scarletnebula.misc.Utils;
@@ -132,12 +136,21 @@ class ServerCellRenderer implements ListCellRenderer
 
 	private JPanel createServerPanel(JList list, int index, boolean isSelected)
 	{
-		JPanel p = new JPanel();
+		JXPanel p = new JXPanel();
 		p.setLayout(new GridBagLayout());
 
 		Color background = getBackgroundColor(list, index, isSelected);
 
 		p.setBackground(background);
+		Color color1 = Colors.White.color(0.5f);
+		Color color2 = Colors.Gray.color(0.95f);
+		// Color color2 = Colors.Red.color(0.2f);
+
+		LinearGradientPaint gradientPaint = new LinearGradientPaint(0.0f, 0.0f,
+				250, 500, new float[] { 0.0f, 1.0f }, new Color[] { color1,
+						color2 });
+		MattePainter mattePainter = new MattePainter(gradientPaint);
+		p.setBackgroundPainter(mattePainter);
 
 		if (isSelected)
 		{
@@ -149,7 +162,8 @@ class ServerCellRenderer implements ListCellRenderer
 		else
 		{
 			p.setBorder(BorderFactory.createCompoundBorder(
-					BorderFactory.createEmptyBorder(2, 2, 2, 2),
+					BorderFactory.createLineBorder(
+							UIManager.getColor("List.background"), 2),
 					BorderFactory.createEtchedBorder()));
 
 		}
