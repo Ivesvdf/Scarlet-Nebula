@@ -30,6 +30,7 @@ import javax.swing.JToolBar;
 import javax.swing.KeyStroke;
 import javax.swing.OverlayLayout;
 import javax.swing.SwingUtilities;
+import javax.swing.SwingWorker;
 import javax.swing.UIManager;
 import javax.swing.UIManager.LookAndFeelInfo;
 import javax.swing.event.DocumentEvent;
@@ -109,16 +110,17 @@ public class GUI extends JFrame implements ListSelectionListener,
 		// If there are no linked cloudproviders, start the new provider wizard
 		if (CloudManager.get().getLinkedCloudProviders().size() == 0)
 		{
-			Thread t = new Thread()
+			SwingWorker<Object, Object> welcomeWizardWorker = new SwingWorker<Object, Object>()
 			{
 				@Override
-				public void run()
+				protected Object doInBackground() throws Exception
 				{
 					new WelcomeWizard(GUI.this);
+					return null;
 				}
 			};
 
-			t.start();
+			welcomeWizardWorker.execute();
 		}
 	}
 
