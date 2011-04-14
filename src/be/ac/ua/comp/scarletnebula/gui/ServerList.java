@@ -2,8 +2,12 @@ package be.ac.ua.comp.scarletnebula.gui;
 
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.Point;
+import java.awt.Rectangle;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.Collection;
 
 import javax.swing.BorderFactory;
@@ -59,6 +63,30 @@ public class ServerList extends JXList implements ComponentListener
 
 		getActionMap().remove("find"); // JXlist registers its own find, we'll
 										// provide our version later.
+
+		addMouseListener(new MouseAdapter()
+		{
+			private void testClearSelection(MouseEvent e)
+			{
+				JList list = (JList) e.getSource();
+
+				Point currentPos = e.getPoint();
+
+				for (int i = 0; i < list.getModel().getSize(); i++)
+				{
+					Rectangle r = list.getCellBounds(i, i);
+					if (r.contains(currentPos))
+						return;
+				}
+				list.clearSelection();
+			}
+
+			@Override
+			public void mousePressed(MouseEvent e)
+			{
+				testClearSelection(e);
+			}
+		});
 	}
 
 	@Override
