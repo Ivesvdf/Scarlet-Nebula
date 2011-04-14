@@ -44,8 +44,7 @@ public class ServerList extends JXList implements ComponentListener
 		}
 
 		@Override
-		protected Component doHighlight(Component arg0,
-				ComponentAdapter arg1)
+		protected Component doHighlight(Component arg0, ComponentAdapter arg1)
 		{
 			JXPanel objectToBeRendered = (JXPanel) arg0;
 			serverCellRenderer.onRollOver(objectToBeRendered);
@@ -75,6 +74,12 @@ public class ServerList extends JXList implements ComponentListener
 		{
 			testClearSelection(e);
 		}
+
+		@Override
+		public void mouseReleased(MouseEvent e)
+		{
+			testClearSelection(e);
+		}
 	}
 
 	private static final long serialVersionUID = 1L;
@@ -93,7 +98,8 @@ public class ServerList extends JXList implements ComponentListener
 		setBorder(BorderFactory.createEmptyBorder(2, 2, 2, 2));
 		addComponentListener(this);
 		setRolloverEnabled(true);
-		addHighlighter(new RollOverHighlighter(HighlightPredicate.ROLLOVER_CELL, serverCellRenderer));
+		addHighlighter(new RollOverHighlighter(
+				HighlightPredicate.ROLLOVER_CELL, serverCellRenderer));
 
 		getActionMap().remove("find"); // JXlist registers its own find, we'll
 										// provide our version later.

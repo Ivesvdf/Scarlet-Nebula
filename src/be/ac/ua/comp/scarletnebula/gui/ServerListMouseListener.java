@@ -143,7 +143,7 @@ class ServerListMouseListener implements MouseListener
 			{
 				new AddServerWizard(gui, gui);
 			}
-			else
+			else if (serverlist.getSelectedServers().size() > 0)
 			// Normal double click on a server
 			{
 				new PropertiesWindow(gui, serverlist.getSelectedServers());
