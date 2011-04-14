@@ -414,7 +414,9 @@ public class RadixCloudProvider extends CloudProvider
 		public VirtualMachine getVirtualMachine(String arg0)
 				throws InternalException, CloudException
 		{
-			return createdServers.get(UUID.fromString(arg0));
+			VirtualMachine m = createdServers.get(UUID.fromString(arg0));
+
+			return m;
 		}
 
 		@Override
@@ -527,6 +529,18 @@ public class RadixCloudProvider extends CloudProvider
 			final VirtualMachineProduct prod = new VirtualMachineProduct();
 			prod.setName("Normal");
 			return prod;
+		}
+
+		@Override
+		public Architecture getArchitecture()
+		{
+			return Architecture.I32;
+		}
+
+		@Override
+		public Platform getPlatform()
+		{
+			return Platform.FREE_BSD;
 		}
 	}
 }

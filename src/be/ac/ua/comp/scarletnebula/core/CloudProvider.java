@@ -259,7 +259,10 @@ public class CloudProvider
 	private void deleteServerSaveFile(String unfriendlyName)
 	{
 		File toBeRemoved = new File(getSaveFileDir() + unfriendlyName);
-		toBeRemoved.delete();
+		final boolean result = toBeRemoved.delete();
+
+		if (!result)
+			log.error("Could not remove savefile for server " + unfriendlyName);
 	}
 
 	/**

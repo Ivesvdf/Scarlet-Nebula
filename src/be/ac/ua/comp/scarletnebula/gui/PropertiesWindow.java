@@ -78,6 +78,7 @@ public class PropertiesWindow extends JDialog
 		bottomPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
 		add(bottomPanel, BorderLayout.SOUTH);
 		setSize(500, 300);
+		setTitle("Server Properties - Scarlet Nebula");
 		updateOverviewTab(selectedServers);
 		setLocationRelativeTo(gui);
 		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
@@ -134,6 +135,12 @@ public class PropertiesWindow extends JDialog
 		DefaultFormBuilder builder = new DefaultFormBuilder(layout);
 		builder.setDefaultDialogBorder();
 		builder.appendSeparator("General Information");
+
+		final LabelEditSwitcherPanel servername = new LabelEditSwitcherPanel(
+				"hello");
+		servername.setInputVerifier(new ServernameInputVerifier());
+		builder.append("Name", servername);
+		builder.nextLine();
 
 		builder.append("Status", statusLabel);
 		builder.append("Provider", cloudLabel);
