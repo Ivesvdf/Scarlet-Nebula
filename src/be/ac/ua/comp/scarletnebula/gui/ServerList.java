@@ -32,6 +32,51 @@ import be.ac.ua.comp.scarletnebula.core.Server;
  */
 public class ServerList extends JXList implements ComponentListener
 {
+	private final class RollOverHighlighter extends AbstractHighlighter
+	{
+		private final ServerCellRenderer serverCellRenderer;
+
+		private RollOverHighlighter(HighlightPredicate predicate,
+				ServerCellRenderer serverCellRenderer)
+		{
+			super(predicate);
+			this.serverCellRenderer = serverCellRenderer;
+		}
+
+		@Override
+		protected Component doHighlight(Component arg0,
+				ComponentAdapter arg1)
+		{
+			JXPanel objectToBeRendered = (JXPanel) arg0;
+			serverCellRenderer.onRollOver(objectToBeRendered);
+			return objectToBeRendered;
+		}
+	}
+
+	private final class ClearSelectionMouseAdapter extends MouseAdapter
+	{
+		private void testClearSelection(MouseEvent e)
+		{
+			JList list = (JList) e.getSource();
+
+			Point currentPos = e.getPoint();
+
+			for (int i = 0; i < list.getModel().getSize(); i++)
+			{
+				Rectangle r = list.getCellBounds(i, i);
+				if (r.contains(currentPos))
+					return;
+			}
+			list.clearSelection();
+		}
+
+		@Override
+		public void mousePressed(MouseEvent e)
+		{
+			testClearSelection(e);
+		}
+	}
+
 	private static final long serialVersionUID = 1L;
 
 	ServerListModel serverListModel;
@@ -48,45 +93,12 @@ public class ServerList extends JXList implements ComponentListener
 		setBorder(BorderFactory.createEmptyBorder(2, 2, 2, 2));
 		addComponentListener(this);
 		setRolloverEnabled(true);
-		addHighlighter(new AbstractHighlighter(HighlightPredicate.ROLLOVER_CELL)
-		{
-			@Override
-			protected Component doHighlight(Component arg0,
-					ComponentAdapter arg1)
-			{
-				JXPanel objectToBeRendered = (JXPanel) arg0;
-				serverCellRenderer.onRollOver(objectToBeRendered);
-				return objectToBeRendered;
-			}
-
-		});
+		addHighlighter(new RollOverHighlighter(HighlightPredicate.ROLLOVER_CELL, serverCellRenderer));
 
 		getActionMap().remove("find"); // JXlist registers its own find, we'll
 										// provide our version later.
 
-		addMouseListener(new MouseAdapter()
-		{
-			private void testClearSelection(MouseEvent e)
-			{
-				JList list = (JList) e.getSource();
-
-				Point currentPos = e.getPoint();
-
-				for (int i = 0; i < list.getModel().getSize(); i++)
-				{
-					Rectangle r = list.getCellBounds(i, i);
-					if (r.contains(currentPos))
-						return;
-				}
-				list.clearSelection();
-			}
-
-			@Override
-			public void mousePressed(MouseEvent e)
-			{
-				testClearSelection(e);
-			}
-		});
+		addMouseListener(new ClearSelectionMouseAdapter());
 	}
 
 	@Override
