@@ -54,7 +54,6 @@ class ServerCellRenderer implements ListCellRenderer
 				getServerIcon(server), SwingConstants.LEFT);
 		label.setOpaque(false);
 
-		label.setBackground(background);
 		label.setForeground(foreground);
 
 		JLabel tags = new JLabel();
@@ -63,7 +62,6 @@ class ServerCellRenderer implements ListCellRenderer
 		tags.setFont(tagFont);
 		tags.setText(Utils.implode(new ArrayList<String>(server.getTags()),
 				", "));
-		tags.setBackground(background);
 		tags.setForeground(foreground);
 
 		p.setLayout(new GridBagLayout());
@@ -139,7 +137,8 @@ class ServerCellRenderer implements ListCellRenderer
 		JXPanel p = new JXPanel();
 		p.setLayout(new GridBagLayout());
 
-		Color background = getBackgroundColor(list, index, isSelected);
+		Color background = Colors.alpha(
+				getBackgroundColor(list, index, isSelected), 0.4f);
 
 		p.setBackground(background);
 		Color color1 = Colors.White.color(0.5f);
