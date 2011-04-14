@@ -18,11 +18,14 @@ class ServerListMouseListener implements MouseListener
 {
 	private GUI gui;
 	private ServerListModel serverListModel;
+	private ServerList serverlist;
 
-	ServerListMouseListener(GUI gui, ServerListModel serverListModel)
+	ServerListMouseListener(GUI gui, ServerList serverlist,
+			ServerListModel serverListModel)
 	{
 		super();
 		this.gui = gui;
+		this.serverlist = serverlist;
 		this.serverListModel = serverListModel;
 	}
 
@@ -136,15 +139,15 @@ class ServerListMouseListener implements MouseListener
 		{
 			// If the user double clicked a null server, this is taken as a hint
 			// to create a new server!
-			if (gui.getSelectedServers().size() > 0
-					&& gui.getSelectedServers().iterator().next() == null)
+			if (serverlist.getSelectedServers().size() > 0
+					&& serverlist.getSelectedServers().iterator().next() == null)
 			{
 				new AddServerWizard(gui, gui);
 			}
 			else
 			// Normal double click on a server
 			{
-				new PropertiesWindow(gui, gui.getSelectedServers());
+				new PropertiesWindow(gui, serverlist.getSelectedServers());
 			}
 		}
 

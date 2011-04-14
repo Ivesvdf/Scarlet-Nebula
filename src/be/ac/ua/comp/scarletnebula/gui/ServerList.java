@@ -4,6 +4,7 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
+import java.util.Collection;
 
 import javax.swing.BorderFactory;
 import javax.swing.JList;
@@ -15,6 +16,8 @@ import org.jdesktop.swingx.JXPanel;
 import org.jdesktop.swingx.decorator.AbstractHighlighter;
 import org.jdesktop.swingx.decorator.ComponentAdapter;
 import org.jdesktop.swingx.decorator.HighlightPredicate;
+
+import be.ac.ua.comp.scarletnebula.core.Server;
 
 /**
  * JList that displays JLabels as items in the list. This will allow me to
@@ -62,6 +65,12 @@ public class ServerList extends JXList implements ComponentListener
 	public void clearSelection()
 	{
 		setSelectedIndices(new int[0]);
+	}
+
+	public Collection<Server> getSelectedServers()
+	{
+		int indices[] = getSelectedIndices();
+		return serverListModel.getVisibleServersAtIndices(indices);
 	}
 
 	@Override

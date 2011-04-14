@@ -497,7 +497,7 @@ public class GUI extends JFrame implements ListSelectionListener,
 
 	protected void terminateSelectedServers()
 	{
-		Collection<Server> servers = getSelectedServers();
+		Collection<Server> servers = serverList.getSelectedServers();
 
 		for (Server server : servers)
 		{
@@ -525,7 +525,7 @@ public class GUI extends JFrame implements ListSelectionListener,
 		serverList = new ServerList(serverListModel);
 		// serverList.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 		serverList.addMouseListener(new ServerListMouseListener(this,
-				serverListModel));
+				serverList, serverListModel));
 		serverList.addListSelectionListener(this);
 		serverList.requestFocusInWindow();
 
@@ -578,7 +578,7 @@ public class GUI extends JFrame implements ListSelectionListener,
 			}
 			catch (ServerDisappearedException e)
 			{
-				log.info(e.toString());
+				log.info("Server disappeared.", e);
 				removeServer(server);
 			}
 		}
@@ -697,7 +697,7 @@ public class GUI extends JFrame implements ListSelectionListener,
 
 	public void pauseSelectedServers()
 	{
-		Collection<Server> selectedServers = getSelectedServers();
+		Collection<Server> selectedServers = serverList.getSelectedServers();
 
 		try
 		{
@@ -720,7 +720,7 @@ public class GUI extends JFrame implements ListSelectionListener,
 
 	public void rebootSelectedServers()
 	{
-		Collection<Server> selectedServers = getSelectedServers();
+		Collection<Server> selectedServers = serverList.getSelectedServers();
 
 		try
 		{
@@ -738,15 +738,9 @@ public class GUI extends JFrame implements ListSelectionListener,
 		}
 	}
 
-	Collection<Server> getSelectedServers()
-	{
-		int indices[] = serverList.getSelectedIndices();
-		return serverListModel.getVisibleServersAtIndices(indices);
-	}
-
 	public void unlinkSelectedServers()
 	{
-		Collection<Server> selectedServers = getSelectedServers();
+		Collection<Server> selectedServers = serverList.getSelectedServers();
 
 		for (Server server : selectedServers)
 		{

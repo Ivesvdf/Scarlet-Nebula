@@ -190,7 +190,11 @@ public class ServerListModel extends AbstractListModel
 		Collection<Server> servers = new ArrayList<Server>();
 
 		for (int i : indices)
-			servers.add(getVisibleServerAtIndex(i));
+		{
+			final Server server = getVisibleServerAtIndex(i);
+			if (server != null)
+				servers.add(server);
+		}
 
 		return servers;
 	}
