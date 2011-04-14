@@ -56,14 +56,7 @@ public class LabelEditSwitcherPanel extends JPanel implements MouseListener,
 		add(new JLabel(content), c);
 		final JButton editButton = new ToolbarStyleButton(
 				Utils.icon("settings16.png"));
-		editButton.addActionListener(new ActionListener()
-		{
-			@Override
-			public void actionPerformed(ActionEvent e)
-			{
-				goToEdit();
-			}
-		});
+		editButton.addActionListener(new TryGoingBackToEditActionHandler());
 		c.fill = GridBagConstraints.NONE;
 		c.weightx = 0.0;
 		c.gridx = 1;
@@ -80,26 +73,7 @@ public class LabelEditSwitcherPanel extends JPanel implements MouseListener,
 
 		edit.addKeyListener(this);
 
-		edit.addActionListener(new ActionListener()
-		{
-			@Override
-			public void actionPerformed(ActionEvent e)
-			{
-				// Check if input is valid before switching
-				if (inputVerifier != null)
-				{
-					if (!inputVerifier.verify(edit))
-						return;
-				}
-				content = edit.getText();
-				for (ContentChangedListener l : listeners)
-				{
-					l.changed(content);
-				}
-
-				goToLabel();
-			}
-		});
+		edit.addActionListener(new TryGoingBackToLabelActionHandler(edit));
 		add(edit, BorderLayout.CENTER);
 		edit.requestFocusInWindow();
 	}
@@ -107,6 +81,45 @@ public class LabelEditSwitcherPanel extends JPanel implements MouseListener,
 	public void addContentChangedListener(ContentChangedListener listener)
 	{
 		listeners.add(listener);
+	}
+
+	private final class TryGoingBackToEditActionHandler implements
+			ActionListener
+	{
+		@Override
+		public void actionPerformed(ActionEvent e)
+		{
+			goToEdit();
+		}
+	}
+
+	private final class TryGoingBackToLabelActionHandler implements
+			ActionListener
+	{
+		private final JTextField edit;
+
+		private TryGoingBackToLabelActionHandler(JTextField edit)
+		{
+			this.edit = edit;
+		}
+
+		@Override
+		public void actionPerformed(ActionEvent e)
+		{
+			// Check if input is valid before switching
+			if (inputVerifier != null)
+			{
+				if (!inputVerifier.verify(edit))
+					return;
+			}
+			content = edit.getText();
+			for (ContentChangedListener l : listeners)
+			{
+				l.changed(content);
+			}
+
+			goToLabel();
+		}
 	}
 
 	interface ContentChangedListener

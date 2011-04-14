@@ -38,7 +38,7 @@ public class CloudProviderTemplate
 			this.name = name;
 		}
 
-		private void setShortName(String shortname)
+		public void setShortName(String shortname)
 		{
 			this.shortname = shortname;
 		}
