@@ -117,4 +117,15 @@ public class ServerList extends JXList implements ComponentListener
 
 	}
 
+	public boolean startNewServerServerSelected()
+	{
+		int indices[] = getSelectedIndices();
+		for (int index : indices)
+		{
+			if (serverListModel.getVisibleServerAtIndex(index) == null)
+				return true;
+		}
+		return false;
+	}
+
 }

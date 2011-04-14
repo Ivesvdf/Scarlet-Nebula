@@ -78,7 +78,7 @@ public class PropertiesWindow extends JDialog
 		bottomPanel.setLayout(new BoxLayout(bottomPanel, BoxLayout.LINE_AXIS));
 		bottomPanel.add(Box.createHorizontalGlue());
 		bottomPanel.add(okButton);
-		bottomPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+		bottomPanel.setBorder(BorderFactory.createEmptyBorder(0, 20, 20, 20));
 		add(bottomPanel, BorderLayout.SOUTH);
 		setSize(500, 300);
 		setTitle("Server Properties - Scarlet Nebula");
@@ -194,7 +194,7 @@ public class PropertiesWindow extends JDialog
 		Component servernameComponent;
 		final Server server = servers.iterator().next();
 		final LabelEditSwitcherPanel servername = new LabelEditSwitcherPanel(
-				"hello");
+				server.getFriendlyName());
 		servername.setInputVerifier(new ServernameInputVerifier());
 		servername
 				.addContentChangedListener(new LabelEditSwitcherPanel.ContentChangedListener()

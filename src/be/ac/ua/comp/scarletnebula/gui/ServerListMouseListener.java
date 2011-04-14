@@ -139,8 +139,7 @@ class ServerListMouseListener implements MouseListener
 		{
 			// If the user double clicked a null server, this is taken as a hint
 			// to create a new server!
-			if (serverlist.getSelectedServers().size() > 0
-					&& serverlist.getSelectedServers().iterator().next() == null)
+			if (serverlist.startNewServerServerSelected())
 			{
 				new AddServerWizard(gui, gui);
 			}

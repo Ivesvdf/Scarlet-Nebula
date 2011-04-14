@@ -5,6 +5,8 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -16,7 +18,7 @@ import javax.swing.JTextField;
 
 import be.ac.ua.comp.scarletnebula.misc.Utils;
 
-public class LabelEditSwitcherPanel extends JPanel
+public class LabelEditSwitcherPanel extends JPanel implements MouseListener
 {
 	private static final long serialVersionUID = 1L;
 	private String content;
@@ -26,6 +28,7 @@ public class LabelEditSwitcherPanel extends JPanel
 	LabelEditSwitcherPanel(String initialContent)
 	{
 		super(new BorderLayout());
+		addMouseListener(this);
 		content = initialContent;
 		fillWithLabel();
 	}
@@ -53,9 +56,7 @@ public class LabelEditSwitcherPanel extends JPanel
 			@Override
 			public void actionPerformed(ActionEvent e)
 			{
-				removeAll();
-				fillWithEdit();
-				revalidate();
+				goToEdit();
 			}
 		});
 		c.fill = GridBagConstraints.NONE;
@@ -77,22 +78,7 @@ public class LabelEditSwitcherPanel extends JPanel
 			@Override
 			public void actionPerformed(ActionEvent e)
 			{
-				// Check if input is valid before switching
-				if (inputVerifier != null)
-				{
-					if (!inputVerifier.verify(edit))
-						return;
-				}
-				content = edit.getText();
-
-				for (ContentChangedListener l : listeners)
-				{
-					l.changed(content);
-				}
-
-				removeAll();
-				fillWithLabel();
-				revalidate();
+				goToLabel(edit);
 			}
 		});
 		add(edit, BorderLayout.CENTER);
@@ -106,5 +92,70 @@ public class LabelEditSwitcherPanel extends JPanel
 	interface ContentChangedListener
 	{
 		void changed(String newContents);
+	}
+
+	@Override
+	public void mouseClicked(MouseEvent e)
+	{
+	}
+
+	@Override
+	public void mousePressed(MouseEvent e)
+	{
+		if (e.getClickCount() == 2)
+		{
+			// Hack to see if we're in labelmode
+			if (getComponentCount() == 2)
+				goToEdit();
+		}
+
+	}
+
+	@Override
+	public void mouseReleased(MouseEvent e)
+	{
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void mouseEntered(MouseEvent e)
+	{
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void mouseExited(MouseEvent e)
+	{
+		// TODO Auto-generated method stub
+
+	}
+
+	private void goToEdit()
+	{
+		removeAll();
+		fillWithEdit();
+		revalidate();
+	}
+
+	private void goToLabel(final JTextField edit)
+	{
+		// Check if input is valid before switching
+		if (inputVerifier != null)
+		{
+			if (!inputVerifier.verify(edit))
+				return;
+		}
+		content = edit.getText();
+
+		for (ContentChangedListener l : listeners)
+		{
+			l.changed(content);
+		}
+
+		removeAll();
+		fillWithLabel();
+		revalidate();
 	}
 }

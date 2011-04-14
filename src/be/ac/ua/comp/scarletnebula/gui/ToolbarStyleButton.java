@@ -1,7 +1,9 @@
 package be.ac.ua.comp.scarletnebula.gui;
 
 import java.awt.Graphics2D;
+import java.awt.Insets;
 
+import javax.swing.BorderFactory;
 import javax.swing.Icon;
 import javax.swing.JButton;
 import javax.swing.UIDefaults;
@@ -18,6 +20,9 @@ public class ToolbarStyleButton extends JButton
 		setBorderPainted(false);
 		setRolloverEnabled(true);
 		setRolloverIcon(icon);
+		setBounds(10, 10, icon.getIconWidth(), icon.getIconHeight());
+		setMargin(new Insets(0, 0, 0, 0));
+		setBorder(BorderFactory.createEmptyBorder(4, 4, 4, 4));
 
 		UIDefaults def = new UIDefaults();
 		def.put("Button[Enabled].backgroundPainter", new Painter<Object>()
