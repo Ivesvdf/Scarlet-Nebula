@@ -2,10 +2,12 @@ package be.ac.ua.comp.scarletnebula.gui;
 
 import java.awt.AWTEvent;
 import java.awt.BorderLayout;
+import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -24,6 +26,7 @@ import org.dasein.cloud.compute.Platform;
 import org.dasein.cloud.compute.VmState;
 
 import be.ac.ua.comp.scarletnebula.core.Server;
+import be.ac.ua.comp.scarletnebula.misc.Utils;
 
 import com.jgoodies.forms.builder.DefaultFormBuilder;
 import com.jgoodies.forms.layout.FormLayout;
@@ -59,7 +62,7 @@ public class PropertiesWindow extends JDialog
 		this.selectedServers = selectedServers;
 		this.gui = gui;
 		setLayout(new BorderLayout());
-		add(createTopPartition(), BorderLayout.CENTER);
+		add(createTopPartition(selectedServers), BorderLayout.CENTER);
 
 		JPanel bottomPanel = new JPanel();
 		JButton okButton = new JButton("Ok");
@@ -85,14 +88,14 @@ public class PropertiesWindow extends JDialog
 		setVisible(true);
 	}
 
-	private JPanel createTopPartition()
+	private JPanel createTopPartition(Collection<Server> servers)
 	{
 		final JPanel total = new JPanel();
 		total.setLayout(new BorderLayout());
 
 		final JTabbedPane tabbedPane = new JTabbedPane();
 
-		createOverviewPanel();
+		createOverviewPanel(servers);
 		createCommunicationPanel();
 
 		tabbedPane.addTab("Overview", overviewTab);
@@ -124,7 +127,7 @@ public class PropertiesWindow extends JDialog
 	{
 	}
 
-	private void createOverviewPanel()
+	private void createOverviewPanel(final Collection<Server> servers)
 	{
 		overviewTab.setLayout(new BorderLayout());
 
@@ -136,10 +139,18 @@ public class PropertiesWindow extends JDialog
 		builder.setDefaultDialogBorder();
 		builder.appendSeparator("General Information");
 
-		final LabelEditSwitcherPanel servername = new LabelEditSwitcherPanel(
-				"hello");
-		servername.setInputVerifier(new ServernameInputVerifier());
-		builder.append("Name", servername);
+		Component servernameComponent = null;
+
+		if (servers.size() == 1)
+		{
+			servernameComponent = getSingleServerServerNameComponent(servers);
+		}
+		else
+		{
+			servernameComponent = getMultipleServerServerNameComponent(servers);
+		}
+
+		builder.append("Name", servernameComponent);
 		builder.nextLine();
 
 		builder.append("Status", statusLabel);
@@ -162,6 +173,41 @@ public class PropertiesWindow extends JDialog
 		builder.append("Image", imageLabel);
 
 		overviewTab.add(builder.getPanel());
+	}
+
+	private Component getMultipleServerServerNameComponent(
+			final Collection<Server> servers)
+	{
+		Component servernameComponent;
+		List<String> names = new ArrayList<String>(servers.size());
+		for (Server server : servers)
+		{
+			names.add(server.getFriendlyName());
+		}
+		servernameComponent = new JLabel(Utils.implode(names, ", "));
+		return servernameComponent;
+	}
+
+	private Component getSingleServerServerNameComponent(
+			final Collection<Server> servers)
+	{
+		Component servernameComponent;
+		final Server server = servers.iterator().next();
+		final LabelEditSwitcherPanel servername = new LabelEditSwitcherPanel(
+				"hello");
+		servername.setInputVerifier(new ServernameInputVerifier());
+		servername
+				.addContentChangedListener(new LabelEditSwitcherPanel.ContentChangedListener()
+				{
+					@Override
+					public void changed(String newContents)
+					{
+						server.setFriendlyName(newContents);
+						server.store();
+					}
+				});
+		servernameComponent = servername;
+		return servernameComponent;
 	}
 
 	protected void communicationTabGotFocus()

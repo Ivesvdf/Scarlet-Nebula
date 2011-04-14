@@ -138,7 +138,7 @@ public class Server
 	/**
 	 * Saves this server to its savefile.
 	 */
-	void store()
+	public void store()
 	{
 		// Write key to file
 		String dir = provider.getSaveFileDir();

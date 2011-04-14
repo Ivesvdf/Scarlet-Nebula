@@ -5,6 +5,8 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.Collection;
 
 import javax.swing.InputVerifier;
 import javax.swing.JButton;
@@ -19,6 +21,7 @@ public class LabelEditSwitcherPanel extends JPanel
 	private static final long serialVersionUID = 1L;
 	private String content;
 	private InputVerifier inputVerifier = null;
+	private Collection<ContentChangedListener> listeners = new ArrayList<ContentChangedListener>();
 
 	LabelEditSwitcherPanel(String initialContent)
 	{
@@ -82,11 +85,26 @@ public class LabelEditSwitcherPanel extends JPanel
 				}
 				content = edit.getText();
 
+				for (ContentChangedListener l : listeners)
+				{
+					l.changed(content);
+				}
+
 				removeAll();
 				fillWithLabel();
 				revalidate();
 			}
 		});
 		add(edit, BorderLayout.CENTER);
+	}
+
+	public void addContentChangedListener(ContentChangedListener listener)
+	{
+		listeners.add(listener);
+	}
+
+	interface ContentChangedListener
+	{
+		void changed(String newContents);
 	}
 }
