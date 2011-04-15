@@ -39,7 +39,7 @@ public class LinkUnlinkWindow extends JDialog
 		super(parent, "Link/Unlink Providers", true);
 
 		setSize(500, 400);
-		setLocationRelativeTo(parent);
+		setLocationByPlatform(true);
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 
 		JPanel topPanel = new JPanel();

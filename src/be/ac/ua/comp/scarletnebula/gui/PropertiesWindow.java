@@ -83,7 +83,7 @@ public class PropertiesWindow extends JDialog
 		setSize(500, 300);
 		setTitle("Server Properties - Scarlet Nebula");
 		updateOverviewTab(selectedServers);
-		setLocationRelativeTo(gui);
+		setLocationByPlatform(true);
 		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 		setVisible(true);
 	}
@@ -151,6 +151,17 @@ public class PropertiesWindow extends JDialog
 		}
 
 		builder.append("Name", servernameComponent);
+		final JButton tags = new JButton("tags");
+		tags.addActionListener(new ActionListener()
+		{
+
+			@Override
+			public void actionPerformed(ActionEvent e)
+			{
+				new TaggingWindow(PropertiesWindow.this);
+			}
+		});
+		builder.append("Tags", tags);
 		builder.nextLine();
 
 		builder.append("Status", statusLabel);

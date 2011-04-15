@@ -25,7 +25,7 @@ public class ManageKeysDialog extends JDialog
 		this.provider = provider;
 		this.gui = gui;
 		setSize(400, 400);
-		setLocationRelativeTo(gui);
+		setLocationByPlatform(true);
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 
 		final KeyList keyList = new KeyList(provider);

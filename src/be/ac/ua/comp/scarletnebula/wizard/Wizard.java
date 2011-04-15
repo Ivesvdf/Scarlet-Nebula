@@ -77,8 +77,7 @@ public class Wizard
 	{
 		dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 		dialog.setPreferredSize(new Dimension(width, height));
-		dialog.setLocation(0, 0);
-		dialog.setLocationRelativeTo(parent);
+		dialog.setLocationByPlatform(true);
 		dialog.setTitle(title);
 		dialog.pack();
 

@@ -82,11 +82,12 @@ public class GUI extends JFrame implements ListSelectionListener,
 
 		setTitle("Scarlet Nebula");
 		setSize(700, 400);
-		setLocationRelativeTo(null);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		ImageIcon icon = new ImageIcon(getClass().getResource(
 				"/images/icon48.png"));
 		setIconImage(icon.getImage());
+		System.setProperty("java.awt.Window.locationByPlatform", "true");
+		setLocationByPlatform(true);
 
 		addMenubar();
 		setKeyboardAccelerators();
