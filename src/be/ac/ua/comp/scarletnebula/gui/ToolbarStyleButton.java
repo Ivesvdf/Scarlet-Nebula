@@ -25,20 +25,15 @@ public class ToolbarStyleButton extends JButton
 		setBorder(BorderFactory.createEmptyBorder(4, 4, 4, 4));
 
 		UIDefaults def = new UIDefaults();
-		def.put("Button[Enabled].backgroundPainter", new Painter<Object>()
+		final Painter<Object> notAPainter = new Painter<Object>()
 		{
 			@Override
 			public void paint(Graphics2D g, Object c, int w, int h)
 			{
 			}
-		});
-		def.put("Button[Focused].backgroundPainter", new Painter<Object>()
-		{
-			@Override
-			public void paint(Graphics2D g, Object c, int w, int h)
-			{
-			}
-		});
+		};
+		def.put("Button[Enabled].backgroundPainter", notAPainter);
+		def.put("Button[Focused].backgroundPainter", notAPainter);
 		putClientProperty("Nimbus.Overrides", def);
 		putClientProperty("Nimbus.Overrides.InheritDefaults", false);
 
