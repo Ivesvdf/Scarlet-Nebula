@@ -52,8 +52,8 @@ public class Wizard
 	 */
 	public void startModal(String title, int width, int height, Dialog parent)
 	{
-		JDialog dialog = new JDialog(parent, true);
-		configureDialog(title, width, height, dialog, parent);
+		window = new JDialog(parent, true);
+		configureDialog(title, width, height, window, parent);
 	}
 
 	/**
@@ -68,8 +68,8 @@ public class Wizard
 	 */
 	public void startModal(String title, int width, int height, Frame parent)
 	{
-		JDialog dialog = new JDialog(parent, true);
-		configureDialog(title, width, height, dialog, parent);
+		window = new JDialog(parent, true);
+		configureDialog(title, width, height, window, parent);
 	}
 
 	private void configureDialog(String title, int width, int height,
@@ -142,10 +142,7 @@ public class Wizard
 		wizardTemplate.finishButton.setEnabled(page.finishIsEnabled());
 		wizardTemplate.previousButton.setEnabled(visitedPages.size() > 1);
 
-		for (Component c : wizardTemplate.container.getComponents())
-		{
-			wizardTemplate.container.remove(c);
-		}
+		wizardTemplate.container.removeAll();
 
 		for (Component c : page.getComponents())
 			c.setVisible(true);

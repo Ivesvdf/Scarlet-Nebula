@@ -1,6 +1,5 @@
 package be.ac.ua.comp.scarletnebula.gui.addserverwizard;
 
-import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
@@ -14,7 +13,7 @@ import be.ac.ua.comp.scarletnebula.wizard.Wizard;
 import be.ac.ua.comp.scarletnebula.wizard.WizardListener;
 import be.ac.ua.comp.scarletnebula.wizard.WizardPage;
 
-public class AddServerWizard extends JDialog implements WizardListener
+public class AddServerWizard implements WizardListener
 {
 	private final GUI gui;
 	private static final long serialVersionUID = 1L;
@@ -54,7 +53,6 @@ public class AddServerWizard extends JDialog implements WizardListener
 		Wizard wiz = new Wizard(firstPage, rec, new SimpleWizardTemplate());
 		wiz.addWizardListener(this);
 		wiz.startModal("Start new server", 400, 300, gui);
-		setVisible(true);
 	}
 
 	@Override

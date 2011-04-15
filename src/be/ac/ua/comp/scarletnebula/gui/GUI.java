@@ -623,9 +623,11 @@ public class GUI extends JFrame implements ListSelectionListener,
 
 			AddProviderWizard wiz = new AddProviderWizard();
 			wiz.startModal(this);
-			return;
 		}
-		new AddServerWizard(this, this);
+		else
+		{
+			new AddServerWizard(this, this);
+		}
 	}
 
 	public static void main(String[] args)
