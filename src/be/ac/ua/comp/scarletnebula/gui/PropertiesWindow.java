@@ -65,7 +65,7 @@ public class PropertiesWindow extends JDialog
 		add(createTopPartition(selectedServers), BorderLayout.CENTER);
 
 		JPanel bottomPanel = new JPanel();
-		JButton okButton = new JButton("Ok");
+		JButton okButton = ButtonFactory.createOkButton();
 		okButton.addActionListener(new ActionListener()
 		{
 			@Override
@@ -140,10 +140,14 @@ public class PropertiesWindow extends JDialog
 		builder.appendSeparator("General Information");
 
 		Component servernameComponent = null;
+		Component servertagComponent = null;
 
 		if (servers.size() == 1)
 		{
-			servernameComponent = getSingleServerServerNameComponent(servers);
+			final Server server = servers.iterator().next();
+
+			servernameComponent = getSingleServerServerNameComponent(server);
+			servertagComponent = getSingleServerTagComponent(server);
 		}
 		else
 		{
@@ -151,17 +155,7 @@ public class PropertiesWindow extends JDialog
 		}
 
 		builder.append("Name", servernameComponent);
-		final JButton tags = new JButton("tags");
-		tags.addActionListener(new ActionListener()
-		{
-
-			@Override
-			public void actionPerformed(ActionEvent e)
-			{
-				new TaggingWindow(PropertiesWindow.this);
-			}
-		});
-		builder.append("Tags", tags);
+		builder.append("Tags", servertagComponent);
 		builder.nextLine();
 
 		builder.append("Status", statusLabel);
@@ -186,6 +180,37 @@ public class PropertiesWindow extends JDialog
 		overviewTab.add(builder.getPanel());
 	}
 
+	private Component getSingleServerTagComponent(final Server server)
+	{
+		ChangeableLabel tagLabel = new ChangeableLabel(Utils.implode(
+				new ArrayList<String>(server.getTags()), ", "),
+				new ChangeableLabel.Executable<JLabel>()
+				{
+					@Override
+					public void run(final JLabel label)
+					{
+						TaggingWindow win = new TaggingWindow(
+								PropertiesWindow.this, server.getTags());
+						win.addWindowClosedListener(new TaggingWindow.WindowClosedListener()
+						{
+							@Override
+							public void windowClosed(Collection<String> newTags)
+							{
+								for (String t : newTags)
+									log.warn(t);
+
+								label.setText(Utils.implode(
+										new ArrayList<String>(newTags), ", "));
+								server.setTags(newTags);
+								server.store();
+							}
+						});
+						win.setVisible(true);
+					}
+				});
+		return tagLabel;
+	}
+
 	private Component getMultipleServerServerNameComponent(
 			final Collection<Server> servers)
 	{
@@ -199,11 +224,9 @@ public class PropertiesWindow extends JDialog
 		return servernameComponent;
 	}
 
-	private Component getSingleServerServerNameComponent(
-			final Collection<Server> servers)
+	private Component getSingleServerServerNameComponent(final Server server)
 	{
 		Component servernameComponent;
-		final Server server = servers.iterator().next();
 		final LabelEditSwitcherPanel servername = new LabelEditSwitcherPanel(
 				server.getFriendlyName());
 		servername.setInputVerifier(new ServernameInputVerifier());

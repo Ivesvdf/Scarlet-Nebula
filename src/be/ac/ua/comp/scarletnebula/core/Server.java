@@ -515,4 +515,9 @@ public class Server
 		}, (long) (wait * 1000));
 
 	}
+
+	public void setTags(Collection<String> newTags)
+	{
+		tags = newTags;
+	}
 }

@@ -32,6 +32,13 @@ public class ToolbarStyleButton extends JButton
 			{
 			}
 		});
+		def.put("Button[Focused].backgroundPainter", new Painter<Object>()
+		{
+			@Override
+			public void paint(Graphics2D g, Object c, int w, int h)
+			{
+			}
+		});
 		putClientProperty("Nimbus.Overrides", def);
 		putClientProperty("Nimbus.Overrides.InheritDefaults", false);
 
