@@ -72,7 +72,6 @@ public class LabelEditSwitcherPanel extends JPanel implements MouseListener,
 			edit.setInputVerifier(inputVerifier);
 
 		edit.addKeyListener(this);
-
 		edit.addActionListener(new TryGoingBackToLabelActionHandler(edit));
 		add(edit, BorderLayout.CENTER);
 		edit.requestFocusInWindow();

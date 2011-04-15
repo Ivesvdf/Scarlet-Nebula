@@ -1,29 +1,15 @@
 package be.ac.ua.comp.scarletnebula.gui.addserverwizard;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.Font;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.util.ArrayList;
 import java.util.Collection;
 
 import javax.swing.BorderFactory;
-import javax.swing.Box;
-import javax.swing.BoxLayout;
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTextField;
-import javax.swing.border.BevelBorder;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import be.ac.ua.comp.scarletnebula.gui.BetterTextLabel;
+import be.ac.ua.comp.scarletnebula.gui.TaggingPanel;
 import be.ac.ua.comp.scarletnebula.wizard.DataRecorder;
 import be.ac.ua.comp.scarletnebula.wizard.WizardPage;
 
@@ -31,7 +17,7 @@ public class TaggingPage extends WizardPage
 {
 	private static Log log = LogFactory.getLog(TaggingPage.class);
 	private static final long serialVersionUID = 1L;
-	private final TagList taglist = new TagList();
+	TaggingPanel taggingPanel = new TaggingPanel();
 
 	TaggingPage()
 	{
@@ -41,120 +27,47 @@ public class TaggingPage extends WizardPage
 				"Enter some labels that describe the functionality of this server. E.g. dns, webserver, ...");
 		lbl.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
 		add(lbl, BorderLayout.NORTH);
-
-		JPanel bottomPanel = new JPanel();
-		bottomPanel.setLayout(new BorderLayout());
-
-		final JTextField inputField = new JTextField();
-		inputField.setBorder(BorderFactory
-				.createBevelBorder(BevelBorder.LOWERED));
-		ActionListener addTagActionListener = new ActionListener()
-		{
-			@Override
-			public void actionPerformed(ActionEvent e)
-			{
-				String tagTxt = inputField.getText();
-				inputField.setText("");
-				taglist.addTag(new TagItem(tagTxt));
-			}
-		};
-		inputField.addActionListener(addTagActionListener);
-
-		final JButton addButton = new JButton(new ImageIcon(getClass()
-				.getResource("/images/add16.png")));
-		addButton.addActionListener(addTagActionListener);
-		bottomPanel.add(inputField, BorderLayout.NORTH);
-
-		taglist.setBorder(BorderFactory.createBevelBorder(BevelBorder.LOWERED));
-
-		JScrollPane tagScrollPane = new JScrollPane(taglist);
-		bottomPanel.add(tagScrollPane, BorderLayout.CENTER);
-		bottomPanel.setBorder(BorderFactory.createEmptyBorder(0, 20, 20, 20));
-
-		bottomPanel.setBorder(BorderFactory.createEmptyBorder(0, 100, 0, 100));
-		add(bottomPanel, BorderLayout.CENTER);
-
-		inputField.requestFocusInWindow();
+		taggingPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 20, 0));
+		add(taggingPanel, BorderLayout.CENTER);
+		/*
+		 * final JTextField inputField = new JTextField();
+		 * inputField.setBorder(BorderFactory
+		 * .createBevelBorder(BevelBorder.LOWERED)); ActionListener
+		 * addTagActionListener = new ActionListener() {
+		 * 
+		 * @Override public void actionPerformed(ActionEvent e) { String tagTxt
+		 * = inputField.getText(); inputField.setText(""); taglist.addTag(new
+		 * TagItem(tagTxt)); } };
+		 * inputField.addActionListener(addTagActionListener);
+		 * 
+		 * final JButton addButton = new JButton(new ImageIcon(getClass()
+		 * .getResource("/images/add16.png")));
+		 * addButton.addActionListener(addTagActionListener);
+		 * bottomPanel.add(inputField, BorderLayout.NORTH);
+		 * 
+		 * taglist.setBorder(BorderFactory.createBevelBorder(BevelBorder.LOWERED)
+		 * );
+		 * 
+		 * JScrollPane tagScrollPane = new JScrollPane(taglist);
+		 * bottomPanel.add(tagScrollPane, BorderLayout.CENTER);
+		 * bottomPanel.setBorder(BorderFactory.createEmptyBorder(0, 20, 20,
+		 * 20));
+		 * 
+		 * bottomPanel.setBorder(BorderFactory.createEmptyBorder(0, 100, 0,
+		 * 100)); add(bottomPanel, BorderLayout.CENTER);
+		 * 
+		 * inputField.requestFocusInWindow();
+		 */
 	}
 
 	@Override
 	public WizardPage next(DataRecorder recorder)
 	{
 		// Extract tags
-		Collection<String> tags = taglist.getTags();
+		Collection<String> tags = taggingPanel.getTags();
 		AddServerWizardDataRecorder rec = (AddServerWizardDataRecorder) recorder;
 		rec.tags = tags;
 		return new FinalServerAddPage(rec);
 	}
 
-	class TagList extends JPanel
-	{
-		private static final long serialVersionUID = 1L;
-
-		TagList()
-		{
-			super();
-			setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
-			setBackground(Color.WHITE);
-
-		}
-
-		void addTag(TagItem tag)
-		{
-			tag.setAlignmentX(LEFT_ALIGNMENT);
-			add(tag);
-			revalidate();
-			repaint();
-		}
-
-		public Collection<String> getTags()
-		{
-			Collection<String> tags = new ArrayList<String>();
-			for (Component c : getComponents())
-			{
-				TagItem tag = (TagItem) c;
-				tags.add(tag.getTagString());
-				log.debug("Tag:" + tag.getTagString());
-			}
-			return tags;
-		}
-	}
-
-	class TagItem extends JPanel
-	{
-		private static final long serialVersionUID = 1L;
-		String tag;
-
-		TagItem(String tag)
-		{
-			this.tag = tag;
-			setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
-			setBackground(Color.WHITE);
-			setFont(new Font(getFont().getName(), Font.BOLD, getFont()
-					.getSize()));
-			add(new JLabel(tag));
-			add(Box.createHorizontalGlue());
-
-			JButton deleteButton = new JButton(new ImageIcon(getClass()
-					.getResource("/images/remove16.png")));
-			deleteButton.addActionListener(new ActionListener()
-			{
-				@Override
-				public void actionPerformed(ActionEvent e)
-				{
-					JPanel taglist = (JPanel) TagItem.this.getParent();
-					taglist.remove(TagItem.this);
-					taglist.revalidate();
-					taglist.repaint();
-				}
-			});
-			add(deleteButton);
-		}
-
-		public String getTagString()
-		{
-			return tag;
-		}
-
-	}
 }
