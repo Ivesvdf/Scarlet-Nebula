@@ -11,6 +11,7 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+import be.ac.ua.comp.scarletnebula.misc.Executable;
 import be.ac.ua.comp.scarletnebula.misc.Utils;
 
 public class ChangeableLabel extends JPanel
@@ -32,55 +33,67 @@ public class ChangeableLabel extends JPanel
 		add(contentLabel, c);
 		final JButton editButton = new ToolbarStyleButton(
 				Utils.icon("settings16.png"));
-		editButton.addActionListener(new ActionListener()
-		{
-			@Override
-			public void actionPerformed(ActionEvent e)
-			{
-				executable.run(contentLabel);
-			}
-		});
+		editButton.addActionListener(new ExecuteActionListener(executable));
 		c.fill = GridBagConstraints.NONE;
 		c.weightx = 0.0;
 		c.gridx = 1;
 		add(editButton, c);
 
-		addMouseListener(new MouseListener()
-		{
-
-			@Override
-			public void mouseClicked(MouseEvent e)
-			{
-			}
-
-			@Override
-			public void mousePressed(MouseEvent e)
-			{
-				if (e.getClickCount() == 2)
-				{
-					executable.run(contentLabel);
-				}
-			}
-
-			@Override
-			public void mouseReleased(MouseEvent e)
-			{
-			}
-
-			@Override
-			public void mouseEntered(MouseEvent e)
-			{
-			}
-
-			@Override
-			public void mouseExited(MouseEvent e)
-			{
-			}
-		});
+		addMouseListener(new ExecuteMouseListener(executable));
 	}
 
-	interface Executable<Paramtype>
+	private final class ExecuteActionListener implements ActionListener
 	{
-		void run(Paramtype param);
+		private final Executable<JLabel> executable;
+
+		private ExecuteActionListener(Executable<JLabel> executable)
+		{
+			this.executable = executable;
+		}
+
+		@Override
+		public void actionPerformed(ActionEvent e)
+		{
+			executable.run(contentLabel);
+		}
+	}
+
+	private final class ExecuteMouseListener implements MouseListener
+	{
+		private final Executable<JLabel> executable;
+
+		private ExecuteMouseListener(Executable<JLabel> executable)
+		{
+			this.executable = executable;
+		}
+
+		@Override
+		public void mouseClicked(MouseEvent e)
+		{
+		}
+
+		@Override
+		public void mousePressed(MouseEvent e)
+		{
+			if (e.getClickCount() == 2)
+			{
+				executable.run(contentLabel);
+			}
+		}
+
+		@Override
+		public void mouseReleased(MouseEvent e)
+		{
+		}
+
+		@Override
+		public void mouseEntered(MouseEvent e)
+		{
+		}
+
+		@Override
+		public void mouseExited(MouseEvent e)
+		{
+		}
 	}
 }

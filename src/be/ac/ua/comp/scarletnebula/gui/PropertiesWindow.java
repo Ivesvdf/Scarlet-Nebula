@@ -26,6 +26,7 @@ import org.dasein.cloud.compute.Platform;
 import org.dasein.cloud.compute.VmState;
 
 import be.ac.ua.comp.scarletnebula.core.Server;
+import be.ac.ua.comp.scarletnebula.misc.Executable;
 import be.ac.ua.comp.scarletnebula.misc.Utils;
 
 import com.jgoodies.forms.builder.DefaultFormBuilder;
@@ -184,7 +185,7 @@ public class PropertiesWindow extends JDialog
 	{
 		ChangeableLabel tagLabel = new ChangeableLabel(Utils.implode(
 				new ArrayList<String>(server.getTags()), ", "),
-				new ChangeableLabel.Executable<JLabel>()
+				new Executable<JLabel>()
 				{
 					@Override
 					public void run(final JLabel label)
