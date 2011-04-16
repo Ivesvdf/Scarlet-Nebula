@@ -1,4 +1,4 @@
-package be.ac.ua.comp.scarletnebula.gui;
+package be.ac.ua.comp.scarletnebula.gui.windows;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;

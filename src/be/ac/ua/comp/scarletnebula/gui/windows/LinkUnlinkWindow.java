@@ -1,4 +1,4 @@
-package be.ac.ua.comp.scarletnebula.gui;
+package be.ac.ua.comp.scarletnebula.gui.windows;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -26,6 +26,8 @@ import org.dasein.cloud.InternalException;
 import be.ac.ua.comp.scarletnebula.core.CloudManager;
 import be.ac.ua.comp.scarletnebula.core.CloudProvider;
 import be.ac.ua.comp.scarletnebula.core.Server;
+import be.ac.ua.comp.scarletnebula.gui.ServerList;
+import be.ac.ua.comp.scarletnebula.gui.ServerListModel;
 import be.ac.ua.comp.scarletnebula.gui.ServerListModel.CreateNewServerServer;
 
 public class LinkUnlinkWindow extends JDialog

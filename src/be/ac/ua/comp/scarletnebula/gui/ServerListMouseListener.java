@@ -13,14 +13,16 @@ import org.dasein.cloud.compute.VmState;
 
 import be.ac.ua.comp.scarletnebula.core.Server;
 import be.ac.ua.comp.scarletnebula.gui.addserverwizard.AddServerWizard;
+import be.ac.ua.comp.scarletnebula.gui.windows.GUI;
+import be.ac.ua.comp.scarletnebula.gui.windows.PropertiesWindow;
 
-class ServerListMouseListener implements MouseListener
+public class ServerListMouseListener implements MouseListener
 {
 	private GUI gui;
 	private ServerListModel serverListModel;
 	private ServerList serverlist;
 
-	ServerListMouseListener(GUI gui, ServerList serverlist,
+	public ServerListMouseListener(GUI gui, ServerList serverlist,
 			ServerListModel serverListModel)
 	{
 		super();

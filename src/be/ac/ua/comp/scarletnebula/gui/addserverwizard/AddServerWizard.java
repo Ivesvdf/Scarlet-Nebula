@@ -5,8 +5,8 @@ import javax.swing.JOptionPane;
 
 import be.ac.ua.comp.scarletnebula.core.CloudManager;
 import be.ac.ua.comp.scarletnebula.core.CloudProvider;
-import be.ac.ua.comp.scarletnebula.gui.GUI;
 import be.ac.ua.comp.scarletnebula.gui.addproviderwizard.AddProviderWizard;
+import be.ac.ua.comp.scarletnebula.gui.windows.GUI;
 import be.ac.ua.comp.scarletnebula.wizard.DataRecorder;
 import be.ac.ua.comp.scarletnebula.wizard.SimpleWizardTemplate;
 import be.ac.ua.comp.scarletnebula.wizard.Wizard;

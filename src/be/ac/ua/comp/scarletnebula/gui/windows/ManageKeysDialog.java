@@ -1,4 +1,4 @@
-package be.ac.ua.comp.scarletnebula.gui;
+package be.ac.ua.comp.scarletnebula.gui.windows;
 
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
@@ -12,6 +12,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
 import be.ac.ua.comp.scarletnebula.core.CloudProvider;
+import be.ac.ua.comp.scarletnebula.gui.KeyList;
 
 public class ManageKeysDialog extends JDialog
 {

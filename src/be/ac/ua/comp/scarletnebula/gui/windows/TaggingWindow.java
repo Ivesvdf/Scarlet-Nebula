@@ -1,4 +1,4 @@
-package be.ac.ua.comp.scarletnebula.gui;
+package be.ac.ua.comp.scarletnebula.gui.windows;
 
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
@@ -14,6 +14,9 @@ import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
+
+import be.ac.ua.comp.scarletnebula.gui.ButtonFactory;
+import be.ac.ua.comp.scarletnebula.gui.TaggingPanel;
 
 public class TaggingWindow extends JDialog
 {

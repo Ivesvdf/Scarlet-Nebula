@@ -25,7 +25,7 @@ public class ServerListModel extends AbstractListModel
 	LinkedList<Server> visibleServers = new LinkedList<Server>();
 	LinkedList<Server> invisibleServers = new LinkedList<Server>();
 
-	ServerListModel(CreateNewServerServer displayNewServer)
+	public ServerListModel(CreateNewServerServer displayNewServer)
 	{
 		this.displayNewServer = (displayNewServer == CreateNewServerServer.DISPLAY_NEW_SERVER);
 	}

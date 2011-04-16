@@ -1,4 +1,4 @@
-package be.ac.ua.comp.scarletnebula.gui;
+package be.ac.ua.comp.scarletnebula.gui.windows;
 
 import java.awt.AWTEvent;
 import java.awt.BorderLayout;
@@ -26,6 +26,12 @@ import org.dasein.cloud.compute.Platform;
 import org.dasein.cloud.compute.VmState;
 
 import be.ac.ua.comp.scarletnebula.core.Server;
+import be.ac.ua.comp.scarletnebula.gui.BetterTextLabel;
+import be.ac.ua.comp.scarletnebula.gui.ButtonFactory;
+import be.ac.ua.comp.scarletnebula.gui.ChangeableLabel;
+import be.ac.ua.comp.scarletnebula.gui.LabelEditSwitcherPanel;
+import be.ac.ua.comp.scarletnebula.gui.SSHPanel;
+import be.ac.ua.comp.scarletnebula.gui.ServernameInputVerifier;
 import be.ac.ua.comp.scarletnebula.misc.Executable;
 import be.ac.ua.comp.scarletnebula.misc.Utils;
 
@@ -57,7 +63,7 @@ public class PropertiesWindow extends JDialog
 	GUI gui;
 	Collection<Server> selectedServers;
 
-	PropertiesWindow(GUI gui, Collection<Server> selectedServers)
+	public PropertiesWindow(GUI gui, Collection<Server> selectedServers)
 	{
 		super(gui, true);
 		this.selectedServers = selectedServers;

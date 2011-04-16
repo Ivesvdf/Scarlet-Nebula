@@ -37,7 +37,7 @@ public class SSHPanel extends JPanel
 	private static final long serialVersionUID = 1L;
 	private static Log log = LogFactory.getLog(SSHPanel.class);
 
-	SSHPanel(final Server server)
+	public SSHPanel(final Server server)
 	{
 		super();
 

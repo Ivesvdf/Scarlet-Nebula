@@ -1,4 +1,4 @@
-package be.ac.ua.comp.scarletnebula.gui;
+package be.ac.ua.comp.scarletnebula.gui.windows;
 
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
@@ -50,7 +50,11 @@ import be.ac.ua.comp.scarletnebula.core.Server;
 import be.ac.ua.comp.scarletnebula.core.ServerChangedObserver;
 import be.ac.ua.comp.scarletnebula.core.ServerDisappearedException;
 import be.ac.ua.comp.scarletnebula.core.ServerLinkUnlinkObserver;
+import be.ac.ua.comp.scarletnebula.gui.SearchField;
+import be.ac.ua.comp.scarletnebula.gui.ServerList;
+import be.ac.ua.comp.scarletnebula.gui.ServerListModel;
 import be.ac.ua.comp.scarletnebula.gui.ServerListModel.CreateNewServerServer;
+import be.ac.ua.comp.scarletnebula.gui.ServerListMouseListener;
 import be.ac.ua.comp.scarletnebula.gui.addproviderwizard.AddProviderWizard;
 import be.ac.ua.comp.scarletnebula.gui.addserverwizard.AddServerWizard;
 import be.ac.ua.comp.scarletnebula.gui.addserverwizard.AddServerWizardDataRecorder;
@@ -496,7 +500,7 @@ public class GUI extends JFrame implements ListSelectionListener,
 		aboutWindow.setVisible(true);
 	}
 
-	protected void terminateSelectedServers()
+	public void terminateSelectedServers()
 	{
 		Collection<Server> servers = serverList.getSelectedServers();
 
@@ -552,7 +556,7 @@ public class GUI extends JFrame implements ListSelectionListener,
 		return leftPanel;
 	}
 
-	protected void refreshSelectedServers()
+	public void refreshSelectedServers()
 	{
 		int indices[] = serverList.getSelectedIndices();
 

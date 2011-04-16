@@ -28,7 +28,7 @@ public class LabelEditSwitcherPanel extends JPanel implements MouseListener,
 	private InputVerifier inputVerifier = null;
 	private Collection<ContentChangedListener> listeners = new ArrayList<ContentChangedListener>();
 
-	LabelEditSwitcherPanel(String initialContent)
+	public LabelEditSwitcherPanel(String initialContent)
 	{
 		super(new BorderLayout());
 		addMouseListener(this);
@@ -121,7 +121,7 @@ public class LabelEditSwitcherPanel extends JPanel implements MouseListener,
 		}
 	}
 
-	interface ContentChangedListener
+	public interface ContentChangedListener
 	{
 		void changed(String newContents);
 	}

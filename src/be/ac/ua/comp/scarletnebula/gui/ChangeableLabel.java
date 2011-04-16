@@ -20,7 +20,8 @@ public class ChangeableLabel extends JPanel
 
 	final JLabel contentLabel;
 
-	ChangeableLabel(String originalText, final Executable<JLabel> executable)
+	public ChangeableLabel(String originalText,
+			final Executable<JLabel> executable)
 	{
 		setLayout(new GridBagLayout());
 		contentLabel = new JLabel(originalText);
