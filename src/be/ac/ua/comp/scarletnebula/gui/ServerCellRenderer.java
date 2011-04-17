@@ -251,7 +251,7 @@ class ServerCellRenderer implements ListCellRenderer
 	 * Returns the icon that represents this server's status.
 	 * 
 	 * @param server
-	 * @return
+	 * @return The 16x16px Icon representing the server's state
 	 */
 	public ImageIcon getServerIcon(Server server)
 	{
