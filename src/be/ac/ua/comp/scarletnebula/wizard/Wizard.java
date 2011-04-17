@@ -9,6 +9,7 @@ import java.awt.event.ActionListener;
 import java.util.Stack;
 
 import javax.swing.JDialog;
+import javax.swing.WindowConstants;
 
 public class Wizard
 {
@@ -75,7 +76,7 @@ public class Wizard
 	private void configureDialog(String title, int width, int height,
 			JDialog dialog, Component parent)
 	{
-		dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+		dialog.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 		dialog.setPreferredSize(new Dimension(width, height));
 		dialog.setLocationByPlatform(true);
 		dialog.setTitle(title);

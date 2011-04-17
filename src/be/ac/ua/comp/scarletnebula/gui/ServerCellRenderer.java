@@ -238,7 +238,7 @@ class ServerCellRenderer implements ListCellRenderer
 	{
 		JPanel p = createServerPanel(list, index, isSelected);
 		JLabel label = new JLabel("Start a new server", new ImageIcon(
-				getClass().getResource("/images/add.png")), JLabel.LEFT);
+				getClass().getResource("/images/add.png")), SwingConstants.LEFT);
 		label.setFont(new Font(label.getFont().getName(), Font.PLAIN, 16));
 		// Border for better horizontal alignment
 		label.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 12));
