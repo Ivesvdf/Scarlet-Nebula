@@ -1,5 +1,6 @@
 package be.ac.ua.comp.scarletnebula.gui;
 
+import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Font;
@@ -22,6 +23,17 @@ import javax.swing.border.BevelBorder;
 
 import org.jdesktop.swingx.JXPanel;
 import org.jdesktop.swingx.painter.MattePainter;
+import org.jfree.chart.ChartPanel;
+import org.jfree.chart.JFreeChart;
+import org.jfree.chart.axis.DateAxis;
+import org.jfree.chart.axis.NumberAxis;
+import org.jfree.chart.plot.XYPlot;
+import org.jfree.chart.renderer.xy.XYItemRenderer;
+import org.jfree.chart.renderer.xy.XYLineAndShapeRenderer;
+import org.jfree.data.time.Millisecond;
+import org.jfree.data.time.TimeSeries;
+import org.jfree.data.time.TimeSeriesCollection;
+import org.jfree.ui.RectangleInsets;
 
 import be.ac.ua.comp.scarletnebula.core.Server;
 import be.ac.ua.comp.scarletnebula.misc.Utils;
@@ -47,22 +59,11 @@ class ServerCellRenderer implements ListCellRenderer
 		Server server = (Server) value;
 
 		JPanel p = createServerPanel(list, index, isSelected);
-		final Color background = getBackgroundColor(list, index, isSelected);
 		final Color foreground = getForegroundColor(list, index, isSelected);
 
-		JLabel label = new JLabel(server.getFriendlyName(),
-				getServerIcon(server), SwingConstants.LEFT);
-		label.setOpaque(false);
-
-		label.setForeground(foreground);
-
-		JLabel tags = new JLabel();
-
-		Font tagFont = new Font(tags.getFont().getName(), Font.PLAIN, 11);
-		tags.setFont(tagFont);
-		tags.setText(Utils.implode(new ArrayList<String>(server.getTags()),
-				", "));
-		tags.setForeground(foreground);
+		final JLabel label = getServernameComponent(server, foreground);
+		final JLabel tags = getTagComponent(server, foreground);
+		final ChartPanel chartPanel = getChartPanelComponent();
 
 		p.setLayout(new GridBagLayout());
 		GridBagConstraints c = new GridBagConstraints();
@@ -81,10 +82,72 @@ class ServerCellRenderer implements ListCellRenderer
 		c.fill = GridBagConstraints.BOTH;
 		c.weighty = 1.0;
 		c.gridy = 2;
-		p.add(new JLabel(), c);
+		p.add(chartPanel, c);
 
 		return p;
 
+	}
+
+	private ChartPanel getChartPanelComponent()
+	{
+		TimeSeries total = new TimeSeries("Total Memory", Millisecond.class);
+		TimeSeries free = new TimeSeries("Free Memory", Millisecond.class);
+		TimeSeriesCollection dataset = new TimeSeriesCollection();
+		dataset.addSeries(total);
+		dataset.addSeries(free);
+		DateAxis domain = new DateAxis("Time");
+		domain.setVisible(false);
+		NumberAxis range = new NumberAxis("Memory");
+		range.setVisible(false);
+		domain.setTickLabelFont(new Font("SansSerif", Font.PLAIN, 12));
+		range.setTickLabelFont(new Font("SansSerif", Font.PLAIN, 12));
+		domain.setLabelFont(new Font("SansSerif", Font.PLAIN, 14));
+		range.setLabelFont(new Font("SansSerif", Font.PLAIN, 14));
+		XYItemRenderer renderer = new XYLineAndShapeRenderer(true, false);
+		renderer.setSeriesPaint(0, Color.red);
+		renderer.setSeriesPaint(1, Color.green);
+		renderer.setStroke(new BasicStroke(3f, BasicStroke.CAP_BUTT,
+				BasicStroke.JOIN_BEVEL));
+		XYPlot plot = new XYPlot(dataset, domain, range, renderer);
+		plot.setBackgroundPaint(Color.lightGray);
+		plot.setDomainGridlinePaint(Color.white);
+		plot.setRangeGridlinePaint(Color.white);
+		plot.setInsets(new RectangleInsets(0, 0, 0, 0));
+		domain.setAutoRange(true);
+		domain.setLowerMargin(0.0);
+		domain.setUpperMargin(0.0);
+		domain.setTickLabelsVisible(true);
+		range.setStandardTickUnits(NumberAxis.createIntegerTickUnits());
+		JFreeChart chart = new JFreeChart(null, new Font("SansSerif",
+				Font.BOLD, 24), plot, false);
+		chart.setBorderVisible(false);
+		chart.setBackgroundPaint(Color.white);
+		ChartPanel chartPanel = new ChartPanel(chart);
+		chartPanel.setBorder(BorderFactory
+				.createBevelBorder(BevelBorder.LOWERED));
+		return chartPanel;
+	}
+
+	private JLabel getServernameComponent(Server server, final Color foreground)
+	{
+		JLabel label = new JLabel(server.getFriendlyName(),
+				getServerIcon(server), SwingConstants.LEFT);
+		label.setOpaque(false);
+
+		label.setForeground(foreground);
+		return label;
+	}
+
+	private JLabel getTagComponent(Server server, final Color foreground)
+	{
+		JLabel tags = new JLabel();
+
+		Font tagFont = new Font(tags.getFont().getName(), Font.PLAIN, 11);
+		tags.setFont(tagFont);
+		tags.setText(Utils.implode(new ArrayList<String>(server.getTags()),
+				", "));
+		tags.setForeground(foreground);
+		return tags;
 	}
 
 	Color getBackgroundColor(JList list, int index, boolean isSelected)
