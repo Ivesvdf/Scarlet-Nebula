@@ -78,23 +78,28 @@ public class GUI extends JFrame implements ListSelectionListener,
 	{
 		chooseLookAndFeel();
 
-		addToolbar();
-
-		final JPanel mainPanel = getMainPanel();
-
-		getContentPane().add(mainPanel);
-
 		setTitle("Scarlet Nebula");
 		setSize(700, 400);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		ImageIcon icon = new ImageIcon(getClass().getResource(
 				"/images/icon48.png"));
 		setIconImage(icon.getImage());
-		System.setProperty("java.awt.Window.locationByPlatform", "true");
-		setLocationByPlatform(true);
+
+		addToolbar();
+
+		final JPanel mainPanel = getMainPanel();
+
+		add(mainPanel);
 
 		addMenubar();
 		setKeyboardAccelerators();
+
+		// I'd like to
+		// setLocationByPlatform(true);
+		// but this apparently breaks my JMenu (also my "klomp").
+		setLocationRelativeTo(null);
+
+		setVisible(true);
 
 		// Last but not least, we construct a cloudmanager object, which will
 		// cause it to load all providers and thus servers.
@@ -643,7 +648,6 @@ public class GUI extends JFrame implements ListSelectionListener,
 			public void run()
 			{
 				GUI ex = new GUI();
-				ex.setVisible(true);
 			}
 		});
 	}
