@@ -322,14 +322,16 @@ public class Server
 	}
 
 	/**
-	 * Pauses this server
+	 * Pauses this server if it can be paused
 	 * 
 	 * @throws InternalException
 	 * @throws CloudException
 	 */
 	public void pause() throws InternalException, CloudException
 	{
-		provider.pause(this);
+		if (serverImpl.isPausable())
+			provider.pause(this);
+		return;
 	}
 
 	/**
