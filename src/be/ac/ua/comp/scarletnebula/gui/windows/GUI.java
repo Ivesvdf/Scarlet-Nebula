@@ -50,6 +50,7 @@ import be.ac.ua.comp.scarletnebula.core.Server;
 import be.ac.ua.comp.scarletnebula.core.ServerChangedObserver;
 import be.ac.ua.comp.scarletnebula.core.ServerDisappearedException;
 import be.ac.ua.comp.scarletnebula.core.ServerLinkUnlinkObserver;
+import be.ac.ua.comp.scarletnebula.gui.GraphPanelCache;
 import be.ac.ua.comp.scarletnebula.gui.SearchField;
 import be.ac.ua.comp.scarletnebula.gui.ServerList;
 import be.ac.ua.comp.scarletnebula.gui.ServerListModel;
@@ -778,5 +779,6 @@ public class GUI extends JFrame implements ListSelectionListener,
 	public void serverUnlinked(CloudProvider cloudProvider, Server srv)
 	{
 		removeServer(srv);
+		GraphPanelCache.get().clearBareServerCache(srv);
 	}
 }

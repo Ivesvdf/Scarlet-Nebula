@@ -102,7 +102,7 @@ class ServerCellRenderer implements ListCellRenderer
 			public void actionPerformed(ActionEvent e)
 			{
 				graph.newDataPoint("CPU", random.nextDouble());
-				list.repaint();
+				server.serverChanged();
 			}
 		});
 		timer.setInitialDelay(0);

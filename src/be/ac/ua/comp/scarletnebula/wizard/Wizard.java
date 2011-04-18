@@ -77,10 +77,9 @@ public class Wizard
 			JDialog dialog, Component parent)
 	{
 		dialog.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-		dialog.setPreferredSize(new Dimension(width, height));
+		dialog.setSize(new Dimension(width, height));
 		dialog.setLocationByPlatform(true);
 		dialog.setTitle(title);
-		dialog.pack();
 
 		start(dialog);
 

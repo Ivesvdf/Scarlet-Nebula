@@ -369,7 +369,7 @@ public class Server
 	/**
 	 * Notify all observers the server has changed.
 	 */
-	private void serverChanged()
+	public void serverChanged()
 	{
 		for (ServerChangedObserver obs : serverChangedObservers)
 			obs.serverChanged(this);
