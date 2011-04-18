@@ -10,7 +10,6 @@ import java.awt.LinearGradientPaint;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Random;
 
@@ -95,26 +94,15 @@ class ServerCellRenderer implements ListCellRenderer
 		final BareGraph graph = new BareGraph((long) 60 * 60 * 1000);
 		graph.registerRelativeDatastream(server, "CPU", "CPU", Color.GREEN);
 		final ChartPanel chartPanel = graph.getChartPanel();
-		log.info("making new baregraph");
+		log.info("Making new baregraph for server " + server);
 		final Random random = new Random();
 		final Timer timer = new Timer(1000, new ActionListener()
 		{
 			@Override
 			public void actionPerformed(ActionEvent e)
 			{
-				log.info("b4 Executing timer"
-						+ Calendar.getInstance().getTimeInMillis());
-
 				graph.newDataPoint("CPU", random.nextDouble());
-
-				log.info("after Executing timer"
-						+ Calendar.getInstance().getTimeInMillis());
-
 				list.repaint();
-
-				log.info("after refreshing"
-						+ Calendar.getInstance().getTimeInMillis());
-
 			}
 		});
 		timer.setInitialDelay(0);
