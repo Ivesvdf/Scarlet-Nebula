@@ -1,6 +1,5 @@
 package be.ac.ua.comp.scarletnebula.gui;
 
-import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Font;
@@ -8,8 +7,12 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.LinearGradientPaint;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
+import java.util.Random;
 
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
@@ -18,22 +21,15 @@ import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.ListCellRenderer;
 import javax.swing.SwingConstants;
+import javax.swing.Timer;
 import javax.swing.UIManager;
 import javax.swing.border.BevelBorder;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.jdesktop.swingx.JXPanel;
 import org.jdesktop.swingx.painter.MattePainter;
 import org.jfree.chart.ChartPanel;
-import org.jfree.chart.JFreeChart;
-import org.jfree.chart.axis.DateAxis;
-import org.jfree.chart.axis.NumberAxis;
-import org.jfree.chart.plot.XYPlot;
-import org.jfree.chart.renderer.xy.XYItemRenderer;
-import org.jfree.chart.renderer.xy.XYLineAndShapeRenderer;
-import org.jfree.data.time.Millisecond;
-import org.jfree.data.time.TimeSeries;
-import org.jfree.data.time.TimeSeriesCollection;
-import org.jfree.ui.RectangleInsets;
 
 import be.ac.ua.comp.scarletnebula.core.Server;
 import be.ac.ua.comp.scarletnebula.misc.Utils;
@@ -42,28 +38,33 @@ class ServerCellRenderer implements ListCellRenderer
 {
 	private static final long serialVersionUID = 1L;
 	public static HashMap<Server, JPanel> panelMapping = new HashMap<Server, JPanel>();
+	private static Log log = LogFactory.getLog(ServerCellRenderer.class);
 
 	ServerCellRenderer()
 	{
 	}
 
 	@Override
-	public Component getListCellRendererComponent(JList list, Object value,
-			int index, boolean isSelected, boolean cellHasFocus)
+	public Component getListCellRendererComponent(final JList list,
+			Object value, int index, boolean isSelected, boolean cellHasFocus)
 	{
 		// Dirty hack: the last item in the serverlist is always a fake server
 		// that when double clicked produces an "add new server" wizard.
 		if (value == null)
 			return getNewServerServer(list, index, isSelected);
-
-		Server server = (Server) value;
+		final Server server = (Server) value;
 
 		JPanel p = createServerPanel(list, index, isSelected);
 		final Color foreground = getForegroundColor(list, index, isSelected);
 
 		final JLabel label = getServernameComponent(server, foreground);
 		final JLabel tags = getTagComponent(server, foreground);
-		final ChartPanel chartPanel = getChartPanelComponent();
+		// final ChartPanel chartPanel = getChartPanelComponent();
+
+		final GraphPanelCache gcp = GraphPanelCache.get();
+		final ChartPanel chartPanel = gcp.inBareServerCache(server) ? gcp
+				.getBareChartPanel(server) : createAndStoreBareChartPanel(list,
+				server);
 
 		p.setLayout(new GridBagLayout());
 		GridBagConstraints c = new GridBagConstraints();
@@ -88,43 +89,37 @@ class ServerCellRenderer implements ListCellRenderer
 
 	}
 
-	private ChartPanel getChartPanelComponent()
+	private ChartPanel createAndStoreBareChartPanel(final JList list,
+			final Server server)
 	{
-		TimeSeries total = new TimeSeries("Total Memory", Millisecond.class);
-		TimeSeries free = new TimeSeries("Free Memory", Millisecond.class);
-		TimeSeriesCollection dataset = new TimeSeriesCollection();
-		dataset.addSeries(total);
-		dataset.addSeries(free);
-		DateAxis domain = new DateAxis("Time");
-		domain.setVisible(false);
-		NumberAxis range = new NumberAxis("Memory");
-		range.setVisible(false);
-		domain.setTickLabelFont(new Font("SansSerif", Font.PLAIN, 12));
-		range.setTickLabelFont(new Font("SansSerif", Font.PLAIN, 12));
-		domain.setLabelFont(new Font("SansSerif", Font.PLAIN, 14));
-		range.setLabelFont(new Font("SansSerif", Font.PLAIN, 14));
-		XYItemRenderer renderer = new XYLineAndShapeRenderer(true, false);
-		renderer.setSeriesPaint(0, Color.red);
-		renderer.setSeriesPaint(1, Color.green);
-		renderer.setStroke(new BasicStroke(3f, BasicStroke.CAP_BUTT,
-				BasicStroke.JOIN_BEVEL));
-		XYPlot plot = new XYPlot(dataset, domain, range, renderer);
-		plot.setBackgroundPaint(Color.lightGray);
-		plot.setDomainGridlinePaint(Color.white);
-		plot.setRangeGridlinePaint(Color.white);
-		plot.setInsets(new RectangleInsets(0, 0, 0, 0));
-		domain.setAutoRange(true);
-		domain.setLowerMargin(0.0);
-		domain.setUpperMargin(0.0);
-		domain.setTickLabelsVisible(true);
-		range.setStandardTickUnits(NumberAxis.createIntegerTickUnits());
-		JFreeChart chart = new JFreeChart(null, new Font("SansSerif",
-				Font.BOLD, 24), plot, false);
-		chart.setBorderVisible(false);
-		chart.setBackgroundPaint(Color.white);
-		ChartPanel chartPanel = new ChartPanel(chart);
-		chartPanel.setBorder(BorderFactory
-				.createBevelBorder(BevelBorder.LOWERED));
+		final BareGraph graph = new BareGraph((long) 60 * 60 * 1000);
+		graph.registerRelativeDatastream(server, "CPU", "CPU", Color.GREEN);
+		final ChartPanel chartPanel = graph.getChartPanel();
+		log.info("making new baregraph");
+		final Random random = new Random();
+		final Timer timer = new Timer(1000, new ActionListener()
+		{
+			@Override
+			public void actionPerformed(ActionEvent e)
+			{
+				log.info("b4 Executing timer"
+						+ Calendar.getInstance().getTimeInMillis());
+
+				graph.newDataPoint("CPU", random.nextDouble());
+
+				log.info("after Executing timer"
+						+ Calendar.getInstance().getTimeInMillis());
+
+				list.repaint();
+
+				log.info("after refreshing"
+						+ Calendar.getInstance().getTimeInMillis());
+
+			}
+		});
+		timer.setInitialDelay(0);
+		timer.start();
+		GraphPanelCache.get().addToBareServerCache(server, chartPanel);
 		return chartPanel;
 	}
 
@@ -199,11 +194,11 @@ class ServerCellRenderer implements ListCellRenderer
 	{
 		JXPanel p = new JXPanel();
 		p.setLayout(new GridBagLayout());
-
-		Color background = Colors.alpha(
+		final Color background = Colors.alpha(
 				getBackgroundColor(list, index, isSelected), 0.4f);
 
 		p.setBackground(background);
+
 		Color color1 = Colors.White.color(0.5f);
 		Color color2 = Colors.Gray.color(0.95f);
 		// Color color2 = Colors.Red.color(0.2f);
