@@ -17,7 +17,6 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
-import javax.swing.JTextField;
 import javax.swing.RowFilter;
 import javax.swing.SwingWorker;
 import javax.swing.border.BevelBorder;
@@ -31,6 +30,7 @@ import org.dasein.cloud.compute.MachineImage;
 import org.dasein.cloud.compute.Platform;
 
 import be.ac.ua.comp.scarletnebula.core.CloudProvider;
+import be.ac.ua.comp.scarletnebula.gui.BetterTextField;
 import be.ac.ua.comp.scarletnebula.gui.ThrobberBarWithText;
 import be.ac.ua.comp.scarletnebula.misc.Utils;
 import be.ac.ua.comp.scarletnebula.wizard.DataRecorder;
@@ -69,7 +69,7 @@ public class ChooseImagePage extends WizardPage
 
 		JScrollPane tableScrollPane = new JScrollPane(table);
 		tableScrollPane.setBorder(BorderFactory.createCompoundBorder(
-				BorderFactory.createEmptyBorder(10, 20, 20, 20),
+				BorderFactory.createEmptyBorder(5, 20, 10, 20),
 				BorderFactory.createBevelBorder(BevelBorder.LOWERED)));
 
 		add(tableScrollPane, BorderLayout.CENTER);
@@ -79,7 +79,7 @@ public class ChooseImagePage extends WizardPage
 	private JPanel getSearchPanel(final TableRowSorter<TableModel> sorter)
 	{
 		JPanel searchPanel = new JPanel(new GridBagLayout());
-		searchPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 10, 20));
+		searchPanel.setBorder(BorderFactory.createEmptyBorder(10, 20, 5, 20));
 
 		add(searchPanel, BorderLayout.NORTH);
 		final PlatformComboBox platformComboBox = new PlatformComboBox();
@@ -97,7 +97,8 @@ public class ChooseImagePage extends WizardPage
 		c.gridx = 1;
 		searchPanel.add(architectureComboBox, c);
 
-		final JTextField searchField = new JTextField();
+		final BetterTextField searchField = new BetterTextField();
+		searchField.setPlaceHolder("Search terms");
 
 		searchField.setBorder(BorderFactory
 				.createBevelBorder(BevelBorder.LOWERED));

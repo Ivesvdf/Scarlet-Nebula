@@ -11,12 +11,12 @@ public class BetterTextField extends JTextField
 	private static final long serialVersionUID = 1L;
 	private boolean originalPlaceholderText = true;
 
-	BetterTextField(int columns)
+	public BetterTextField(int columns)
 	{
 		super(columns);
 	}
 
-	BetterTextField()
+	public BetterTextField()
 	{
 		super();
 	}
