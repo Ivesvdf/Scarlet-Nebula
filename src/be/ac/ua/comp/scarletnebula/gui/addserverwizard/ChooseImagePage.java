@@ -8,7 +8,6 @@ import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,6 +32,7 @@ import be.ac.ua.comp.scarletnebula.core.CloudProvider;
 import be.ac.ua.comp.scarletnebula.gui.BetterTextField;
 import be.ac.ua.comp.scarletnebula.gui.ThrobberBarWithText;
 import be.ac.ua.comp.scarletnebula.misc.Utils;
+import be.ac.ua.comp.scarletnebula.misc.WorkerPropertyChangeListener;
 import be.ac.ua.comp.scarletnebula.wizard.DataRecorder;
 import be.ac.ua.comp.scarletnebula.wizard.WizardPage;
 
@@ -193,19 +193,20 @@ public class ChooseImagePage extends WizardPage
 			this.architecture = architecture;
 			this.table = jtable;
 
-			addPropertyChangeListener(new PropertyChangeListener()
+			addPropertyChangeListener(new WorkerPropertyChangeListener()
 			{
 				@Override
-				public void propertyChange(PropertyChangeEvent evt)
+				public void taskIsFinished(PropertyChangeEvent evt)
 				{
-					if ("state".equals(evt.getPropertyName())
-							&& SwingWorker.StateValue.DONE == evt.getNewValue())
-					{
-						throbberPanel.removeAll();
-						throbberPanel.revalidate();
-					}
+					throbberPanel.removeAll();
+					throbberPanel.revalidate();
 				}
 
+				@Override
+				public void progressChanged(Object source, Object newValue,
+						PropertyChangeEvent evt)
+				{
+				}
 			});
 
 		}
