@@ -1,5 +1,7 @@
 package be.ac.ua.comp.scarletnebula.core;
 
+import com.jcraft.jsch.JSchException;
+
 abstract public class CommandConnection
 {
 	/**
@@ -8,8 +10,9 @@ abstract public class CommandConnection
 	 * @param Command
 	 *            The command to be executed
 	 * @return Shell output.
+	 * @throws JSchException
 	 */
-	abstract public String executeCommand(String command);
+	abstract public String executeCommand(String command) throws Exception;
 
 	/**
 	 * Closes this connection.

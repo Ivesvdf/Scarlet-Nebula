@@ -4,9 +4,14 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
+import org.jfree.util.Log;
+
+import be.ac.ua.comp.scarletnebula.gui.NotPromptingJschUserInfo;
+
 import com.jcraft.jcterm.Connection;
 import com.jcraft.jcterm.Term;
 import com.jcraft.jsch.Channel;
+import com.jcraft.jsch.ChannelExec;
 import com.jcraft.jsch.ChannelShell;
 import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.JSchException;
@@ -17,8 +22,8 @@ public class SSHCommandConnection extends CommandConnection
 {
 	Session session = null;
 
-	SSHCommandConnection(String address, String keypairfilename, UserInfo ui)
-			throws Exception
+	public SSHCommandConnection(String address, String keypairfilename,
+			UserInfo ui) throws Exception
 	{
 		String user = "ubuntu";
 
@@ -40,28 +45,84 @@ public class SSHCommandConnection extends CommandConnection
 
 	}
 
-	@Override
-	public String executeCommand(String command)
+	public SSHCommandConnection(String address, String username,
+			String password, UserInfo ui) throws Exception
 	{
-		// ssh.auth(root, authmethods)
-		// ssh.authPassword("root", "fakepassword");
-		// ssh.authPublickey(System.getProperty("user.name"));
+		JSch jsch = new JSch();
 
-		/*
-		 * String output = ""; try {
-		 * 
-		 * // final Command cmd = session.exec(command); //
-		 * System.out.println("\n** exit status: " + cmd.getExitStatus());
-		 * 
-		 * // output = cmd.getOutputAsString(); } catch (ConnectionException e)
-		 * { // TODO Auto-generated catch block e.printStackTrace(); } catch
-		 * (TransportException e) { // TODO Auto-generated catch block
-		 * e.printStackTrace(); } catch (IOException e) { // TODO Auto-generated
-		 * catch block e.printStackTrace(); } finally { close(); }
-		 * 
-		 * return output;
-		 */
-		return null;
+		session = jsch.getSession(username, address, 22);
+
+		java.util.Properties config = new java.util.Properties();
+
+		config.put("compression.s2c", "zlib,none");
+		config.put("compression.c2s", "zlib,none");
+
+		session.setUserInfo(ui);
+		session.setConfig(config);
+		session.setPassword(password);
+		session.connect();
+		// session.rekey();
+
+	}
+
+	@Override
+	public String executeCommand(String command) throws JSchException,
+			IOException
+	{
+		ChannelExec channel = (ChannelExec) session.openChannel("exec");
+		channel.setCommand(command);
+
+		channel.setInputStream(null);
+		channel.setErrStream(System.err);
+
+		InputStream in = channel.getInputStream();
+
+		channel.connect();
+
+		StringBuilder result = new StringBuilder();
+		byte[] tmp = new byte[1024];
+		while (true)
+		{
+			while (in.available() > 0)
+			{
+				int i = in.read(tmp, 0, 1024);
+				if (i < 0)
+					break;
+				result.append(new String(tmp, 0, i));
+			}
+			if (channel.isClosed())
+			{
+				Log.info("exit-status: " + channel.getExitStatus());
+				break;
+			}
+			try
+			{
+				Thread.sleep(1000);
+			}
+			catch (Exception ee)
+			{
+			}
+		}
+
+		channel.disconnect();
+
+		return result.toString();
+	}
+
+	public ChannelInputStreamTuple executeContinuousCommand(String command)
+			throws JSchException, IOException
+	{
+		final ChannelExec channel = (ChannelExec) session.openChannel("exec");
+		channel.setCommand(command);
+
+		channel.setInputStream(null);
+		channel.setErrStream(System.err);
+
+		InputStream in = channel.getInputStream();
+
+		channel.connect();
+
+		return new ChannelInputStreamTuple(channel, in);
 	}
 
 	@Override
@@ -70,7 +131,8 @@ public class SSHCommandConnection extends CommandConnection
 		session.disconnect();
 	}
 
-	public Connection getJSchConnection() throws JSchException, IOException
+	public Connection getJSchTerminalConnection() throws JSchException,
+			IOException
 	{
 		Channel channel = session.openChannel("shell");
 
@@ -117,4 +179,82 @@ public class SSHCommandConnection extends CommandConnection
 		return connection;
 	}
 
+	public static void main(String[] args)
+	{
+		try
+		{
+			SSHCommandConnection connection = new SSHCommandConnection(
+					"radix.cmi.ua.ac.be", "p080558", "somepassword",
+					new NotPromptingJschUserInfo());
+
+			ChannelInputStreamTuple tuple = connection
+					.executeContinuousCommand("date"); // while [[ 1 ]]; do echo
+														// \"incoming data\"; date; sleep 1; done");
+
+			InputStream in = tuple.inputStream;
+			Channel channel = tuple.channel;
+
+			System.out.println();
+
+			StringBuilder result = new StringBuilder();
+			final int buffersize = 1024;
+			byte[] tmp = new byte[buffersize];
+			while (true)
+			{
+
+				while (in.available() > 0)
+				{
+					int i = in.read(tmp, 0, buffersize);
+					if (i < 0)
+						break;
+					result.append(new String(tmp, 0, i));
+
+					// Start of weird shit
+					while (result.indexOf("\n") >= 0)
+					{
+						int nlPos = result.indexOf("\n");
+						String before = result.substring(0, nlPos);
+						System.out.println("Newline detected: came before it:"
+								+ before);
+						String after = result.substring(nlPos + 1);
+
+						result = new StringBuilder(after);
+					}
+				}
+				if (channel.isClosed())
+				{
+					System.out.println("ow ...");
+					break;
+
+				}
+				try
+				{
+					System.out.println("sleeping");
+					Thread.sleep(1000);
+				}
+				catch (Exception ee)
+				{
+				}
+			}
+			channel.disconnect();
+
+		}
+		catch (Exception e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+	public class ChannelInputStreamTuple
+	{
+		public Channel channel;
+		public InputStream inputStream;
+
+		ChannelInputStreamTuple(Channel channel, InputStream inputStream)
+		{
+			this.channel = channel;
+			this.inputStream = inputStream;
+		}
+	}
 }
