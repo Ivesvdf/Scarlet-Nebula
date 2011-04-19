@@ -203,7 +203,7 @@ public class ChooseImagePage extends WizardPage
 				}
 
 				@Override
-				public void progressChanged(Object source, Object newValue,
+				public void progressChanged(Object source, int newValue,
 						PropertyChangeEvent evt)
 				{
 				}

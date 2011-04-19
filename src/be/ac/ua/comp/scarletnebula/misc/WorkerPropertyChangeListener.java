@@ -5,6 +5,14 @@ import java.beans.PropertyChangeListener;
 
 import javax.swing.SwingWorker;
 
+/**
+ * Implementation of PropertyChangeListener to be used in conjunction with a
+ * SwingWorker. Extend one of these babies and pass it as a
+ * PropertyChangeListener to the SwingWorker.
+ * 
+ * @author ives
+ * 
+ */
 public abstract class WorkerPropertyChangeListener implements
 		PropertyChangeListener
 {
@@ -24,9 +32,27 @@ public abstract class WorkerPropertyChangeListener implements
 		}
 	}
 
+	/**
+	 * Method that will be called when setProgress() is called in the
+	 * SwingWorker.
+	 * 
+	 * @param source
+	 *            The SwingWorker whose progress changed
+	 * @param newProgress
+	 *            The current progress
+	 * @param evt
+	 *            The event itself that notified this class of the change
+	 */
 	public abstract void progressChanged(Object source, int newProgress,
 			PropertyChangeEvent evt);
 
+	/**
+	 * Method that will be called when the SwingWorker's work is done ie when
+	 * doInBackground finishes.
+	 * 
+	 * @param evt
+	 *            The event itself that notified this class of the change
+	 */
 	public abstract void taskIsFinished(PropertyChangeEvent evt);
 
 }
