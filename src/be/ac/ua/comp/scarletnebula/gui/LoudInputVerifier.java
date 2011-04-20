@@ -33,6 +33,14 @@ public abstract class LoudInputVerifier extends InputVerifier implements
 	private Color color = new Color(243, 255, 159);
 	final private JTextField textField;
 
+	/**
+	 * Constructs a LoudInputVerifier
+	 * 
+	 * @param textField
+	 *            The JTextField to be verified
+	 * @param message
+	 *            The message shown when textField does not pass verification
+	 */
 	public LoudInputVerifier(JTextField textField, String message)
 	{
 		this.textField = textField;
@@ -46,6 +54,9 @@ public abstract class LoudInputVerifier extends InputVerifier implements
 		image = new JLabel(Utils.icon("warning16.png"));
 	}
 
+	/**
+	 * @see InputVerifier
+	 */
 	@Override
 	public boolean shouldYieldFocus(JComponent c)
 	{
@@ -79,6 +90,13 @@ public abstract class LoudInputVerifier extends InputVerifier implements
 
 	}
 
+	/**
+	 * Sets the text contained in the popup. Can be used by deriving classes to
+	 * give failure-dependant error notices.
+	 * 
+	 * @param message
+	 *            The message to be displayed.
+	 */
 	protected void setMessage(String message)
 	{
 		messageLabel.setText(message);
@@ -87,7 +105,6 @@ public abstract class LoudInputVerifier extends InputVerifier implements
 	/**
 	 * @see KeyListener
 	 */
-
 	@Override
 	public void keyPressed(KeyEvent e)
 	{
@@ -97,7 +114,6 @@ public abstract class LoudInputVerifier extends InputVerifier implements
 	/**
 	 * @see KeyListener
 	 */
-
 	@Override
 	public void keyTyped(KeyEvent e)
 	{
@@ -106,12 +122,17 @@ public abstract class LoudInputVerifier extends InputVerifier implements
 	/**
 	 * @see KeyListener
 	 */
-
 	@Override
 	public void keyReleased(KeyEvent e)
 	{
 	}
 
+	/**
+	 * Initialises the popup window (fills it with components)
+	 * 
+	 * @param popup
+	 *            The popup that will be filled.
+	 */
 	private void initComponents(JDialog popup)
 	{
 		JPanel content = new JPanel(new FlowLayout());
@@ -126,18 +147,27 @@ public abstract class LoudInputVerifier extends InputVerifier implements
 		popup.setFocusableWindowState(false);
 	}
 
+	/**
+	 * @see DocumentListener
+	 */
 	@Override
 	public void changedUpdate(DocumentEvent e)
 	{
 
 	}
 
+	/**
+	 * @see DocumentListener
+	 */
 	@Override
 	public void insertUpdate(DocumentEvent e)
 	{
 		shouldYieldFocus(textField);
 	}
 
+	/**
+	 * @see DocumentListener
+	 */
 	@Override
 	public void removeUpdate(DocumentEvent e)
 	{
