@@ -20,21 +20,31 @@ import javax.swing.JScrollPane;
 import javax.swing.border.BevelBorder;
 import javax.swing.border.EmptyBorder;
 
-import org.dasein.cloud.CloudException;
-import org.dasein.cloud.InternalException;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import be.ac.ua.comp.scarletnebula.core.CloudManager;
 import be.ac.ua.comp.scarletnebula.core.CloudProvider;
 import be.ac.ua.comp.scarletnebula.core.Server;
+import be.ac.ua.comp.scarletnebula.gui.ButtonFactory;
+import be.ac.ua.comp.scarletnebula.gui.CollapsablePanel;
 import be.ac.ua.comp.scarletnebula.gui.ServerList;
 import be.ac.ua.comp.scarletnebula.gui.ServerListModel;
 import be.ac.ua.comp.scarletnebula.gui.ServerListModel.CreateNewServerServer;
+import be.ac.ua.comp.scarletnebula.gui.ThrobberBarWithText;
+import be.ac.ua.comp.scarletnebula.gui.addserverwizard.ChooseImagePage;
+import be.ac.ua.comp.scarletnebula.misc.SwingWorkerWithThrobber;
 
 public class LinkUnlinkWindow extends JDialog
 {
+	private static final Log log = LogFactory.getLog(ChooseImagePage.class);
+
 	private static final long serialVersionUID = 1L;
-	final ServerListModel unlinkedServerListModel;
-	final ServerListModel linkedServerListModel;
+	final ServerListModel unlinkedServerListModel = new ServerListModel(
+			CreateNewServerServer.NO_NEW_SERVER);
+	final ServerListModel linkedServerListModel = new ServerListModel(
+			CreateNewServerServer.NO_NEW_SERVER);
+	private final CollapsablePanel throbberPanel;
 
 	LinkUnlinkWindow(JFrame parent)
 	{
@@ -44,18 +54,79 @@ public class LinkUnlinkWindow extends JDialog
 		setLocationByPlatform(true);
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 
-		JPanel topPanel = new JPanel();
-		topPanel.setLayout(new GridBagLayout());
+		final ThrobberBarWithText throbber = new ThrobberBarWithText(
+				"Loading unlinked servers");
 
-		linkedServerListModel = new ServerListModel(
-				CreateNewServerServer.NO_NEW_SERVER);
+		final JPanel borderedThrobber = getBorderedThrobber(throbber);
+		throbberPanel = new CollapsablePanel(borderedThrobber, false);
+
+		add(throbberPanel, BorderLayout.NORTH);
+
+		final JPanel mainPanel = getMainPanel();
+		add(mainPanel, BorderLayout.CENTER);
+
+		final JPanel bottomPanel = getBottomPanel();
+		add(bottomPanel, BorderLayout.SOUTH);
+
+		fillLinkedList(linkedServerListModel);
+		fillUnlinkedList(unlinkedServerListModel);
+
+		setVisible(true);
+	}
+
+	private JPanel getBorderedThrobber(final ThrobberBarWithText throbber)
+	{
+		JPanel borderedThrobber = new JPanel(new BorderLayout());
+		borderedThrobber.add(throbber, BorderLayout.CENTER);
+		borderedThrobber.setBorder(BorderFactory
+				.createEmptyBorder(10, 0, 10, 0));
+		return borderedThrobber;
+	}
+
+	private JPanel getBottomPanel()
+	{
+		JPanel bottomPanel = new JPanel();
+		bottomPanel.setLayout(new BoxLayout(bottomPanel, BoxLayout.X_AXIS));
+		bottomPanel.add(Box.createHorizontalGlue());
+		JButton cancelButton = ButtonFactory.createCancelButton();
+		cancelButton.addActionListener(new ActionListener()
+		{
+			@Override
+			public void actionPerformed(ActionEvent e)
+			{
+				LinkUnlinkWindow.this.dispose();
+			}
+		});
+
+		bottomPanel.add(cancelButton);
+		bottomPanel.add(Box.createHorizontalStrut(10));
+		JButton okButton = ButtonFactory.createOkButton();
+		okButton.addActionListener(new ActionListener()
+		{
+			@Override
+			public void actionPerformed(ActionEvent e)
+			{
+				actuallyLinkUnlink();
+				LinkUnlinkWindow.this.dispose();
+			}
+		});
+
+		bottomPanel.add(okButton);
+		bottomPanel.setBorder(BorderFactory.createEmptyBorder(0, 20, 20, 20));
+		return bottomPanel;
+	}
+
+	private final JPanel getMainPanel()
+	{
+		JPanel mainPanel = new JPanel(new GridBagLayout());
+		mainPanel.setBorder(BorderFactory.createEmptyBorder(10, 0, 0, 0));
 		final ServerList linkedServerList = new ServerList(
 				linkedServerListModel);
 		linkedServerList.setBorder(BorderFactory
 				.createBevelBorder(BevelBorder.LOWERED));
 		JScrollPane linkedServerScrollPane = new JScrollPane(linkedServerList);
 		linkedServerScrollPane.setBorder(BorderFactory.createTitledBorder(
-				new EmptyBorder(20, 20, 20, 20), "Linked Servers"));
+				new EmptyBorder(5, 20, 20, 20), "Linked Servers"));
 		// Doesn't matter what this is set to, as long as it's the same as the
 		// one for unlinkedServerScrollPane
 		linkedServerScrollPane.setPreferredSize(new Dimension(10, 10));
@@ -68,10 +139,8 @@ public class LinkUnlinkWindow extends JDialog
 		c.weightx = 0.5;
 		c.weighty = 1.0;
 
-		topPanel.add(linkedServerScrollPane, c);
+		mainPanel.add(linkedServerScrollPane, c);
 
-		unlinkedServerListModel = new ServerListModel(
-				CreateNewServerServer.NO_NEW_SERVER);
 		final ServerList unlinkedServerList = new ServerList(
 				unlinkedServerListModel);
 		unlinkedServerList.setBorder(BorderFactory
@@ -79,7 +148,7 @@ public class LinkUnlinkWindow extends JDialog
 		JScrollPane unlinkedServerScrollPane = new JScrollPane(
 				unlinkedServerList);
 		unlinkedServerScrollPane.setBorder(BorderFactory.createTitledBorder(
-				new EmptyBorder(20, 20, 20, 20), "Unlinked Servers"));
+				new EmptyBorder(5, 20, 20, 20), "Unlinked Servers"));
 
 		// Doesn't matter what this is set to, as long as it's the same as the
 		// one for unlinkedServerScrollPane
@@ -155,52 +224,15 @@ public class LinkUnlinkWindow extends JDialog
 		c.weightx = 0.0;
 		c.weighty = 0.0;
 
-		topPanel.add(middlePanel, c);
+		mainPanel.add(middlePanel, c);
 
 		c.gridx = 2;
 		c.gridy = 0;
 		c.weightx = 0.5;
 		c.weighty = 1.0;
 
-		topPanel.add(unlinkedServerScrollPane, c);
-
-		add(topPanel);
-
-		JPanel bottomPanel = new JPanel();
-		bottomPanel.setLayout(new BoxLayout(bottomPanel, BoxLayout.X_AXIS));
-		bottomPanel.add(Box.createHorizontalGlue());
-		JButton cancelButton = new JButton("Cancel");
-		cancelButton.addActionListener(new ActionListener()
-		{
-			@Override
-			public void actionPerformed(ActionEvent e)
-			{
-				LinkUnlinkWindow.this.dispose();
-			}
-		});
-
-		bottomPanel.add(cancelButton);
-		bottomPanel.add(Box.createHorizontalStrut(10));
-		JButton okButton = new JButton("OK");
-		okButton.addActionListener(new ActionListener()
-		{
-			@Override
-			public void actionPerformed(ActionEvent e)
-			{
-				actuallyLinkUnlink();
-				LinkUnlinkWindow.this.dispose();
-			}
-		});
-
-		bottomPanel.add(okButton);
-		bottomPanel.setBorder(BorderFactory.createEmptyBorder(0, 20, 20, 20));
-
-		add(bottomPanel, BorderLayout.SOUTH);
-
-		fillLinkedList(linkedServerListModel);
-		fillUnlinkedList(unlinkedServerListModel);
-
-		setVisible(true);
+		mainPanel.add(unlinkedServerScrollPane, c);
+		return mainPanel;
 	}
 
 	protected void actuallyLinkUnlink()
@@ -228,28 +260,37 @@ public class LinkUnlinkWindow extends JDialog
 		}
 	}
 
-	private void fillUnlinkedList(ServerListModel unlinkedServerListModel)
+	private void fillUnlinkedList(final ServerListModel unlinkedServerListModel)
 	{
-		for (CloudProvider prov : CloudManager.get().getLinkedCloudProviders())
+		SwingWorkerWithThrobber<ServerListModel, Server> fillUnlinkedListWorker = new SwingWorkerWithThrobber<ServerListModel, Server>(
+				throbberPanel)
 		{
-			try
+			@Override
+			protected ServerListModel doInBackground() throws Exception
 			{
-				for (Server server : prov.listUnlinkedServers())
+				for (CloudProvider prov : CloudManager.get()
+						.getLinkedCloudProviders())
 				{
-					unlinkedServerListModel.addServer(server);
+					try
+					{
+						for (Server server : prov.listUnlinkedServers())
+						{
+							unlinkedServerListModel.addServer(server);
+							if (isCancelled())
+							{
+								break;
+							}
+						}
+					}
+					catch (Exception e)
+					{
+						log.error("Error while querying unlinked servers.");
+					}
 				}
+				return unlinkedServerListModel;
 			}
-			catch (InternalException e)
-			{
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			catch (CloudException e)
-			{
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
+		};
+		fillUnlinkedListWorker.execute();
 	}
 
 	private void fillLinkedList(ServerListModel linkedServerListModel)
