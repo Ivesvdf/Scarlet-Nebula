@@ -95,10 +95,8 @@ public class GUI extends JFrame implements ListSelectionListener,
 		addMenubar();
 		setKeyboardAccelerators();
 
-		// I'd like to
-		// setLocationByPlatform(true);
-		// but this apparently breaks my JMenu (also my "klomp").
 		setLocationRelativeTo(null);
+		setLocationByPlatform(true);
 
 		setVisible(true);
 
