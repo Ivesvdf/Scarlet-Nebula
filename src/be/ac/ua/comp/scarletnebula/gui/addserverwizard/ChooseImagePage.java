@@ -30,6 +30,7 @@ import org.dasein.cloud.compute.Platform;
 
 import be.ac.ua.comp.scarletnebula.core.CloudProvider;
 import be.ac.ua.comp.scarletnebula.gui.BetterTextField;
+import be.ac.ua.comp.scarletnebula.gui.CollapsablePanel;
 import be.ac.ua.comp.scarletnebula.gui.ThrobberBarWithText;
 import be.ac.ua.comp.scarletnebula.misc.Utils;
 import be.ac.ua.comp.scarletnebula.misc.WorkerPropertyChangeListener;
@@ -45,7 +46,9 @@ public class ChooseImagePage extends WizardPage
 	private final JTable table;
 	private final MachineImageTableModel model;
 	private final CloudProvider provider;
-	private final JPanel throbberPanel = new JPanel(new BorderLayout());
+	private final CollapsablePanel throbberPanel = new CollapsablePanel(
+			new ThrobberBarWithText("Loading machine images"), false);// Not
+																		// visible
 
 	ChooseImagePage(final CloudProvider provider)
 	{
@@ -126,13 +129,7 @@ public class ChooseImagePage extends WizardPage
 					model.clear();
 					log.warn("executing");
 
-					throbberPanel.removeAll();
-
-					ThrobberBarWithText throbber = new ThrobberBarWithText(
-							"Loading machine images");
-					throbberPanel.add(throbber, BorderLayout.CENTER);
-
-					throbberPanel.revalidate();
+					throbberPanel.uncollapse();
 
 					ImageModelFillerTask task = new ImageModelFillerTask(Utils
 							.findWindow(ChooseImagePage.this), table, model,
@@ -142,6 +139,7 @@ public class ChooseImagePage extends WizardPage
 
 					previousSelectedArchitecture = currentArchitecture;
 					previousSelectedPlatform = currentPlatform;
+
 				}
 				String expr = searchField.getText();
 				sorter.setRowFilter(RowFilter.regexFilter(expr));
@@ -198,8 +196,7 @@ public class ChooseImagePage extends WizardPage
 				@Override
 				public void taskIsFinished(PropertyChangeEvent evt)
 				{
-					throbberPanel.removeAll();
-					throbberPanel.revalidate();
+					throbberPanel.collapse();
 				}
 
 				@Override
@@ -225,7 +222,6 @@ public class ChooseImagePage extends WizardPage
 					return model;
 				publish(image);
 			}
-
 			return model;
 		}
 

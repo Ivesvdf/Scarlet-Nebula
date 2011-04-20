@@ -6,6 +6,8 @@ import java.awt.event.FocusListener;
 
 import javax.swing.JTextField;
 
+import be.ac.ua.comp.scarletnebula.misc.Colors;
+
 public class BetterTextField extends JTextField
 {
 	private static final long serialVersionUID = 1L;

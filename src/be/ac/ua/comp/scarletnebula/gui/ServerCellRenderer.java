@@ -31,6 +31,7 @@ import org.jdesktop.swingx.painter.MattePainter;
 import org.jfree.chart.ChartPanel;
 
 import be.ac.ua.comp.scarletnebula.core.Server;
+import be.ac.ua.comp.scarletnebula.misc.Colors;
 import be.ac.ua.comp.scarletnebula.misc.Utils;
 
 class ServerCellRenderer implements ListCellRenderer
