@@ -2,6 +2,7 @@ package be.ac.ua.comp.scarletnebula.gui;
 
 import java.util.regex.Pattern;
 
+import javax.swing.InputVerifier;
 import javax.swing.JComponent;
 import javax.swing.JTextField;
 
@@ -16,6 +17,9 @@ public class ServernameInputVerifier extends LoudInputVerifier
 				"A servername must be at least 1 character long and can only contain letters, numbers, parentheses and dashes.");
 	}
 
+	/**
+	 * @see InputVerifier
+	 */
 	@Override
 	public boolean verify(JComponent input)
 	{

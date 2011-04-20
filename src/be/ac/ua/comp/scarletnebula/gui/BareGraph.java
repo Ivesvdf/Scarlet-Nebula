@@ -17,11 +17,23 @@ import org.jfree.chart.axis.NumberTickUnit;
 import org.jfree.chart.plot.XYPlot;
 import org.jfree.ui.RectangleInsets;
 
+/**
+ * A Graph without a legend, title or axes
+ * 
+ * @author ives
+ * 
+ */
 public class BareGraph extends Graph
 {
 	private final DateAxis domain = new DateAxis();
 	private final NumberAxis range = new NumberAxis();
 
+	/**
+	 * Constructor
+	 * 
+	 * @param maximumAge
+	 *            The age after which data is no longer displayed in the graph
+	 */
 	BareGraph(long maximumAge)
 	{
 		super(maximumAge);
@@ -37,11 +49,9 @@ public class BareGraph extends Graph
 		range.setVisible(false);
 	}
 
-	void registerAbsoluteDatastream(String streamname, Color color)
-	{
-
-	}
-
+	/**
+	 * @see Graph
+	 */
 	@Override
 	ChartPanel getChartPanel()
 	{

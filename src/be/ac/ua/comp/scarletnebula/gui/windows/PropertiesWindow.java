@@ -70,9 +70,23 @@ public class PropertiesWindow extends JDialog
 		super(gui, true);
 		this.selectedServers = selectedServers;
 		this.gui = gui;
+
 		setLayout(new BorderLayout());
+		setSize(500, 300);
+		setTitle("Server Properties - Scarlet Nebula");
+
 		add(createTopPartition(selectedServers), BorderLayout.CENTER);
 
+		add(getBottomPanel(), BorderLayout.SOUTH);
+
+		updateOverviewTab(selectedServers);
+		setLocationByPlatform(true);
+		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+		setVisible(true);
+	}
+
+	private JPanel getBottomPanel()
+	{
 		JPanel bottomPanel = new JPanel();
 		JButton okButton = ButtonFactory.createOkButton();
 		okButton.addActionListener(new ActionListener()
@@ -88,13 +102,7 @@ public class PropertiesWindow extends JDialog
 		bottomPanel.add(Box.createHorizontalGlue());
 		bottomPanel.add(okButton);
 		bottomPanel.setBorder(BorderFactory.createEmptyBorder(0, 20, 20, 20));
-		add(bottomPanel, BorderLayout.SOUTH);
-		setSize(500, 300);
-		setTitle("Server Properties - Scarlet Nebula");
-		updateOverviewTab(selectedServers);
-		setLocationByPlatform(true);
-		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-		setVisible(true);
+		return bottomPanel;
 	}
 
 	private JPanel createTopPartition(Collection<Server> servers)
@@ -235,7 +243,6 @@ public class PropertiesWindow extends JDialog
 
 	private Component getSingleServerServerNameComponent(final Server server)
 	{
-		Component servernameComponent;
 		JTextField servernameTextField = new JTextField();
 		servernameTextField.setInputVerifier(new ServernameInputVerifier(
 				servernameTextField));
@@ -251,8 +258,7 @@ public class PropertiesWindow extends JDialog
 						server.store();
 					}
 				});
-		servernameComponent = servername;
-		return servernameComponent;
+		return servername;
 	}
 
 	protected void communicationTabGotFocus()
