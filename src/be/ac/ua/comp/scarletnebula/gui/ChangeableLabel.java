@@ -14,12 +14,29 @@ import javax.swing.JPanel;
 import be.ac.ua.comp.scarletnebula.misc.Executable;
 import be.ac.ua.comp.scarletnebula.misc.Utils;
 
+/**
+ * A class that displays a label that can be "executed". After execution the
+ * content of the label might change.
+ * 
+ * @author ives
+ * 
+ */
 public class ChangeableLabel extends JPanel
 {
 	private static final long serialVersionUID = 1L;
 
-	final JLabel contentLabel;
+	final private JLabel contentLabel;
 
+	/**
+	 * Constructor.
+	 * 
+	 * @param originalText
+	 *            Text that will be displayed in the JLabel when it is first
+	 *            shown
+	 * @param executable
+	 *            The Executable class that will be executed when the
+	 *            ChangeableLabel is executed.
+	 */
 	public ChangeableLabel(String originalText,
 			final Executable<JLabel> executable)
 	{
@@ -34,64 +51,117 @@ public class ChangeableLabel extends JPanel
 		add(contentLabel, c);
 		final JButton editButton = new ToolbarStyleButton(
 				Utils.icon("settings16.png"));
-		editButton.addActionListener(new ExecuteActionListener(executable));
+		editButton.addActionListener(new ExecuteActionListener<JLabel>(
+				executable, contentLabel));
 		c.fill = GridBagConstraints.NONE;
 		c.weightx = 0.0;
 		c.gridx = 1;
 		add(editButton, c);
 
-		addMouseListener(new ExecuteMouseListener(executable));
+		addMouseListener(new ExecuteMouseListener(executable, contentLabel));
 	}
 
-	private final class ExecuteActionListener implements ActionListener
+	/**
+	 * Class that converts an ActionListener trigger to an Executable trigger
+	 * 
+	 * @author ives
+	 * 
+	 */
+	private final class ExecuteActionListener<T> implements ActionListener
 	{
-		private final Executable<JLabel> executable;
+		private final Executable<T> executable;
+		private final T argument;
 
-		private ExecuteActionListener(Executable<JLabel> executable)
+		/**
+		 * Constructor.
+		 * 
+		 * @param executable
+		 *            The interface that will be executed when the
+		 *            ActionListener fires.
+		 * @param argument
+		 *            This parameter will be given to the run() method of the
+		 *            Executable when the ActionListener fires
+		 */
+		private ExecuteActionListener(Executable<T> executable, T argument)
 		{
 			this.executable = executable;
+			this.argument = argument;
 		}
 
+		/**
+		 * @see ActionListener
+		 */
 		@Override
 		public void actionPerformed(ActionEvent e)
 		{
-			executable.run(contentLabel);
+			executable.run(argument);
 		}
 	}
 
-	private final class ExecuteMouseListener implements MouseListener
+	/**
+	 * Class that converts a double click to the running of an Executable.
+	 * 
+	 * @author ives
+	 * 
+	 */
+	private final class ExecuteMouseListener<T> implements MouseListener
 	{
-		private final Executable<JLabel> executable;
+		private final Executable<T> executable;
+		private final T argument;
 
-		private ExecuteMouseListener(Executable<JLabel> executable)
+		/**
+		 * Constructor
+		 * 
+		 * @param executable
+		 *            The Executable to be executed on double click
+		 * @param argument
+		 *            The parameter given to the Executable's run method
+		 */
+		private ExecuteMouseListener(Executable<T> executable, T argument)
 		{
 			this.executable = executable;
+			this.argument = argument;
 		}
 
+		/**
+		 * @see MouseListener
+		 */
 		@Override
 		public void mouseClicked(MouseEvent e)
 		{
 		}
 
+		/**
+		 * @see MouseListener
+		 */
 		@Override
 		public void mousePressed(MouseEvent e)
 		{
 			if (e.getClickCount() == 2)
 			{
-				executable.run(contentLabel);
+				executable.run(argument);
 			}
 		}
 
+		/**
+		 * @see MouseListener
+		 */
 		@Override
 		public void mouseReleased(MouseEvent e)
 		{
 		}
 
+		/**
+		 * @see MouseListener
+		 */
 		@Override
 		public void mouseEntered(MouseEvent e)
 		{
 		}
 
+		/**
+		 * @see MouseListener
+		 */
 		@Override
 		public void mouseExited(MouseEvent e)
 		{
