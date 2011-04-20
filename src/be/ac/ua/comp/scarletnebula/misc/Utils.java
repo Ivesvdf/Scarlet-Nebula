@@ -11,10 +11,19 @@ import java.util.List;
 
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
-import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
 
 public class Utils
 {
+	/**
+	 * Copies the contents of a file to a different file
+	 * 
+	 * @param sourceFile
+	 *            The source file
+	 * @param destFile
+	 *            The place the source file will be copied to
+	 * @throws IOException
+	 */
 	public static void copyFile(File sourceFile, File destFile)
 			throws IOException
 	{
@@ -44,34 +53,42 @@ public class Utils
 		}
 	}
 
-	public static String implode(List<String> input, String delimiter)
+	/**
+	 * Joins a list of strings by using delimiter as glue
+	 * 
+	 * @param pieces
+	 *            The different pieces to be joined by glue
+	 * @param glue
+	 *            The glue used to join the different pieces
+	 * @return A string containing a a string representation of all elements in
+	 *         pieces in their respective orders, with a glue string between
+	 *         each of them (but not before the first or after the last one).
+	 */
+	public static String implode(List<String> pieces, String glue)
 	{
 		String out = "";
-		for (int i = 0; i < input.size(); i++)
+		for (int i = 0; i < pieces.size(); i++)
 		{
 			if (i != 0)
 			{
-				out += delimiter;
+				out += glue;
 			}
-			out += input.get(i);
+			out += pieces.get(i);
 		}
 		return out;
 	}
 
+	/**
+	 * Returns the parent window of the component in parameter
+	 * 
+	 * @param c
+	 *            The component for which the parent window (if any) will be
+	 *            returned
+	 * @return The parent window if one is found, null otherwise
+	 */
 	public static Window findWindow(Component c)
 	{
-		if (c == null)
-		{
-			return JOptionPane.getRootFrame();
-		}
-		else if (c instanceof Window)
-		{
-			return (Window) c;
-		}
-		else
-		{
-			return findWindow(c.getParent());
-		}
+		return (Window) SwingUtilities.getAncestorOfClass(Window.class, c);
 	}
 
 	/**
