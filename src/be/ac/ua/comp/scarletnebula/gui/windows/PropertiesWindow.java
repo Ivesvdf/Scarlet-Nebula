@@ -240,7 +240,7 @@ public class PropertiesWindow extends JDialog
 		servernameTextField.setInputVerifier(new ServernameInputVerifier(
 				servernameTextField));
 		final LabelEditSwitcherPanel servername = new LabelEditSwitcherPanel(
-				server.getFriendlyName());
+				server.getFriendlyName(), servernameTextField);
 		servername
 				.addContentChangedListener(new LabelEditSwitcherPanel.ContentChangedListener()
 				{

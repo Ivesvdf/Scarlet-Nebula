@@ -109,12 +109,13 @@ public class LabelEditSwitcherPanel extends JPanel implements MouseListener,
 					return;
 			}
 			content = edit.getText();
+
+			goToLabel();
+
 			for (ContentChangedListener l : listeners)
 			{
 				l.changed(content);
 			}
-
-			goToLabel();
 		}
 	}
 

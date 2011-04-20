@@ -20,6 +20,7 @@ public class ServernameInputVerifier extends LoudInputVerifier
 	public boolean verify(JComponent input)
 	{
 		final String text = ((JTextField) input).getText();
+		System.out.println("verifying: " + text);
 
 		boolean valid = true;
 		if (!Pattern.matches("[a-zA-Z )(-0-9]+", text))
@@ -28,6 +29,7 @@ public class ServernameInputVerifier extends LoudInputVerifier
 		}
 		else if (CloudManager.get().serverExists(text))
 		{
+			System.out.println("server exists!");
 			valid = false;
 		}
 
