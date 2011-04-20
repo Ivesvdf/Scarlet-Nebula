@@ -78,6 +78,7 @@ public class Wizard
 	{
 		dialog.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 		dialog.setSize(new Dimension(width, height));
+		dialog.setLocationRelativeTo(parent);
 		dialog.setLocationByPlatform(true);
 		dialog.setTitle(title);
 

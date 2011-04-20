@@ -6,6 +6,7 @@ import javax.swing.JComboBox;
 import javax.swing.JTextField;
 
 import be.ac.ua.comp.scarletnebula.core.CloudProvider;
+import be.ac.ua.comp.scarletnebula.gui.ServernameInputVerifier;
 import be.ac.ua.comp.scarletnebula.wizard.DataRecorder;
 import be.ac.ua.comp.scarletnebula.wizard.WizardPage;
 
@@ -21,6 +22,8 @@ class InstanceInformationPage extends WizardPage
 
 	InstanceInformationPage(CloudProvider provider)
 	{
+		instanceNameField.setInputVerifier(new ServernameInputVerifier(
+				instanceNameField));
 		instanceNameField.setText(provider.getName() + "-"
 				+ provider.listLinkedServers().size());
 		instanceNameField.selectAll();

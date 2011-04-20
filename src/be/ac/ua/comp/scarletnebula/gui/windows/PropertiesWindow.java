@@ -17,6 +17,7 @@ import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
+import javax.swing.JTextField;
 import javax.swing.WindowConstants;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -235,9 +236,11 @@ public class PropertiesWindow extends JDialog
 	private Component getSingleServerServerNameComponent(final Server server)
 	{
 		Component servernameComponent;
+		JTextField servernameTextField = new JTextField();
+		servernameTextField.setInputVerifier(new ServernameInputVerifier(
+				servernameTextField));
 		final LabelEditSwitcherPanel servername = new LabelEditSwitcherPanel(
 				server.getFriendlyName());
-		servername.setInputVerifier(new ServernameInputVerifier());
 		servername
 				.addContentChangedListener(new LabelEditSwitcherPanel.ContentChangedListener()
 				{

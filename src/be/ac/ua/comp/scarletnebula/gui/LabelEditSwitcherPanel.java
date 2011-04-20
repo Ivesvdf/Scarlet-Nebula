@@ -12,7 +12,6 @@ import java.awt.event.MouseListener;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import javax.swing.InputVerifier;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -25,23 +24,26 @@ public class LabelEditSwitcherPanel extends JPanel implements MouseListener,
 {
 	private static final long serialVersionUID = 1L;
 	private String content;
-	private InputVerifier inputVerifier = null;
 	private Collection<ContentChangedListener> listeners = new ArrayList<ContentChangedListener>();
+	private JTextField textField;
 
 	public LabelEditSwitcherPanel(String initialContent)
+	{
+		this(initialContent, new JTextField());
+	}
+
+	public LabelEditSwitcherPanel(String initialContent, JTextField theTextField)
 	{
 		super(new BorderLayout());
 		addMouseListener(this);
 		addKeyListener(this);
+		this.textField = theTextField;
+		textField.addKeyListener(this);
+		textField.addActionListener(new TryGoingBackToLabelActionHandler(
+				textField));
 
 		content = initialContent;
 		fillWithLabel();
-	}
-
-	@Override
-	public void setInputVerifier(InputVerifier inputVerifier)
-	{
-		this.inputVerifier = inputVerifier;
 	}
 
 	final private void fillWithLabel()
@@ -66,15 +68,10 @@ public class LabelEditSwitcherPanel extends JPanel implements MouseListener,
 	final protected void fillWithEdit()
 	{
 		setLayout(new BorderLayout());
-		final JTextField edit = new JTextField(content, 15);
+		textField.setText(content);
 
-		if (inputVerifier != null)
-			edit.setInputVerifier(inputVerifier);
-
-		edit.addKeyListener(this);
-		edit.addActionListener(new TryGoingBackToLabelActionHandler(edit));
-		add(edit, BorderLayout.CENTER);
-		edit.requestFocusInWindow();
+		add(textField, BorderLayout.CENTER);
+		textField.requestFocusInWindow();
 	}
 
 	public void addContentChangedListener(ContentChangedListener listener)
@@ -106,9 +103,9 @@ public class LabelEditSwitcherPanel extends JPanel implements MouseListener,
 		public void actionPerformed(ActionEvent e)
 		{
 			// Check if input is valid before switching
-			if (inputVerifier != null)
+			if (edit.getInputVerifier() != null)
 			{
-				if (!inputVerifier.verify(edit))
+				if (!edit.getInputVerifier().verify(edit))
 					return;
 			}
 			content = edit.getText();

@@ -1,17 +1,36 @@
 package be.ac.ua.comp.scarletnebula.gui;
 
-import javax.swing.InputVerifier;
+import java.util.regex.Pattern;
+
 import javax.swing.JComponent;
 import javax.swing.JTextField;
 
-public class ServernameInputVerifier extends InputVerifier
+import be.ac.ua.comp.scarletnebula.core.CloudManager;
+
+public class ServernameInputVerifier extends LoudInputVerifier
 {
+	public ServernameInputVerifier(JTextField textfield)
+	{
+		super(
+				textfield,
+				"A servername must be at least 1 character long and can only contain letters, numbers, parentheses and dashes.");
+	}
 
 	@Override
 	public boolean verify(JComponent input)
 	{
-		JTextField inputField = (JTextField) input;
-		return inputField.getText().length() > 0;
-	}
+		final String text = ((JTextField) input).getText();
 
+		boolean valid = true;
+		if (!Pattern.matches("[a-zA-Z )(-0-9]+", text))
+		{
+			valid = false;
+		}
+		else if (CloudManager.get().serverExists(text))
+		{
+			valid = false;
+		}
+
+		return valid;
+	}
 }
