@@ -30,6 +30,12 @@ public abstract class WorkerPropertyChangeListener implements
 		{
 			taskIsFinished(evt);
 		}
+
+		if ("state".equals(evt.getPropertyName())
+				&& SwingWorker.StateValue.STARTED == evt.getNewValue())
+		{
+			taskStarted(evt);
+		}
 	}
 
 	/**
@@ -54,5 +60,13 @@ public abstract class WorkerPropertyChangeListener implements
 	 *            The event itself that notified this class of the change
 	 */
 	public abstract void taskIsFinished(PropertyChangeEvent evt);
+
+	/**
+	 * Method that will be called when the SwingWorker's starts the actual work
+	 * 
+	 * @param evt
+	 *            The event itself that notified this class of the change
+	 */
+	public abstract void taskStarted(PropertyChangeEvent evt);
 
 }

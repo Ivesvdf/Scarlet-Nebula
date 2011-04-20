@@ -7,7 +7,6 @@ import java.awt.Insets;
 import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.beans.PropertyChangeEvent;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,7 +16,6 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.RowFilter;
-import javax.swing.SwingWorker;
 import javax.swing.border.BevelBorder;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
@@ -30,10 +28,11 @@ import org.dasein.cloud.compute.Platform;
 
 import be.ac.ua.comp.scarletnebula.core.CloudProvider;
 import be.ac.ua.comp.scarletnebula.gui.BetterTextField;
+import be.ac.ua.comp.scarletnebula.gui.Collapsable;
 import be.ac.ua.comp.scarletnebula.gui.CollapsablePanel;
 import be.ac.ua.comp.scarletnebula.gui.ThrobberBarWithText;
+import be.ac.ua.comp.scarletnebula.misc.SwingWorkerWithThrobber;
 import be.ac.ua.comp.scarletnebula.misc.Utils;
-import be.ac.ua.comp.scarletnebula.misc.WorkerPropertyChangeListener;
 import be.ac.ua.comp.scarletnebula.wizard.DataRecorder;
 import be.ac.ua.comp.scarletnebula.wizard.WizardPage;
 
@@ -48,13 +47,13 @@ public class ChooseImagePage extends WizardPage
 	private final CloudProvider provider;
 	private final CollapsablePanel throbberPanel = new CollapsablePanel(
 			new ThrobberBarWithText("Loading machine images"), false);// Not
+																		// initially
 																		// visible
 
 	ChooseImagePage(final CloudProvider provider)
 	{
-		super();
+		super(new BorderLayout());
 		this.provider = provider;
-		setLayout(new BorderLayout());
 
 		model = new MachineImageTableModel(new ArrayList<MachineImage>());
 		table = new JTable(model);
@@ -111,41 +110,8 @@ public class ChooseImagePage extends WizardPage
 		c.insets = new Insets(0, 0, 0, 0);
 		searchPanel.add(searchField, c);
 
-		searchField.addActionListener(new ActionListener()
-		{
-			@Override
-			public void actionPerformed(ActionEvent e)
-			{
-				log.debug("Filtering table");
-				final Platform currentPlatform = platformComboBox
-						.getSelection();
-				final Architecture currentArchitecture = architectureComboBox
-						.getSelection();
-
-				if (!currentPlatform.equals(previousSelectedPlatform)
-						|| !currentArchitecture
-								.equals(previousSelectedArchitecture))
-				{
-					model.clear();
-					log.warn("executing");
-
-					throbberPanel.uncollapse();
-
-					ImageModelFillerTask task = new ImageModelFillerTask(Utils
-							.findWindow(ChooseImagePage.this), table, model,
-							provider, currentPlatform, currentArchitecture);
-					log.warn("going to execute");
-					task.execute();
-
-					previousSelectedArchitecture = currentArchitecture;
-					previousSelectedPlatform = currentPlatform;
-
-				}
-				String expr = searchField.getText();
-				sorter.setRowFilter(RowFilter.regexFilter(expr));
-				sorter.setSortKeys(null);
-			}
-		});
+		searchField.addActionListener(new SearchFieldListener(
+				architectureComboBox, sorter, platformComboBox, searchField));
 
 		return searchPanel;
 	}
@@ -172,8 +138,55 @@ public class ChooseImagePage extends WizardPage
 		return new TaggingPage();
 	}
 
+	private final class SearchFieldListener implements ActionListener
+	{
+		private final ArchitectureComboBox architectureComboBox;
+		private final TableRowSorter<TableModel> sorter;
+		private final PlatformComboBox platformComboBox;
+		private final BetterTextField searchField;
+
+		private SearchFieldListener(ArchitectureComboBox architectureComboBox,
+				TableRowSorter<TableModel> sorter,
+				PlatformComboBox platformComboBox, BetterTextField searchField)
+		{
+			this.architectureComboBox = architectureComboBox;
+			this.sorter = sorter;
+			this.platformComboBox = platformComboBox;
+			this.searchField = searchField;
+		}
+
+		@Override
+		public void actionPerformed(ActionEvent e)
+		{
+			log.debug("Filtering table");
+			final Platform currentPlatform = platformComboBox.getSelection();
+			final Architecture currentArchitecture = architectureComboBox
+					.getSelection();
+
+			if (!currentPlatform.equals(previousSelectedPlatform)
+					|| !currentArchitecture
+							.equals(previousSelectedArchitecture))
+			{
+				model.clear();
+
+				ImageModelFillerTask task = new ImageModelFillerTask(
+						Utils.findWindow(ChooseImagePage.this), throbberPanel,
+						table, model, provider, currentPlatform,
+						currentArchitecture);
+				task.execute();
+
+				previousSelectedArchitecture = currentArchitecture;
+				previousSelectedPlatform = currentPlatform;
+
+			}
+			String expr = searchField.getText();
+			sorter.setRowFilter(RowFilter.regexFilter(expr));
+			sorter.setSortKeys(null);
+		}
+	}
+
 	class ImageModelFillerTask extends
-			SwingWorker<MachineImageTableModel, MachineImage>
+			SwingWorkerWithThrobber<MachineImageTableModel, MachineImage>
 	{
 		MachineImageTableModel model;
 		CloudProvider provider;
@@ -181,31 +194,17 @@ public class ChooseImagePage extends WizardPage
 		Architecture architecture;
 		JTable table;
 
-		ImageModelFillerTask(final Window win, JTable jtable,
-				MachineImageTableModel model, CloudProvider provider,
-				Platform platform, Architecture architecture)
+		ImageModelFillerTask(final Window win, Collapsable throbber,
+				JTable jtable, MachineImageTableModel model,
+				CloudProvider provider, Platform platform,
+				Architecture architecture)
 		{
+			super(throbber);
 			this.model = model;
 			this.provider = provider;
 			this.platform = platform;
 			this.architecture = architecture;
 			this.table = jtable;
-
-			addPropertyChangeListener(new WorkerPropertyChangeListener()
-			{
-				@Override
-				public void taskIsFinished(PropertyChangeEvent evt)
-				{
-					throbberPanel.collapse();
-				}
-
-				@Override
-				public void progressChanged(Object source, int newValue,
-						PropertyChangeEvent evt)
-				{
-				}
-			});
-
 		}
 
 		@Override
@@ -221,6 +220,15 @@ public class ChooseImagePage extends WizardPage
 				if (isCancelled())
 					return model;
 				publish(image);
+			}
+			try
+			{
+				Thread.sleep(1000);
+			}
+			catch (InterruptedException e)
+			{
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
 			return model;
 		}

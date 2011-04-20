@@ -5,6 +5,8 @@ import java.awt.Component;
 
 import javax.swing.JPanel;
 
+import org.jdesktop.core.animation.timing.Animator;
+
 /**
  * A component that contains exactly one other component. A CollapsablePanel can
  * be "collapsed", after which it takes op no space.
@@ -12,10 +14,11 @@ import javax.swing.JPanel;
  * @author ives
  * 
  */
-public class CollapsablePanel extends JPanel
+public class CollapsablePanel extends JPanel implements Collapsable
 {
 	private static final long serialVersionUID = 1L;
-	Component storedComponent;
+	private Component storedComponent;
+	private Animator collapseAnimation = null;
 
 	/**
 	 * Constructs a CollapsablePanel
@@ -36,23 +39,23 @@ public class CollapsablePanel extends JPanel
 			uncollapse();
 	}
 
-	/**
-	 * Adjusts this component to make it display the contained component
+	/*
+	 * @see be.ac.ua.comp.scarletnebula.gui.Collapsable#uncollapse()
 	 */
+	@Override
 	public void uncollapse()
 	{
 		if (getComponentCount() == 0)
 		{
-			System.out.println("uncollapsing");
 			add(storedComponent, BorderLayout.CENTER);
 			revalidate();
-			repaint();
 		}
 	}
 
-	/**
-	 * Adjusts this component to assure it no longer takes up any space
+	/*
+	 * @see be.ac.ua.comp.scarletnebula.gui.Collapsable#collapse()
 	 */
+	@Override
 	public void collapse()
 	{
 		if (getComponentCount() > 0)
@@ -60,7 +63,7 @@ public class CollapsablePanel extends JPanel
 			storedComponent = getComponent(0);
 			removeAll();
 			revalidate();
-			repaint();
 		}
 	}
+
 }

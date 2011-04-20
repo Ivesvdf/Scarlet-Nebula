@@ -35,5 +35,6 @@
 	</classpathentry>
 	<classpathentry kind="lib" path="lib/gson-1.7.1-javadoc.jar"/>
 	<classpathentry kind="lib" path="lib/gson-1.7.1-sources.jar"/>
+	<classpathentry kind="lib" path="lib/timingframework-swing-3.0.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
