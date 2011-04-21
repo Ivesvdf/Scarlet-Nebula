@@ -28,6 +28,31 @@ import com.jgoodies.forms.layout.FormLayout;
 
 public class ChangeServerSshLoginMethodWindow extends JDialog
 {
+	private final class UsePasswordButtonActionListener implements
+			ActionListener
+	{
+		@Override
+		public void actionPerformed(ActionEvent e)
+		{
+			keyUsername.setEnabled(false);
+			keypairCombo.setEnabled(false);
+			normalUsername.setEnabled(true);
+			normalPassword.setEnabled(true);
+		}
+	}
+
+	private final class UseKeyButtonActionListener implements ActionListener
+	{
+		@Override
+		public void actionPerformed(ActionEvent e)
+		{
+			keyUsername.setEnabled(true);
+			keypairCombo.setEnabled(true);
+			normalUsername.setEnabled(false);
+			normalPassword.setEnabled(false);
+		}
+	}
+
 	private static final long serialVersionUID = 1L;
 	final private JRadioButton useLoginButton = new JRadioButton(
 			"Username and password");
@@ -35,9 +60,10 @@ public class ChangeServerSshLoginMethodWindow extends JDialog
 			"Username and key authentication");
 	final private ButtonGroup radioButtonGroup = new ButtonGroup();
 
-	final private JTextField keyUsername = new JTextField();
 	final private JPasswordField normalPassword = new JPasswordField();
 	final private JTextField normalUsername = new JTextField();
+
+	final private JTextField keyUsername = new JTextField();
 	final private JComboBox keypairCombo;
 	final private Server server;
 
@@ -97,31 +123,8 @@ public class ChangeServerSshLoginMethodWindow extends JDialog
 		keyPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
 		keyPanel.setBorder(BorderFactory.createEmptyBorder(0, 40, 0, 0));
 
-		final ActionListener useLoginButtonActionListener = new ActionListener()
-		{
-			@Override
-			public void actionPerformed(ActionEvent e)
-			{
-				keyUsername.setEnabled(false);
-				keypairCombo.setEnabled(false);
-				normalUsername.setEnabled(true);
-				normalPassword.setEnabled(true);
-			}
-		};
-		useLoginButton.addActionListener(useLoginButtonActionListener);
-
-		final ActionListener useKeyButtonActionListener = new ActionListener()
-		{
-			@Override
-			public void actionPerformed(ActionEvent e)
-			{
-				keyUsername.setEnabled(true);
-				keypairCombo.setEnabled(true);
-				normalUsername.setEnabled(false);
-				normalPassword.setEnabled(false);
-			}
-		};
-		useKeyButton.addActionListener(useKeyButtonActionListener);
+		useLoginButton.addActionListener(new UsePasswordButtonActionListener());
+		useKeyButton.addActionListener(new UseKeyButtonActionListener());
 
 		useLoginButton.setSelected(server.usesSshPassword());
 		useKeyButton.setSelected(!server.usesSshPassword());
@@ -141,7 +144,17 @@ public class ChangeServerSshLoginMethodWindow extends JDialog
 		add(buttonPanel);
 		add(Box.createVerticalStrut(15));
 
+		prefillTextfields(server);
+
 		setVisible(true);
+	}
+
+	private void prefillTextfields(Server server)
+	{
+		normalUsername.setText(server.getSshUsername());
+		normalPassword.setText(server.getSshPassword());
+		keyUsername.setText(server.getSshUsername());
+		keypairCombo.setSelectedItem(server.getKeypair());
 	}
 
 	public void saveAndClose()
