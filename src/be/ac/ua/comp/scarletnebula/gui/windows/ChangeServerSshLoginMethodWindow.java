@@ -4,8 +4,6 @@ import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
-import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
 import java.util.Collection;
 
 import javax.swing.BorderFactory;
@@ -30,50 +28,18 @@ import com.jgoodies.forms.layout.FormLayout;
 
 public class ChangeServerSshLoginMethodWindow extends JDialog
 {
-	public class ChangeSshServerWindowClosingListener implements WindowListener
-	{
-
-		@Override
-		public void windowOpened(WindowEvent e)
-		{
-		}
-
-		@Override
-		public void windowClosing(WindowEvent e)
-		{
-		}
-
-		@Override
-		public void windowClosed(WindowEvent e)
-		{
-			ChangeServerSshLoginMethodWindow win = (ChangeServerSshLoginMethodWindow) e
-					.getWindow();
-			win.close();
-		}
-
-		@Override
-		public void windowIconified(WindowEvent e)
-		{
-		}
-
-		@Override
-		public void windowDeiconified(WindowEvent e)
-		{
-		}
-
-		@Override
-		public void windowActivated(WindowEvent e)
-		{
-		}
-
-		@Override
-		public void windowDeactivated(WindowEvent e)
-		{
-		}
-
-	}
-
 	private static final long serialVersionUID = 1L;
+	final private JRadioButton useLoginButton = new JRadioButton(
+			"Username and password");
+	final private JRadioButton useKeyButton = new JRadioButton(
+			"Username and key authentication");
+	final private ButtonGroup radioButtonGroup = new ButtonGroup();
+
+	final private JTextField keyUsername = new JTextField();
+	final private JPasswordField normalPassword = new JPasswordField();
+	final private JTextField normalUsername = new JTextField();
+	final private JComboBox keypairCombo;
+	final private Server server;
 
 	public ChangeServerSshLoginMethodWindow(JDialog parent, Server server)
 	{
@@ -84,19 +50,16 @@ public class ChangeServerSshLoginMethodWindow extends JDialog
 		setLocationRelativeTo(null);
 		setLocationByPlatform(true);
 
-		JRadioButton useLoginButton = new JRadioButton("Username and password");
+		this.server = server;
 		useLoginButton.setMnemonic(KeyEvent.VK_P);
 		useLoginButton.setBorder(BorderFactory.createEmptyBorder(0, 15, 0, 0));
 
-		JRadioButton useKeyButton = new JRadioButton(
-				"Username and key authentication");
 		useKeyButton.setMnemonic(KeyEvent.VK_K);
 		useKeyButton.setBorder(BorderFactory.createEmptyBorder(0, 15, 0, 0));
 
 		// Group the radio buttons.
-		ButtonGroup group = new ButtonGroup();
-		group.add(useLoginButton);
-		group.add(useKeyButton);
+		radioButtonGroup.add(useLoginButton);
+		radioButtonGroup.add(useKeyButton);
 
 		getContentPane().setLayout(
 				new BoxLayout(getContentPane(), BoxLayout.PAGE_AXIS));
@@ -112,11 +75,9 @@ public class ChangeServerSshLoginMethodWindow extends JDialog
 		// add rows dynamically
 		DefaultFormBuilder loginPanelsBuilder = new DefaultFormBuilder(layout);
 		loginPanelsBuilder.setDefaultDialogBorder();
-		final JTextField loginUsername = new JTextField();
-		loginPanelsBuilder.append("Username", loginUsername);
+		loginPanelsBuilder.append("Username", normalUsername);
 		loginPanelsBuilder.nextLine();
-		final JPasswordField loginPassword = new JPasswordField();
-		loginPanelsBuilder.append("Password", loginPassword);
+		loginPanelsBuilder.append("Password", normalPassword);
 		final JPanel loginPanel = loginPanelsBuilder.getPanel();
 		loginPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
 		loginPanel.setBorder(BorderFactory.createEmptyBorder(0, 40, 0, 0));
@@ -124,14 +85,12 @@ public class ChangeServerSshLoginMethodWindow extends JDialog
 		FormLayout layout2 = new FormLayout(layoutString, "");
 		DefaultFormBuilder keyPanelsBuilder = new DefaultFormBuilder(layout2);
 		keyPanelsBuilder.setDefaultDialogBorder();
-		final JTextField keyUsername = new JTextField();
 		keyPanelsBuilder.append("Username", keyUsername);
 		keyPanelsBuilder.nextLine();
 
 		Collection<String> keynames = KeyManager.getKeyNames(server.getCloud()
 				.getName());
-		final JComboBox keypairCombo = new JComboBox(
-				keynames.toArray(new String[0]));
+		keypairCombo = new JComboBox(keynames.toArray(new String[0]));
 		keyPanelsBuilder.append("Keypair", keypairCombo);
 
 		final JPanel keyPanel = keyPanelsBuilder.getPanel();
@@ -145,8 +104,8 @@ public class ChangeServerSshLoginMethodWindow extends JDialog
 			{
 				keyUsername.setEnabled(false);
 				keypairCombo.setEnabled(false);
-				loginUsername.setEnabled(true);
-				loginPassword.setEnabled(true);
+				normalUsername.setEnabled(true);
+				normalPassword.setEnabled(true);
 			}
 		};
 		useLoginButton.addActionListener(useLoginButtonActionListener);
@@ -158,8 +117,8 @@ public class ChangeServerSshLoginMethodWindow extends JDialog
 			{
 				keyUsername.setEnabled(true);
 				keypairCombo.setEnabled(true);
-				loginUsername.setEnabled(false);
-				loginPassword.setEnabled(false);
+				normalUsername.setEnabled(false);
+				normalPassword.setEnabled(false);
 			}
 		};
 		useKeyButton.addActionListener(useKeyButtonActionListener);
@@ -182,13 +141,27 @@ public class ChangeServerSshLoginMethodWindow extends JDialog
 		add(buttonPanel);
 		add(Box.createVerticalStrut(15));
 
-		addWindowListener(new ChangeSshServerWindowClosingListener());
 		setVisible(true);
 	}
 
-	public void close()
+	public void saveAndClose()
 	{
-
+		if (radioButtonGroup.getSelection() == useKeyButton.getModel())
+		{
+			// Use key
+			final String keyname = (String) keypairCombo.getSelectedItem();
+			final String username = keyUsername.getText();
+			server.assureKeypairLogin(username, keyname);
+			server.store();
+		}
+		else
+		{
+			// Use login & password
+			final String username = normalUsername.getText();
+			final String password = new String(normalPassword.getPassword());
+			server.assurePasswordLogin(username, password);
+			server.store();
+		}
 		dispose();
 	}
 
@@ -204,7 +177,7 @@ public class ChangeServerSshLoginMethodWindow extends JDialog
 			@Override
 			public void actionPerformed(ActionEvent e)
 			{
-				close();
+				saveAndClose();
 			}
 		});
 

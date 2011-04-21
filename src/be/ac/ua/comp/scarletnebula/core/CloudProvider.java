@@ -437,7 +437,9 @@ public class CloudProvider
 				keypairOrPassword, // Keypair used
 				serverName, // Server's friendly name
 				tags, // Tags this server was given
-				false); // server uses password to SSH
+				false, // server uses password to SSH
+				daseinServer.getRootUser(), // SSH login
+				daseinServer.getRootPassword()); // SSH Password
 
 		linkUnlinkedServer(server);
 		return server;

@@ -34,18 +34,23 @@ public class Server
 	private CloudProvider provider;
 	private String friendlyName;
 	private String keypair;
+	private String sshLogin;
+	private String sshPassword;
 	private Collection<String> tags;
 	private ServerStatisticsManager serverStatisticsManager;
 	private boolean useSshPassword;
 
 	public Server(VirtualMachine server, CloudProvider inputProvider,
 			String inputKeypair, String inputFriendlyName,
-			Collection<String> tags, boolean useSshPassword)
+			Collection<String> tags, boolean useSshPassword, String sshLogin,
+			String sshPassword)
 	{
 		provider = inputProvider;
 		keypair = inputKeypair;
 		serverImpl = server;
 		this.useSshPassword = useSshPassword;
+		this.sshLogin = sshLogin;
+		this.sshPassword = sshPassword;
 		this.tags = tags;
 		setFriendlyName(inputFriendlyName);
 	}
@@ -119,6 +124,11 @@ public class Server
 				.valueOf(getPropertyOrStringIfMissing(props, "useSshPassword",
 						"false"));
 
+		final String sshLogin = getPropertyOrStringIfMissing(props, "sshLogin",
+				"root");
+		final String sshPassword = getPropertyOrStringIfMissing(props,
+				"sshPassword", null);
+
 		List<String> daseinTags = new ArrayList<String>();
 		for (String key : server.getTags().keySet())
 		{
@@ -132,8 +142,10 @@ public class Server
 				keypair, // ssh keypair chosen
 				friendlyName, // the servers friendly name
 				tags, // tags given to the server
-				useSshPassword); // true if an ssh password instead of keypair
-									// is used
+				useSshPassword, // true if an ssh password instead of keypair
+								// is used
+				sshLogin, // Login for SSH'ing
+				sshPassword); // Password for ssh'ing (if any)
 	}
 
 	public boolean usesSshPassword()
@@ -192,6 +204,10 @@ public class Server
 			properties.setProperty("keypair", keypair);
 			properties.setProperty("providerClassName",
 					provider.getUnderlyingClassname());
+			properties.setProperty("sshLogin", sshLogin);
+			properties.setProperty("sshPassword", sshPassword);
+			properties.setProperty("useSshPassword",
+					new Boolean(useSshPassword).toString());
 			properties.setProperty("tags",
 					Utils.implode(new ArrayList<String>(tags), ","));
 
@@ -555,5 +571,27 @@ public class Server
 	public String getKeypair()
 	{
 		return keypair;
+	}
+
+	public void assureKeypairLogin(String username, String keyname)
+	{
+		sshLogin = username;
+		keypair = keyname;
+	}
+
+	public void assurePasswordLogin(String username, String password)
+	{
+		sshLogin = username;
+		sshPassword = password;
+	}
+
+	public String getSshUsername()
+	{
+		return sshLogin;
+	}
+
+	public String getSshPassword()
+	{
+		return sshPassword;
 	}
 }
