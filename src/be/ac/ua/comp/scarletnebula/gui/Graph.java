@@ -15,6 +15,7 @@ import org.jfree.data.time.TimeSeries;
 import org.jfree.data.time.TimeSeriesCollection;
 
 import be.ac.ua.comp.scarletnebula.core.Server;
+import be.ac.ua.comp.scarletnebula.gui.graph.Datapoint;
 
 /**
  * An abstract Graph that displays streaming data
@@ -90,9 +91,9 @@ public abstract class Graph implements DataStreamListener
 	 *            Current measurement for streamname
 	 */
 	@Override
-	public void newDataPoint(String streamname, double value)
+	public void newDataPoint(Datapoint datapoint)
 	{
-		newDataPoint(streamname, new Millisecond(), value);
+		newDataPoint(new Millisecond(), datapoint);
 	}
 
 	/**
@@ -108,16 +109,17 @@ public abstract class Graph implements DataStreamListener
 	 *            The time at which this measurement was made
 	 */
 	@Override
-	public void newDataPoint(String streamname, RegularTimePeriod time,
-			double value)
+	public void newDataPoint(RegularTimePeriod time, Datapoint datapoint)
 	{
-		if (!datastreams.containsKey(streamname))
+		final String dataStreamName = datapoint.getDatastreamName();
+		if (!datastreams.containsKey(dataStreamName))
 		{
 			log.error("Adding datapoint to unregistered stream.");
 		}
 		else
 		{
-			datastreams.get(streamname).addOrUpdate(time, value);
+			datastreams.get(dataStreamName).addOrUpdate(time,
+					datapoint.getValue());
 		}
 	}
 

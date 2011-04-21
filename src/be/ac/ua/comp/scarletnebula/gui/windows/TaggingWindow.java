@@ -52,7 +52,7 @@ public class TaggingWindow extends JDialog
 		final JPanel buttonPanel = getButtonPanel();
 		add(buttonPanel, BorderLayout.SOUTH);
 
-		addWindowListener(new ClosingWindowListener());
+		addWindowListener(new TagginWindowClosingWindowListener());
 	}
 
 	/**
@@ -83,13 +83,64 @@ public class TaggingWindow extends JDialog
 	}
 
 	/**
+	 * A simple interface containing only one method, which will be called when
+	 * the TaggingWindow one would subscribe to is closed. The implementors of
+	 * this interface will then receive the set of tags contained in the Window
+	 * upon closing.
+	 * 
+	 * @author ives
+	 * 
+	 */
+	interface WindowClosedListener
+	{
+		/**
+		 * Called when the TaggingWindow is closed
+		 * 
+		 * @param newTags
+		 *            The collection of tags after the window closes
+		 */
+		void windowClosed(Collection<String> newTags);
+	}
+
+	/**
+	 * Method to notify all subscribed implementors of WindowClosedListener.
+	 * These will be called with the new set of tags.
+	 */
+	private void notifyClosedListeners()
+	{
+		for (WindowClosedListener listener : windowClosedListeners)
+			listener.windowClosed(taggingPanel.getTags());
+	}
+
+	/**
+	 * This method will notify all observers and dispose of the window. This
+	 * method will be called by closing the window or clicking the OK button.
+	 */
+	public void close()
+	{
+		notifyClosedListeners();
+		dispose();
+	}
+
+	/**
+	 * Subscribe as a WindowClosedListener to this TaggingWindow
+	 * 
+	 * @param listener
+	 *            The class subscribing
+	 */
+	public void addWindowClosedListener(WindowClosedListener listener)
+	{
+		windowClosedListeners.add(listener);
+	}
+
+	/**
 	 * Class that implements the WindowListener that will call the close()
 	 * method on the TaggingWindow when the JDialog window closes.
 	 * 
 	 * @author ives
 	 * 
 	 */
-	private final class ClosingWindowListener implements WindowListener
+	public class TagginWindowClosingWindowListener implements WindowListener
 	{
 		/**
 		 * @see WindowListener
@@ -152,56 +203,5 @@ public class TaggingWindow extends JDialog
 			// TODO Auto-generated method stub
 
 		}
-	}
-
-	/**
-	 * A simple interface containing only one method, which will be called when
-	 * the TaggingWindow one would subscribe to is closed. The implementors of
-	 * this interface will then receive the set of tags contained in the Window
-	 * upon closing.
-	 * 
-	 * @author ives
-	 * 
-	 */
-	interface WindowClosedListener
-	{
-		/**
-		 * Called when the TaggingWindow is closed
-		 * 
-		 * @param newTags
-		 *            The collection of tags after the window closes
-		 */
-		void windowClosed(Collection<String> newTags);
-	}
-
-	/**
-	 * Method to notify all subscribed implementors of WindowClosedListener.
-	 * These will be called with the new set of tags.
-	 */
-	private void notifyClosedListeners()
-	{
-		for (WindowClosedListener listener : windowClosedListeners)
-			listener.windowClosed(taggingPanel.getTags());
-	}
-
-	/**
-	 * This method will notify all observers and dispose of the window. This
-	 * method will be called by closing the window or clicking the OK button.
-	 */
-	public void close()
-	{
-		notifyClosedListeners();
-		dispose();
-	}
-
-	/**
-	 * Subscribe as a WindowClosedListener to this TaggingWindow
-	 * 
-	 * @param listener
-	 *            The class subscribing
-	 */
-	public void addWindowClosedListener(WindowClosedListener listener)
-	{
-		windowClosedListeners.add(listener);
 	}
 }

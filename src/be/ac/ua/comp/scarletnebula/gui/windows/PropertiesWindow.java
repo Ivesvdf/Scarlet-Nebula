@@ -16,6 +16,7 @@ import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
 import javax.swing.WindowConstants;
@@ -72,7 +73,7 @@ public class PropertiesWindow extends JDialog
 		this.gui = gui;
 
 		setLayout(new BorderLayout());
-		setSize(500, 300);
+		setSize(550, 400);
 		setTitle("Server Properties - Scarlet Nebula");
 
 		add(createTopPartition(selectedServers), BorderLayout.CENTER);
@@ -158,6 +159,7 @@ public class PropertiesWindow extends JDialog
 
 		Component servernameComponent = null;
 		Component servertagComponent = null;
+		Component sshLoginMethodComponent = null;
 
 		if (servers.size() == 1)
 		{
@@ -165,17 +167,25 @@ public class PropertiesWindow extends JDialog
 
 			servernameComponent = getSingleServerServerNameComponent(server);
 			servertagComponent = getSingleServerTagComponent(server);
+			sshLoginMethodComponent = getSingleServerSshLoginMethodComponent(server);
+
 		}
 		else
 		{
 			servernameComponent = getMultipleServerServerNameComponent(servers);
+			servertagComponent = new JLabel("...");
+			sshLoginMethodComponent = new JLabel("...");
 		}
 
 		builder.append("Name", servernameComponent);
 		builder.append("Tags", servertagComponent);
 		builder.nextLine();
 
+		builder.append("SSH Login", sshLoginMethodComponent);
 		builder.append("Status", statusLabel);
+
+		builder.nextLine();
+
 		builder.append("Provider", cloudLabel);
 		builder.nextLine();
 
@@ -184,6 +194,7 @@ public class PropertiesWindow extends JDialog
 		builder.nextLine();
 
 		builder.append("DNS Address", dnsLabel);
+
 		builder.append("IP Address", ipLabel);
 		builder.nextLine();
 
@@ -194,7 +205,41 @@ public class PropertiesWindow extends JDialog
 
 		builder.append("Image", imageLabel);
 
-		overviewTab.add(builder.getPanel());
+		final JScrollPane bodyScrollPane = new JScrollPane(builder.getPanel());
+		bodyScrollPane.setBorder(null);
+		overviewTab.add(bodyScrollPane);
+	}
+
+	private Component getSingleServerSshLoginMethodComponent(final Server server)
+	{
+		ChangeableLabel sshLabel = new ChangeableLabel(
+				getTextRepresentationOfSshSituation(server),
+				new Executable<JLabel>()
+				{
+					@Override
+					public void run(JLabel param)
+					{
+						new ChangeServerSshLoginMethodWindow(
+								PropertiesWindow.this, server);
+					}
+				});
+		sshLabel.setBorder(null);
+		return sshLabel;
+	}
+
+	private String getTextRepresentationOfSshSituation(Server server)
+	{
+		String rv = "";
+
+		if (server.usesSshPassword())
+		{
+			rv = "Login & Password";
+		}
+		else
+		{
+			rv = "Keypair: " + server.getKeypair();
+		}
+		return rv;
 	}
 
 	private Component getSingleServerTagComponent(final Server server)

@@ -60,4 +60,34 @@ public class Datapoint
 	{
 		return gson.fromJson(input, Datapoint.class);
 	}
+
+	public Type getDatapointType()
+	{
+		return datapointType;
+	}
+
+	public String getDatastreamName()
+	{
+		return datastream;
+	}
+
+	public double getValue()
+	{
+		return value;
+	}
+
+	public double getLowWarnLevel()
+	{
+		return lowWarnLevel;
+	}
+
+	public double getMediumWarnLevel()
+	{
+		return mediumWarnLevel;
+	}
+
+	public double getHighWarnLevel()
+	{
+		return highWarnLevel;
+	}
 }

@@ -20,9 +20,9 @@ public class ToolbarStyleButton extends JButton
 		setBorderPainted(false);
 		setRolloverEnabled(true);
 		setRolloverIcon(icon);
-		setBounds(10, 10, icon.getIconWidth(), icon.getIconHeight());
+		// setBounds(10, 10, icon.getIconWidth(), icon.getIconHeight() - 2);
 		setMargin(new Insets(0, 0, 0, 0));
-		setBorder(BorderFactory.createEmptyBorder(4, 4, 4, 4));
+		setBorder(BorderFactory.createEmptyBorder(3, 3, 3, 3));
 
 		UIDefaults def = new UIDefaults();
 		final Painter<Object> notAPainter = new Painter<Object>()

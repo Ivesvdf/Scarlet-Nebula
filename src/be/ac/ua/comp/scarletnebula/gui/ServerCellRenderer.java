@@ -102,7 +102,7 @@ class ServerCellRenderer implements ListCellRenderer
 			@Override
 			public void actionPerformed(ActionEvent e)
 			{
-				graph.newDataPoint("CPU", random.nextDouble());
+				// graph.newDataPoint("CPU", random.nextDouble());
 				server.serverChanged();
 			}
 		});

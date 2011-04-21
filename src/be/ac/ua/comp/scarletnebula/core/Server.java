@@ -36,14 +36,16 @@ public class Server
 	private String keypair;
 	private Collection<String> tags;
 	private ServerStatisticsManager serverStatisticsManager;
+	private boolean useSshPassword;
 
 	public Server(VirtualMachine server, CloudProvider inputProvider,
 			String inputKeypair, String inputFriendlyName,
-			Collection<String> tags)
+			Collection<String> tags, boolean useSshPassword)
 	{
 		provider = inputProvider;
 		keypair = inputKeypair;
 		serverImpl = server;
+		this.useSshPassword = useSshPassword;
 		this.tags = tags;
 		setFriendlyName(inputFriendlyName);
 	}
@@ -108,11 +110,14 @@ public class Server
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		String keypair = props.getProperty("keypair") != null ? props
-				.getProperty("keypair") : "default";
-		String friendlyName = props.getProperty("friendlyName") != null ? props
-				.getProperty("friendlyName") : server.getName() + " ("
-				+ provider.getName() + ")";
+		final String keypair = getPropertyOrStringIfMissing(props, "keypair",
+				null);
+		final String friendlyName = getPropertyOrStringIfMissing(props,
+				"friendlyName", server.getName() + " (" + provider.getName()
+						+ ")");
+		final boolean useSshPassword = Boolean
+				.valueOf(getPropertyOrStringIfMissing(props, "useSshPassword",
+						"false"));
 
 		List<String> daseinTags = new ArrayList<String>();
 		for (String key : server.getTags().keySet())
@@ -120,10 +125,30 @@ public class Server
 			daseinTags.add(key + ":" + server.getTags().get(key));
 		}
 
-		System.out.println("properties tags: " + props.getProperty("tags"));
 		Collection<String> tags = (props.getProperty("tags") != null ? Arrays
 				.asList(props.getProperty("tags").split(",")) : daseinTags);
-		return new Server(server, provider, keypair, friendlyName, tags);
+		return new Server(server, // dasein server implementation
+				provider, // cloud provider
+				keypair, // ssh keypair chosen
+				friendlyName, // the servers friendly name
+				tags, // tags given to the server
+				useSshPassword); // true if an ssh password instead of keypair
+									// is used
+	}
+
+	public boolean usesSshPassword()
+	{
+		return useSshPassword || keypair == null;
+	}
+
+	/**
+	 * 
+	 */
+	private static String getPropertyOrStringIfMissing(Properties props,
+			String propertyname, String standard)
+	{
+		return props.getProperty(propertyname) != null ? props
+				.getProperty(propertyname) : standard;
 	}
 
 	/**
@@ -525,5 +550,10 @@ public class Server
 	public void setTags(Collection<String> newTags)
 	{
 		tags = newTags;
+	}
+
+	public String getKeypair()
+	{
+		return keypair;
 	}
 }

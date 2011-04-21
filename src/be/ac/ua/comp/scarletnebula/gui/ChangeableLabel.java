@@ -58,7 +58,8 @@ public class ChangeableLabel extends JPanel
 		c.gridx = 1;
 		add(editButton, c);
 
-		addMouseListener(new ExecuteMouseListener(executable, contentLabel));
+		addMouseListener(new ExecuteMouseListener<JLabel>(executable,
+				contentLabel));
 	}
 
 	/**

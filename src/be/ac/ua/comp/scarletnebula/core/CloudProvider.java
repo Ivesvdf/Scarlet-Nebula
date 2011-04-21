@@ -432,8 +432,12 @@ public class CloudProvider
 				"", keypairOrPassword, vlan, false, false, firewalls,
 				daseinTags.toArray(new org.dasein.cloud.Tag[0]));
 
-		Server server = new Server(daseinServer, this, keypairOrPassword,
-				serverName, tags);
+		Server server = new Server(daseinServer, // Dasein server implementation
+				this, // Cloud provider
+				keypairOrPassword, // Keypair used
+				serverName, // Server's friendly name
+				tags, // Tags this server was given
+				false); // server uses password to SSH
 
 		linkUnlinkedServer(server);
 		return server;
