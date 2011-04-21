@@ -2,31 +2,28 @@ package be.ac.ua.comp.scarletnebula.gui;
 
 import org.jfree.data.time.RegularTimePeriod;
 
+import be.ac.ua.comp.scarletnebula.gui.graph.Datapoint;
+
 public interface DataStreamListener
 {
 	/**
 	 * Notifies when a new datapoint is added to stream streamname at the
 	 * current time with value currentValue
 	 * 
-	 * @param streamname
-	 *            Name of the stream this point was detected in
-	 * @param currentValue
+	 * @param currentMeasurement
 	 *            The new value in the datastream
 	 */
-	void newDataPoint(String streamname, double currentValue);
+	void newDataPoint(Datapoint currentMeasurement);
 
 	/**
 	 * Notifies when a new datapoint is added to the stream @param streamname at
 	 * the time @param time with with value currentValue
 	 * 
-	 * @param streamname
-	 *            Name of the stream
 	 * @param time
 	 *            The time at which this datapoint was detected
-	 * @param currentValue
+	 * @param currentMeasurement
 	 *            The new value in the datastream
 	 */
-	void newDataPoint(String streamname, RegularTimePeriod time,
-			double currentValue);
+	void newDataPoint(RegularTimePeriod time, Datapoint currentMeasurement);
 
 }

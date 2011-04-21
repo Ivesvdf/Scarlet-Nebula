@@ -1,5 +1,7 @@
 package be.ac.ua.comp.scarletnebula.gui.graph;
 
+import com.google.gson.Gson;
+
 public class Datapoint
 {
 	public enum Type
@@ -7,6 +9,7 @@ public class Datapoint
 		RELATIVE, ABSOLUTE
 	};
 
+	final private static Gson gson = new Gson();
 	final Type datapointType;
 	final String datastream;
 	final double value;
@@ -46,5 +49,15 @@ public class Datapoint
 		return "[" + datapointType + " in " + datastream + "] " + value
 				+ " (WL=" + lowWarnLevel + ", WM=" + mediumWarnLevel + ", WH="
 				+ highWarnLevel + ")";
+	}
+
+	public String toJson()
+	{
+		return gson.toJson(this);
+	}
+
+	public static Datapoint fromJson(String input)
+	{
+		return gson.fromJson(input, Datapoint.class);
 	}
 }

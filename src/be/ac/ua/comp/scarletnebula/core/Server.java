@@ -29,12 +29,13 @@ public class Server
 {
 	private static Log log = LogFactory.getLog(Server.class);
 
-	VirtualMachine serverImpl;
-	Collection<ServerChangedObserver> serverChangedObservers = new ArrayList<ServerChangedObserver>();
-	CloudProvider provider;
+	private VirtualMachine serverImpl;
+	private Collection<ServerChangedObserver> serverChangedObservers = new ArrayList<ServerChangedObserver>();
+	private CloudProvider provider;
 	private String friendlyName;
-	String keypair;
-	Collection<String> tags;
+	private String keypair;
+	private Collection<String> tags;
+	private ServerStatisticsManager serverStatisticsManager;
 
 	public Server(VirtualMachine server, CloudProvider inputProvider,
 			String inputKeypair, String inputFriendlyName,
@@ -53,7 +54,11 @@ public class Server
 
 	public ServerStatisticsManager getServerStatistics()
 	{
-		return null;
+		if (serverStatisticsManager != null)
+		{
+			serverStatisticsManager = new ServerStatisticsManager(this);
+		}
+		return serverStatisticsManager;
 	}
 
 	/**
@@ -62,7 +67,6 @@ public class Server
 	 * @throws FileNotFoundException
 	 */
 	public CommandConnection newCommandConnection(UserInfo ui)
-			throws FileNotFoundException
 	{
 		try
 		{
