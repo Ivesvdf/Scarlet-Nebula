@@ -73,32 +73,25 @@ public class Server
 	 * @throws Exception
 	 * @throws FileNotFoundException
 	 */
-	public CommandConnection newCommandConnection(UserInfo ui)
+	public CommandConnection newCommandConnection(UserInfo ui) throws Exception
 	{
 		SSHCommandConnection rv = null;
-		try
+
+		if (usesSshPassword())
 		{
-			if (usesSshPassword())
-			{
-				rv = SSHCommandConnection.newConnectionWithPassword(
-						serverImpl.getPublicDnsAddress(), sshLogin,
-						sshPassword, ui);
-			}
-			else
-			{
-				rv = SSHCommandConnection.newConnectionWithKey(
-						serverImpl.getPublicDnsAddress(), sshLogin,
-						KeyManager.getKeyFilename(provider.getName(), keypair),
-						ui);
-			}
+			rv = SSHCommandConnection
+					.newConnectionWithPassword(
+							serverImpl.getPublicDnsAddress(), sshLogin,
+							sshPassword, ui);
 		}
-		catch (Exception e)
+		else
 		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			rv = SSHCommandConnection.newConnectionWithKey(
+					serverImpl.getPublicDnsAddress(), sshLogin,
+					KeyManager.getKeyFilename(provider.getName(), keypair), ui);
 		}
 
-		return null;
+		return rv;
 	}
 
 	/**

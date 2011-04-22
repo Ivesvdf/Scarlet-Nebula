@@ -542,5 +542,11 @@ public class RadixCloudProvider extends CloudProvider
 		{
 			return Platform.FREE_BSD;
 		}
+
+		@Override
+		public String getPublicDnsAddress()
+		{
+			return "radix.cmi.ua.ac.be";
+		}
 	}
 }
