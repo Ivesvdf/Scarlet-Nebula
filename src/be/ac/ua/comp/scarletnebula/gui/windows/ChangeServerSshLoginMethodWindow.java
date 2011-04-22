@@ -123,11 +123,21 @@ public class ChangeServerSshLoginMethodWindow extends JDialog
 		keyPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
 		keyPanel.setBorder(BorderFactory.createEmptyBorder(0, 40, 0, 0));
 
-		useLoginButton.addActionListener(new UsePasswordButtonActionListener());
-		useKeyButton.addActionListener(new UseKeyButtonActionListener());
+		final UsePasswordButtonActionListener usePasswordButtonActionListener = new UsePasswordButtonActionListener();
+		useLoginButton.addActionListener(usePasswordButtonActionListener);
+		final UseKeyButtonActionListener useKeyButtonActionListener = new UseKeyButtonActionListener();
+		useKeyButton.addActionListener(useKeyButtonActionListener);
 
-		useLoginButton.setSelected(server.usesSshPassword());
-		useKeyButton.setSelected(!server.usesSshPassword());
+		if (server.usesSshPassword())
+		{
+			useLoginButton.setSelected(true);
+			usePasswordButtonActionListener.actionPerformed(null);
+		}
+		else
+		{
+			useKeyButton.setSelected(true);
+			useKeyButtonActionListener.actionPerformed(null);
+		}
 
 		add(topText);
 		add(useLoginButton);
@@ -183,6 +193,18 @@ public class ChangeServerSshLoginMethodWindow extends JDialog
 		JPanel buttonPanel = new JPanel();
 		buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.LINE_AXIS));
 		buttonPanel.add(Box.createHorizontalGlue());
+
+		final JButton cancelButton = ButtonFactory.createCancelButton();
+		cancelButton.setAlignmentY(Component.BOTTOM_ALIGNMENT);
+		cancelButton.addActionListener(new ActionListener()
+		{
+			@Override
+			public void actionPerformed(ActionEvent e)
+			{
+				dispose();
+			}
+		});
+
 		final JButton okButton = ButtonFactory.createOkButton();
 		okButton.setAlignmentY(Component.BOTTOM_ALIGNMENT);
 		okButton.addActionListener(new ActionListener()
@@ -194,6 +216,8 @@ public class ChangeServerSshLoginMethodWindow extends JDialog
 			}
 		});
 
+		buttonPanel.add(cancelButton);
+		buttonPanel.add(Box.createHorizontalStrut(10));
 		buttonPanel.add(okButton);
 		buttonPanel.add(Box.createHorizontalStrut(15));
 		buttonPanel.setAlignmentY(Component.BOTTOM_ALIGNMENT);

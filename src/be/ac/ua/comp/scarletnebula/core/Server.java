@@ -49,8 +49,8 @@ public class Server
 		keypair = inputKeypair;
 		serverImpl = server;
 		this.useSshPassword = useSshPassword;
-		this.sshLogin = sshLogin;
-		this.sshPassword = sshPassword;
+		this.sshLogin = (sshLogin != null ? sshLogin : "");
+		this.sshPassword = (sshPassword != null ? sshPassword : "");
 		this.tags = tags;
 		setFriendlyName(inputFriendlyName);
 	}
@@ -75,10 +75,22 @@ public class Server
 	 */
 	public CommandConnection newCommandConnection(UserInfo ui)
 	{
+		SSHCommandConnection rv = null;
 		try
 		{
-			return new SSHCommandConnection(serverImpl.getPublicDnsAddress(),
-					KeyManager.getKeyFilename(provider.getName(), keypair), ui);
+			if (usesSshPassword())
+			{
+				rv = SSHCommandConnection.newConnectionWithPassword(
+						serverImpl.getPublicDnsAddress(), sshLogin,
+						sshPassword, ui);
+			}
+			else
+			{
+				rv = SSHCommandConnection.newConnectionWithKey(
+						serverImpl.getPublicDnsAddress(), sshLogin,
+						KeyManager.getKeyFilename(provider.getName(), keypair),
+						ui);
+			}
 		}
 		catch (Exception e)
 		{
@@ -127,7 +139,7 @@ public class Server
 		final String sshLogin = getPropertyOrStringIfMissing(props, "sshLogin",
 				"root");
 		final String sshPassword = getPropertyOrStringIfMissing(props,
-				"sshPassword", null);
+				"sshPassword", "");
 
 		List<String> daseinTags = new ArrayList<String>();
 		for (String key : server.getTags().keySet())
@@ -576,13 +588,15 @@ public class Server
 	public void assureKeypairLogin(String username, String keyname)
 	{
 		sshLogin = username;
-		keypair = keyname;
+		keypair = (keyname != null ? keyname : "");
+		useSshPassword = false;
 	}
 
 	public void assurePasswordLogin(String username, String password)
 	{
 		sshLogin = username;
 		sshPassword = password;
+		useSshPassword = true;
 	}
 
 	public String getSshUsername()

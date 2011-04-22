@@ -22,34 +22,21 @@ public class SSHCommandConnection extends CommandConnection
 {
 	Session session = null;
 
-	public SSHCommandConnection(String address, String keypairfilename,
-			UserInfo ui) throws Exception
+	private enum LoginMethod
 	{
-		String user = "ubuntu";
+		PASSWORD, KEY
+	};
 
-		JSch jsch = new JSch();
-
-		jsch.addIdentity(keypairfilename);
-
-		session = jsch.getSession(user, address, 22);
-
-		java.util.Properties config = new java.util.Properties();
-
-		config.put("compression.s2c", "zlib,none");
-		config.put("compression.c2s", "zlib,none");
-
-		session.setUserInfo(ui);
-		session.setConfig(config);
-		session.connect();
-		// session.rekey();
-
-	}
-
-	public SSHCommandConnection(String address, String username,
-			String password, UserInfo ui) throws Exception
+	private SSHCommandConnection(String address, String username,
+			String keypairfilenameOrPassword, UserInfo ui,
+			LoginMethod loginMethod) throws Exception
 	{
 		JSch jsch = new JSch();
 
+		if (loginMethod == LoginMethod.KEY)
+		{
+			jsch.addIdentity(keypairfilenameOrPassword);
+		}
 		session = jsch.getSession(username, address, 22);
 
 		java.util.Properties config = new java.util.Properties();
@@ -59,10 +46,28 @@ public class SSHCommandConnection extends CommandConnection
 
 		session.setUserInfo(ui);
 		session.setConfig(config);
-		session.setPassword(password);
+
+		if (loginMethod == LoginMethod.PASSWORD)
+		{
+			session.setPassword(keypairfilenameOrPassword);
+		}
 		session.connect();
 		// session.rekey();
+	}
 
+	static public SSHCommandConnection newConnectionWithPassword(
+			String address, String username, String password, UserInfo ui)
+			throws Exception
+	{
+		return new SSHCommandConnection(address, username, password, ui,
+				LoginMethod.PASSWORD);
+	}
+
+	static public SSHCommandConnection newConnectionWithKey(String address,
+			String username, String key, UserInfo ui) throws Exception
+	{
+		return new SSHCommandConnection(address, username, key, ui,
+				LoginMethod.KEY);
 	}
 
 	@Override
@@ -183,9 +188,9 @@ public class SSHCommandConnection extends CommandConnection
 	{
 		try
 		{
-			SSHCommandConnection connection = new SSHCommandConnection(
-					"radix.cmi.ua.ac.be", "p080558", "somepassword",
-					new NotPromptingJschUserInfo());
+			SSHCommandConnection connection = SSHCommandConnection
+					.newConnectionWithPassword("radix.cmi.ua.ac.be", "p080558",
+							"somepassword", new NotPromptingJschUserInfo());
 
 			ChannelInputStreamTuple tuple = connection
 					.executeContinuousCommand("date"); // while [[ 1 ]]; do echo
