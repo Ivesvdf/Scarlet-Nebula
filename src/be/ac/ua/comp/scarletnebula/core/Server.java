@@ -20,6 +20,7 @@ import org.dasein.cloud.compute.Platform;
 import org.dasein.cloud.compute.VirtualMachine;
 import org.dasein.cloud.compute.VmState;
 
+import be.ac.ua.comp.scarletnebula.gui.GraphPanelCache;
 import be.ac.ua.comp.scarletnebula.gui.SearchHelper;
 import be.ac.ua.comp.scarletnebula.misc.Utils;
 
@@ -61,7 +62,7 @@ public class Server
 
 	public ServerStatisticsManager getServerStatistics()
 	{
-		if (serverStatisticsManager != null)
+		if (serverStatisticsManager == null)
 		{
 			serverStatisticsManager = new ServerStatisticsManager(this);
 		}
@@ -436,6 +437,7 @@ public class Server
 	public void unlink()
 	{
 		getCloud().unlink(this);
+		stopConnections();
 	}
 
 	/**
@@ -583,6 +585,24 @@ public class Server
 		sshLogin = username;
 		keypair = (keyname != null ? keyname : "");
 		useSshPassword = false;
+
+		resetConnections();
+	}
+
+	private void stopConnections()
+	{
+		if (serverStatisticsManager != null)
+		{
+			serverStatisticsManager.stop();
+		}
+		serverStatisticsManager = null;
+	}
+
+	private void resetConnections()
+	{
+		GraphPanelCache.get().clearBareServerCache(this);
+
+		stopConnections();
 	}
 
 	public void assurePasswordLogin(String username, String password)
@@ -590,6 +610,8 @@ public class Server
 		sshLogin = username;
 		sshPassword = password;
 		useSshPassword = true;
+
+		resetConnections();
 	}
 
 	public String getSshUsername()

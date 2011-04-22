@@ -1,8 +1,12 @@
 package be.ac.ua.comp.scarletnebula.gui;
 
 import java.awt.Color;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+
+import javax.swing.SwingUtilities;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -15,6 +19,7 @@ import org.jfree.data.time.TimeSeries;
 import org.jfree.data.time.TimeSeriesCollection;
 
 import be.ac.ua.comp.scarletnebula.core.Server;
+import be.ac.ua.comp.scarletnebula.core.ServerStatisticsManager;
 import be.ac.ua.comp.scarletnebula.gui.graph.Datapoint;
 
 /**
@@ -32,6 +37,7 @@ public abstract class Graph implements DataStreamListener
 			false);
 	final long maximumAge;
 	private int maxSeriesID = 0;
+	private Collection<Server> serversToRefresh = new ArrayList<Server>();
 
 	/**
 	 * Constructor
@@ -62,8 +68,9 @@ public abstract class Graph implements DataStreamListener
 	public final void registerRelativeDatastream(Server server,
 			String streamname, String streamtitle, Color color)
 	{
-		// ServerStatisticsManager manager = server.getServerStatistics();
-		// manager.addStreamListener(this);
+		ServerStatisticsManager manager = server.getServerStatistics();
+		if (manager != null)
+			manager.addStreamListener(this);
 
 		TimeSeries series = new TimeSeries(streamtitle);
 		series.setMaximumItemAge(maximumAge);
@@ -96,6 +103,11 @@ public abstract class Graph implements DataStreamListener
 		newDataPoint(new Millisecond(), datapoint);
 	}
 
+	public void addServerToRefresh(Server server)
+	{
+		serversToRefresh.add(server);
+	}
+
 	/**
 	 * Registers a new datapoint for the stream named streamname, which was
 	 * measured at value, at time time.
@@ -109,18 +121,28 @@ public abstract class Graph implements DataStreamListener
 	 *            The time at which this measurement was made
 	 */
 	@Override
-	public void newDataPoint(RegularTimePeriod time, Datapoint datapoint)
+	public void newDataPoint(final RegularTimePeriod time,
+			final Datapoint datapoint)
 	{
-		final String dataStreamName = datapoint.getDatastreamName();
-		if (!datastreams.containsKey(dataStreamName))
+		SwingUtilities.invokeLater(new Runnable()
 		{
-			log.error("Adding datapoint to unregistered stream.");
-		}
-		else
-		{
-			datastreams.get(dataStreamName).addOrUpdate(time,
-					datapoint.getValue());
-		}
-	}
+			@Override
+			public void run()
+			{
+				final String dataStreamName = datapoint.getDatastreamName();
+				if (!datastreams.containsKey(dataStreamName))
+				{
+					log.error("Adding datapoint to unregistered stream.");
+				}
+				else
+				{
+					datastreams.get(dataStreamName).addOrUpdate(time,
+							datapoint.getValue());
+				}
 
+				for (Server server : serversToRefresh)
+					server.serverChanged();
+			}
+		});
+	}
 }

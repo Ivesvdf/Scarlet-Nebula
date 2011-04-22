@@ -35,8 +35,6 @@ public class SSHPanel extends JPanel
 		term.setCompression(7);
 		term.setAntiAliasing(true);
 
-		term.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
-
 		setLayout(new BorderLayout());
 
 		addComponentListener(new ComponentListener()

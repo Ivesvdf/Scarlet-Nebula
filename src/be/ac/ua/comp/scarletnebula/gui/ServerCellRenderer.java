@@ -7,11 +7,8 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.LinearGradientPaint;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Random;
 
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
@@ -20,7 +17,6 @@ import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.ListCellRenderer;
 import javax.swing.SwingConstants;
-import javax.swing.Timer;
 import javax.swing.UIManager;
 import javax.swing.border.BevelBorder;
 
@@ -94,20 +90,18 @@ class ServerCellRenderer implements ListCellRenderer
 	{
 		final BareGraph graph = new BareGraph((long) 60 * 60 * 1000);
 		graph.registerRelativeDatastream(server, "CPU", "CPU", Color.GREEN);
+		graph.addServerToRefresh(server);
 		final ChartPanel chartPanel = graph.getChartPanel();
 		log.info("Making new baregraph for server " + server);
-		final Random random = new Random();
-		final Timer timer = new Timer(1000, new ActionListener()
-		{
-			@Override
-			public void actionPerformed(ActionEvent e)
-			{
-				// graph.newDataPoint("CPU", random.nextDouble());
-				server.serverChanged();
-			}
-		});
-		timer.setInitialDelay(0);
-		timer.start();
+		/*
+		 * final Timer timer = new Timer(1000, new ActionListener() {
+		 * 
+		 * @Override public void actionPerformed(ActionEvent e) { //
+		 * graph.newDataPoint("CPU", random.nextDouble());
+		 * server.serverChanged(); } });
+		 * 
+		 * timer.setInitialDelay(0); timer.start();
+		 */
 		GraphPanelCache.get().addToBareServerCache(server, chartPanel);
 		return chartPanel;
 	}

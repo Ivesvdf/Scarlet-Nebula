@@ -18,8 +18,10 @@ import com.jcraft.jsch.JSchException;
 
 public class ServerStatisticsManager
 {
-	private final class PollingThread implements Runnable
+	private final class PollingRunnable implements Runnable
 	{
+		private boolean stop = false;
+
 		@Override
 		public void run()
 		{
@@ -39,9 +41,8 @@ public class ServerStatisticsManager
 				final int buffersize = 1024;
 				byte[] tmp = new byte[buffersize];
 
-				while (true)
+				while (!stop)
 				{
-
 					while (pollingInputStream.available() > 0)
 					{
 						int i = pollingInputStream.read(tmp, 0, buffersize);
@@ -67,7 +68,6 @@ public class ServerStatisticsManager
 					}
 					try
 					{
-						System.out.println("sleeping");
 						Thread.sleep(1000);
 					}
 					catch (Exception ee)
@@ -91,6 +91,11 @@ public class ServerStatisticsManager
 				e.printStackTrace();
 			}
 		}
+
+		public void pleaseStop()
+		{
+			stop = true;
+		}
 	}
 
 	final private static Log log = LogFactory
@@ -99,12 +104,15 @@ public class ServerStatisticsManager
 	private final Collection<DataStreamListener> listeners = new ArrayList<DataStreamListener>();
 	private final Server server;
 
+	private PollingRunnable pollingRunnable = new PollingRunnable();
+
 	ServerStatisticsManager(Server server)
 	{
 		this.server = server;
 
-		Thread readerThread = new Thread(new PollingThread());
+		final Thread readerThread = new Thread(pollingRunnable);
 		readerThread.start();
+		log.info("Starting polling thread");
 	}
 
 	public void newDatapoint(String stringRepresentation)
@@ -125,4 +133,9 @@ public class ServerStatisticsManager
 		}
 	}
 
+	public void stop()
+	{
+		log.info("Stopping polling thread");
+		pollingRunnable.pleaseStop();
+	}
 }

@@ -14,7 +14,7 @@ public class ToolbarStyleButton extends JButton
 {
 	private static final long serialVersionUID = 1L;
 
-	ToolbarStyleButton(Icon icon)
+	public ToolbarStyleButton(Icon icon)
 	{
 		super(icon);
 		setBorderPainted(false);

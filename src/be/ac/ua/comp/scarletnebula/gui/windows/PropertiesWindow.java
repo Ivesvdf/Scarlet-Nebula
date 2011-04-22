@@ -3,6 +3,8 @@ package be.ac.ua.comp.scarletnebula.gui.windows;
 import java.awt.AWTEvent;
 import java.awt.BorderLayout;
 import java.awt.Component;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -26,14 +28,12 @@ import javax.swing.event.ChangeListener;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.dasein.cloud.compute.Platform;
-import org.dasein.cloud.compute.VmState;
 
 import be.ac.ua.comp.scarletnebula.core.Server;
-import be.ac.ua.comp.scarletnebula.gui.BetterTextLabel;
 import be.ac.ua.comp.scarletnebula.gui.ButtonFactory;
 import be.ac.ua.comp.scarletnebula.gui.ChangeableLabel;
+import be.ac.ua.comp.scarletnebula.gui.DecoratedCommunicationPanel;
 import be.ac.ua.comp.scarletnebula.gui.LabelEditSwitcherPanel;
-import be.ac.ua.comp.scarletnebula.gui.SSHPanel;
 import be.ac.ua.comp.scarletnebula.gui.ServernameInputVerifier;
 import be.ac.ua.comp.scarletnebula.misc.Executable;
 import be.ac.ua.comp.scarletnebula.misc.Utils;
@@ -48,7 +48,6 @@ public class PropertiesWindow extends JDialog
 
 	private static Log log = LogFactory.getLog(PropertiesWindow.class);
 
-	private JPanel configurationTab = new JPanel();
 	private JPanel overviewTab = new JPanel();
 	private JPanel statisticsTab = new JPanel();
 	private JPanel communicationTab = new JPanel();
@@ -63,10 +62,14 @@ public class PropertiesWindow extends JDialog
 	private JLabel architectureLabel = new JLabel();
 	private JLabel platformLabel = new JLabel();
 
+	private boolean statisticsTabIsFilled = false;
+
 	GUI gui;
 	Collection<Server> selectedServers;
 
 	private ChangeableLabel sshLabel;
+
+	private DecoratedCommunicationPanel decoratedCommunicationPanel = null;
 
 	public PropertiesWindow(GUI gui, Collection<Server> selectedServers)
 	{
@@ -76,7 +79,18 @@ public class PropertiesWindow extends JDialog
 
 		setLayout(new BorderLayout());
 		setSize(550, 400);
-		setTitle("Server Properties - Scarlet Nebula");
+		// This really needs to be here...
+		enableEvents(AWTEvent.KEY_EVENT_MASK);
+
+		if (selectedServers.size() > 1)
+		{
+			setTitle("Server Properties - Scarlet Nebula");
+		}
+		else
+		{
+			setTitle(selectedServers.iterator().next().getFriendlyName()
+					+ " Properties - Scarlet Nebula");
+		}
 
 		add(createTopPartition(selectedServers), BorderLayout.CENTER);
 
@@ -108,7 +122,7 @@ public class PropertiesWindow extends JDialog
 		return bottomPanel;
 	}
 
-	private JPanel createTopPartition(Collection<Server> servers)
+	private JPanel createTopPartition(final Collection<Server> servers)
 	{
 		final JPanel total = new JPanel();
 		total.setLayout(new BorderLayout());
@@ -119,7 +133,6 @@ public class PropertiesWindow extends JDialog
 		createCommunicationPanel();
 
 		tabbedPane.addTab("Overview", overviewTab);
-		tabbedPane.addTab("Configuration", configurationTab);
 		tabbedPane.addTab("Communication", communicationTab);
 		tabbedPane.addTab("Statistics", statisticsTab);
 
@@ -134,13 +147,28 @@ public class PropertiesWindow extends JDialog
 						.getSelectedComponent();
 
 				if (selectedPanel == communicationTab)
-					PropertiesWindow.this.communicationTabGotFocus();
+					PropertiesWindow.this.communicationTabGotFocus(servers);
+				if (selectedPanel == statisticsTab)
+					PropertiesWindow.this.statisticsTabGotFocus();
 			}
 
 		});
 
 		total.add(tabbedPane);
 		return total;
+	}
+
+	protected void statisticsTabGotFocus()
+	{
+		if (statisticsTabIsFilled)
+			return;
+		else
+		{
+			statisticsTabIsFilled = true;
+			statisticsTab.setLayout(new BorderLayout());
+			statisticsTab.add(getStatisticsPanel(), BorderLayout.CENTER);
+
+		}
 	}
 
 	private void createCommunicationPanel()
@@ -206,10 +234,51 @@ public class PropertiesWindow extends JDialog
 		builder.nextLine();
 
 		builder.append("Image", imageLabel);
+		builder.nextLine();
 
 		final JScrollPane bodyScrollPane = new JScrollPane(builder.getPanel());
 		bodyScrollPane.setBorder(null);
 		overviewTab.add(bodyScrollPane);
+	}
+
+	private JScrollPane getStatisticsPanel()
+	{
+		JPanel statisticsPanel = new JPanel(new BorderLayout());
+		JPanel propertiesPart = new JPanel();
+		propertiesPart.setLayout(new BoxLayout(propertiesPart,
+				BoxLayout.LINE_AXIS));
+		propertiesPart.add(Box.createHorizontalGlue());
+		propertiesPart
+				.add(new JButton("Properties", Utils.icon("modify16.png")));
+		propertiesPart.add(Box.createHorizontalStrut(20));
+		propertiesPart.setBorder(BorderFactory.createEmptyBorder(20, 0, 0, 0));
+
+		int numberOfComponentsPlaced = 0;
+		int currXPos = 0;
+
+		final JPanel graphCollection = new JPanel(new GridBagLayout());
+		GridBagConstraints c = new GridBagConstraints();
+
+		c.fill = GridBagConstraints.HORIZONTAL;
+		c.weightx = 0.5;
+		c.gridx = currXPos;
+		c.gridy = numberOfComponentsPlaced / 2;
+
+		if (currXPos == 0)
+		{
+			currXPos = 1;
+		}
+		else
+		{
+			currXPos = 0;
+		}
+
+		statisticsPanel.add(propertiesPart, BorderLayout.NORTH);
+		statisticsPanel.add(graphCollection, BorderLayout.CENTER);
+
+		final JScrollPane scrollPanel = new JScrollPane(statisticsPanel);
+		scrollPanel.setBorder(null);
+		return scrollPanel;
 	}
 
 	private Component getSingleServerSshLoginMethodComponent(final Server server)
@@ -318,49 +387,17 @@ public class PropertiesWindow extends JDialog
 		return servername;
 	}
 
-	protected void communicationTabGotFocus()
+	protected void communicationTabGotFocus(Collection<Server> selectedServers)
 	{
-		// This really needs to be here...
-		enableEvents(AWTEvent.KEY_EVENT_MASK);
-
-		// Remove all components on there
-		communicationTab.invalidate();
-		communicationTab.removeAll();
-
-		communicationTab.setLayout(new BorderLayout());
-
-		// If there are no servers, or none of the servers are running, do not
-		// display the ssh console
-		Collection<Server> connectableServers = new ArrayList<Server>();
-		for (Server s : selectedServers)
+		if (decoratedCommunicationPanel == null)
 		{
-			if (s.getStatus() == VmState.RUNNING
-					&& s.getPublicDnsAddress() != null)
-			{
-				connectableServers.add(s);
-			}
+			decoratedCommunicationPanel = new DecoratedCommunicationPanel(this,
+					selectedServers);
+
+			communicationTab.setLayout(new BorderLayout());
+			communicationTab.add(decoratedCommunicationPanel,
+					BorderLayout.CENTER);
 		}
-
-		// If there are no servers to connect to, don't draw the ssh console
-		if (connectableServers.size() == 0)
-		{
-			log.info("Connection tab clicked and no servers selected to connect to.");
-			BetterTextLabel txt = new BetterTextLabel(
-					"Please select at least one running server to connect to.");
-			txt.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
-			communicationTab.add(txt, BorderLayout.NORTH);
-			communicationTab.validate();
-			communicationTab.repaint();
-			return;
-		}
-
-		final Server connectServer = selectedServers.iterator().next();
-
-		communicationTab.add(new SSHPanel(connectServer), BorderLayout.CENTER);
-
-		communicationTab.validate();
-		communicationTab.repaint();
-
 	}
 
 	private void updateOverviewTab(Collection<Server> selectedServers)
