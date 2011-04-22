@@ -66,6 +66,8 @@ public class PropertiesWindow extends JDialog
 	GUI gui;
 	Collection<Server> selectedServers;
 
+	private ChangeableLabel sshLabel;
+
 	public PropertiesWindow(GUI gui, Collection<Server> selectedServers)
 	{
 		super(gui, true);
@@ -212,15 +214,25 @@ public class PropertiesWindow extends JDialog
 
 	private Component getSingleServerSshLoginMethodComponent(final Server server)
 	{
-		ChangeableLabel sshLabel = new ChangeableLabel(
+		sshLabel = new ChangeableLabel(
 				getTextRepresentationOfSshSituation(server),
 				new Executable<JLabel>()
 				{
 					@Override
-					public void run(JLabel param)
+					public void run(final JLabel text)
 					{
-						new ChangeServerSshLoginMethodWindow(
+						ChangeServerSshLoginMethodWindow window = new ChangeServerSshLoginMethodWindow(
 								PropertiesWindow.this, server);
+						window.addActionListener(new ActionListener()
+						{
+							@Override
+							public void actionPerformed(ActionEvent e)
+							{
+								text.setText(getTextRepresentationOfSshSituation(server));
+							}
+
+						});
+						window.setVisible(true);
 					}
 				});
 		sshLabel.setBorder(null);
@@ -233,7 +245,7 @@ public class PropertiesWindow extends JDialog
 
 		if (server.usesSshPassword())
 		{
-			rv = "Login & Password";
+			rv = "Username & Password";
 		}
 		else
 		{

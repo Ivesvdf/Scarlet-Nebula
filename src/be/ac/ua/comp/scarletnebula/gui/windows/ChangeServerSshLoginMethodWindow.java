@@ -4,6 +4,7 @@ import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+import java.util.ArrayList;
 import java.util.Collection;
 
 import javax.swing.BorderFactory;
@@ -66,6 +67,8 @@ public class ChangeServerSshLoginMethodWindow extends JDialog
 	final private JTextField keyUsername = new JTextField();
 	final private JComboBox keypairCombo;
 	final private Server server;
+	final private Collection<ActionListener> actionListeners = new ArrayList<ActionListener>();
+	private int actionId = 1;
 
 	public ChangeServerSshLoginMethodWindow(JDialog parent, Server server)
 	{
@@ -155,8 +158,6 @@ public class ChangeServerSshLoginMethodWindow extends JDialog
 		add(Box.createVerticalStrut(15));
 
 		prefillTextfields(server);
-
-		setVisible(true);
 	}
 
 	private void prefillTextfields(Server server)
@@ -185,6 +186,7 @@ public class ChangeServerSshLoginMethodWindow extends JDialog
 			server.assurePasswordLogin(username, password);
 			server.store();
 		}
+		fireActionListeners();
 		dispose();
 	}
 
@@ -215,6 +217,7 @@ public class ChangeServerSshLoginMethodWindow extends JDialog
 				saveAndClose();
 			}
 		});
+		getRootPane().setDefaultButton(okButton);
 
 		buttonPanel.add(cancelButton);
 		buttonPanel.add(Box.createHorizontalStrut(10));
@@ -223,5 +226,19 @@ public class ChangeServerSshLoginMethodWindow extends JDialog
 		buttonPanel.setAlignmentY(Component.BOTTOM_ALIGNMENT);
 		buttonPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
 		return buttonPanel;
+	}
+
+	public void addActionListener(ActionListener actionListener)
+	{
+		actionListeners.add(actionListener);
+	}
+
+	private void fireActionListeners()
+	{
+		for (ActionListener actionListener : actionListeners)
+		{
+			actionListener.actionPerformed(new ActionEvent(this, actionId++,
+					"Window closed"));
+		}
 	}
 }
