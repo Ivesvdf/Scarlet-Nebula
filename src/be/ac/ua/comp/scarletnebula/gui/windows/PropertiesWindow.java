@@ -149,7 +149,7 @@ public class PropertiesWindow extends JDialog
 				if (selectedPanel == communicationTab)
 					PropertiesWindow.this.communicationTabGotFocus(servers);
 				if (selectedPanel == statisticsTab)
-					PropertiesWindow.this.statisticsTabGotFocus();
+					PropertiesWindow.this.statisticsTabGotFocus(servers);
 			}
 
 		});
@@ -158,7 +158,7 @@ public class PropertiesWindow extends JDialog
 		return total;
 	}
 
-	protected void statisticsTabGotFocus()
+	protected void statisticsTabGotFocus(Collection<Server> servers)
 	{
 		if (statisticsTabIsFilled)
 			return;
@@ -166,7 +166,7 @@ public class PropertiesWindow extends JDialog
 		{
 			statisticsTabIsFilled = true;
 			statisticsTab.setLayout(new BorderLayout());
-			statisticsTab.add(getStatisticsPanel(), BorderLayout.CENTER);
+			statisticsTab.add(getStatisticsPanel(servers), BorderLayout.CENTER);
 
 		}
 	}
@@ -241,15 +241,34 @@ public class PropertiesWindow extends JDialog
 		overviewTab.add(bodyScrollPane);
 	}
 
-	private JScrollPane getStatisticsPanel()
+	private JScrollPane getStatisticsPanel(final Collection<Server> servers)
 	{
 		JPanel statisticsPanel = new JPanel(new BorderLayout());
 		JPanel propertiesPart = new JPanel();
 		propertiesPart.setLayout(new BoxLayout(propertiesPart,
 				BoxLayout.LINE_AXIS));
 		propertiesPart.add(Box.createHorizontalGlue());
-		propertiesPart
-				.add(new JButton("Properties", Utils.icon("modify16.png")));
+		final JButton statisticsPropertiesButton = new JButton("Properties",
+				Utils.icon("modify16.png"));
+		statisticsPropertiesButton.addActionListener(new ActionListener()
+		{
+			@Override
+			public void actionPerformed(ActionEvent e)
+			{
+				StatisticsPropertiesWindow win = new StatisticsPropertiesWindow(
+						PropertiesWindow.this, servers);
+				win.addActionListener(new ActionListener()
+				{
+					@Override
+					public void actionPerformed(ActionEvent e)
+					{
+
+					}
+				});
+				win.setVisible(true);
+			}
+		});
+		propertiesPart.add(statisticsPropertiesButton);
 		propertiesPart.add(Box.createHorizontalStrut(20));
 		propertiesPart.setBorder(BorderFactory.createEmptyBorder(20, 0, 0, 0));
 

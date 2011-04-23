@@ -96,7 +96,8 @@ public class DecoratedCommunicationPanel extends JPanel
 				}
 			});
 
-			final JButton restartButton = new JButton("Restart connection");
+			final JButton restartButton = new JButton("Restart connection",
+					Utils.icon("undo16.png"));
 			restartButton.addActionListener(new ActionListener()
 			{
 				@Override
