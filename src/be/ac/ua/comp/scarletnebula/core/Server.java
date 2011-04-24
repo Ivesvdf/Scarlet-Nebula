@@ -569,6 +569,7 @@ public class Server
 	public void setTags(Collection<String> newTags)
 	{
 		tags = newTags;
+		serverChanged();
 	}
 
 	public String getKeypair()
@@ -583,6 +584,7 @@ public class Server
 		useSshPassword = false;
 
 		resetConnections();
+		serverChanged();
 	}
 
 	private void stopConnections()
@@ -608,6 +610,7 @@ public class Server
 		useSshPassword = true;
 
 		resetConnections();
+		serverChanged();
 	}
 
 	public void setStatisticsCommand(String command)

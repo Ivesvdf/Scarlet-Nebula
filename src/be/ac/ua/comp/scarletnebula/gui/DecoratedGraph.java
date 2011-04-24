@@ -3,6 +3,7 @@ package be.ac.ua.comp.scarletnebula.gui;
 import java.awt.Color;
 import java.awt.Font;
 import java.text.DecimalFormat;
+import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -17,6 +18,7 @@ import org.jfree.chart.plot.XYPlot;
 
 import be.ac.ua.comp.scarletnebula.gui.graph.Datapoint.Type;
 import be.ac.ua.comp.scarletnebula.gui.graph.Datastream;
+import be.ac.ua.comp.scarletnebula.gui.graph.Datastream.TimedDatapoint;
 
 public class DecoratedGraph extends Graph
 {
@@ -80,11 +82,19 @@ public class DecoratedGraph extends Graph
 		}
 		else
 		{
-			range.setStandardTickUnits(NumberAxis.createIntegerTickUnits());
+			double sum = 0;
+			final List<TimedDatapoint> datapoints = stream
+					.getRecentlyProcessedDatapoints();
+			for (TimedDatapoint dp : datapoints)
+			{
+				sum += dp.getValue();
+			}
+			range.setTickUnit(new NumberTickUnit((int) (sum / (datapoints
+					.size() * 5)), new DecimalFormat(), 1));
 		}
 
 		JFreeChart chart = new JFreeChart(stream.getStreamname(), new Font(
-				"SansSerif", Font.BOLD, 24), plot, true);
+				"SansSerif", Font.PLAIN, 20), plot, true);
 		chart.setBackgroundPaint(Color.white);
 		chart.removeLegend();
 		ChartPanel chartPanel = new ChartPanel(chart);
@@ -93,5 +103,4 @@ public class DecoratedGraph extends Graph
 
 		return chartPanel;
 	}
-
 }

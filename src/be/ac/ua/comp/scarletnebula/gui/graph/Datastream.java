@@ -37,7 +37,7 @@ public class Datastream
 	private Double mediumWarnLevel;
 	private Double highWarnLevel;
 	private DroppingFifoQueue<TimedDatapoint> processedDatapoints = new DroppingFifoQueue<TimedDatapoint>(
-			50);
+			120);
 
 	public String getStreamname()
 	{

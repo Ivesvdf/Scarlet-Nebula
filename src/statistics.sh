@@ -45,6 +45,10 @@ while true; do
   if (( $IT_COUNT % 10 == 0 || $IT_COUNT == 1 )); then
 	  echo "{\"datapointType\":\"ABSOLUTE\",\"datastream\":\"MEM\",\"value\":$(free -mto | grep Mem: | awk '{ print $3 }'),\"max\":$(free -mto | grep Mem: | awk '{ print $2 }')}"
   fi
+
+  # Open connections
+  echo "{\"datapointType\":\"ABSOLUTE\",\"datastream\":\"Open connections\",\"value\":$(netstat --protocol=inet -n | grep tcp | wc -l)}"
+  
   # Wait before checking again.
   sleep 5
   let "IT_COUNT=IT_COUNT+1"
