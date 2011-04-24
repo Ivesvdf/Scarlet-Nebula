@@ -6,6 +6,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.nio.channels.FileChannel;
 import java.util.List;
 
@@ -103,5 +105,21 @@ public class Utils
 	public static Icon icon(String name)
 	{
 		return new ImageIcon(Utils.class.getResource("/images/" + name));
+	}
+
+	public static File internalFile(String name)
+	{
+		final URL url = Utils.class.getResource("/" + name);
+
+		File f;
+		try
+		{
+			f = new File(url.toURI());
+		}
+		catch (URISyntaxException e)
+		{
+			f = new File(url.getPath());
+		}
+		return f;
 	}
 }

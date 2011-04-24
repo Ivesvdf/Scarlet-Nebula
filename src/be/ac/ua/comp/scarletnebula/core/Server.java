@@ -39,12 +39,14 @@ public class Server
 	private Collection<String> tags;
 	private ServerStatisticsManager serverStatisticsManager;
 	private String statisticsCommand;
+	private String preferredDatastream;
 	private boolean useSshPassword;
 
 	public Server(VirtualMachine server, CloudProvider inputProvider,
 			String inputKeypair, String inputFriendlyName,
 			Collection<String> tags, boolean useSshPassword, String sshLogin,
-			String sshPassword, String statisticsCommand)
+			String sshPassword, String statisticsCommand,
+			String preferredDatastream)
 	{
 		provider = inputProvider;
 		keypair = inputKeypair;
@@ -53,6 +55,7 @@ public class Server
 		this.sshLogin = (sshLogin != null ? sshLogin : "");
 		this.sshPassword = (sshPassword != null ? sshPassword : "");
 		this.statisticsCommand = statisticsCommand;
+		this.preferredDatastream = preferredDatastream;
 		this.tags = tags;
 		setFriendlyName(inputFriendlyName);
 	}
@@ -130,6 +133,8 @@ public class Server
 		final String sshPassword = props.getProperty("sshPassword");
 		final String statisticsCommand = props.getProperty("statisticsCommand");
 		final String tagString = props.getProperty("tags");
+		final String preferredDatastream = props
+				.getProperty("preferredDatastream");
 
 		return new Server(server, // dasein server implementation
 				provider, // cloud provider
@@ -141,7 +146,8 @@ public class Server
 								// is used
 				sshLogin, // Login for SSH'ing
 				sshPassword, // Password for ssh'ing (if any)
-				statisticsCommand); // Command to be executed for statistics
+				statisticsCommand, // Command to be executed for statistics
+				preferredDatastream); // Datastream to show in small server
 	}
 
 	public boolean usesSshPassword()
@@ -149,14 +155,9 @@ public class Server
 		return useSshPassword || keypair == null;
 	}
 
-	/**
-	 * 
-	 */
-	private static String getPropertyOrStringIfMissing(Properties props,
-			String propertyname, String standard)
+	public String getPreferredDatastream()
 	{
-		return props.getProperty(propertyname) != null ? props
-				.getProperty(propertyname) : standard;
+		return preferredDatastream;
 	}
 
 	/**

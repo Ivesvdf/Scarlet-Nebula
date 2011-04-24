@@ -89,19 +89,12 @@ class ServerCellRenderer implements ListCellRenderer
 			final Server server)
 	{
 		final BareGraph graph = new BareGraph((long) 30 * 60 * 1000);
-		graph.registerRelativeDatastream(server, "CPU", "CPU", Color.GREEN);
+		graph.registerRelativeDatastream(server,
+				server.getPreferredDatastream(), "", Color.GREEN);
 		graph.addServerToRefresh(server);
 		final ChartPanel chartPanel = graph.getChartPanel();
 		log.info("Making new baregraph for server " + server);
-		/*
-		 * final Timer timer = new Timer(1000, new ActionListener() {
-		 * 
-		 * @Override public void actionPerformed(ActionEvent e) { //
-		 * graph.newDataPoint("CPU", random.nextDouble());
-		 * server.serverChanged(); } });
-		 * 
-		 * timer.setInitialDelay(0); timer.start();
-		 */
+
 		GraphPanelCache.get().addToBareServerCache(server, chartPanel);
 		return chartPanel;
 	}

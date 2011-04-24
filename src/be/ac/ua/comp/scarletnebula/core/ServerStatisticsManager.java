@@ -14,6 +14,7 @@ import be.ac.ua.comp.scarletnebula.core.SSHCommandConnection.ChannelInputStreamT
 import be.ac.ua.comp.scarletnebula.gui.NewDatapointListener;
 import be.ac.ua.comp.scarletnebula.gui.NotPromptingJschUserInfo;
 import be.ac.ua.comp.scarletnebula.gui.graph.Datapoint;
+import be.ac.ua.comp.scarletnebula.gui.graph.Datastream;
 
 import com.jcraft.jsch.Channel;
 import com.jcraft.jsch.JSchException;
@@ -100,12 +101,12 @@ public class ServerStatisticsManager
 	final private static Log log = LogFactory
 			.getLog(ServerStatisticsManager.class);
 
-	private final Collection<NewDatapointListener> newDatapointListeners = new ArrayList<NewDatapointListener>();
 	private final Collection<NewDatastreamListener> newDatastreamListeners = new ArrayList<NewDatastreamListener>();
 
 	private final Server server;
 	private boolean stop = false;
-	private final Map<String, Datapoint> availableStreams = new HashMap<String, Datapoint>();
+	private final Map<String, Datastream> availableStreams = new HashMap<String, Datastream>();
+	private final Map<String, Collection<NewDatapointListener>> futureHookups = new HashMap<String, Collection<NewDatapointListener>>();
 
 	private PollingRunnable pollingRunnable = new PollingRunnable();
 
@@ -118,35 +119,39 @@ public class ServerStatisticsManager
 		log.info("Starting polling thread");
 	}
 
-	public void newDatapoint(String stringRepresentation)
+	private void newDatapoint(String stringRepresentation)
 	{
 		final Datapoint datapoint = Datapoint.fromJson(stringRepresentation);
 
-		if (!availableStreams.containsKey(datapoint.getDatastreamName()))
+		final String datastreamName = datapoint.getDatastreamName();
+		if (!availableStreams.containsKey(datastreamName))
 		{
+			log.info("Registering new stream " + datastreamName);
 			updateNewDatastreamObservers(datapoint);
-			availableStreams.put(datapoint.getDatastreamName(), datapoint);
+			final Datastream newDatastream = new Datastream(datapoint);
+			availableStreams.put(datastreamName, newDatastream);
+
+			// If the streamname appears in the futureHookups, add the listeners
+			// for that streamname
+			if (futureHookups.containsKey(datastreamName))
+			{
+				for (NewDatapointListener listener : futureHookups
+						.get(datastreamName))
+				{
+					log.info("Adding future hookup listener to newly created stream.");
+					newDatastream.addNewDatapointListener(listener);
+				}
+				futureHookups.remove(datastreamName);
+			}
 		}
 
-		updateNewDatapointObservers(datapoint);
-	}
-
-	public void addNewDatapointListener(NewDatapointListener listener)
-	{
-		newDatapointListeners.add(listener);
+		availableStreams.get(datastreamName).updateNewDatapointObservers(
+				datapoint);
 	}
 
 	public void addNewDatastreamListener(NewDatastreamListener listener)
 	{
 		newDatastreamListeners.add(listener);
-	}
-
-	private void updateNewDatapointObservers(Datapoint datapoint)
-	{
-		for (NewDatapointListener listener : newDatapointListeners)
-		{
-			listener.newDataPoint(datapoint);
-		}
 	}
 
 	private void updateNewDatastreamObservers(Datapoint datapoint)
@@ -164,6 +169,11 @@ public class ServerStatisticsManager
 	{
 		log.info("Stopping polling thread");
 		pollingRunnable.pleaseStop();
+	}
+
+	public Collection<String> getAvailableDatastreams()
+	{
+		return availableStreams.keySet();
 	}
 
 	/**
@@ -186,5 +196,35 @@ public class ServerStatisticsManager
 		 * @param datapoint
 		 */
 		public void newDataStream(Datapoint datapoint);
+	}
+
+	/**
+	 * Adds a new listener to the Datastream datastream. If no such stream is
+	 * found, this request is stored and applied as soon as this stream is
+	 * created. So when the first datapoint for this stream arrives, the
+	 * listener will automatically be added.
+	 * 
+	 * @param listener
+	 * @param datastream
+	 */
+	public void addNewDatapointListener(NewDatapointListener listener,
+			String datastream)
+	{
+		if (availableStreams.containsKey(datastream))
+		{
+			availableStreams.get(datastream).addNewDatapointListener(listener);
+		}
+		else
+		{
+			log.info("Adding stream " + datastream
+					+ " to be hooked when it arrives.");
+
+			if (!futureHookups.containsKey(datastream))
+			{
+				futureHookups.put(datastream,
+						new ArrayList<NewDatapointListener>());
+			}
+			futureHookups.get(datastream).add(listener);
+		}
 	}
 }

@@ -70,7 +70,7 @@ public abstract class Graph implements NewDatapointListener
 	{
 		ServerStatisticsManager manager = server.getServerStatistics();
 		if (manager != null)
-			manager.addNewDatapointListener(this);
+			manager.addNewDatapointListener(this, streamname);
 
 		TimeSeries series = new TimeSeries(streamtitle);
 		series.setMaximumItemAge(maximumAge);

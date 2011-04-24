@@ -1,9 +1,11 @@
 package be.ac.ua.comp.scarletnebula.core;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -27,6 +29,8 @@ import org.dasein.cloud.identity.ShellKeySupport;
 import org.dasein.cloud.network.Firewall;
 import org.dasein.cloud.network.FirewallSupport;
 import org.dasein.cloud.network.Protocol;
+
+import be.ac.ua.comp.scarletnebula.misc.Utils;
 
 /**
  * Class representing a cloud provider in Scarlet Nebula. This will contain a
@@ -386,7 +390,8 @@ public class CloudProvider
 						nullToEmpty(testServer.getRootUser()), // root user
 						nullToEmpty(testServer.getRootPassword()), // root
 																	// password
-						getDefaultStatisticsCommand())); // statistics command
+						getDefaultStatisticsCommand(), // statistics command
+						"CPU"));
 			}
 		}
 
@@ -462,7 +467,8 @@ public class CloudProvider
 				false, // server uses password to SSH
 				daseinServer.getRootUser(), // SSH login
 				daseinServer.getRootPassword(), // SSH Password
-				getDefaultStatisticsCommand()); // Statistics command
+				getDefaultStatisticsCommand(), // Statistics command
+				"CPU"); // preferred datastream
 
 		linkUnlinkedServer(server);
 		return server;
@@ -470,7 +476,29 @@ public class CloudProvider
 
 	private String getDefaultStatisticsCommand()
 	{
-		return null;
+		StringBuffer sb = new StringBuffer();
+
+		try
+		{
+			BufferedReader br;
+
+			br = new BufferedReader(new FileReader(
+					Utils.internalFile("statistics.sh")));
+
+			String nextLine = "";
+			while ((nextLine = br.readLine()) != null)
+			{
+				sb.append(nextLine);
+				sb.append("\n");
+			}
+		}
+		catch (Exception e)
+		{
+			log.error(
+					"Could not read default statistics command, continuing with empty string",
+					e);
+		}
+		return sb.toString();
 	}
 
 	public VirtualMachineProduct getVMProductWithName(String name)
