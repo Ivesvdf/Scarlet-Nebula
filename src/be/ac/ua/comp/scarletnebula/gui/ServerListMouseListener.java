@@ -133,6 +133,7 @@ public class ServerListMouseListener implements MouseListener
 			popup.add(reboot);
 			popup.add(terminate);
 			popup.add(refresh);
+			popup.addSeparator();
 			popup.add(unlink);
 
 			popup.show(e.getComponent(), e.getX(), e.getY());

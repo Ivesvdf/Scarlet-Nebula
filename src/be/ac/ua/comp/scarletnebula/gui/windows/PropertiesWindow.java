@@ -2,10 +2,7 @@ package be.ac.ua.comp.scarletnebula.gui.windows;
 
 import java.awt.AWTEvent;
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -30,14 +27,12 @@ import javax.swing.event.ChangeListener;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.dasein.cloud.compute.Platform;
-import org.jfree.chart.ChartPanel;
 
 import be.ac.ua.comp.scarletnebula.core.Server;
-import be.ac.ua.comp.scarletnebula.core.ServerStatisticsManager;
+import be.ac.ua.comp.scarletnebula.gui.AllGraphsPanel;
 import be.ac.ua.comp.scarletnebula.gui.ButtonFactory;
 import be.ac.ua.comp.scarletnebula.gui.ChangeableLabel;
 import be.ac.ua.comp.scarletnebula.gui.DecoratedCommunicationPanel;
-import be.ac.ua.comp.scarletnebula.gui.DecoratedGraph;
 import be.ac.ua.comp.scarletnebula.gui.LabelEditSwitcherPanel;
 import be.ac.ua.comp.scarletnebula.gui.ServernameInputVerifier;
 import be.ac.ua.comp.scarletnebula.misc.Executable;
@@ -83,7 +78,7 @@ public class PropertiesWindow extends JDialog
 		this.gui = gui;
 
 		setLayout(new BorderLayout());
-		setSize(550, 400);
+		setSize(550, 500);
 		// This really needs to be here...
 		enableEvents(AWTEvent.KEY_EVENT_MASK);
 
@@ -102,6 +97,7 @@ public class PropertiesWindow extends JDialog
 		add(getBottomPanel(), BorderLayout.SOUTH);
 
 		updateOverviewTab(selectedServers);
+		setLocationRelativeTo(gui);
 		setLocationByPlatform(true);
 		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 		setVisible(true);
@@ -277,50 +273,19 @@ public class PropertiesWindow extends JDialog
 		propertiesPart.add(Box.createHorizontalStrut(10));
 		propertiesPart.setBorder(BorderFactory.createEmptyBorder(10, 0, 0, 0));
 
-		int numberOfComponentsPlaced = 0;
-		int currXPos = 0;
-
 		final JPanel graphCollection = new JPanel(new GridBagLayout());
-		graphCollection.setOpaque(true);
-		graphCollection.setBackground(Color.WHITE);
-		graphCollection.setBorder(BorderFactory.createEtchedBorder());
-		GridBagConstraints constraints = new GridBagConstraints();
 
 		if (servers.size() > 1)
 			log.fatal("more than one server in statisticspanel");
 
 		Server server = servers.iterator().next();
-		ServerStatisticsManager manager = server.getServerStatistics();
-		for (String streamname : manager.getAvailableDatastreams())
-		{
-			log.info("drawing stream");
-			constraints.fill = GridBagConstraints.HORIZONTAL;
-			constraints.weightx = 0.5;
-			constraints.gridx = currXPos;
-			constraints.gridy = numberOfComponentsPlaced / 2;
 
-			final DecoratedGraph graph = new DecoratedGraph(
-					(long) 30 * 60 * 1000, manager.getDatastream(streamname));
-			graph.registerRelativeDatastream(server, streamname, Color.GREEN);
-			graph.addServerToRefresh(server);
-			final ChartPanel chartPanel = graph.getChartPanel();
-			chartPanel.setPreferredSize(new Dimension(100, 150));
-			graphCollection.add(chartPanel, constraints);
+		AllGraphsPanel allGraphsPanel = new AllGraphsPanel(server);
 
-			if (currXPos == 0)
-			{
-				currXPos = 1;
-			}
-			else
-			{
-				currXPos = 0;
-			}
-			numberOfComponentsPlaced++;
-		}
 		JPanel graphCollectionWrapper = new JPanel(new BorderLayout());
 		graphCollectionWrapper.setBorder(BorderFactory.createEmptyBorder(10,
 				20, 10, 20));
-		graphCollectionWrapper.add(graphCollection, BorderLayout.CENTER);
+		graphCollectionWrapper.add(allGraphsPanel, BorderLayout.CENTER);
 		statisticsPanel.add(propertiesPart, BorderLayout.NORTH);
 		statisticsPanel.add(graphCollectionWrapper, BorderLayout.CENTER);
 

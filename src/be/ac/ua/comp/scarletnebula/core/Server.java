@@ -618,6 +618,7 @@ public class Server
 		statisticsCommand = command;
 
 		resetConnections();
+		serverChanged();
 	}
 
 	public String getSshUsername()
