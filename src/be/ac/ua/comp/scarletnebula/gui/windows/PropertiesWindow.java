@@ -269,8 +269,8 @@ public class PropertiesWindow extends JDialog
 			}
 		});
 		propertiesPart.add(statisticsPropertiesButton);
-		propertiesPart.add(Box.createHorizontalStrut(20));
-		propertiesPart.setBorder(BorderFactory.createEmptyBorder(20, 0, 0, 0));
+		propertiesPart.add(Box.createHorizontalStrut(10));
+		propertiesPart.setBorder(BorderFactory.createEmptyBorder(10, 0, 0, 0));
 
 		int numberOfComponentsPlaced = 0;
 		int currXPos = 0;

@@ -11,6 +11,7 @@ import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JDialog;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
@@ -29,7 +30,7 @@ public class StatisticsPropertiesWindow extends JDialog
 
 	public StatisticsPropertiesWindow(JDialog parent, Collection<Server> servers)
 	{
-		super(parent, "Statistics Properties", false);
+		super(parent, "Statistics Properties", true);
 
 		if (servers.size() == 1)
 		{
@@ -48,6 +49,34 @@ public class StatisticsPropertiesWindow extends JDialog
 						+ "This command can be an entire script or just the execution of a single server-style program.");
 		textLabel.setBorder(BorderFactory.createEmptyBorder(20, 20, 0, 20));
 
+		boolean allCommandsAreEqual = true;
+
+		if (servers.size() > 1)
+		{
+			String firstServersText = servers.iterator().next()
+					.getStatisticsCommand();
+
+			for (Server server : servers)
+			{
+				if (!server.getStatisticsCommand().equals(firstServersText))
+				{
+					allCommandsAreEqual = false;
+					break;
+				}
+			}
+		}
+
+		if (allCommandsAreEqual)
+		{
+			commandArea.setText(servers.iterator().next()
+					.getStatisticsCommand());
+		}
+		else
+		{
+			commandArea
+					.setText("The selected servers have differing Statistic commands.");
+		}
+
 		commandArea.setBorder(BorderFactory
 				.createBevelBorder(BevelBorder.LOWERED));
 		JScrollPane commandAreaScrollPane = new JScrollPane(commandArea);
@@ -55,11 +84,11 @@ public class StatisticsPropertiesWindow extends JDialog
 				15, 20));
 		add(textLabel, BorderLayout.NORTH);
 		add(commandAreaScrollPane, BorderLayout.CENTER);
-		add(getButtonPanel(), BorderLayout.SOUTH);
+		add(getButtonPanel(servers), BorderLayout.SOUTH);
 
 	}
 
-	private JPanel getButtonPanel()
+	private JPanel getButtonPanel(final Collection<Server> servers)
 	{
 		JPanel buttonPanel = new JPanel();
 		final JButton cancelButton = ButtonFactory.createCancelButton();
@@ -74,10 +103,25 @@ public class StatisticsPropertiesWindow extends JDialog
 		final JButton okButton = ButtonFactory.createOkButton();
 		okButton.addActionListener(new ActionListener()
 		{
+
 			@Override
 			public void actionPerformed(ActionEvent e)
 			{
-				saveAndClose();
+				if (servers.size() > 1)
+				{
+					int result = JOptionPane
+							.showConfirmDialog(
+									StatisticsPropertiesWindow.this,
+									"You are changing the Statistics command for multiple servers, are you sure you wish to proceed?",
+									"Proceed?", JOptionPane.OK_CANCEL_OPTION,
+									JOptionPane.WARNING_MESSAGE);
+
+					if (result == JOptionPane.OK_OPTION)
+						saveAndClose(servers);
+				}
+				else
+					saveAndClose(servers);
+
 			}
 		});
 
@@ -96,8 +140,12 @@ public class StatisticsPropertiesWindow extends JDialog
 		actionListeners.add(listener);
 	}
 
-	private void saveAndClose()
+	private void saveAndClose(Collection<Server> servers)
 	{
+		for (Server server : servers)
+		{
+			server.setStatisticsCommand(commandArea.getText());
+		}
 		dispose();
 		final ActionEvent actionEvent = new ActionEvent(this, maxEventId++,
 				"Window Closed");

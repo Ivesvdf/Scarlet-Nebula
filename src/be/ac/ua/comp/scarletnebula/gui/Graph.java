@@ -28,7 +28,7 @@ import be.ac.ua.comp.scarletnebula.gui.graph.Datapoint;
  * @author ives
  * 
  */
-public abstract class Graph implements DataStreamListener
+public abstract class Graph implements NewDatapointListener
 {
 	private static Log log = LogFactory.getLog(Graph.class);
 	protected Map<String, TimeSeries> datastreams = new HashMap<String, TimeSeries>();
@@ -70,7 +70,7 @@ public abstract class Graph implements DataStreamListener
 	{
 		ServerStatisticsManager manager = server.getServerStatistics();
 		if (manager != null)
-			manager.addStreamListener(this);
+			manager.addNewDatapointListener(this);
 
 		TimeSeries series = new TimeSeries(streamtitle);
 		series.setMaximumItemAge(maximumAge);
@@ -132,7 +132,7 @@ public abstract class Graph implements DataStreamListener
 				final String dataStreamName = datapoint.getDatastreamName();
 				if (!datastreams.containsKey(dataStreamName))
 				{
-					log.error("Adding datapoint to unregistered stream.");
+					// Do nothing
 				}
 				else
 				{

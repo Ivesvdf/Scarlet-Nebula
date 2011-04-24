@@ -546,7 +546,7 @@ public class RadixCloudProvider extends CloudProvider
 		@Override
 		public String getPublicDnsAddress()
 		{
-			return "radix.cmi.ua.ac.be";
+			return "localhost";
 		}
 	}
 }

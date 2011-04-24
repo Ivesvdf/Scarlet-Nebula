@@ -4,7 +4,7 @@ import org.jfree.data.time.RegularTimePeriod;
 
 import be.ac.ua.comp.scarletnebula.gui.graph.Datapoint;
 
-public interface DataStreamListener
+public interface NewDatapointListener
 {
 	/**
 	 * Notifies when a new datapoint is added to stream streamname at the

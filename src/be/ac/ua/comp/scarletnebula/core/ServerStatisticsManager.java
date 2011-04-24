@@ -4,12 +4,14 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import be.ac.ua.comp.scarletnebula.core.SSHCommandConnection.ChannelInputStreamTuple;
-import be.ac.ua.comp.scarletnebula.gui.DataStreamListener;
+import be.ac.ua.comp.scarletnebula.gui.NewDatapointListener;
 import be.ac.ua.comp.scarletnebula.gui.NotPromptingJschUserInfo;
 import be.ac.ua.comp.scarletnebula.gui.graph.Datapoint;
 
@@ -20,7 +22,6 @@ public class ServerStatisticsManager
 {
 	private final class PollingRunnable implements Runnable
 	{
-		private boolean stop = false;
 
 		@Override
 		public void run()
@@ -30,9 +31,7 @@ public class ServerStatisticsManager
 				final SSHCommandConnection connection = (SSHCommandConnection) server
 						.newCommandConnection(new NotPromptingJschUserInfo());
 				ChannelInputStreamTuple tup = connection
-						.executeContinuousCommand("while [[ 1 ]]; "
-								+ "do echo '{\"datapointType\":\"RELATIVE\",\"datastream\":\"CPU\",\"value\":0.63,\"lowWarnLevel\":0.5,\"mediumWarnLevel\":0.85,\"highWarnLevel\":0.95}\'; "
-								+ "sleep 1; done");
+						.executeContinuousCommand(server.getStatisticsCommand());
 
 				InputStream pollingInputStream = tup.inputStream;
 				Channel sshChannel = tup.channel;
@@ -101,8 +100,12 @@ public class ServerStatisticsManager
 	final private static Log log = LogFactory
 			.getLog(ServerStatisticsManager.class);
 
-	private final Collection<DataStreamListener> listeners = new ArrayList<DataStreamListener>();
+	private final Collection<NewDatapointListener> newDatapointListeners = new ArrayList<NewDatapointListener>();
+	private final Collection<NewDatastreamListener> newDatastreamListeners = new ArrayList<NewDatastreamListener>();
+
 	private final Server server;
+	private boolean stop = false;
+	private final Map<String, Datapoint> availableStreams = new HashMap<String, Datapoint>();
 
 	private PollingRunnable pollingRunnable = new PollingRunnable();
 
@@ -117,25 +120,71 @@ public class ServerStatisticsManager
 
 	public void newDatapoint(String stringRepresentation)
 	{
-		updateObservers(Datapoint.fromJson(stringRepresentation));
+		final Datapoint datapoint = Datapoint.fromJson(stringRepresentation);
+
+		if (!availableStreams.containsKey(datapoint.getDatastreamName()))
+		{
+			updateNewDatastreamObservers(datapoint);
+			availableStreams.put(datapoint.getDatastreamName(), datapoint);
+		}
+
+		updateNewDatapointObservers(datapoint);
 	}
 
-	public void addStreamListener(DataStreamListener listener)
+	public void addNewDatapointListener(NewDatapointListener listener)
 	{
-		listeners.add(listener);
+		newDatapointListeners.add(listener);
 	}
 
-	private void updateObservers(Datapoint datapoint)
+	public void addNewDatastreamListener(NewDatastreamListener listener)
 	{
-		for (DataStreamListener listener : listeners)
+		newDatastreamListeners.add(listener);
+	}
+
+	private void updateNewDatapointObservers(Datapoint datapoint)
+	{
+		for (NewDatapointListener listener : newDatapointListeners)
 		{
 			listener.newDataPoint(datapoint);
 		}
 	}
 
+	private void updateNewDatastreamObservers(Datapoint datapoint)
+	{
+		for (NewDatastreamListener listener : newDatastreamListeners)
+		{
+			listener.newDataStream(datapoint);
+		}
+	}
+
+	/**
+	 * Stops the polling thead and closes the SSH connection.
+	 */
 	public void stop()
 	{
 		log.info("Stopping polling thread");
 		pollingRunnable.pleaseStop();
+	}
+
+	/**
+	 * Interface to implement if you'd like to be notified of new data streams
+	 * that present themselves relating to this server.
+	 * 
+	 * @author ives
+	 * 
+	 */
+	public interface NewDatastreamListener
+	{
+		/**
+		 * Called when a new datastream is registered, together with the first
+		 * point in that datastream. Do *not* use the value in this point as an
+		 * actual datapoint, instead use a NewDataPointListener for this. The
+		 * Datapoint should only be used for its fields such as lowWarnLevel,
+		 * max, etc. This method is guaranteed to be called before the
+		 * NewDatapointObservers.
+		 * 
+		 * @param datapoint
+		 */
+		public void newDataStream(Datapoint datapoint);
 	}
 }

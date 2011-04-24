@@ -8,7 +8,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.List;
 import java.util.Properties;
 
 import org.apache.commons.logging.Log;
@@ -39,12 +38,13 @@ public class Server
 	private String sshPassword;
 	private Collection<String> tags;
 	private ServerStatisticsManager serverStatisticsManager;
+	private String statisticsCommand;
 	private boolean useSshPassword;
 
 	public Server(VirtualMachine server, CloudProvider inputProvider,
 			String inputKeypair, String inputFriendlyName,
 			Collection<String> tags, boolean useSshPassword, String sshLogin,
-			String sshPassword)
+			String sshPassword, String statisticsCommand)
 	{
 		provider = inputProvider;
 		keypair = inputKeypair;
@@ -52,6 +52,7 @@ public class Server
 		this.useSshPassword = useSshPassword;
 		this.sshLogin = (sshLogin != null ? sshLogin : "");
 		this.sshPassword = (sshPassword != null ? sshPassword : "");
+		this.statisticsCommand = statisticsCommand;
 		this.tags = tags;
 		setFriendlyName(inputFriendlyName);
 	}
@@ -121,37 +122,26 @@ public class Server
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		final String keypair = getPropertyOrStringIfMissing(props, "keypair",
-				null);
-		final String friendlyName = getPropertyOrStringIfMissing(props,
-				"friendlyName", server.getName() + " (" + provider.getName()
-						+ ")");
-		final boolean useSshPassword = Boolean
-				.valueOf(getPropertyOrStringIfMissing(props, "useSshPassword",
-						"false"));
+		final String keypair = props.getProperty("keypair");
+		final String friendlyName = props.getProperty("friendlyName");
+		final boolean useSshPassword = Boolean.valueOf(props.getProperty(
+				"useSshPassword", "false"));
+		final String sshLogin = props.getProperty("sshLogin");
+		final String sshPassword = props.getProperty("sshPassword");
+		final String statisticsCommand = props.getProperty("statisticsCommand");
+		final String tagString = props.getProperty("tags");
 
-		final String sshLogin = getPropertyOrStringIfMissing(props, "sshLogin",
-				"root");
-		final String sshPassword = getPropertyOrStringIfMissing(props,
-				"sshPassword", "");
-
-		List<String> daseinTags = new ArrayList<String>();
-		for (String key : server.getTags().keySet())
-		{
-			daseinTags.add(key + ":" + server.getTags().get(key));
-		}
-
-		Collection<String> tags = (props.getProperty("tags") != null ? Arrays
-				.asList(props.getProperty("tags").split(",")) : daseinTags);
 		return new Server(server, // dasein server implementation
 				provider, // cloud provider
 				keypair, // ssh keypair chosen
 				friendlyName, // the servers friendly name
-				tags, // tags given to the server
+				Arrays.asList(tagString.split(",")), // tags given to
+														// the server
 				useSshPassword, // true if an ssh password instead of keypair
 								// is used
 				sshLogin, // Login for SSH'ing
-				sshPassword); // Password for ssh'ing (if any)
+				sshPassword, // Password for ssh'ing (if any)
+				statisticsCommand); // Command to be executed for statistics
 	}
 
 	public boolean usesSshPassword()
@@ -284,6 +274,11 @@ public class Server
 			return new String[0];
 		else
 			return addresses;
+	}
+
+	public String getStatisticsCommand()
+	{
+		return statisticsCommand;
 	}
 
 	/**
@@ -610,6 +605,13 @@ public class Server
 		sshLogin = username;
 		sshPassword = password;
 		useSshPassword = true;
+
+		resetConnections();
+	}
+
+	public void setStatisticsCommand(String command)
+	{
+		statisticsCommand = command;
 
 		resetConnections();
 	}

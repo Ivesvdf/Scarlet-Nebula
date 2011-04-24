@@ -12,13 +12,13 @@ public class DatapointSerialisationTest
 	public void serialiseTest()
 	{
 		Gson gson = new Gson();
-		Datapoint dp = getTestDataPoints();
+		Datapoint dp = getTestDataPoint();
 		Datapoint[] dps = { dp, dp, dp };
-		// System.out.println(gson.toJson(dps));
+		System.out.println(gson.toJson(dps));
 		assertEquals(gson.toJson(dps), getSerialisedDatapoints());
 	}
 
-	private Datapoint getTestDataPoints()
+	private Datapoint getTestDataPoint()
 	{
 		Datapoint dp = new Datapoint(Datapoint.Type.RELATIVE, "CPU", 0.63, // value
 				0.5, // low Warning
@@ -35,8 +35,9 @@ public class DatapointSerialisationTest
 				Datapoint[].class);
 
 		assertEquals(dps.length, 3);
+		System.out.println(getSerialisedDatapoints());
 		for (Datapoint dp : dps)
-			assertEquals(getTestDataPoints(), dp);
+			assertEquals(getTestDataPoint(), dp);
 	}
 
 	private String getSerialisedDatapoints()

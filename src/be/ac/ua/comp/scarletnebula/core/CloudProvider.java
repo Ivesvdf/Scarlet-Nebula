@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Properties;
 
 import org.apache.commons.logging.Log;
@@ -369,11 +370,32 @@ public class CloudProvider
 
 			if (!found)
 			{
-				rv.add(Server.load(testServer, this));
+				List<String> daseinTags = new ArrayList<String>();
+				for (String key : testServer.getTags().keySet())
+				{
+					daseinTags.add(key + ":" + testServer.getTags().get(key));
+				}
+
+				rv.add(new Server(testServer, // dasein server
+						this, // cloud provider
+						"", // keypair
+						testServer.getName() + " (" + getName() + ")",// friendly
+																		// name
+						daseinTags, // tags
+						true, // use password
+						nullToEmpty(testServer.getRootUser()), // root user
+						nullToEmpty(testServer.getRootPassword()), // root
+																	// password
+						getDefaultStatisticsCommand())); // statistics command
 			}
 		}
 
 		return rv;
+	}
+
+	private String nullToEmpty(String input)
+	{
+		return (input == null) ? "" : input;
 	}
 
 	/**
@@ -439,10 +461,16 @@ public class CloudProvider
 				tags, // Tags this server was given
 				false, // server uses password to SSH
 				daseinServer.getRootUser(), // SSH login
-				daseinServer.getRootPassword()); // SSH Password
+				daseinServer.getRootPassword(), // SSH Password
+				getDefaultStatisticsCommand()); // Statistics command
 
 		linkUnlinkedServer(server);
 		return server;
+	}
+
+	private String getDefaultStatisticsCommand()
+	{
+		return null;
 	}
 
 	public VirtualMachineProduct getVMProductWithName(String name)

@@ -13,9 +13,10 @@ public class Datapoint
 	final Type datapointType;
 	final String datastream;
 	final double value;
-	final double lowWarnLevel;
-	final double mediumWarnLevel;
-	final double highWarnLevel;
+	Double lowWarnLevel = null;
+	Double mediumWarnLevel = null;
+	Double highWarnLevel = null;
+	Double max = null;
 
 	public Datapoint(Type datapointType, String datastream, double value,
 			double lowWarnLevel, double mediumWarnLevel, double highWarnLevel)
@@ -38,9 +39,16 @@ public class Datapoint
 		Datapoint o = (Datapoint) obj;
 		return this.datapointType == o.datapointType
 				&& this.datastream.equals(o.datastream)
-				&& this.value == o.value && this.lowWarnLevel == o.lowWarnLevel
-				&& this.mediumWarnLevel == o.mediumWarnLevel
-				&& this.highWarnLevel == o.highWarnLevel;
+				&& this.value == o.value
+				&& equalOrBothNull(this.lowWarnLevel, o.lowWarnLevel)
+				&& equalOrBothNull(this.mediumWarnLevel, o.mediumWarnLevel)
+				&& equalOrBothNull(this.highWarnLevel, o.highWarnLevel)
+				&& equalOrBothNull(this.max, o.max);
+	}
+
+	private boolean equalOrBothNull(Object o1, Object o2)
+	{
+		return (o1 == null && o2 == null) || o1.equals(o2);
 	}
 
 	@Override
@@ -48,7 +56,7 @@ public class Datapoint
 	{
 		return "[" + datapointType + " in " + datastream + "] " + value
 				+ " (WL=" + lowWarnLevel + ", WM=" + mediumWarnLevel + ", WH="
-				+ highWarnLevel + ")";
+				+ highWarnLevel + ", Max=" + max + ")";
 	}
 
 	public String toJson()
