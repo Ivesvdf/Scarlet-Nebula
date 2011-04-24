@@ -23,7 +23,8 @@ public class DatapointSerialisationTest
 		Datapoint dp = new Datapoint(Datapoint.Type.RELATIVE, "CPU", 0.63, // value
 				0.5, // low Warning
 				0.85, // medium warning
-				0.95); // high warning
+				0.95, // high warning
+				null); // max
 		return dp;
 	}
 

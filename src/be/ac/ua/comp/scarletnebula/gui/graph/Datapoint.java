@@ -18,8 +18,9 @@ public class Datapoint
 	Double highWarnLevel = null;
 	Double max = null;
 
-	public Datapoint(Type datapointType, String datastream, double value,
-			double lowWarnLevel, double mediumWarnLevel, double highWarnLevel)
+	public Datapoint(Type datapointType, String datastream, Double value,
+			Double lowWarnLevel, Double mediumWarnLevel, Double highWarnLevel,
+			Double max)
 	{
 		this.datapointType = datapointType;
 		this.datastream = datastream;
@@ -27,6 +28,10 @@ public class Datapoint
 		this.lowWarnLevel = lowWarnLevel;
 		this.mediumWarnLevel = mediumWarnLevel;
 		this.highWarnLevel = highWarnLevel;
+		this.max = max;
+
+		if (datapointType == Type.RELATIVE)
+			this.max = 1.0;
 	}
 
 	@Override
@@ -84,18 +89,23 @@ public class Datapoint
 		return value;
 	}
 
-	public double getLowWarnLevel()
+	public Double getLowWarnLevel()
 	{
 		return lowWarnLevel;
 	}
 
-	public double getMediumWarnLevel()
+	public Double getMediumWarnLevel()
 	{
 		return mediumWarnLevel;
 	}
 
-	public double getHighWarnLevel()
+	public Double getHighWarnLevel()
 	{
 		return highWarnLevel;
+	}
+
+	public Double getMax()
+	{
+		return max;
 	}
 }

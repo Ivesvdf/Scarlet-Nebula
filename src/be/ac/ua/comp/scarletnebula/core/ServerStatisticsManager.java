@@ -5,6 +5,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.logging.Log;
@@ -15,6 +16,7 @@ import be.ac.ua.comp.scarletnebula.gui.NewDatapointListener;
 import be.ac.ua.comp.scarletnebula.gui.NotPromptingJschUserInfo;
 import be.ac.ua.comp.scarletnebula.gui.graph.Datapoint;
 import be.ac.ua.comp.scarletnebula.gui.graph.Datastream;
+import be.ac.ua.comp.scarletnebula.gui.graph.Datastream.TimedDatapoint;
 
 import com.jcraft.jsch.Channel;
 import com.jcraft.jsch.JSchException;
@@ -145,8 +147,7 @@ public class ServerStatisticsManager
 			}
 		}
 
-		availableStreams.get(datastreamName).updateNewDatapointObservers(
-				datapoint);
+		availableStreams.get(datastreamName).newDatapoint(datapoint);
 	}
 
 	public void addNewDatastreamListener(NewDatastreamListener listener)
@@ -226,5 +227,27 @@ public class ServerStatisticsManager
 			}
 			futureHookups.get(datastream).add(listener);
 		}
+	}
+
+	public Datastream getDatastream(String streamname)
+	{
+		return availableStreams.get(streamname);
+	}
+
+	public List<TimedDatapoint> getHistoricalDatapoints(String streamname)
+	{
+		List<TimedDatapoint> datapoints;
+
+		if (availableStreams.containsKey(streamname))
+		{
+			datapoints = availableStreams.get(streamname)
+					.getRecentlyProcessedDatapoints();
+		}
+		else
+		{
+			datapoints = new ArrayList<TimedDatapoint>();
+		}
+
+		return datapoints;
 	}
 }

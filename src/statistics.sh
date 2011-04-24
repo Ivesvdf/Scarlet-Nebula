@@ -34,13 +34,15 @@ while true; do
   PREV_TOTAL="$TOTAL"
   PREV_IDLE="$IDLE"
 
-  # Number of processes
-  if (( $IT_COUNT % 10 == 0 )); then
-	  echo "{\"datapointType\":\"ABSOLUTE\",\"datastream\":\"NUMPROC\",\"value\":$(ps axue | grep -vE "^USER|grep|ps" | wc -l)}"
+  if [[ 0 == 1 ]]; then
+    # Number of processes
+    if (( $IT_COUNT % 10 == 0 )); then
+  	  echo "{\"datapointType\":\"ABSOLUTE\",\"datastream\":\"NUMPROC\",\"value\":$(ps axue | grep -vE "^USER|grep|ps" | wc -l)}"
+    fi
   fi
 
   # Memory usage
-  if (( $IT_COUNT % 10 == 0 )); then
+  if (( $IT_COUNT % 10 == 0 || $IT_COUNT == 1 )); then
 	  echo "{\"datapointType\":\"ABSOLUTE\",\"datastream\":\"MEM\",\"value\":$(free -mto | grep Mem: | awk '{ print $3 }'),\"max\":$(free -mto | grep Mem: | awk '{ print $2 }')}"
   fi
   # Wait before checking again.

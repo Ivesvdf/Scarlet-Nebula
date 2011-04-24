@@ -3,13 +3,13 @@ package be.ac.ua.comp.scarletnebula.gui;
 import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.swing.SwingUtilities;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.renderer.xy.XYItemRenderer;
 import org.jfree.chart.renderer.xy.XYLineAndShapeRenderer;
@@ -21,6 +21,7 @@ import org.jfree.data.time.TimeSeriesCollection;
 import be.ac.ua.comp.scarletnebula.core.Server;
 import be.ac.ua.comp.scarletnebula.core.ServerStatisticsManager;
 import be.ac.ua.comp.scarletnebula.gui.graph.Datapoint;
+import be.ac.ua.comp.scarletnebula.gui.graph.Datastream.TimedDatapoint;
 
 /**
  * An abstract Graph that displays streaming data
@@ -30,7 +31,6 @@ import be.ac.ua.comp.scarletnebula.gui.graph.Datapoint;
  */
 public abstract class Graph implements NewDatapointListener
 {
-	private static Log log = LogFactory.getLog(Graph.class);
 	protected Map<String, TimeSeries> datastreams = new HashMap<String, TimeSeries>();
 	protected final TimeSeriesCollection dataset = new TimeSeriesCollection();
 	protected final XYItemRenderer renderer = new XYLineAndShapeRenderer(true,
@@ -56,6 +56,9 @@ public abstract class Graph implements NewDatapointListener
 	 * and formal title (a displayable name) streamtitle. This stream will be
 	 * displayed with Color color.
 	 * 
+	 * If this datastream was already running, historical data will be taken
+	 * from the stream and be displayed in the graph.
+	 * 
 	 * @param server
 	 *            Server that generates this relative datastream
 	 * @param streamname
@@ -66,18 +69,19 @@ public abstract class Graph implements NewDatapointListener
 	 *            The color this stream will be displayed in
 	 */
 	public final void registerRelativeDatastream(Server server,
-			String streamname, String streamtitle, Color color)
+			String streamname, Color color)
 	{
 		ServerStatisticsManager manager = server.getServerStatistics();
-		if (manager != null)
-			manager.addNewDatapointListener(this, streamname);
+		manager.addNewDatapointListener(this, streamname);
 
-		TimeSeries series = new TimeSeries(streamtitle);
+		TimeSeries series = new TimeSeries(streamname);
 		series.setMaximumItemAge(maximumAge);
 		datastreams.put(streamname, series);
 		dataset.addSeries(series);
 
 		renderer.setSeriesPaint(maxSeriesID++, color);
+
+		addListOfDatapoints(manager.getHistoricalDatapoints(streamname));
 	}
 
 	/**
@@ -103,9 +107,24 @@ public abstract class Graph implements NewDatapointListener
 		newDataPoint(new Millisecond(), datapoint);
 	}
 
+	/**
+	 * Adds a new server to the list of servers to be refreshed when a new
+	 * datapoint is received
+	 * 
+	 * @param server
+	 */
 	public void addServerToRefresh(Server server)
 	{
 		serversToRefresh.add(server);
+	}
+
+	public void addListOfDatapoints(List<TimedDatapoint> datapoints)
+	{
+		for (TimedDatapoint datapoint : datapoints)
+		{
+			newDataPoint(new Millisecond(new Date(datapoint.getTimeMs())),
+					datapoint);
+		}
 	}
 
 	/**

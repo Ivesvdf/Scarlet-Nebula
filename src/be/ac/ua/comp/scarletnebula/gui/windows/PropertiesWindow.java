@@ -2,7 +2,9 @@ package be.ac.ua.comp.scarletnebula.gui.windows;
 
 import java.awt.AWTEvent;
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
@@ -28,11 +30,14 @@ import javax.swing.event.ChangeListener;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.dasein.cloud.compute.Platform;
+import org.jfree.chart.ChartPanel;
 
 import be.ac.ua.comp.scarletnebula.core.Server;
+import be.ac.ua.comp.scarletnebula.core.ServerStatisticsManager;
 import be.ac.ua.comp.scarletnebula.gui.ButtonFactory;
 import be.ac.ua.comp.scarletnebula.gui.ChangeableLabel;
 import be.ac.ua.comp.scarletnebula.gui.DecoratedCommunicationPanel;
+import be.ac.ua.comp.scarletnebula.gui.DecoratedGraph;
 import be.ac.ua.comp.scarletnebula.gui.LabelEditSwitcherPanel;
 import be.ac.ua.comp.scarletnebula.gui.ServernameInputVerifier;
 import be.ac.ua.comp.scarletnebula.misc.Executable;
@@ -276,27 +281,52 @@ public class PropertiesWindow extends JDialog
 		int currXPos = 0;
 
 		final JPanel graphCollection = new JPanel(new GridBagLayout());
-		GridBagConstraints c = new GridBagConstraints();
+		graphCollection.setOpaque(true);
+		graphCollection.setBackground(Color.WHITE);
+		graphCollection.setBorder(BorderFactory.createEtchedBorder());
+		GridBagConstraints constraints = new GridBagConstraints();
 
-		c.fill = GridBagConstraints.HORIZONTAL;
-		c.weightx = 0.5;
-		c.gridx = currXPos;
-		c.gridy = numberOfComponentsPlaced / 2;
+		if (servers.size() > 1)
+			log.fatal("more than one server in statisticspanel");
 
-		if (currXPos == 0)
+		Server server = servers.iterator().next();
+		ServerStatisticsManager manager = server.getServerStatistics();
+		for (String streamname : manager.getAvailableDatastreams())
 		{
-			currXPos = 1;
-		}
-		else
-		{
-			currXPos = 0;
-		}
+			log.info("drawing stream");
+			constraints.fill = GridBagConstraints.HORIZONTAL;
+			constraints.weightx = 0.5;
+			constraints.gridx = currXPos;
+			constraints.gridy = numberOfComponentsPlaced / 2;
 
+			final DecoratedGraph graph = new DecoratedGraph(
+					(long) 30 * 60 * 1000, manager.getDatastream(streamname));
+			graph.registerRelativeDatastream(server, streamname, Color.GREEN);
+			graph.addServerToRefresh(server);
+			final ChartPanel chartPanel = graph.getChartPanel();
+			chartPanel.setPreferredSize(new Dimension(100, 150));
+			graphCollection.add(chartPanel, constraints);
+
+			if (currXPos == 0)
+			{
+				currXPos = 1;
+			}
+			else
+			{
+				currXPos = 0;
+			}
+			numberOfComponentsPlaced++;
+		}
+		JPanel graphCollectionWrapper = new JPanel(new BorderLayout());
+		graphCollectionWrapper.setBorder(BorderFactory.createEmptyBorder(10,
+				20, 10, 20));
+		graphCollectionWrapper.add(graphCollection, BorderLayout.CENTER);
 		statisticsPanel.add(propertiesPart, BorderLayout.NORTH);
-		statisticsPanel.add(graphCollection, BorderLayout.CENTER);
+		statisticsPanel.add(graphCollectionWrapper, BorderLayout.CENTER);
 
-		final JScrollPane scrollPanel = new JScrollPane(statisticsPanel);
-		scrollPanel.setBorder(null);
+		final JScrollPane scrollPanel = new JScrollPane(statisticsPanel,
+				JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
+				JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 		return scrollPanel;
 	}
 
