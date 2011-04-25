@@ -22,13 +22,15 @@ while true; do
   let "DIFF_USAGE=(1000*($DIFF_TOTAL-$DIFF_IDLE)/$DIFF_TOTAL+5)/10"
   #echo -en "\rCPU: $DIFF_USAGE%  \b\b"
 
-  if (( $DIFF_USAGE < 10 )); then
-	  PRINT_DIFF_USAGE=0$DIFF_USAGE
+  if (( $DIFF_USAGE == 100 )); then
+	  PRINT_DIFF_USAGE=1.0
+  elif (( $DIFF_USAGE < 10 )); then
+	  PRINT_DIFF_USAGE=0.0$DIFF_USAGE
   else
-	  PRINT_DIFF_USAGE=$DIFF_USAGE
+	  PRINT_DIFF_USAGE=0.$DIFF_USAGE
   fi
 
-  echo "{\"datapointType\":\"RELATIVE\",\"datastream\":\"CPU\",\"value\":0.$PRINT_DIFF_USAGE,\"lowWarnLevel\":0.5,\"mediumWarnLevel\":0.85,\"highWarnLevel\":0.95}"
+  echo "{\"datapointType\":\"RELATIVE\",\"datastream\":\"CPU\",\"value\":$PRINT_DIFF_USAGE,\"lowWarnLevel\":0.5,\"mediumWarnLevel\":0.85,\"highWarnLevel\":0.95}"
 
   # Remember the total and idle CPU times for the next check.
   PREV_TOTAL="$TOTAL"

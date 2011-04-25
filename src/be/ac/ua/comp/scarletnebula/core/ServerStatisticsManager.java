@@ -276,4 +276,19 @@ public class ServerStatisticsManager
 		stop();
 		startPolling();
 	}
+
+	public Datastream.WarnLevel getHighestWarnLevel()
+	{
+		Datastream.WarnLevel highestWarnLevel = Datastream.WarnLevel.NONE;
+
+		for (Datastream datastream : availableStreams.values())
+		{
+			if (datastream.getCurrentWarnLevel().compareTo(highestWarnLevel) > 0)
+			{
+				highestWarnLevel = datastream.getCurrentWarnLevel();
+			}
+		}
+
+		return highestWarnLevel;
+	}
 }

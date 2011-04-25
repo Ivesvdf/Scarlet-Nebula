@@ -29,6 +29,11 @@ public class Datastream
 		}
 	}
 
+	public enum WarnLevel
+	{
+		NONE, LOW, MEDIUM, HIGH;
+	};
+
 	private final Collection<NewDatapointListener> newDatapointListeners = new ArrayList<NewDatapointListener>();
 	private final Datapoint.Type type;
 	private final String streamname;
@@ -38,6 +43,12 @@ public class Datastream
 	private Double highWarnLevel;
 	private DroppingFifoQueue<TimedDatapoint> processedDatapoints = new DroppingFifoQueue<TimedDatapoint>(
 			120);
+	private WarnLevel currentWarnLevel = WarnLevel.NONE;
+
+	public WarnLevel getCurrentWarnLevel()
+	{
+		return currentWarnLevel;
+	}
 
 	public String getStreamname()
 	{
@@ -94,6 +105,26 @@ public class Datastream
 
 	public void newDatapoint(Datapoint datapoint)
 	{
+		if (datapoint.getHighWarnLevel() != null
+				&& datapoint.getValue() > datapoint.getHighWarnLevel())
+		{
+			currentWarnLevel = WarnLevel.HIGH;
+		}
+		else if (datapoint.getMediumWarnLevel() != null
+				&& datapoint.getValue() > datapoint.getMediumWarnLevel())
+		{
+			currentWarnLevel = WarnLevel.MEDIUM;
+		}
+		else if (datapoint.getLowWarnLevel() != null
+				&& datapoint.getValue() > datapoint.getLowWarnLevel())
+		{
+			currentWarnLevel = WarnLevel.LOW;
+		}
+		else
+		{
+			currentWarnLevel = WarnLevel.NONE;
+		}
+
 		processedDatapoints.add(new TimedDatapoint(datapoint));
 		updateNewDatapointObservers(datapoint);
 	}
