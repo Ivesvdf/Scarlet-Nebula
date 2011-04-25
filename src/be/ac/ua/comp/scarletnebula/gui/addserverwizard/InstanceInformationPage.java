@@ -2,6 +2,7 @@ package be.ac.ua.comp.scarletnebula.gui.addserverwizard;
 
 import java.util.Collection;
 
+import javax.swing.InputVerifier;
 import javax.swing.JComboBox;
 import javax.swing.JTextField;
 
@@ -50,10 +51,23 @@ class InstanceInformationPage extends WizardPage
 	@Override
 	public WizardPage next(DataRecorder recorder)
 	{
-		AddServerWizardDataRecorder rec = (AddServerWizardDataRecorder) recorder;
+		WizardPage returnPage;
+		final InputVerifier inputVerifier = instanceNameField.getInputVerifier();
+		if (inputVerifier != null
+				&& !inputVerifier.verify(
+						instanceNameField))
+		{
+			returnPage = null;
+		}
+		else
+		{
+			AddServerWizardDataRecorder rec = (AddServerWizardDataRecorder) recorder;
 
-		rec.instanceName = instanceNameField.getText();
-		rec.instanceSize = (String) instanceSizeList.getSelectedItem();
-		return new ChooseImagePage(rec.provider);
+			rec.instanceName = instanceNameField.getText();
+			rec.instanceSize = (String) instanceSizeList.getSelectedItem();
+			returnPage = new ChooseImagePage(rec.provider);
+		}
+
+		return returnPage;
 	}
 };

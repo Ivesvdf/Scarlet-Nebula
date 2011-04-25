@@ -22,12 +22,14 @@ public class ServernameInputVerifierTest
 		assertTrue(test("foo bar"));
 		assertFalse(test("foo#bar"));
 		assertTrue(test("foo (bar-bar)"));
+		assertTrue(test("foo (bar-22bar)"));
+
 	}
 
 	private boolean test(String text)
 	{
 		final ServernameInputVerifier verifier = new ServernameInputVerifier(
-				null);
+				null, null);
 		return verifier.verify(new JTextField(text));
 	}
 }

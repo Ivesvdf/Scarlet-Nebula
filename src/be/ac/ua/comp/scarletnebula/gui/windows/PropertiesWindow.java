@@ -387,7 +387,7 @@ public class PropertiesWindow extends JDialog
 	{
 		JTextField servernameTextField = new JTextField();
 		servernameTextField.setInputVerifier(new ServernameInputVerifier(
-				servernameTextField));
+				servernameTextField, server));
 		final LabelEditSwitcherPanel servername = new LabelEditSwitcherPanel(
 				server.getFriendlyName(), servernameTextField);
 		servername
