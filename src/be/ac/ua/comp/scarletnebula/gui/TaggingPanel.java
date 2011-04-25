@@ -9,6 +9,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.regex.Pattern;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -50,13 +51,15 @@ public class TaggingPanel extends JPanel
 			{
 				String tagTxt = inputField.getText();
 				inputField.setText("");
-				taglist.add(tagTxt);
+				if (!Pattern.matches("^\\s*$", tagTxt))
+					taglist.add(tagTxt);
 			}
 		};
 		inputField.addActionListener(addTagActionListener);
 		final String hint = "Type a tag and press enter";
 		inputField.setPlaceHolder(hint);
 		inputField.setToolTipText(hint);
+		inputField.setInputVerifier(new TagInputVerifier(inputField));
 		inputField.setBorder(BorderFactory.createCompoundBorder(
 				BorderFactory.createEmptyBorder(0, 0, 5, 0),
 				BorderFactory.createBevelBorder(BevelBorder.LOWERED)));
