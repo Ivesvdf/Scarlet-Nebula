@@ -1,8 +1,8 @@
 package be.ac.ua.comp.scarletnebula.gui;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Component;
-import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
@@ -48,11 +48,9 @@ public class SSHPanel extends JPanel
 			@Override
 			public void componentResized(ComponentEvent e)
 			{
-				System.out.println(e);
 				Component c = e.getComponent();
 				int cw = c.getWidth();
 				int ch = c.getHeight();
-				System.out.println("ch:" + ch);
 
 				JPanel source = ((JPanel) c);
 
@@ -65,9 +63,9 @@ public class SSHPanel extends JPanel
 				cw -= cwm;
 				ch -= chm;
 
-				System.out.println("ch:" + ch);
-				System.out.println("cwm:" + cwm);
-
+				term.setBorder(BorderFactory.createMatteBorder(0, 0,
+						term.getTermHeight() - c.getHeight(),
+						term.getTermWidth() - c.getWidth(), Color.BLACK));
 				term.setSize(cw, ch);
 				term.setPreferredSize(new Dimension(cw, ch));
 				// term.setMinimumSize(new Dimension(cw, ch));
@@ -106,9 +104,7 @@ public class SSHPanel extends JPanel
 					SSHCommandConnection commandConnection = (SSHCommandConnection) server
 							.newCommandConnection(new NotPromptingJschUserInfo());
 
-					beforeConnectionWasMade();
 					connection = commandConnection.getJSchTerminalConnection();
-					afterConnectionWasMade();
 
 					term.requestFocusInWindow();
 					term.start(connection);
@@ -130,29 +126,12 @@ public class SSHPanel extends JPanel
 				}
 				finally
 				{
-					afterConnectionWasTerminated();
 				}
 
-				log.debug("before start");
 			}
 		};
 
 		connectionThread.start();
 	}
 
-	protected void afterConnectionWasTerminated()
-	{
-		getParent().setCursor(Cursor.getDefaultCursor());
-	}
-
-	protected void afterConnectionWasMade()
-	{
-		getParent().setCursor(Cursor.getDefaultCursor());
-	}
-
-	protected void beforeConnectionWasMade()
-	{
-		getParent().setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-
-	}
 }

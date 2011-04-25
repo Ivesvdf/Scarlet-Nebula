@@ -617,7 +617,10 @@ public class Server
 	{
 		statisticsCommand = command;
 
-		resetConnections();
+		ServerStatisticsManager manager = getServerStatistics();
+		if (manager != null)
+			manager.reset();
+
 		serverChanged();
 	}
 

@@ -116,6 +116,8 @@ public class PropertiesWindow extends JDialog
 			}
 		});
 
+		getRootPane().setDefaultButton(okButton);
+
 		bottomPanel.setLayout(new BoxLayout(bottomPanel, BoxLayout.LINE_AXIS));
 		bottomPanel.add(Box.createHorizontalGlue());
 		bottomPanel.add(okButton);

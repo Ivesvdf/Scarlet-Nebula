@@ -4,8 +4,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.util.Collection;
 
-import javax.swing.ImageIcon;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 
@@ -15,6 +15,7 @@ import be.ac.ua.comp.scarletnebula.core.Server;
 import be.ac.ua.comp.scarletnebula.gui.addserverwizard.AddServerWizard;
 import be.ac.ua.comp.scarletnebula.gui.windows.GUI;
 import be.ac.ua.comp.scarletnebula.gui.windows.PropertiesWindow;
+import be.ac.ua.comp.scarletnebula.misc.Utils;
 
 public class ServerListMouseListener implements MouseListener
 {
@@ -55,18 +56,27 @@ public class ServerListMouseListener implements MouseListener
 			{
 				list.setSelectedIndex(indexOfSelectedServer);
 			}
-			final Server selectedServer = serverListModel
+			final Server clickedServer = serverListModel
 					.getVisibleServerAtIndex(indexOfSelectedServer);
 
-			if (selectedServer == null)
+			final Collection<Server> allSelectedServers = list
+					.getSelectedServers();
+			if (!allSelectedServers.contains(clickedServer))
+			{
+				list.setSelectedIndices(new int[0]);
+			}
+			if (clickedServer == null)
 				return;
 
-			VmState status = selectedServer.getStatus();
+			final Collection<Server> selectedServers = list
+					.getSelectedServers();
+
+			VmState status = clickedServer.getStatus();
 
 			JPopupMenu popup = new JPopupMenu();
 			JMenuItem pauseResume = new JMenuItem(
 					(status == VmState.PAUSED) ? "Resume" : "Pause",
-					new ImageIcon(getClass().getResource("/images/paused.png")));
+					Utils.icon("paused.png"));
 
 			pauseResume.addActionListener(new ActionListener()
 			{
@@ -77,8 +87,8 @@ public class ServerListMouseListener implements MouseListener
 				}
 			});
 
-			JMenuItem reboot = new JMenuItem("Reboot", new ImageIcon(getClass()
-					.getResource("/images/restarting.png")));
+			JMenuItem reboot = new JMenuItem("Reboot",
+					Utils.icon("restarting.png"));
 			reboot.addActionListener(new ActionListener()
 			{
 				@Override
@@ -88,8 +98,8 @@ public class ServerListMouseListener implements MouseListener
 				}
 			});
 
-			JMenuItem terminate = new JMenuItem("Terminate", new ImageIcon(
-					getClass().getResource("/images/terminated.png")));
+			JMenuItem terminate = new JMenuItem("Terminate",
+					Utils.icon("terminated.png"));
 			terminate.addActionListener(new ActionListener()
 			{
 				@Override
@@ -99,8 +109,8 @@ public class ServerListMouseListener implements MouseListener
 				}
 			});
 
-			JMenuItem refresh = new JMenuItem("Refresh", new ImageIcon(
-					getClass().getResource("/images/refresh16.png")));
+			JMenuItem refresh = new JMenuItem("Refresh",
+					Utils.icon("refresh16.png"));
 			refresh.addActionListener(new ActionListener()
 			{
 
@@ -111,8 +121,8 @@ public class ServerListMouseListener implements MouseListener
 				}
 			});
 
-			JMenuItem unlink = new JMenuItem("Unlink Instance", new ImageIcon(
-					getClass().getResource("/images/unlink16.png")));
+			JMenuItem unlink = new JMenuItem("Unlink Instance",
+					Utils.icon("unlink16.png"));
 			unlink.addActionListener(new ActionListener()
 			{
 				@Override
@@ -122,17 +132,47 @@ public class ServerListMouseListener implements MouseListener
 				}
 			});
 
+			JMenuItem console = new JMenuItem("Start terminal",
+					Utils.icon("console16.png"));
+			console.addActionListener(new ActionListener()
+			{
+				@Override
+				public void actionPerformed(ActionEvent e)
+				{
+					new SSHTerminalWindow(gui, selectedServers);
+				}
+			});
+
+			JMenuItem statistics = new JMenuItem("View statistics",
+					Utils.icon("statistics16.png"));
+			statistics.addActionListener(new ActionListener()
+			{
+				@Override
+				public void actionPerformed(ActionEvent e)
+				{
+					new StatisticsWindow(gui, selectedServers);
+				}
+			});
+
 			if (status != VmState.RUNNING && status != VmState.PAUSED)
 			{
 				pauseResume.setEnabled(false);
 				reboot.setEnabled(false);
 				terminate.setEnabled(false);
 			}
+			if (status != VmState.RUNNING)
+			{
+				console.setEnabled(false);
+				statistics.setEnabled(false);
+			}
 
 			popup.add(pauseResume);
 			popup.add(reboot);
 			popup.add(terminate);
 			popup.add(refresh);
+			popup.addSeparator();
+			popup.add(console);
+			popup.add(statistics);
 			popup.addSeparator();
 			popup.add(unlink);
 

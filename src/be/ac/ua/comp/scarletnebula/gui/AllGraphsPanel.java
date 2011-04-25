@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.Insets;
 
 import javax.swing.BorderFactory;
 import javax.swing.JPanel;
@@ -14,10 +15,12 @@ import org.jfree.chart.ChartPanel;
 
 import be.ac.ua.comp.scarletnebula.core.Server;
 import be.ac.ua.comp.scarletnebula.core.ServerStatisticsManager;
+import be.ac.ua.comp.scarletnebula.core.ServerStatisticsManager.DeleteDatastreamListener;
 import be.ac.ua.comp.scarletnebula.core.ServerStatisticsManager.NewDatastreamListener;
 import be.ac.ua.comp.scarletnebula.gui.graph.Datapoint;
 
-public class AllGraphsPanel extends JPanel implements NewDatastreamListener
+public class AllGraphsPanel extends JPanel implements NewDatastreamListener,
+		DeleteDatastreamListener
 {
 	private static final long serialVersionUID = 1L;
 	final private static Log log = LogFactory.getLog(AllGraphsPanel.class);
@@ -31,6 +34,7 @@ public class AllGraphsPanel extends JPanel implements NewDatastreamListener
 		this.server = server;
 		statisticsManager = server.getServerStatistics();
 		statisticsManager.addNewDatastreamListener(this);
+		statisticsManager.addDeleteDatastreamListener(this);
 
 		setOpaque(true);
 		setBackground(Color.WHITE);
@@ -54,6 +58,7 @@ public class AllGraphsPanel extends JPanel implements NewDatastreamListener
 			constraints.weightx = 0.5;
 			constraints.gridx = currXPos;
 			constraints.gridy = numberOfComponentsPlaced / 2;
+			constraints.insets = new Insets(10, 0, 0, 0);
 
 			final DecoratedGraph graph = new DecoratedGraph(
 					(long) 30 * 60 * 1000,
@@ -79,9 +84,20 @@ public class AllGraphsPanel extends JPanel implements NewDatastreamListener
 	@Override
 	public void newDataStream(Datapoint datapoint)
 	{
+		resetPanel();
+	}
+
+	private void resetPanel()
+	{
 		removeAll();
 		placeComponents();
 		revalidate();
+	}
+
+	@Override
+	public void deleteDataStream(String streamname)
+	{
+		resetPanel();
 	}
 
 }

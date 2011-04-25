@@ -1,6 +1,5 @@
 package be.ac.ua.comp.scarletnebula.core;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -19,12 +18,12 @@ import be.ac.ua.comp.scarletnebula.gui.graph.Datastream;
 import be.ac.ua.comp.scarletnebula.gui.graph.Datastream.TimedDatapoint;
 
 import com.jcraft.jsch.Channel;
-import com.jcraft.jsch.JSchException;
 
 public class ServerStatisticsManager
 {
 	private final class PollingRunnable implements Runnable
 	{
+		private boolean stop = false;
 
 		@Override
 		public void run()
@@ -51,7 +50,6 @@ public class ServerStatisticsManager
 						if (i < 0)
 							break;
 						result.append(new String(tmp, 0, i));
-
 						// Split on newlines
 						while (result.indexOf("\n") >= 0)
 						{
@@ -79,18 +77,9 @@ public class ServerStatisticsManager
 				sshChannel.disconnect();
 
 			}
-			catch (JSchException e)
-			{
-				log.error("Problem executing continuous command.", e);
-			}
-			catch (IOException e)
-			{
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
 			catch (Exception e)
 			{
-				e.printStackTrace();
+				log.error("Problem executing continuous command.", e);
 			}
 		}
 
@@ -104,18 +93,24 @@ public class ServerStatisticsManager
 			.getLog(ServerStatisticsManager.class);
 
 	private final Collection<NewDatastreamListener> newDatastreamListeners = new ArrayList<NewDatastreamListener>();
+	private final Collection<DeleteDatastreamListener> deleteDatastreamListeners = new ArrayList<DeleteDatastreamListener>();
 
 	private final Server server;
-	private boolean stop = false;
 	private final Map<String, Datastream> availableStreams = new HashMap<String, Datastream>();
 	private final Map<String, Collection<NewDatapointListener>> futureHookups = new HashMap<String, Collection<NewDatapointListener>>();
 
-	private PollingRunnable pollingRunnable = new PollingRunnable();
+	private PollingRunnable pollingRunnable;
 
 	ServerStatisticsManager(Server server)
 	{
 		this.server = server;
 
+		startPolling();
+	}
+
+	private void startPolling()
+	{
+		pollingRunnable = new PollingRunnable();
 		final Thread readerThread = new Thread(pollingRunnable);
 		readerThread.start();
 		log.info("Starting polling thread");
@@ -153,6 +148,11 @@ public class ServerStatisticsManager
 	public void addNewDatastreamListener(NewDatastreamListener listener)
 	{
 		newDatastreamListeners.add(listener);
+	}
+
+	public void addDeleteDatastreamListener(DeleteDatastreamListener listener)
+	{
+		deleteDatastreamListeners.add(listener);
 	}
 
 	private void updateNewDatastreamObservers(Datapoint datapoint)
@@ -197,6 +197,18 @@ public class ServerStatisticsManager
 		 * @param datapoint
 		 */
 		public void newDataStream(Datapoint datapoint);
+	}
+
+	public interface DeleteDatastreamListener
+	{
+		/**
+		 * Called when a datastream is removed (when the corresponding graphs
+		 * should no longer be displayed)
+		 * 
+		 * @author ives
+		 * 
+		 */
+		public void deleteDataStream(String streamname);
 	}
 
 	/**
@@ -249,5 +261,19 @@ public class ServerStatisticsManager
 		}
 
 		return datapoints;
+	}
+
+	public void reset()
+	{
+		for (String streamname : availableStreams.keySet())
+		{
+			for (DeleteDatastreamListener listener : deleteDatastreamListeners)
+			{
+				listener.deleteDataStream(streamname);
+			}
+		}
+
+		stop();
+		startPolling();
 	}
 }

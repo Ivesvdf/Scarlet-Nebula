@@ -11,7 +11,6 @@ import java.net.URL;
 import java.nio.channels.FileChannel;
 import java.util.List;
 
-import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.SwingUtilities;
 
@@ -102,7 +101,7 @@ public class Utils
 	 *            Filename including extension excluding path
 	 * @return The icon described by name
 	 */
-	public static Icon icon(String name)
+	public static ImageIcon icon(String name)
 	{
 		return new ImageIcon(Utils.class.getResource("/images/" + name));
 	}

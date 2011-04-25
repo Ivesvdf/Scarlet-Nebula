@@ -208,7 +208,7 @@ public class GUI extends JFrame implements ListSelectionListener,
 
 		SearchField searchField = new SearchField(filterTextField);
 
-		ImageIcon closeIcon = (ImageIcon) Utils.icon("cross16.png");
+		ImageIcon closeIcon = Utils.icon("cross16.png");
 		JButton closeButton = new JButton(closeIcon);
 		closeButton.setBounds(10, 10, closeIcon.getIconWidth(),
 				closeIcon.getIconHeight());
@@ -679,16 +679,12 @@ public class GUI extends JFrame implements ListSelectionListener,
 					image, tags);
 			server.refreshUntilServerHasState(VmState.RUNNING);
 		}
-		catch (InternalException e)
+		catch (Exception e)
 		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.error("Could not start server", e);
 		}
-		catch (CloudException e)
-		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+
+		serverList.setSelectedIndices(new int[0]);
 	}
 
 	private void addServer(Server server)
