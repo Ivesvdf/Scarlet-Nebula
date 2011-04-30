@@ -29,6 +29,7 @@ public class TaggingPanel extends JPanel
 	private static final long serialVersionUID = 1L;
 	private final TagList taglist = new TagList();
 	private static Log log = LogFactory.getLog(TaggingPanel.class);
+	private ActionListener addTagActionListener;
 
 	public TaggingPanel()
 	{
@@ -44,17 +45,7 @@ public class TaggingPanel extends JPanel
 			taglist.addTag(new TagItem(tag));
 		}
 		final BetterTextField inputField = new BetterTextField();
-		ActionListener addTagActionListener = new ActionListener()
-		{
-			@Override
-			public void actionPerformed(ActionEvent e)
-			{
-				String tagTxt = inputField.getText();
-				inputField.setText("");
-				if (!Pattern.matches("^\\s*$", tagTxt))
-					taglist.add(tagTxt);
-			}
-		};
+		addTagActionListener = new AddTagActionListener(inputField);
 		inputField.addActionListener(addTagActionListener);
 		final String hint = "Type a tag and press enter";
 		inputField.setPlaceHolder(hint);
@@ -85,6 +76,25 @@ public class TaggingPanel extends JPanel
 	public Collection<String> getTags()
 	{
 		return taglist.getTags();
+	}
+
+	private final class AddTagActionListener implements ActionListener
+	{
+		private final BetterTextField inputField;
+
+		private AddTagActionListener(BetterTextField inputField)
+		{
+			this.inputField = inputField;
+		}
+
+		@Override
+		public void actionPerformed(ActionEvent e)
+		{
+			String tagTxt = inputField.getText();
+			inputField.setText("");
+			if (!Pattern.matches("^\\s*$", tagTxt))
+				taglist.add(tagTxt);
+		}
 	}
 
 	public class TagList extends JPanel
@@ -161,5 +171,11 @@ public class TaggingPanel extends JPanel
 			return tag;
 		}
 
+	}
+
+	public void simulateEnter()
+	{
+		log.debug("Simulating return");
+		addTagActionListener.actionPerformed(null);
 	}
 }

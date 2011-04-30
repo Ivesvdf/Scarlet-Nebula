@@ -178,19 +178,18 @@ public class ServerListMouseListener implements MouseListener
 
 			popup.show(e.getComponent(), e.getX(), e.getY());
 		}
-		else if (e.getClickCount() == 2)
+		else if (e.getClickCount() >= 1
+				&& serverlist.startNewServerServerSelected())
 		{
-			// If the user double clicked a null server, this is taken as a hint
+			// If the user clicked a null server, this is taken as a hint
 			// to create a new server!
-			if (serverlist.startNewServerServerSelected())
-			{
-				new AddServerWizard(gui, gui);
-			}
-			else if (serverlist.getSelectedServers().size() > 0)
-			// Normal double click on a server
-			{
-				new PropertiesWindow(gui, serverlist.getSelectedServers());
-			}
+			new AddServerWizard(gui, gui);
+		}
+		else if (e.getClickCount() == 2
+				&& serverlist.getSelectedServers().size() > 0)
+		// Normal double click on a server
+		{
+			new PropertiesWindow(gui, serverlist.getSelectedServers());
 		}
 
 	}
