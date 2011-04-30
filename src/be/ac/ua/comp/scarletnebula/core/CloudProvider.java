@@ -57,6 +57,7 @@ public class CloudProvider
 	private String apiSecret;
 	private String apiKey;
 	private String endpoint;
+	private String defaultKeypair;
 
 	private ArrayList<Server> servers = new ArrayList<Server>();
 	Collection<ServerLinkUnlinkObserver> linkUnlinkObservers = new ArrayList<ServerLinkUnlinkObserver>();
@@ -162,6 +163,7 @@ public class CloudProvider
 		this.apiKey = properties.getProperty("apikey");
 		this.apiSecret = properties.getProperty("apisecret");
 		this.endpoint = properties.getProperty("endpoint");
+		this.defaultKeypair = properties.getProperty("defaultKeypair", "");
 	}
 
 	/**
@@ -438,11 +440,10 @@ public class CloudProvider
 	 * @throws CloudException
 	 */
 	public Server startServer(String serverName, String productName,
-			String imageId, Collection<String> tags) throws InternalException,
-			CloudException
+			String imageId, Collection<String> tags, String keypairOrPassword)
+			throws InternalException, CloudException
 	{
 		String dataCenterId = "eu-west-1b";
-		String keypairOrPassword = "sndefault";
 		String vlan = null;
 		String[] firewalls = new String[] { "sshonly" };
 
@@ -472,6 +473,11 @@ public class CloudProvider
 
 		linkUnlinkedServer(server);
 		return server;
+	}
+
+	public String getDefaultKeypair()
+	{
+		return defaultKeypair;
 	}
 
 	private String getDefaultStatisticsCommand()
@@ -753,8 +759,7 @@ public class CloudProvider
 	 * @param apisecret
 	 *            Access key
 	 */
-	static void store(String providername, String providerclass,
-			String endpoint, String apikey, String apisecret)
+	public void store()
 	{
 		// First assure the providers/ directory exists
 		File dir = new File("providers");
@@ -770,15 +775,15 @@ public class CloudProvider
 		// Now write to the file properties file
 		Properties prop = new Properties();
 
-		prop.setProperty("class", providerclass);
-		prop.setProperty("apikey", apikey);
-		prop.setProperty("apisecret", apisecret);
+		prop.setProperty("class", providerClassName);
+		prop.setProperty("apikey", apiKey);
+		prop.setProperty("apisecret", apiSecret);
 		prop.setProperty("endpoint", endpoint);
+		prop.setProperty("defaultKeypair", defaultKeypair);
 
 		try
 		{
-			prop.store(new FileOutputStream(getConfigfileName(providername)),
-					null);
+			prop.store(new FileOutputStream(getConfigfileName(name)), null);
 		}
 		catch (FileNotFoundException e)
 		{

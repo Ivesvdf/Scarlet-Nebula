@@ -160,7 +160,7 @@ public class ServerListMouseListener implements MouseListener
 				reboot.setEnabled(false);
 				terminate.setEnabled(false);
 			}
-			if (status != VmState.RUNNING)
+			if (clickedServer.sshWillFail() || status != VmState.RUNNING)
 			{
 				console.setEnabled(false);
 				statistics.setEnabled(false);

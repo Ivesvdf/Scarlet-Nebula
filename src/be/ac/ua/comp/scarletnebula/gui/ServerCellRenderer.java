@@ -62,9 +62,19 @@ class ServerCellRenderer implements ListCellRenderer
 		// final ChartPanel chartPanel = getChartPanelComponent();
 
 		final GraphPanelCache gcp = GraphPanelCache.get();
-		final ChartPanel chartPanel = gcp.inBareServerCache(server) ? gcp
-				.getBareChartPanel(server) : createAndStoreBareChartPanel(list,
-				server);
+
+		final Component chartOrNothing;
+
+		if (server.sshWillFail())
+		{
+			chartOrNothing = new JLabel();
+		}
+		else
+		{
+			chartOrNothing = gcp.inBareServerCache(server) ? gcp
+					.getBareChartPanel(server) : createAndStoreBareChartPanel(
+					list, server);
+		}
 
 		p.setLayout(new GridBagLayout());
 		GridBagConstraints c = new GridBagConstraints();
@@ -83,7 +93,7 @@ class ServerCellRenderer implements ListCellRenderer
 		c.fill = GridBagConstraints.BOTH;
 		c.weighty = 1.0;
 		c.gridy = 2;
-		p.add(chartPanel, c);
+		p.add(chartOrNothing, c);
 
 		return p;
 
@@ -186,7 +196,8 @@ class ServerCellRenderer implements ListCellRenderer
 		Point2D start = new Point2D.Float(0, 0);
 		Point2D stop = new Point2D.Float(150, 500);
 
-		if (server != null && server.getServerStatistics() != null)
+		if (server != null && !server.sshWillFail()
+				&& server.getServerStatistics() != null)
 		{
 			ServerStatisticsManager manager = server.getServerStatistics();
 			Datastream.WarnLevel warnlevel = manager.getHighestWarnLevel();

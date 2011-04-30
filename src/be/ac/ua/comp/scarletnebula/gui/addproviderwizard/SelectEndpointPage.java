@@ -10,6 +10,7 @@ import javax.swing.JScrollPane;
 import javax.swing.border.BevelBorder;
 import javax.swing.border.EmptyBorder;
 
+import be.ac.ua.comp.scarletnebula.gui.BetterTextLabel;
 import be.ac.ua.comp.scarletnebula.gui.CloudProviderTemplate;
 import be.ac.ua.comp.scarletnebula.wizard.DataRecorder;
 import be.ac.ua.comp.scarletnebula.wizard.WizardPage;
@@ -38,7 +39,11 @@ public class SelectEndpointPage extends WizardPage
 
 		// providerlist.setPreferredSize(new Dimension(260, 20));
 		setLayout(new BorderLayout());
-		add(scrollPane);
+		final BetterTextLabel endpointlabel = new BetterTextLabel(
+				"Select the endpoint you would like to connect to. ");
+		endpointlabel.setBorder(BorderFactory.createEmptyBorder(20, 20, 0, 20));
+		add(endpointlabel);
+		add(scrollPane, BorderLayout.CENTER);
 
 	}
 

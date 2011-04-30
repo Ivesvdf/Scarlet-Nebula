@@ -58,7 +58,6 @@ import be.ac.ua.comp.scarletnebula.gui.ServerListModel.CreateNewServerServer;
 import be.ac.ua.comp.scarletnebula.gui.ServerListMouseListener;
 import be.ac.ua.comp.scarletnebula.gui.addproviderwizard.AddProviderWizard;
 import be.ac.ua.comp.scarletnebula.gui.addserverwizard.AddServerWizard;
-import be.ac.ua.comp.scarletnebula.gui.addserverwizard.AddServerWizardDataRecorder;
 import be.ac.ua.comp.scarletnebula.gui.welcomewizard.WelcomeWizard;
 import be.ac.ua.comp.scarletnebula.misc.Utils;
 
@@ -655,36 +654,6 @@ public class GUI extends JFrame implements ListSelectionListener,
 	{
 		JOptionPane.showMessageDialog(this, errorMessage,
 				"An unexpected error occured.", JOptionPane.ERROR_MESSAGE);
-	}
-
-	public void addServerWizardClosed(AddServerWizardDataRecorder rec)
-	{
-		final String instancename = rec.instanceName;
-		final String instancesize = rec.instanceSize;
-		final String image = rec.image;
-		final CloudProvider provider = rec.provider;
-		final Collection<String> tags = rec.tags;
-
-		if (Server.exists(instancename))
-		{
-			JOptionPane.showMessageDialog(this,
-					"A server with this name already exists.",
-					"Server already exists", JOptionPane.ERROR_MESSAGE);
-			return;
-		}
-
-		try
-		{
-			Server server = provider.startServer(instancename, instancesize,
-					image, tags);
-			server.refreshUntilServerHasState(VmState.RUNNING);
-		}
-		catch (Exception e)
-		{
-			log.error("Could not start server", e);
-		}
-
-		serverList.setSelectedIndices(new int[0]);
 	}
 
 	private void addServer(Server server)

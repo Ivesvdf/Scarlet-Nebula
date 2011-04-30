@@ -1,10 +1,17 @@
 package be.ac.ua.comp.scarletnebula.gui.addserverwizard;
 
+import java.util.Collection;
+
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.dasein.cloud.compute.VmState;
+
 import be.ac.ua.comp.scarletnebula.core.CloudManager;
 import be.ac.ua.comp.scarletnebula.core.CloudProvider;
+import be.ac.ua.comp.scarletnebula.core.Server;
 import be.ac.ua.comp.scarletnebula.gui.addproviderwizard.AddProviderWizard;
 import be.ac.ua.comp.scarletnebula.gui.windows.GUI;
 import be.ac.ua.comp.scarletnebula.wizard.DataRecorder;
@@ -16,6 +23,7 @@ import be.ac.ua.comp.scarletnebula.wizard.WizardPage;
 public class AddServerWizard implements WizardListener
 {
 	private final GUI gui;
+	private static Log log = LogFactory.getLog(Server.class);
 	private static final long serialVersionUID = 1L;
 
 	public AddServerWizard(JFrame parent, final GUI gui)
@@ -58,7 +66,32 @@ public class AddServerWizard implements WizardListener
 	@Override
 	public void onFinish(DataRecorder recorder)
 	{
-		gui.addServerWizardClosed((AddServerWizardDataRecorder) recorder);
+		AddServerWizardDataRecorder rec = (AddServerWizardDataRecorder) recorder;
+		final String instancename = rec.instanceName;
+		final String instancesize = rec.instanceSize;
+		final String image = rec.image;
+		final CloudProvider provider = rec.provider;
+		final Collection<String> tags = rec.tags;
+		final String keypairOrPassword = rec.keypairOrPassword;
+
+		if (Server.exists(instancename))
+		{
+			JOptionPane.showMessageDialog(gui,
+					"A server with this name already exists.",
+					"Server already exists", JOptionPane.ERROR_MESSAGE);
+			return;
+		}
+
+		try
+		{
+			Server server = provider.startServer(instancename, instancesize,
+					image, tags, keypairOrPassword);
+			server.refreshUntilServerHasState(VmState.RUNNING);
+		}
+		catch (Exception e)
+		{
+			log.error("Could not start server", e);
+		}
 	}
 
 	@Override

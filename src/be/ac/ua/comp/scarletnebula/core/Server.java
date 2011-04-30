@@ -66,11 +66,29 @@ public class Server
 
 	public ServerStatisticsManager getServerStatistics()
 	{
-		if (serverStatisticsManager == null)
+		if (sshWillFail())
+		{
+			// Do nothing -- return null
+		}
+		else if (serverStatisticsManager == null)
 		{
 			serverStatisticsManager = new ServerStatisticsManager(this);
+
 		}
 		return serverStatisticsManager;
+	}
+
+	/**
+	 * Does basic sanity checks to see if it's even remotely possible to
+	 * establish an SSH connection.
+	 * 
+	 * @return True if the SSH connection will fail, false if it might succeed.
+	 */
+	public boolean sshWillFail()
+	{
+		return sshLogin.isEmpty()
+				|| ((useSshPassword && sshPassword.isEmpty() || !useSshPassword
+						&& keypair.isEmpty()));
 	}
 
 	/**

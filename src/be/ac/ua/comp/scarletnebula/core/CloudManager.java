@@ -157,11 +157,9 @@ public class CloudManager
 	public void registerNewCloudProvider(String name, String classname,
 			String endpoint, String apiKey, String apiSecret)
 	{
-		// Save to file and then read from file -- the easiest way to create a
-		// new CloudProvider
-		CloudProvider.store(name, classname, endpoint, apiKey, apiSecret);
-
-		CloudProvider prov = new CloudProvider(name);
+		CloudProvider prov = new CloudProvider(name, classname, endpoint,
+				apiKey, apiSecret);
+		prov.store();
 
 		for (ServerLinkUnlinkObserver obs : linkUnlinkObservers)
 			prov.addServerLinkUnlinkObserver(obs);
