@@ -47,8 +47,8 @@ public class ProvideAccessPage extends WizardPage
 	public WizardPage next(DataRecorder recorder)
 	{
 		AddProviderWizardDataRecorder rec = (AddProviderWizardDataRecorder) recorder;
-		rec.setApiKey(apiKey.getText());
-		rec.setApiSecret(apiSecret.getText());
+		rec.setApiKey(apiKey.getText().trim());
+		rec.setApiSecret(apiSecret.getText().trim());
 
 		return new ChooseNamePage(rec);
 	}

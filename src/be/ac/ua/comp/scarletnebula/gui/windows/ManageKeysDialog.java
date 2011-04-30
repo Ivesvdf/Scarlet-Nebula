@@ -12,7 +12,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
 import be.ac.ua.comp.scarletnebula.core.CloudProvider;
-import be.ac.ua.comp.scarletnebula.gui.KeyList;
+import be.ac.ua.comp.scarletnebula.gui.SelectKeyList;
 
 public class ManageKeysDialog extends JDialog
 {
@@ -29,7 +29,7 @@ public class ManageKeysDialog extends JDialog
 		setLocationByPlatform(true);
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 
-		final KeyList keyList = new KeyList(provider);
+		final SelectKeyList keyList = new SelectKeyList(provider);
 
 		JScrollPane keyListScrollPane = new JScrollPane(keyList);
 		keyListScrollPane.setBorder(BorderFactory.createEmptyBorder(20, 20, 20,

@@ -4,6 +4,9 @@ import java.beans.PropertyChangeEvent;
 
 import javax.swing.SwingWorker;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import be.ac.ua.comp.scarletnebula.gui.Collapsable;
 
 /**
@@ -22,6 +25,8 @@ import be.ac.ua.comp.scarletnebula.gui.Collapsable;
 public abstract class SwingWorkerWithThrobber<T, V> extends SwingWorker<T, V>
 {
 	final Collapsable throbber;
+	private static final Log log = LogFactory
+			.getLog(SwingWorkerWithThrobber.class);
 
 	/**
 	 * Constructor.

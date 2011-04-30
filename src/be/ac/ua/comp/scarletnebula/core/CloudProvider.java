@@ -177,15 +177,17 @@ public class CloudProvider
 	 * @param endpoint
 	 * @param apikey
 	 * @param apisecret
+	 * @param defaultKeypair
 	 */
 	public CloudProvider(String name, String classname, String endpoint,
-			String apikey, String apisecret)
+			String apikey, String apisecret, String defaultKeypair)
 	{
 		this.name = name;
 		this.providerClassName = classname;
 		this.apiKey = apikey;
 		this.apiSecret = apisecret;
 		this.endpoint = endpoint;
+		this.defaultKeypair = defaultKeypair;
 		connect();
 	}
 
@@ -280,30 +282,14 @@ public class CloudProvider
 	 * @throws InternalException
 	 * @throws CloudException
 	 */
-	private void createKey(ShellKeySupport shellKeySupport, String keyname)
-			throws InternalException, CloudException
-	{
-		KeyManager.addKey(providerClassName, keyname,
-				shellKeySupport.createKeypair(keyname));
-
-	}
-
-	/**
-	 * Assures there's an SSH key with name "sndefault". If no such key exists,
-	 * it will be created
-	 * 
-	 * @throws InternalException
-	 * @throws CloudException
-	 */
-	private void assureSSHKey() throws InternalException, CloudException
+	public void createKey(String keyname) throws InternalException,
+			CloudException
 	{
 		ShellKeySupport shellKeySupport = providerImpl.getIdentityServices()
 				.getShellKeySupport();
 
-		if (!shellKeySupport.list().contains("sndefault"))
-		{
-			createKey(shellKeySupport, "sndefault");
-		}
+		KeyManager.addKey(providerClassName, keyname,
+				shellKeySupport.createKeypair(keyname));
 	}
 
 	/**
@@ -478,6 +464,21 @@ public class CloudProvider
 	public String getDefaultKeypair()
 	{
 		return defaultKeypair;
+	}
+
+	/**
+	 * Sets the default keypair (without saving) on the condition that a keypair
+	 * by this name exists.
+	 * 
+	 * @param newDefaultKeypair
+	 *            The name of the new keypair that will become default.
+	 */
+	public void setDefaultKeypair(String newDefaultKeypair)
+	{
+		if (KeyManager.getKeyNames(getName()).contains(defaultKeypair))
+		{
+			defaultKeypair = newDefaultKeypair;
+		}
 	}
 
 	private String getDefaultStatisticsCommand()
@@ -856,6 +857,22 @@ public class CloudProvider
 		Collection<String> knownKeys = KeyManager.getKeyNames(getName());
 		keys.removeAll(knownKeys);
 		return keys;
+	}
 
+	public boolean unlinkedKeyExists(String checkKeyname)
+	{
+		ShellKeySupport shellKeySupport = providerImpl.getIdentityServices()
+				.getShellKeySupport();
+
+		boolean exists = false;
+		try
+		{
+			exists = shellKeySupport.list().contains(checkKeyname);
+		}
+		catch (Exception e)
+		{
+			log.error("Could not list keys.", e);
+		}
+		return exists;
 	}
 }

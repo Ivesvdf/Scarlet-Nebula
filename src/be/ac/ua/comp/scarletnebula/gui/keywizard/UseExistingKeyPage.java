@@ -12,14 +12,14 @@ import org.dasein.cloud.InternalException;
 
 import be.ac.ua.comp.scarletnebula.core.CloudProvider;
 import be.ac.ua.comp.scarletnebula.gui.BetterTextLabel;
-import be.ac.ua.comp.scarletnebula.gui.KeyList;
+import be.ac.ua.comp.scarletnebula.gui.SelectKeyList;
 import be.ac.ua.comp.scarletnebula.wizard.DataRecorder;
 import be.ac.ua.comp.scarletnebula.wizard.WizardPage;
 
 public class UseExistingKeyPage extends WizardPage
 {
 	private static final long serialVersionUID = 1L;
-	KeyList keylist;
+	SelectKeyList keylist;
 	private CloudProvider provider;
 
 	UseExistingKeyPage(CloudProvider provider)
@@ -34,7 +34,7 @@ public class UseExistingKeyPage extends WizardPage
 
 		add(lbl, BorderLayout.PAGE_START);
 
-		keylist = new KeyList(provider);
+		keylist = new SelectKeyList(provider);
 		try
 		{
 			keylist.fillWithUnknownKeys();

@@ -35,14 +35,14 @@ public class SelectEndpointPage extends WizardPage
 		endpoints.setBorder(BorderFactory
 				.createBevelBorder(BevelBorder.LOWERED));
 		JScrollPane scrollPane = new JScrollPane(endpoints);
-		scrollPane.setBorder(new EmptyBorder(20, 20, 20, 20));
+		scrollPane.setBorder(new EmptyBorder(20, 20, 10, 20));
 
 		// providerlist.setPreferredSize(new Dimension(260, 20));
 		setLayout(new BorderLayout());
 		final BetterTextLabel endpointlabel = new BetterTextLabel(
 				"Select the endpoint you would like to connect to. ");
 		endpointlabel.setBorder(BorderFactory.createEmptyBorder(20, 20, 0, 20));
-		add(endpointlabel);
+		add(endpointlabel, BorderLayout.NORTH);
 		add(scrollPane, BorderLayout.CENTER);
 
 	}

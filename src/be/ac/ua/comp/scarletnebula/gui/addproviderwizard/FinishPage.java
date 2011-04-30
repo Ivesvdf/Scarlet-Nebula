@@ -25,7 +25,7 @@ public class FinishPage extends WizardPage
 
 		CloudProvider tmpProvider = new CloudProvider(rec.getName(), rec
 				.getTemplate().getClassname(), rec.getEndpoint().getURL(),
-				rec.getApiKey(), rec.getApiSecret());
+				rec.getApiKey(), rec.getApiSecret(), ""); // default keypair
 
 		boolean credentialsOk = tmpProvider.test();
 

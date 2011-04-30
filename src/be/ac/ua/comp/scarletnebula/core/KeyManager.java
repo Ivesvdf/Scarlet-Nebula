@@ -46,6 +46,16 @@ public class KeyManager
 		}
 	}
 
+	/**
+	 * Creates a new key from the contents of the key in a string.
+	 * 
+	 * @param providerName
+	 *            Name of the provider
+	 * @param keyname
+	 *            Name of the key
+	 * @param key
+	 *            Contents of the key
+	 */
 	public static void addKey(String providerName, String keyname, File key)
 	{
 
@@ -106,11 +116,6 @@ public class KeyManager
 			throws FileNotFoundException
 	{
 		String filename = getKeyPath(providerName) + keyname + ".key";
-
-		File f = new File(filename);
-		if (!f.exists())
-			throw new FileNotFoundException("No key by the name of " + keyname
-					+ " found for " + providerName);
 
 		return filename;
 	}

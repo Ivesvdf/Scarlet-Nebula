@@ -158,7 +158,7 @@ public class CloudManager
 			String endpoint, String apiKey, String apiSecret)
 	{
 		CloudProvider prov = new CloudProvider(name, classname, endpoint,
-				apiKey, apiSecret);
+				apiKey, apiSecret, "");
 		prov.store();
 
 		for (ServerLinkUnlinkObserver obs : linkUnlinkObservers)

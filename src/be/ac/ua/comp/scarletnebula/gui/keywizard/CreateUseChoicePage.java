@@ -55,8 +55,7 @@ public class CreateUseChoicePage extends WizardPage
 	{
 		if (group.getSelection() == createButton.getModel())
 		{
-			return new AcceptKeyHandlerPage(AcceptKeyHandlerPage.Action.CREATE,
-					provider);
+			return new SelectNewKeynamePage(provider);
 		}
 		else
 		{

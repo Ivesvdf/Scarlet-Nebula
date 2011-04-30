@@ -20,13 +20,13 @@ import org.dasein.cloud.InternalException;
 import be.ac.ua.comp.scarletnebula.core.CloudProvider;
 import be.ac.ua.comp.scarletnebula.core.KeyManager;
 
-public class KeyList extends JList
+public class SelectKeyList extends JList
 {
 	private static final long serialVersionUID = 1L;
 	DefaultListModel model;
 	CloudProvider provider;
 
-	public KeyList(CloudProvider provider)
+	public SelectKeyList(CloudProvider provider)
 	{
 		super(new DefaultListModel());
 		model = (DefaultListModel) getModel();

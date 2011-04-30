@@ -6,7 +6,6 @@ import java.awt.event.ActionListener;
 
 import javax.swing.BorderFactory;
 import javax.swing.DefaultListModel;
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
@@ -17,8 +16,10 @@ import javax.swing.JScrollPane;
 import javax.swing.border.BevelBorder;
 
 import be.ac.ua.comp.scarletnebula.core.CloudManager;
+import be.ac.ua.comp.scarletnebula.core.CloudProvider;
 import be.ac.ua.comp.scarletnebula.gui.addproviderwizard.AddProviderWizard;
 import be.ac.ua.comp.scarletnebula.gui.addproviderwizard.ProviderAddedListener;
+import be.ac.ua.comp.scarletnebula.misc.Utils;
 
 public class ManageProvidersWindow extends JDialog
 {
@@ -46,8 +47,7 @@ public class ManageProvidersWindow extends JDialog
 
 		setLayout(new BorderLayout());
 
-		JButton addButton = new JButton(new ImageIcon(getClass().getResource(
-				"/images/add22.png")));
+		JButton addButton = new JButton(Utils.icon("add22.png"));
 		addButton.addActionListener(new ActionListener()
 		{
 			@Override
@@ -68,12 +68,27 @@ public class ManageProvidersWindow extends JDialog
 			}
 		});
 
-		JButton modifyButton = new JButton(new ImageIcon(getClass()
-				.getResource("/images/modify22.png")));
-		modifyButton.setEnabled(false);
+		JButton modifyButton = new JButton(Utils.icon("modify22.png"));
+		modifyButton.addActionListener(new ActionListener()
+		{
+			@Override
+			public void actionPerformed(ActionEvent e)
+			{
+				int index = providerList.getSelectedIndex();
 
-		JButton removeButton = new JButton(new ImageIcon(getClass()
-				.getResource("/images/remove22.png")));
+				if (index < 0)
+					return;
+
+				String provname = (String) providerListModel.get(index);
+				CloudProvider provider = CloudManager.get()
+						.getCloudProviderByName(provname);
+
+				new ProviderPropertiesWindow(ManageProvidersWindow.this,
+						provider);
+			}
+		});
+
+		JButton removeButton = new JButton(Utils.icon("remove22.png"));
 		removeButton.addActionListener(new ActionListener()
 		{
 			@Override

@@ -5,8 +5,6 @@ import java.awt.Component;
 
 import javax.swing.JPanel;
 
-import org.jdesktop.core.animation.timing.Animator;
-
 /**
  * A component that contains exactly one other component. A CollapsablePanel can
  * be "collapsed", after which it takes op no space.
@@ -18,7 +16,6 @@ public class CollapsablePanel extends JPanel implements Collapsable
 {
 	private static final long serialVersionUID = 1L;
 	private Component storedComponent;
-	private Animator collapseAnimation = null;
 
 	/**
 	 * Constructs a CollapsablePanel
