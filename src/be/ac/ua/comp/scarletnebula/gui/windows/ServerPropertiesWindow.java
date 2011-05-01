@@ -3,7 +3,6 @@ package be.ac.ua.comp.scarletnebula.gui.windows;
 import java.awt.AWTEvent;
 import java.awt.BorderLayout;
 import java.awt.Component;
-import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -65,7 +64,7 @@ public class ServerPropertiesWindow extends JDialog
 
 	private boolean statisticsTabIsFilled = false;
 
-	GUI gui;
+	private final GUI gui;
 	Collection<Server> selectedServers;
 
 	private ChangeableLabel sshLabel;
@@ -151,7 +150,8 @@ public class ServerPropertiesWindow extends JDialog
 						.getSelectedComponent();
 
 				if (selectedPanel == communicationTab)
-					ServerPropertiesWindow.this.communicationTabGotFocus(servers);
+					ServerPropertiesWindow.this
+							.communicationTabGotFocus(servers);
 				if (selectedPanel == statisticsTab)
 					ServerPropertiesWindow.this.statisticsTabGotFocus(servers);
 			}
@@ -194,6 +194,7 @@ public class ServerPropertiesWindow extends JDialog
 		Component servernameComponent = null;
 		Component servertagComponent = null;
 		Component sshLoginMethodComponent = null;
+		Component providerComponent = null;
 
 		if (servers.size() == 1)
 		{
@@ -202,6 +203,7 @@ public class ServerPropertiesWindow extends JDialog
 			servernameComponent = getSingleServerServerNameComponent(server);
 			servertagComponent = getSingleServerTagComponent(server);
 			sshLoginMethodComponent = getSingleServerSshLoginMethodComponent(server);
+			providerComponent = getSingleProviderComponent(server);
 
 		}
 		else
@@ -209,6 +211,7 @@ public class ServerPropertiesWindow extends JDialog
 			servernameComponent = getMultipleServerServerNameComponent(servers);
 			servertagComponent = new JLabel("...");
 			sshLoginMethodComponent = new JLabel("...");
+			providerComponent = getMultipleServersProviderComponent(servers);
 		}
 
 		builder.append("Name", servernameComponent);
@@ -220,7 +223,7 @@ public class ServerPropertiesWindow extends JDialog
 
 		builder.nextLine();
 
-		builder.append("Provider", cloudLabel);
+		builder.append("Provider", providerComponent);
 		builder.nextLine();
 
 		builder.append("Architecture", architectureLabel);
@@ -243,6 +246,35 @@ public class ServerPropertiesWindow extends JDialog
 		final JScrollPane bodyScrollPane = new JScrollPane(builder.getPanel());
 		bodyScrollPane.setBorder(null);
 		overviewTab.add(bodyScrollPane);
+	}
+
+	private Component getMultipleServersProviderComponent(
+			Collection<Server> servers)
+	{
+		List<String> names = new ArrayList<String>(servers.size());
+		for (Server server : servers)
+		{
+			String provname = server.getCloud().getName();
+			if (!names.contains(provname))
+			{
+				names.add(provname);
+			}
+		}
+		return new JLabel(Utils.implode(names, ", "));
+	}
+
+	private Component getSingleProviderComponent(final Server server)
+	{
+		return new ChangeableLabel(server.getCloud().getName(),
+				new Executable<JLabel>()
+				{
+					@Override
+					public void run(final JLabel text)
+					{
+						new ProviderPropertiesWindow(
+								ServerPropertiesWindow.this, server.getCloud());
+					}
+				});
 	}
 
 	private JScrollPane getStatisticsPanel(final Collection<Server> servers)
@@ -276,22 +308,23 @@ public class ServerPropertiesWindow extends JDialog
 		propertiesPart.add(Box.createHorizontalStrut(10));
 		propertiesPart.setBorder(BorderFactory.createEmptyBorder(10, 0, 0, 0));
 
-		final JPanel graphCollection = new JPanel(new GridBagLayout());
-
 		if (servers.size() > 1)
 			log.fatal("more than one server in statisticspanel");
 
 		final Server server = servers.iterator().next();
 
-		final AllGraphsPanel allGraphsPanel = new AllGraphsPanel(server);
+		if (server.sshWillFail())
+		{
+			final AllGraphsPanel allGraphsPanel = new AllGraphsPanel(server);
 
-		final JPanel graphCollectionWrapper = new JPanel(new BorderLayout());
-		graphCollectionWrapper.setBorder(BorderFactory.createEmptyBorder(10,
-				20, 10, 20));
-		graphCollectionWrapper.add(allGraphsPanel, BorderLayout.CENTER);
+			final JPanel graphCollectionWrapper = new JPanel(new BorderLayout());
+			graphCollectionWrapper.setBorder(BorderFactory.createEmptyBorder(
+					10, 20, 10, 20));
+			graphCollectionWrapper.add(allGraphsPanel, BorderLayout.CENTER);
+			statisticsPanel.add(graphCollectionWrapper, BorderLayout.CENTER);
+		}
+
 		statisticsPanel.add(propertiesPart, BorderLayout.NORTH);
-		statisticsPanel.add(graphCollectionWrapper, BorderLayout.CENTER);
-
 		final JScrollPane scrollPanel = new JScrollPane(statisticsPanel,
 				ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
 				ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);

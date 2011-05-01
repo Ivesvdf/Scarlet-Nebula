@@ -129,7 +129,9 @@ public class KeylistWithDefault extends JTable
 
 		setCellSelectionEnabled(false);
 		setRowSelectionAllowed(true);
-		setRowSelectionInterval(0, 0);
+
+		if (!keys.isEmpty())
+			setRowSelectionInterval(0, 0);
 	}
 
 	public void add(final String keyname, boolean defaultKey)
