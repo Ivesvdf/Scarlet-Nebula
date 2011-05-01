@@ -51,7 +51,8 @@ public class Wizard
 	 * @param parent
 	 *            Owner of the window, null if no owner
 	 */
-	public void startModal(final String title, final int width, final int height, final Dialog parent)
+	public void startModal(final String title, final int width,
+			final int height, final Dialog parent)
 	{
 		window = new JDialog(parent, true);
 		configureDialog(title, width, height, window, parent);
@@ -67,14 +68,15 @@ public class Wizard
 	 * @param parent
 	 *            Owner of the window, null if no owner
 	 */
-	public void startModal(final String title, final int width, final int height, final Frame parent)
+	public void startModal(final String title, final int width,
+			final int height, final Frame parent)
 	{
 		window = new JDialog(parent, true);
 		configureDialog(title, width, height, window, parent);
 	}
 
-	private void configureDialog(final String title, final int width, final int height,
-			final JDialog dialog, final Component parent)
+	private void configureDialog(final String title, final int width,
+			final int height, final JDialog dialog, final Component parent)
 	{
 		dialog.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 		dialog.setSize(new Dimension(width, height));

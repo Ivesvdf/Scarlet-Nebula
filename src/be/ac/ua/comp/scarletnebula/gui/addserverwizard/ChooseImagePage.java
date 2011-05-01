@@ -145,9 +145,11 @@ public class ChooseImagePage extends WizardPage
 		private final PlatformComboBox platformComboBox;
 		private final BetterTextField searchField;
 
-		private SearchFieldListener(final ArchitectureComboBox architectureComboBox,
+		private SearchFieldListener(
+				final ArchitectureComboBox architectureComboBox,
 				final TableRowSorter<TableModel> sorter,
-				final PlatformComboBox platformComboBox, final BetterTextField searchField)
+				final PlatformComboBox platformComboBox,
+				final BetterTextField searchField)
 		{
 			this.architectureComboBox = architectureComboBox;
 			this.sorter = sorter;

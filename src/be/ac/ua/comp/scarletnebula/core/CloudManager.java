@@ -162,8 +162,9 @@ public class CloudManager
 		return providerTemplates;
 	}
 
-	public void registerNewCloudProvider(final String name, final String classname,
-			final String endpoint, final String apiKey, final String apiSecret)
+	public void registerNewCloudProvider(final String name,
+			final String classname, final String endpoint, final String apiKey,
+			final String apiSecret)
 	{
 		final CloudProvider prov = new CloudProvider(name, classname, endpoint,
 				apiKey, apiSecret, "");

@@ -10,7 +10,8 @@ public class KeyManagementWindow extends JDialog
 {
 	private static final long serialVersionUID = 1L;
 
-	public KeyManagementWindow(final JDialog parent, final CloudProvider provider)
+	public KeyManagementWindow(final JDialog parent,
+			final CloudProvider provider)
 	{
 		super(parent, "Manage keys for " + provider.getName(), true);
 

@@ -84,8 +84,8 @@ public class SearchHelper
 		return matches ? matcher.group(1) : null;
 	}
 
-	public static boolean matchTags(final String term, final Collection<String> tags,
-			final boolean negated)
+	public static boolean matchTags(final String term,
+			final Collection<String> tags, final boolean negated)
 	{
 		boolean found = false;
 		for (final String tag : tags)
@@ -100,13 +100,14 @@ public class SearchHelper
 		return foundToMatch(found, negated);
 	}
 
-	public static boolean matchName(final String term, final String friendlyName,
-			final boolean negated)
+	public static boolean matchName(final String term,
+			final String friendlyName, final boolean negated)
 	{
 		return foundToMatch(friendlyName.contains(term), negated);
 	}
 
-	public static boolean matchSize(final String term, final String size, final boolean negated)
+	public static boolean matchSize(final String term, final String size,
+			final boolean negated)
 	{
 		return foundToMatch(size.equalsIgnoreCase(term), negated);
 	}
@@ -127,13 +128,14 @@ public class SearchHelper
 		return foundToMatch(found, negated);
 	}
 
-	private static boolean foundToMatch(final boolean found, final boolean negated)
+	private static boolean foundToMatch(final boolean found,
+			final boolean negated)
 	{
 		return !((negated && found) || (!negated && !found));
 	}
 
-	public static boolean matchCloudProvider(final String term, final String providerName,
-			final boolean negated)
+	public static boolean matchCloudProvider(final String term,
+			final String providerName, final boolean negated)
 	{
 		return foundToMatch(
 				providerName.toLowerCase().contains(term.toLowerCase()),

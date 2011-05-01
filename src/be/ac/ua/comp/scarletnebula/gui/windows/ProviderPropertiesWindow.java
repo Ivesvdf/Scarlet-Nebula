@@ -12,7 +12,8 @@ public class ProviderPropertiesWindow extends JDialog
 	private static final long serialVersionUID = 1L;
 	private final CloudProvider provider;
 
-	public ProviderPropertiesWindow(final JDialog parent, final CloudProvider provider)
+	public ProviderPropertiesWindow(final JDialog parent,
+			final CloudProvider provider)
 	{
 		super(parent, provider.getName() + " Properties", true);
 		this.provider = provider;

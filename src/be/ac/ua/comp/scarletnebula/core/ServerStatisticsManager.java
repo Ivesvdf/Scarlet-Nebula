@@ -153,7 +153,8 @@ public class ServerStatisticsManager
 		newDatastreamListeners.add(listener);
 	}
 
-	public void addDeleteDatastreamListener(final DeleteDatastreamListener listener)
+	public void addDeleteDatastreamListener(
+			final DeleteDatastreamListener listener)
 	{
 		deleteDatastreamListeners.add(listener);
 	}

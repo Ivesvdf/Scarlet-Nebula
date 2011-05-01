@@ -44,7 +44,8 @@ public class ServerList extends JXList implements ComponentListener
 		}
 
 		@Override
-		protected Component doHighlight(final Component arg0, final ComponentAdapter arg1)
+		protected Component doHighlight(final Component arg0,
+				final ComponentAdapter arg1)
 		{
 			final JXPanel objectToBeRendered = (JXPanel) arg0;
 			serverCellRenderer.onRollOver(objectToBeRendered);

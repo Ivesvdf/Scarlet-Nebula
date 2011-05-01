@@ -181,8 +181,9 @@ public class CloudProvider
 	 * @param apisecret
 	 * @param defaultKeypair
 	 */
-	public CloudProvider(final String name, final String classname, final String endpoint,
-			final String apikey, final String apisecret, final String defaultKeypair)
+	public CloudProvider(final String name, final String classname,
+			final String endpoint, final String apikey, final String apisecret,
+			final String defaultKeypair)
 	{
 		this.name = name;
 		this.providerClassName = classname;
@@ -202,8 +203,8 @@ public class CloudProvider
 	 * @throws CloudException
 	 * @throws IOException
 	 */
-	public Server loadServer(final String unfriendlyName) throws InternalException,
-			CloudException, IOException
+	public Server loadServer(final String unfriendlyName)
+			throws InternalException, CloudException, IOException
 	{
 		log.warn("Getting for name " + unfriendlyName);
 		final VirtualMachine server = getServerImpl(unfriendlyName);
@@ -443,8 +444,9 @@ public class CloudProvider
 	 * @throws InternalException
 	 * @throws CloudException
 	 */
-	public Server startServer(final String serverName, final String productName,
-			final String imageId, final Collection<String> tags, final String keypairOrPassword)
+	public Server startServer(final String serverName,
+			final String productName, final String imageId,
+			final Collection<String> tags, final String keypairOrPassword)
 			throws InternalException, CloudException
 	{
 		final String dataCenterId = "eu-west-1b";
@@ -677,8 +679,8 @@ public class CloudProvider
 		return virtualMachineServices.getVirtualMachine(unfriendlyName);
 	}
 
-	public Iterable<MachineImage> getAvailableMachineImages(final Platform platform,
-			final Architecture architecture)
+	public Iterable<MachineImage> getAvailableMachineImages(
+			final Platform platform, final Architecture architecture)
 	{
 		Iterable<MachineImage> images = null;
 		try
@@ -936,7 +938,8 @@ public class CloudProvider
 	 * @param makeDefault
 	 *            True if it should become default, false otherwise.
 	 */
-	public void importKey(final String keyname, final File keyFile, final boolean makeDefault)
+	public void importKey(final String keyname, final File keyFile,
+			final boolean makeDefault)
 	{
 		KeyManager.addKey(getName(), keyname, keyFile);
 
@@ -954,7 +957,8 @@ public class CloudProvider
 	 * @throws CloudException
 	 * @throws InternalException
 	 */
-	public void deleteKey(final String key) throws InternalException, CloudException
+	public void deleteKey(final String key) throws InternalException,
+			CloudException
 	{
 		KeyManager.deleteKey(getName(), key);
 

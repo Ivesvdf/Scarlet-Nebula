@@ -28,7 +28,8 @@ public class StatisticsPropertiesWindow extends JDialog
 	final private JTextArea commandArea = new JTextArea();
 	private int maxEventId = 0;
 
-	public StatisticsPropertiesWindow(final JDialog parent, final Collection<Server> servers)
+	public StatisticsPropertiesWindow(final JDialog parent,
+			final Collection<Server> servers)
 	{
 		super(parent, "Statistics Properties", true);
 

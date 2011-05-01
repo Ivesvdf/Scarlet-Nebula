@@ -71,7 +71,8 @@ public class ServerPropertiesWindow extends JDialog
 
 	private DecoratedCommunicationPanel decoratedCommunicationPanel = null;
 
-	public ServerPropertiesWindow(final GUI gui, final Collection<Server> selectedServers)
+	public ServerPropertiesWindow(final GUI gui,
+			final Collection<Server> selectedServers)
 	{
 		super(gui, true);
 		this.selectedServers = selectedServers;
@@ -215,7 +216,7 @@ public class ServerPropertiesWindow extends JDialog
 		else
 		{
 			servernameComponent = getMultipleServerServerNameComponent(servers);
-			servertagComponent = new JLabel("...");
+			servertagComponent = getMultipleServerTagComponent(servers);
 			sshLoginMethodComponent = new JLabel("...");
 			providerComponent = getMultipleServersProviderComponent(servers);
 		}
@@ -252,6 +253,24 @@ public class ServerPropertiesWindow extends JDialog
 		final JScrollPane bodyScrollPane = new JScrollPane(builder.getPanel());
 		bodyScrollPane.setBorder(null);
 		overviewTab.add(bodyScrollPane);
+	}
+
+	private Component getMultipleServerTagComponent(
+			final Collection<Server> servers)
+	{
+		final ArrayList<String> tags = new ArrayList<String>();
+
+		for (final Server server : servers)
+		{
+			for (final String tag : server.getTags())
+			{
+				if (!tags.contains(tag))
+				{
+					tags.add(tag);
+				}
+			}
+		}
+		return new JLabel(Utils.implode(tags, ", "));
 	}
 
 	private Component getMultipleServersProviderComponent(
@@ -395,7 +414,8 @@ public class ServerPropertiesWindow extends JDialog
 						win.addWindowClosedListener(new TaggingWindow.WindowClosedListener()
 						{
 							@Override
-							public void windowClosed(final Collection<String> newTags)
+							public void windowClosed(
+									final Collection<String> newTags)
 							{
 								for (final String t : newTags)
 								{
@@ -447,7 +467,8 @@ public class ServerPropertiesWindow extends JDialog
 		return servername;
 	}
 
-	protected void communicationTabGotFocus(final Collection<Server> selectedServers)
+	protected void communicationTabGotFocus(
+			final Collection<Server> selectedServers)
 	{
 		if (decoratedCommunicationPanel == null)
 		{

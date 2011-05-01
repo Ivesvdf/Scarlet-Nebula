@@ -42,9 +42,10 @@ public class Server
 	private final String preferredDatastream;
 	private boolean useSshPassword;
 
-	public Server(final VirtualMachine server, final CloudProvider inputProvider,
-			final String inputKeypair, final String inputFriendlyName,
-			final Collection<String> tags, final boolean useSshPassword, final String sshLogin,
+	public Server(final VirtualMachine server,
+			final CloudProvider inputProvider, final String inputKeypair,
+			final String inputFriendlyName, final Collection<String> tags,
+			final boolean useSshPassword, final String sshLogin,
 			final String sshPassword, final String statisticsCommand,
 			final String preferredDatastream)
 	{
@@ -96,7 +97,8 @@ public class Server
 	 * @throws Exception
 	 * @throws FileNotFoundException
 	 */
-	public CommandConnection newCommandConnection(final UserInfo ui) throws Exception
+	public CommandConnection newCommandConnection(final UserInfo ui)
+			throws Exception
 	{
 		SSHCommandConnection rv = null;
 
@@ -186,7 +188,8 @@ public class Server
 	 * @param instanceName
 	 * @return
 	 */
-	static String getSaveFilename(final CloudProvider provider, final VirtualMachine server)
+	static String getSaveFilename(final CloudProvider provider,
+			final VirtualMachine server)
 	{
 		return provider.getSaveFileDir() + server.getProviderVirtualMachineId();
 	}

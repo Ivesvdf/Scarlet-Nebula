@@ -49,8 +49,8 @@ public class RadixCloudProvider extends CloudProvider
 		}
 
 		@Override
-		public MachineImage getMachineImage(final String arg0) throws CloudException,
-				InternalException
+		public MachineImage getMachineImage(final String arg0)
+				throws CloudException, InternalException
 		{
 			// TODO Auto-generated method stub
 			return null;
@@ -81,8 +81,8 @@ public class RadixCloudProvider extends CloudProvider
 
 		@Override
 		public AsynchronousTask<String> imageVirtualMachineToStorage(
-				final String arg0, final String arg1, final String arg2, final String arg3)
-				throws CloudException, InternalException
+				final String arg0, final String arg1, final String arg2,
+				final String arg3) throws CloudException, InternalException
 		{
 			// TODO Auto-generated method stub
 			return null;
@@ -90,7 +90,8 @@ public class RadixCloudProvider extends CloudProvider
 
 		@Override
 		public String installImageFromUpload(final MachineImageFormat arg0,
-				final InputStream arg1) throws CloudException, InternalException
+				final InputStream arg1) throws CloudException,
+				InternalException
 		{
 			// TODO Auto-generated method stub
 			return null;
@@ -128,8 +129,8 @@ public class RadixCloudProvider extends CloudProvider
 		}
 
 		@Override
-		public Iterable<String> listShares(final String arg0) throws CloudException,
-				InternalException
+		public Iterable<String> listShares(final String arg0)
+				throws CloudException, InternalException
 		{
 			// TODO Auto-generated method stub
 			return null;
@@ -144,8 +145,8 @@ public class RadixCloudProvider extends CloudProvider
 		}
 
 		@Override
-		public String registerMachineImage(final String arg0) throws CloudException,
-				InternalException
+		public String registerMachineImage(final String arg0)
+				throws CloudException, InternalException
 		{
 			// TODO Auto-generated method stub
 			return null;
@@ -161,8 +162,8 @@ public class RadixCloudProvider extends CloudProvider
 
 		@Override
 		public Iterable<MachineImage> searchMachineImages(final String arg0,
-				final Platform arg1, final Architecture arg2) throws CloudException,
-				InternalException
+				final Platform arg1, final Architecture arg2)
+				throws CloudException, InternalException
 		{
 			final MachineImage foo = new MachineImage()
 			{
@@ -173,8 +174,8 @@ public class RadixCloudProvider extends CloudProvider
 		}
 
 		@Override
-		public void shareMachineImage(final String arg0, final String arg1, final boolean arg2)
-				throws CloudException, InternalException
+		public void shareMachineImage(final String arg0, final String arg1,
+				final boolean arg2) throws CloudException, InternalException
 		{
 			// TODO Auto-generated method stub
 
@@ -340,40 +341,41 @@ public class RadixCloudProvider extends CloudProvider
 	{
 
 		@Override
-		public void boot(final String arg0) throws InternalException, CloudException
+		public void boot(final String arg0) throws InternalException,
+				CloudException
 		{
 			// TODO Auto-generated method stub
 
 		}
 
 		@Override
-		public VirtualMachine clone(final String arg0, final String arg1, final String arg2,
-				final String arg3, final boolean arg4, final String... arg5)
-				throws InternalException, CloudException
+		public VirtualMachine clone(final String arg0, final String arg1,
+				final String arg2, final String arg3, final boolean arg4,
+				final String... arg5) throws InternalException, CloudException
 		{
 			// TODO Auto-generated method stub
 			return null;
 		}
 
 		@Override
-		public void disableAnalytics(final String arg0) throws InternalException,
-				CloudException
+		public void disableAnalytics(final String arg0)
+				throws InternalException, CloudException
 		{
 			// TODO Auto-generated method stub
 
 		}
 
 		@Override
-		public void enableAnalytics(final String arg0) throws InternalException,
-				CloudException
+		public void enableAnalytics(final String arg0)
+				throws InternalException, CloudException
 		{
 			// TODO Auto-generated method stub
 
 		}
 
 		@Override
-		public String getConsoleOutput(final String arg0) throws InternalException,
-				CloudException
+		public String getConsoleOutput(final String arg0)
+				throws InternalException, CloudException
 		{
 			// TODO Auto-generated method stub
 			return null;
@@ -395,16 +397,17 @@ public class RadixCloudProvider extends CloudProvider
 		}
 
 		@Override
-		public VmStatistics getVMStatistics(final String arg0, final long arg1, final long arg2)
-				throws InternalException, CloudException
+		public VmStatistics getVMStatistics(final String arg0, final long arg1,
+				final long arg2) throws InternalException, CloudException
 		{
 			// TODO Auto-generated method stub
 			return null;
 		}
 
 		@Override
-		public Iterable<VmStatistics> getVMStatisticsForPeriod(final String arg0,
-				final long arg1, final long arg2) throws InternalException, CloudException
+		public Iterable<VmStatistics> getVMStatisticsForPeriod(
+				final String arg0, final long arg1, final long arg2)
+				throws InternalException, CloudException
 		{
 			// TODO Auto-generated method stub
 			return null;
@@ -427,20 +430,23 @@ public class RadixCloudProvider extends CloudProvider
 		}
 
 		@Override
-		public VirtualMachine launch(final String arg0, final VirtualMachineProduct arg1,
-				final String arg2, final String arg3, final String arg4, final String arg5,
-				final String arg6, final boolean arg7, final boolean arg8, final String... arg9)
-				throws InternalException, CloudException
+		public VirtualMachine launch(final String arg0,
+				final VirtualMachineProduct arg1, final String arg2,
+				final String arg3, final String arg4, final String arg5,
+				final String arg6, final boolean arg7, final boolean arg8,
+				final String... arg9) throws InternalException, CloudException
 
 		{
 			return null;
 		}
 
 		@Override
-		public VirtualMachine launch(final String arg0, final VirtualMachineProduct arg1,
-				final String arg2, final String arg3, final String arg4, final String arg5,
-				final String arg6, final boolean arg7, final boolean arg8, final String[] arg9,
-				final Tag... arg10) throws InternalException, CloudException
+		public VirtualMachine launch(final String arg0,
+				final VirtualMachineProduct arg1, final String arg2,
+				final String arg3, final String arg4, final String arg5,
+				final String arg6, final boolean arg7, final boolean arg8,
+				final String[] arg9, final Tag... arg10)
+				throws InternalException, CloudException
 		{
 			final RadixVirtualMachine vm = new RadixVirtualMachine();
 			vm.setName(arg3);
@@ -460,8 +466,9 @@ public class RadixCloudProvider extends CloudProvider
 		}
 
 		@Override
-		public Iterable<VirtualMachineProduct> listProducts(final Architecture arg0)
-				throws InternalException, CloudException
+		public Iterable<VirtualMachineProduct> listProducts(
+				final Architecture arg0) throws InternalException,
+				CloudException
 		{
 			final VirtualMachineProduct p = new VirtualMachineProduct()
 			{
@@ -481,7 +488,8 @@ public class RadixCloudProvider extends CloudProvider
 		}
 
 		@Override
-		public void pause(final String arg0) throws InternalException, CloudException
+		public void pause(final String arg0) throws InternalException,
+				CloudException
 		{
 			// TODO Auto-generated method stub
 

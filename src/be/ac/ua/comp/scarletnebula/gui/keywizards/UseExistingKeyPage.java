@@ -36,7 +36,8 @@ public class UseExistingKeyPage extends WizardPage
 
 		keylist = new SelectKeyList(provider);
 
-		final ThrobberBarWithText throbber = new ThrobberBarWithText("Loading keys");
+		final ThrobberBarWithText throbber = new ThrobberBarWithText(
+				"Loading keys");
 		final JPanel throbberContainer = new JPanel(new BorderLayout());
 		throbberContainer.add(throbber, BorderLayout.CENTER);
 		throbberContainer.setBorder(BorderFactory.createEmptyBorder(15, 0, 15,

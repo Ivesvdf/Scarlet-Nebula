@@ -25,7 +25,8 @@ public class KeyManager
 	 * @param keyname
 	 * @param keystring
 	 */
-	static void addKey(final String providerName, final String keyname, final String keystring)
+	static void addKey(final String providerName, final String keyname,
+			final String keystring)
 	{
 		if (assureDirectory(providerName) == null)
 		{
@@ -58,7 +59,8 @@ public class KeyManager
 	 * @param key
 	 *            Contents of the key
 	 */
-	public static void addKey(final String providerName, final String keyname, final File key)
+	public static void addKey(final String providerName, final String keyname,
+			final File key)
 	{
 
 		if (assureDirectory(providerName) == null)

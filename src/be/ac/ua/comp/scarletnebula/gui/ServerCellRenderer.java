@@ -46,7 +46,8 @@ class ServerCellRenderer implements ListCellRenderer
 
 	@Override
 	public Component getListCellRendererComponent(final JList list,
-			final Object value, final int index, final boolean isSelected, final boolean cellHasFocus)
+			final Object value, final int index, final boolean isSelected,
+			final boolean cellHasFocus)
 	{
 		// Dirty hack: the last item in the serverlist is always a fake server
 		// that when double clicked produces an "add new server" wizard.
@@ -115,7 +116,8 @@ class ServerCellRenderer implements ListCellRenderer
 		return chartPanel;
 	}
 
-	private JLabel getServernameComponent(final Server server, final Color foreground)
+	private JLabel getServernameComponent(final Server server,
+			final Color foreground)
 	{
 		final JLabel label = new JLabel(server.getFriendlyName(),
 				getServerIcon(server), SwingConstants.LEFT);
@@ -137,7 +139,8 @@ class ServerCellRenderer implements ListCellRenderer
 		return tags;
 	}
 
-	Color getBackgroundColor(final JList list, final int index, final boolean isSelected)
+	Color getBackgroundColor(final JList list, final int index,
+			final boolean isSelected)
 	{
 		Color background;
 
@@ -160,7 +163,8 @@ class ServerCellRenderer implements ListCellRenderer
 		return background;
 	}
 
-	Color getForegroundColor(final JList list, final int index, final boolean isSelected)
+	Color getForegroundColor(final JList list, final int index,
+			final boolean isSelected)
 	{
 		Color foreground;
 
@@ -182,8 +186,8 @@ class ServerCellRenderer implements ListCellRenderer
 		return foreground;
 	}
 
-	private JPanel createServerPanel(final Server server, final JList list, final int index,
-			final boolean isSelected)
+	private JPanel createServerPanel(final Server server, final JList list,
+			final int index, final boolean isSelected)
 	{
 		final JXPanel p = new JXPanel();
 		p.setLayout(new GridBagLayout());

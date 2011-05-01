@@ -13,8 +13,8 @@ public class FinalKeyImportPage extends AbstractFinalKeyWizardPage
 	private final String keyname;
 	private final File keyFile;
 
-	public FinalKeyImportPage(final CloudProvider provider, final String keyname,
-			final File keyFile)
+	public FinalKeyImportPage(final CloudProvider provider,
+			final String keyname, final File keyFile)
 	{
 		super(provider, "Click Finish to import the key" + keyname, "");
 		this.provider = provider;

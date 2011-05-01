@@ -18,8 +18,9 @@ public class Datapoint
 	Double highWarnLevel = null;
 	Double max = null;
 
-	public Datapoint(final Type datapointType, final String datastream, final Double value,
-			final Double lowWarnLevel, final Double mediumWarnLevel, final Double highWarnLevel,
+	public Datapoint(final Type datapointType, final String datastream,
+			final Double value, final Double lowWarnLevel,
+			final Double mediumWarnLevel, final Double highWarnLevel,
 			final Double max)
 	{
 		this.datapointType = datapointType;

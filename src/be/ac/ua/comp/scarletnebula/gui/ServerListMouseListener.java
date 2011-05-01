@@ -157,6 +157,17 @@ public class ServerListMouseListener implements MouseListener
 				}
 			});
 
+			final JMenuItem properties = new JMenuItem("Properties",
+					Utils.icon("settings16.png"));
+			properties.addActionListener(new ActionListener()
+			{
+				@Override
+				public void actionPerformed(final ActionEvent e)
+				{
+					new ServerPropertiesWindow(gui, selectedServers);
+				}
+			});
+
 			if (status != VmState.RUNNING && status != VmState.PAUSED)
 			{
 				pauseResume.setEnabled(false);
@@ -178,6 +189,8 @@ public class ServerListMouseListener implements MouseListener
 			popup.add(statistics);
 			popup.addSeparator();
 			popup.add(unlink);
+			popup.addSeparator();
+			popup.add(properties);
 
 			popup.show(e.getComponent(), e.getX(), e.getY());
 		}
@@ -200,22 +213,16 @@ public class ServerListMouseListener implements MouseListener
 	@Override
 	public void mouseReleased(final MouseEvent e)
 	{
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override
 	public void mouseEntered(final MouseEvent e)
 	{
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override
 	public void mouseExited(final MouseEvent e)
 	{
-		// TODO Auto-generated method stub
-
 	}
 
 }

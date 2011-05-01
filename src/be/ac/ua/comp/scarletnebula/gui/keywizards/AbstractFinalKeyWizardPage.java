@@ -30,8 +30,8 @@ public abstract class AbstractFinalKeyWizardPage extends WizardPage
 		private final String checkKeyname;
 		private final CloudProvider provider;
 
-		private TestKeyExistsWorker(final Collapsable throbber, final String checkKeyname,
-				final CloudProvider provider)
+		private TestKeyExistsWorker(final Collapsable throbber,
+				final String checkKeyname, final CloudProvider provider)
 		{
 			super(throbber);
 			this.checkKeyname = checkKeyname;

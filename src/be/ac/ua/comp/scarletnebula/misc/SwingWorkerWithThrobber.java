@@ -44,8 +44,8 @@ public abstract class SwingWorkerWithThrobber<T, V> extends SwingWorker<T, V>
 		addPropertyChangeListener(new WorkerPropertyChangeListener()
 		{
 			@Override
-			public void progressChanged(final Object source, final int newProgress,
-					final PropertyChangeEvent evt)
+			public void progressChanged(final Object source,
+					final int newProgress, final PropertyChangeEvent evt)
 			{
 			}
 

@@ -56,15 +56,16 @@ public class SSHCommandConnection extends CommandConnection
 	}
 
 	static public SSHCommandConnection newConnectionWithPassword(
-			final String address, final String username, final String password, final UserInfo ui)
-			throws Exception
+			final String address, final String username, final String password,
+			final UserInfo ui) throws Exception
 	{
 		return new SSHCommandConnection(address, username, password, ui,
 				LoginMethod.PASSWORD);
 	}
 
-	static public SSHCommandConnection newConnectionWithKey(final String address,
-			final String username, final String key, final UserInfo ui) throws Exception
+	static public SSHCommandConnection newConnectionWithKey(
+			final String address, final String username, final String key,
+			final UserInfo ui) throws Exception
 	{
 		return new SSHCommandConnection(address, username, key, ui,
 				LoginMethod.KEY);
@@ -260,7 +261,8 @@ public class SSHCommandConnection extends CommandConnection
 		public Channel channel;
 		public InputStream inputStream;
 
-		ChannelInputStreamTuple(final Channel channel, final InputStream inputStream)
+		ChannelInputStreamTuple(final Channel channel,
+				final InputStream inputStream)
 		{
 			this.channel = channel;
 			this.inputStream = inputStream;

@@ -81,8 +81,9 @@ public class NotPromptingJschUserInfo implements UserInfo,
 	private Container panel;
 
 	@Override
-	public String[] promptKeyboardInteractive(final String destination, final String name,
-			final String instruction, final String[] prompt, final boolean[] echo)
+	public String[] promptKeyboardInteractive(final String destination,
+			final String name, final String instruction, final String[] prompt,
+			final boolean[] echo)
 	{
 		panel = new JPanel();
 		panel.setLayout(new GridBagLayout());
