@@ -143,6 +143,11 @@ public abstract class AbstractFinalKeyWizardPage extends WizardPage
 		add(textAndThrobber, BorderLayout.NORTH);
 	}
 
+	protected boolean makeKeyDefault()
+	{
+		return makeDefault.isSelected();
+	}
+
 	@Override
 	public WizardPage next(DataRecorder recorder)
 	{
@@ -155,7 +160,7 @@ public abstract class AbstractFinalKeyWizardPage extends WizardPage
 		return null;
 	}
 
-	protected abstract boolean performAction();
+	protected abstract void performAction();
 
 	@Override
 	public boolean nextIsEnabled()

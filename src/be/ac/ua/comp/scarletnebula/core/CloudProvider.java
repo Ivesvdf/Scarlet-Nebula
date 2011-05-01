@@ -282,14 +282,19 @@ public class CloudProvider
 	 * @throws InternalException
 	 * @throws CloudException
 	 */
-	public void createKey(String keyname) throws InternalException,
-			CloudException
+	public void createKey(String keyname, boolean makeDefault)
+			throws InternalException, CloudException
 	{
 		ShellKeySupport shellKeySupport = providerImpl.getIdentityServices()
 				.getShellKeySupport();
 
 		KeyManager.addKey(providerClassName, keyname,
 				shellKeySupport.createKeypair(keyname));
+
+		if (makeDefault)
+		{
+			setDefaultKeypair(keyname);
+		}
 	}
 
 	/**
@@ -874,5 +879,15 @@ public class CloudProvider
 			log.error("Could not list keys.", e);
 		}
 		return exists;
+	}
+
+	public void importKey(String keyname, File keyFile, boolean makeDefault)
+	{
+		KeyManager.addKey(getName(), keyname, keyFile);
+
+		if (makeDefault)
+		{
+			setDefaultKeypair(keyname);
+		}
 	}
 }

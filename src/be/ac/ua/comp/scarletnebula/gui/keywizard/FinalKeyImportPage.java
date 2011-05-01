@@ -4,7 +4,6 @@ import java.awt.BorderLayout;
 import java.io.File;
 
 import be.ac.ua.comp.scarletnebula.core.CloudProvider;
-import be.ac.ua.comp.scarletnebula.core.KeyManager;
 import be.ac.ua.comp.scarletnebula.gui.BetterTextLabel;
 
 public class FinalKeyImportPage extends AbstractFinalKeyWizardPage
@@ -29,10 +28,9 @@ public class FinalKeyImportPage extends AbstractFinalKeyWizardPage
 	}
 
 	@Override
-	protected boolean performAction()
+	protected void performAction()
 	{
-		KeyManager.addKey(provider.getName(), keyname, keyFile);
-		return true;
+		provider.importKey(keyname, keyFile, makeKeyDefault());
 	}
 
 }

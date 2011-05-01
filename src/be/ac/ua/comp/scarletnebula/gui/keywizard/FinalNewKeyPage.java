@@ -1,6 +1,7 @@
 package be.ac.ua.comp.scarletnebula.gui.keywizard;
 
 import javax.swing.JOptionPane;
+import javax.swing.SwingWorker;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -25,21 +26,45 @@ public class FinalNewKeyPage extends AbstractFinalKeyWizardPage
 	}
 
 	@Override
-	protected boolean performAction()
+	protected void performAction()
 	{
-		boolean result = true;
-		try
+		(new SwingWorker<Exception, Object>()
 		{
-			provider.createKey(keyname);
-		}
-		catch (Exception e)
-		{
-			log.error("Could not create key", e);
-			JOptionPane.showMessageDialog(this, e.getLocalizedMessage(),
-					"Error creating key", JOptionPane.ERROR_MESSAGE);
-			result = false;
-		}
-		return result;
-	}
+			@Override
+			protected Exception doInBackground() throws Exception
+			{
+				try
+				{
+					provider.createKey(keyname, makeKeyDefault());
+				}
+				catch (Exception e)
+				{
+					return e;
+				}
+				return null;
+			}
 
+			@Override
+			public void done()
+			{
+				try
+				{
+					Exception result = get();
+
+					if (result != null)
+					{
+						log.error("Could not create key", result);
+						JOptionPane
+								.showMessageDialog(FinalNewKeyPage.this,
+										result.getLocalizedMessage(),
+										"Error creating key",
+										JOptionPane.ERROR_MESSAGE);
+					}
+				}
+				catch (Exception ignore)
+				{
+				}
+			}
+		}).execute();
+	}
 }
