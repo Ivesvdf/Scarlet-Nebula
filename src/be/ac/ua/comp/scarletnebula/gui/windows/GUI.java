@@ -665,6 +665,7 @@ public class GUI extends JFrame implements ListSelectionListener,
 	private void addServer(final Server server)
 	{
 		serverListModel.addServer(server);
+		serverList.setSelectedIndices(new int[0]);
 		server.addServerChangedObserver(this);
 	}
 
@@ -750,7 +751,8 @@ public class GUI extends JFrame implements ListSelectionListener,
 	}
 
 	@Override
-	public void serverUnlinked(final CloudProvider cloudProvider, final Server srv)
+	public void serverUnlinked(final CloudProvider cloudProvider,
+			final Server srv)
 	{
 		removeServer(srv);
 		GraphPanelCache.get().clearBareServerCache(srv);

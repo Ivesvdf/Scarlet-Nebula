@@ -12,7 +12,6 @@ import java.awt.event.MouseListener;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
@@ -56,7 +55,8 @@ public class LabelEditSwitcherPanel extends JPanel implements MouseListener,
 	 *            The JTextField that will be shown after the user goes from
 	 *            display to edit mode
 	 */
-	public LabelEditSwitcherPanel(final String initialContent, final JTextField theTextField)
+	public LabelEditSwitcherPanel(final String initialContent,
+			final JTextField theTextField)
 	{
 		super(new BorderLayout());
 		addMouseListener(this);
@@ -83,8 +83,9 @@ public class LabelEditSwitcherPanel extends JPanel implements MouseListener,
 		c.gridx = 0;
 		c.gridy = 0;
 		add(new JLabel(content), c);
-		final JButton editButton = new ToolbarStyleButton(
-				Utils.icon("settings16.png"));
+		final ToolbarStyleButton editButton = new ToolbarStyleButton(
+				Utils.icon("settings16.png"),
+				Utils.icon("settings_hover16.png"));
 		editButton.addActionListener(new TryGoingBackToEditActionHandler());
 		c.fill = GridBagConstraints.NONE;
 		c.weightx = 0.0;

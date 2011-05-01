@@ -7,7 +7,6 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
-import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
@@ -49,8 +48,9 @@ public class ChangeableLabel extends JPanel
 		c.gridx = 0;
 		c.gridy = 0;
 		add(contentLabel, c);
-		final JButton editButton = new ToolbarStyleButton(
-				Utils.icon("settings16.png"));
+		final ToolbarStyleButton editButton = new ToolbarStyleButton(
+				Utils.icon("settings16.png"),
+				Utils.icon("settings_hover16.png"));
 		editButton.addActionListener(new ExecuteActionListener<JLabel>(
 				executable, contentLabel));
 		c.fill = GridBagConstraints.NONE;
@@ -83,7 +83,8 @@ public class ChangeableLabel extends JPanel
 		 *            This parameter will be given to the run() method of the
 		 *            Executable when the ActionListener fires
 		 */
-		private ExecuteActionListener(final Executable<T> executable, final T argument)
+		private ExecuteActionListener(final Executable<T> executable,
+				final T argument)
 		{
 			this.executable = executable;
 			this.argument = argument;
@@ -118,7 +119,8 @@ public class ChangeableLabel extends JPanel
 		 * @param argument
 		 *            The parameter given to the Executable's run method
 		 */
-		private ExecuteMouseListener(final Executable<T> executable, final T argument)
+		private ExecuteMouseListener(final Executable<T> executable,
+				final T argument)
 		{
 			this.executable = executable;
 			this.argument = argument;
