@@ -1,18 +1,20 @@
 package be.ac.ua.comp.scarletnebula.gui.keywizards;
 
 import java.awt.BorderLayout;
+import java.util.List;
 
 import javax.swing.BorderFactory;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.border.BevelBorder;
 
-import org.dasein.cloud.CloudException;
-import org.dasein.cloud.InternalException;
-
 import be.ac.ua.comp.scarletnebula.core.CloudProvider;
 import be.ac.ua.comp.scarletnebula.gui.BetterTextLabel;
+import be.ac.ua.comp.scarletnebula.gui.CollapsablePanel;
 import be.ac.ua.comp.scarletnebula.gui.SelectKeyList;
+import be.ac.ua.comp.scarletnebula.gui.ThrobberBarWithText;
+import be.ac.ua.comp.scarletnebula.misc.SwingWorkerWithThrobber;
 import be.ac.ua.comp.scarletnebula.wizard.DataRecorder;
 import be.ac.ua.comp.scarletnebula.wizard.WizardPage;
 
@@ -22,7 +24,7 @@ public class UseExistingKeyPage extends WizardPage
 	SelectKeyList keylist;
 	private final CloudProvider provider;
 
-	UseExistingKeyPage(CloudProvider provider)
+	UseExistingKeyPage(final CloudProvider provider)
 	{
 		this.provider = provider;
 		final BetterTextLabel lbl = new BetterTextLabel(
@@ -32,23 +34,44 @@ public class UseExistingKeyPage extends WizardPage
 
 		setLayout(new BorderLayout());
 
-		add(lbl, BorderLayout.PAGE_START);
-
 		keylist = new SelectKeyList(provider);
-		try
+
+		ThrobberBarWithText throbber = new ThrobberBarWithText("Loading keys");
+		JPanel throbberContainer = new JPanel(new BorderLayout());
+		throbberContainer.add(throbber, BorderLayout.CENTER);
+		throbberContainer.setBorder(BorderFactory.createEmptyBorder(15, 0, 15,
+				0));
+
+		CollapsablePanel collapsableThrobber = new CollapsablePanel(
+				throbberContainer, false);
+
+		JPanel aboveKeylist = new JPanel(new BorderLayout());
+		aboveKeylist.add(lbl, BorderLayout.PAGE_START);
+		aboveKeylist.add(collapsableThrobber, BorderLayout.PAGE_END);
+		add(aboveKeylist, BorderLayout.NORTH);
+
+		(new SwingWorkerWithThrobber<Object, String>(collapsableThrobber)
 		{
-			keylist.fillWithUnknownKeys();
-		}
-		catch (final InternalException e)
-		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		catch (final CloudException e)
-		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+			@Override
+			protected Object doInBackground() throws Exception
+			{
+				for (final String keyname : provider.getUnknownKeys())
+				{
+					publish(keyname);
+				}
+
+				return null;
+			}
+
+			@Override
+			protected void process(List<String> keynames)
+			{
+				for (String keyname : keynames)
+				{
+					keylist.add(keyname);
+				}
+			}
+		}).execute();
 
 		final JScrollPane listScrollPane = new JScrollPane(keylist);
 		listScrollPane.setBorder(BorderFactory.createCompoundBorder(

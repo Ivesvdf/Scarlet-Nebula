@@ -14,9 +14,6 @@ import javax.swing.SwingConstants;
 import javax.swing.UIManager;
 import javax.swing.border.BevelBorder;
 
-import org.dasein.cloud.CloudException;
-import org.dasein.cloud.InternalException;
-
 import be.ac.ua.comp.scarletnebula.core.CloudProvider;
 import be.ac.ua.comp.scarletnebula.core.KeyManager;
 
@@ -90,11 +87,4 @@ public class SelectKeyList extends JList
 			add(keyname);
 	}
 
-	public void fillWithUnknownKeys() throws InternalException, CloudException
-	{
-		for (final String keyname : provider.getUnknownKeys())
-		{
-			add(keyname);
-		}
-	}
 }

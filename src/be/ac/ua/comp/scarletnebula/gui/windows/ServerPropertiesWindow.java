@@ -42,12 +42,12 @@ import be.ac.ua.comp.scarletnebula.misc.Utils;
 import com.jgoodies.forms.builder.DefaultFormBuilder;
 import com.jgoodies.forms.layout.FormLayout;
 
-public class PropertiesWindow extends JDialog
+public class ServerPropertiesWindow extends JDialog
 {
 
 	private static final long serialVersionUID = 1L;
 
-	private static Log log = LogFactory.getLog(PropertiesWindow.class);
+	private static Log log = LogFactory.getLog(ServerPropertiesWindow.class);
 
 	private final JPanel overviewTab = new JPanel();
 	private final JPanel statisticsTab = new JPanel();
@@ -72,7 +72,7 @@ public class PropertiesWindow extends JDialog
 
 	private DecoratedCommunicationPanel decoratedCommunicationPanel = null;
 
-	public PropertiesWindow(GUI gui, Collection<Server> selectedServers)
+	public ServerPropertiesWindow(GUI gui, Collection<Server> selectedServers)
 	{
 		super(gui, true);
 		this.selectedServers = selectedServers;
@@ -113,7 +113,7 @@ public class PropertiesWindow extends JDialog
 			@Override
 			public void actionPerformed(ActionEvent e)
 			{
-				PropertiesWindow.this.dispose();
+				ServerPropertiesWindow.this.dispose();
 			}
 		});
 
@@ -151,9 +151,9 @@ public class PropertiesWindow extends JDialog
 						.getSelectedComponent();
 
 				if (selectedPanel == communicationTab)
-					PropertiesWindow.this.communicationTabGotFocus(servers);
+					ServerPropertiesWindow.this.communicationTabGotFocus(servers);
 				if (selectedPanel == statisticsTab)
-					PropertiesWindow.this.statisticsTabGotFocus(servers);
+					ServerPropertiesWindow.this.statisticsTabGotFocus(servers);
 			}
 
 		});
@@ -260,7 +260,7 @@ public class PropertiesWindow extends JDialog
 			public void actionPerformed(ActionEvent e)
 			{
 				final StatisticsPropertiesWindow win = new StatisticsPropertiesWindow(
-						PropertiesWindow.this, servers);
+						ServerPropertiesWindow.this, servers);
 				win.addActionListener(new ActionListener()
 				{
 					@Override
@@ -308,7 +308,7 @@ public class PropertiesWindow extends JDialog
 					public void run(final JLabel text)
 					{
 						final ChangeServerSshLoginMethodWindow window = new ChangeServerSshLoginMethodWindow(
-								PropertiesWindow.this, server);
+								ServerPropertiesWindow.this, server);
 						window.addActionListener(new ActionListener()
 						{
 							@Override
@@ -350,7 +350,7 @@ public class PropertiesWindow extends JDialog
 					public void run(final JLabel label)
 					{
 						final TaggingWindow win = new TaggingWindow(
-								PropertiesWindow.this, server.getTags());
+								ServerPropertiesWindow.this, server.getTags());
 						win.addWindowClosedListener(new TaggingWindow.WindowClosedListener()
 						{
 							@Override
