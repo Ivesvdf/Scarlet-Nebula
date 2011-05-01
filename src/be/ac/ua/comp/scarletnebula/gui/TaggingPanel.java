@@ -119,7 +119,12 @@ public class TaggingPanel extends JPanel
 		void addTag(final TagItem tag)
 		{
 			tag.setAlignmentX(LEFT_ALIGNMENT);
-			add(tag);
+
+			// Only add if it's not yet in the list
+			if (!getTags().contains(tag.getTag()))
+			{
+				add(tag);
+			}
 			revalidate();
 			repaint();
 		}
@@ -140,7 +145,12 @@ public class TaggingPanel extends JPanel
 	private class TagItem extends JPanel
 	{
 		private static final long serialVersionUID = 1L;
-		String tag;
+		private String tag;
+
+		public String getTag()
+		{
+			return tag;
+		}
 
 		TagItem(final String tag)
 		{
