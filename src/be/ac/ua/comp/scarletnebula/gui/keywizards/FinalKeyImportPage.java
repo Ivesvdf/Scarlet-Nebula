@@ -28,8 +28,11 @@ public class FinalKeyImportPage extends AbstractFinalKeyWizardPage
 	}
 
 	@Override
-	protected void performAction()
+	protected void performAction(KeyRecorder recorder)
 	{
+		recorder.keyname = keyname;
+		recorder.makeDefault = makeKeyDefault();
+
 		provider.importKey(keyname, keyFile, makeKeyDefault());
 	}
 

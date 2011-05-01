@@ -12,7 +12,7 @@ public class ImportKeyWizard extends Wizard
 
 	public ImportKeyWizard(JDialog parent, CloudProvider provider)
 	{
-		super(new UseExistingKeyPage(provider), null,
+		super(new UseExistingKeyPage(provider), new KeyRecorder(),
 				new SimpleWizardTemplate());
 		this.parent = parent;
 

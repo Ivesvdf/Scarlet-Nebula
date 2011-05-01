@@ -127,8 +127,8 @@ public abstract class AbstractFinalKeyWizardPage extends WizardPage
 		{
 			final ThrobberBarWithText throbber = new ThrobberBarWithText(
 					"Verifying key uniqueness...");
-			final CollapsablePanel throbberPanel = new CollapsablePanel(throbber,
-					false);
+			final CollapsablePanel throbberPanel = new CollapsablePanel(
+					throbber, false);
 			throbberPanel.setBorder(BorderFactory.createEmptyBorder(10, 0, 10,
 					0));
 			final SwingWorkerWithThrobber<Boolean, String> checkKeyWorker = new TestKeyExistsWorker(
@@ -151,7 +151,7 @@ public abstract class AbstractFinalKeyWizardPage extends WizardPage
 	@Override
 	public WizardPage next(DataRecorder recorder)
 	{
-		performAction();
+		performAction((KeyRecorder) recorder);
 
 		if (makeDefault.isSelected())
 		{
@@ -160,7 +160,7 @@ public abstract class AbstractFinalKeyWizardPage extends WizardPage
 		return null;
 	}
 
-	protected abstract void performAction();
+	protected abstract void performAction(KeyRecorder recorder);
 
 	@Override
 	public boolean nextIsEnabled()

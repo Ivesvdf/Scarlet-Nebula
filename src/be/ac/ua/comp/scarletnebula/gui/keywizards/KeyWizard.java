@@ -10,7 +10,7 @@ public class KeyWizard extends Wizard
 {
 	public KeyWizard(Frame parent, CloudProvider provider)
 	{
-		super(new CreateUseChoicePage(provider), null,
+		super(new CreateUseChoicePage(provider), new KeyRecorder(),
 				new SimpleWizardTemplate());
 
 		startModal("Manage SSH Keys", 400, 310, parent);

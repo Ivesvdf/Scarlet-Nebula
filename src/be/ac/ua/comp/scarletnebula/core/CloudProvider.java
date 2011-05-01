@@ -289,7 +289,7 @@ public class CloudProvider
 		final ShellKeySupport shellKeySupport = providerImpl
 				.getIdentityServices().getShellKeySupport();
 
-		KeyManager.addKey(providerClassName, keyname,
+		KeyManager.addKey(getName(), keyname,
 				shellKeySupport.createKeypair(keyname));
 
 		if (makeDefault)
@@ -470,8 +470,30 @@ public class CloudProvider
 		return server;
 	}
 
+	/**
+	 * @return The name of the default keypair for this provider. If no default
+	 *         keypair is set (or the default keypair is invalid) but there are
+	 *         keys available, one of these will be chosen
+	 */
 	public String getDefaultKeypair()
 	{
+		// If no default keypair is entered in the cloudprovider, but there is a
+		// key for this provider, make that the default.
+
+		// Also do something similar when the default key is not in the set of
+		// keys.
+		final Collection<String> keys = KeyManager.getKeyNames(getName());
+
+		if (defaultKeypair.isEmpty() || !keys.contains(defaultKeypair))
+		{
+			if (!keys.isEmpty())
+			{
+				String newDefaultKey = keys.iterator().next();
+				setDefaultKeypair(newDefaultKey);
+				store();
+			}
+		}
+
 		return defaultKeypair;
 	}
 
@@ -484,7 +506,7 @@ public class CloudProvider
 	 */
 	public void setDefaultKeypair(String newDefaultKeypair)
 	{
-		if (KeyManager.getKeyNames(getName()).contains(defaultKeypair))
+		if (KeyManager.getKeyNames(getName()).contains(newDefaultKeypair))
 		{
 			defaultKeypair = newDefaultKeypair;
 		}
@@ -585,8 +607,6 @@ public class CloudProvider
 
 	private org.dasein.cloud.ProviderContext getCurrentContext()
 	{
-		final String accountNumber = "0";
-
 		final org.dasein.cloud.ProviderContext context = new org.dasein.cloud.ProviderContext();
 
 		context.setAccountNumber("000000000000");
@@ -905,5 +925,21 @@ public class CloudProvider
 			setDefaultKeypair(keyname);
 			store();
 		}
+	}
+
+	/**
+	 * Deletes and SSH key, both locally and, if it exists, remotely.
+	 * 
+	 * @param key
+	 * @throws CloudException
+	 * @throws InternalException
+	 */
+	public void deleteKey(String key) throws InternalException, CloudException
+	{
+		KeyManager.deleteKey(getName(), key);
+
+		final ShellKeySupport shellKeySupport = providerImpl
+				.getIdentityServices().getShellKeySupport();
+		shellKeySupport.deleteKeypair(key);
 	}
 }

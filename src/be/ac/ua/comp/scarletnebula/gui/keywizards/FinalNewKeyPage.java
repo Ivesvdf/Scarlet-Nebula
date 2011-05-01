@@ -26,8 +26,11 @@ public class FinalNewKeyPage extends AbstractFinalKeyWizardPage
 	}
 
 	@Override
-	protected void performAction()
+	protected void performAction(KeyRecorder recorder)
 	{
+		recorder.keyname = keyname;
+		recorder.makeDefault = makeKeyDefault();
+
 		(new SwingWorker<Exception, Object>()
 		{
 			@Override

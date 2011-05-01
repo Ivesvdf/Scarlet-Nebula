@@ -179,17 +179,9 @@ public class CloudManager
 			server.unlink();
 
 		// Remove his server directory
-		final File serverdir = new File("servers/" + provname);
+		final File serverdir = removeDirContainingFiles("servers/" + provname);
 
-		if (serverdir.list() != null)
-		{
-			// If there are still files in the directory, delete them
-			for (final String file : serverdir.list())
-			{
-				final File f = new File(file);
-				f.delete();
-			}
-		}
+		// Should the provider's keyfiles be removed??
 
 		// Now delete the dir itself
 		serverdir.delete();
@@ -197,6 +189,22 @@ public class CloudManager
 		// And delete his configfile
 		final File config = new File(CloudProvider.getConfigfileName(provname));
 		config.delete();
+	}
+
+	private File removeDirContainingFiles(String dirname)
+	{
+		final File dir = new File(dirname);
+
+		if (dir.list() != null)
+		{
+			// If there are still files in the directory, delete them
+			for (final String file : dir.list())
+			{
+				final File f = new File(file);
+				f.delete();
+			}
+		}
+		return dir;
 	}
 
 	public void loadAllLinkedServers() throws InternalException,

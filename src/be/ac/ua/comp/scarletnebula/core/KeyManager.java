@@ -113,10 +113,19 @@ public class KeyManager
 	}
 
 	static String getKeyFilename(String providerName, String keyname)
-			throws FileNotFoundException
 	{
 		final String filename = getKeyPath(providerName) + keyname + ".key";
 
 		return filename;
+	}
+
+	public static void deleteKey(String providerName, String keyname)
+	{
+		final File keyFile = new File(getKeyFilename(providerName, keyname));
+
+		if (keyFile.exists())
+		{
+			keyFile.delete();
+		}
 	}
 }

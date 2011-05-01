@@ -12,7 +12,7 @@ public class NewKeyWizard extends Wizard
 
 	public NewKeyWizard(JDialog parent, CloudProvider provider)
 	{
-		super(new SelectNewKeynamePage(provider), null,
+		super(new SelectNewKeynamePage(provider), new KeyRecorder(),
 				new SimpleWizardTemplate());
 		this.parent = parent;
 	}
