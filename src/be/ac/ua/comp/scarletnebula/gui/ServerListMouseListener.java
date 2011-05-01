@@ -19,6 +19,99 @@ import be.ac.ua.comp.scarletnebula.misc.Utils;
 
 public class ServerListMouseListener implements MouseListener
 {
+	private final class StartPropertiesActionListener implements ActionListener
+	{
+		private final Collection<Server> selectedServers;
+
+		private StartPropertiesActionListener(final Collection<Server> selectedServers)
+		{
+			this.selectedServers = selectedServers;
+		}
+
+		@Override
+		public void actionPerformed(final ActionEvent e)
+		{
+			new ServerPropertiesWindow(gui, selectedServers);
+		}
+	}
+
+	private final class StartStatisticsActionListener implements ActionListener
+	{
+		private final Collection<Server> selectedServers;
+
+		private StartStatisticsActionListener(final Collection<Server> selectedServers)
+		{
+			this.selectedServers = selectedServers;
+		}
+
+		@Override
+		public void actionPerformed(final ActionEvent e)
+		{
+			new StatisticsWindow(gui, selectedServers);
+		}
+	}
+
+	private final class StartTerminalActionListener implements ActionListener
+	{
+		private final Collection<Server> selectedServers;
+
+		private StartTerminalActionListener(final Collection<Server> selectedServers)
+		{
+			this.selectedServers = selectedServers;
+		}
+
+		@Override
+		public void actionPerformed(final ActionEvent e)
+		{
+			new SSHTerminalWindow(gui, selectedServers);
+		}
+	}
+
+	private final class UnlinkActionListener implements ActionListener
+	{
+		@Override
+		public void actionPerformed(final ActionEvent e)
+		{
+			gui.unlinkSelectedServers();
+		}
+	}
+
+	private final class RefreshActionListener implements ActionListener
+	{
+		@Override
+		public void actionPerformed(final ActionEvent e)
+		{
+			gui.refreshSelectedServers();
+		}
+	}
+
+	private final class TerminateActionListener implements ActionListener
+	{
+		@Override
+		public void actionPerformed(final ActionEvent e)
+		{
+			gui.terminateSelectedServers();
+		}
+	}
+
+	private final class RebootActionListener implements ActionListener
+	{
+		@Override
+		public void actionPerformed(final ActionEvent e)
+		{
+			gui.rebootSelectedServers();
+		}
+	}
+
+	private final class PauseActionListener implements ActionListener
+	{
+		@Override
+		public void actionPerformed(final ActionEvent e)
+		{
+			gui.pauseSelectedServers();
+		}
+	}
+
 	private final GUI gui;
 	private final ServerListModel serverListModel;
 	private final ServerList serverlist;
@@ -81,92 +174,38 @@ public class ServerListMouseListener implements MouseListener
 					(status == VmState.PAUSED) ? "Resume" : "Pause",
 					Utils.icon("paused.png"));
 
-			pauseResume.addActionListener(new ActionListener()
-			{
-				@Override
-				public void actionPerformed(final ActionEvent e)
-				{
-					gui.pauseSelectedServers();
-				}
-			});
+			pauseResume.addActionListener(new PauseActionListener());
 
 			final JMenuItem reboot = new JMenuItem("Reboot",
 					Utils.icon("restarting.png"));
-			reboot.addActionListener(new ActionListener()
-			{
-				@Override
-				public void actionPerformed(final ActionEvent e)
-				{
-					gui.rebootSelectedServers();
-				}
-			});
+			reboot.addActionListener(new RebootActionListener());
 
 			final JMenuItem terminate = new JMenuItem("Terminate",
 					Utils.icon("terminated.png"));
-			terminate.addActionListener(new ActionListener()
-			{
-				@Override
-				public void actionPerformed(final ActionEvent e)
-				{
-					gui.terminateSelectedServers();
-				}
-			});
+			terminate.addActionListener(new TerminateActionListener());
 
 			final JMenuItem refresh = new JMenuItem("Refresh",
 					Utils.icon("refresh16.png"));
-			refresh.addActionListener(new ActionListener()
-			{
-
-				@Override
-				public void actionPerformed(final ActionEvent e)
-				{
-					gui.refreshSelectedServers();
-				}
-			});
+			refresh.addActionListener(new RefreshActionListener());
 
 			final JMenuItem unlink = new JMenuItem("Unlink Instance",
 					Utils.icon("unlink16.png"));
-			unlink.addActionListener(new ActionListener()
-			{
-				@Override
-				public void actionPerformed(final ActionEvent e)
-				{
-					gui.unlinkSelectedServers();
-				}
-			});
+			unlink.addActionListener(new UnlinkActionListener());
 
 			final JMenuItem console = new JMenuItem("Start terminal",
 					Utils.icon("console16.png"));
-			console.addActionListener(new ActionListener()
-			{
-				@Override
-				public void actionPerformed(final ActionEvent e)
-				{
-					new SSHTerminalWindow(gui, selectedServers);
-				}
-			});
+			console.addActionListener(new StartTerminalActionListener(
+					selectedServers));
 
 			final JMenuItem statistics = new JMenuItem("View statistics",
 					Utils.icon("statistics16.png"));
-			statistics.addActionListener(new ActionListener()
-			{
-				@Override
-				public void actionPerformed(final ActionEvent e)
-				{
-					new StatisticsWindow(gui, selectedServers);
-				}
-			});
+			statistics.addActionListener(new StartStatisticsActionListener(
+					selectedServers));
 
 			final JMenuItem properties = new JMenuItem("Properties",
 					Utils.icon("settings16.png"));
-			properties.addActionListener(new ActionListener()
-			{
-				@Override
-				public void actionPerformed(final ActionEvent e)
-				{
-					new ServerPropertiesWindow(gui, selectedServers);
-				}
-			});
+			properties.addActionListener(new StartPropertiesActionListener(
+					selectedServers));
 
 			if (status != VmState.RUNNING && status != VmState.PAUSED)
 			{
