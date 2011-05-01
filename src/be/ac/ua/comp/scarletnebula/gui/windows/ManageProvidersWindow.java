@@ -41,19 +41,19 @@ public class ManageProvidersWindow extends JDialog
 		fillProviderList(providerListModel);
 		providerList.setSelectedIndex(0);
 
-		JScrollPane providerListScrollPane = new JScrollPane(providerList);
+		final JScrollPane providerListScrollPane = new JScrollPane(providerList);
 		providerListScrollPane.setBorder(BorderFactory.createEmptyBorder(20,
 				20, 20, 20));
 
 		setLayout(new BorderLayout());
 
-		JButton addButton = new JButton(Utils.icon("add22.png"));
+		final JButton addButton = new JButton(Utils.icon("add22.png"));
 		addButton.addActionListener(new ActionListener()
 		{
 			@Override
 			public void actionPerformed(ActionEvent e)
 			{
-				AddProviderWizard wiz = new AddProviderWizard();
+				final AddProviderWizard wiz = new AddProviderWizard();
 
 				wiz.addProviderAddedListener(new ProviderAddedListener()
 				{
@@ -68,19 +68,19 @@ public class ManageProvidersWindow extends JDialog
 			}
 		});
 
-		JButton modifyButton = new JButton(Utils.icon("modify22.png"));
+		final JButton modifyButton = new JButton(Utils.icon("modify22.png"));
 		modifyButton.addActionListener(new ActionListener()
 		{
 			@Override
 			public void actionPerformed(ActionEvent e)
 			{
-				int index = providerList.getSelectedIndex();
+				final int index = providerList.getSelectedIndex();
 
 				if (index < 0)
 					return;
 
-				String provname = (String) providerListModel.get(index);
-				CloudProvider provider = CloudManager.get()
+				final String provname = (String) providerListModel.get(index);
+				final CloudProvider provider = CloudManager.get()
 						.getCloudProviderByName(provname);
 
 				new ProviderPropertiesWindow(ManageProvidersWindow.this,
@@ -88,19 +88,19 @@ public class ManageProvidersWindow extends JDialog
 			}
 		});
 
-		JButton removeButton = new JButton(Utils.icon("remove22.png"));
+		final JButton removeButton = new JButton(Utils.icon("remove22.png"));
 		removeButton.addActionListener(new ActionListener()
 		{
 			@Override
 			public void actionPerformed(ActionEvent e)
 			{
-				int index = providerList.getSelectedIndex();
+				final int index = providerList.getSelectedIndex();
 
 				// No selection
 				if (index < 0)
 					return;
 
-				int answer = JOptionPane
+				final int answer = JOptionPane
 						.showConfirmDialog(
 								ManageProvidersWindow.this,
 								"Removing a CloudProvider will unlink all servers registered with "
@@ -115,13 +115,13 @@ public class ManageProvidersWindow extends JDialog
 					return;
 				}
 
-				String provname = (String) providerListModel.get(index);
+				final String provname = (String) providerListModel.get(index);
 				providerListModel.remove(index);
 				CloudManager.get().deleteCloudProvider(provname);
 			}
 		});
 
-		JPanel buttonPanel = new JPanel();
+		final JPanel buttonPanel = new JPanel();
 		buttonPanel.setBorder(BorderFactory.createEmptyBorder(0, 20, 20, 20));
 		buttonPanel.add(addButton);
 		buttonPanel.add(modifyButton);
@@ -134,7 +134,7 @@ public class ManageProvidersWindow extends JDialog
 
 	private void fillProviderList(DefaultListModel providerListModel)
 	{
-		for (String name : CloudManager.get().getLinkedCloudProviderNames())
+		for (final String name : CloudManager.get().getLinkedCloudProviderNames())
 		{
 			providerListModel.addElement(name);
 		}

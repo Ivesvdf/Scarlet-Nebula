@@ -23,16 +23,16 @@ public class ProvideAccessPage extends WizardPage
 		setLayout(new BorderLayout());
 
 		// The text on top
-		BetterTextLabel txt = new BetterTextLabel(
+		final BetterTextLabel txt = new BetterTextLabel(
 				"Please enter the API Access Key that identifies your account and the API Secret that represents your password.");
 
 		txt.setBorder(BorderFactory.createEmptyBorder(10, 10, 20, 10));
 
 		// And the textfields below
-		FormLayout layout = new FormLayout(
+		final FormLayout layout = new FormLayout(
 				"right:max(40dlu;p), 4dlu, max(50dlu;p):grow, 7dlu", "");
 
-		DefaultFormBuilder builder = new DefaultFormBuilder(layout);
+		final DefaultFormBuilder builder = new DefaultFormBuilder(layout);
 		builder.setDefaultDialogBorder();
 
 		builder.append("API Key", apiKey);
@@ -46,7 +46,7 @@ public class ProvideAccessPage extends WizardPage
 	@Override
 	public WizardPage next(DataRecorder recorder)
 	{
-		AddProviderWizardDataRecorder rec = (AddProviderWizardDataRecorder) recorder;
+		final AddProviderWizardDataRecorder rec = (AddProviderWizardDataRecorder) recorder;
 		rec.setApiKey(apiKey.getText().trim());
 		rec.setApiSecret(apiSecret.getText().trim());
 

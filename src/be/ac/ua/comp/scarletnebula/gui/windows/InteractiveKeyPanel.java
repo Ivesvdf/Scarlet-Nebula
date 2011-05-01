@@ -24,7 +24,7 @@ public class InteractiveKeyPanel extends JPanel
 	{
 		super(new BorderLayout());
 
-		JButton addButton = new JButton(Utils.icon("add22.png"));
+		final JButton addButton = new JButton(Utils.icon("add22.png"));
 		addButton.addActionListener(new ActionListener()
 		{
 			@Override
@@ -35,9 +35,9 @@ public class InteractiveKeyPanel extends JPanel
 			}
 		});
 
-		JButton modifyButton = new JButton("Import Key");
+		final JButton modifyButton = new JButton("Import Key");
 
-		JButton removeButton = new JButton(Utils.icon("remove22.png"));
+		final JButton removeButton = new JButton(Utils.icon("remove22.png"));
 		removeButton.addActionListener(new ActionListener()
 		{
 			@Override
@@ -47,11 +47,11 @@ public class InteractiveKeyPanel extends JPanel
 			}
 		});
 
-		JPanel buttonPanel = new JPanel();
+		final JPanel buttonPanel = new JPanel();
 		buttonPanel.setLayout(new GridBagLayout());
 		buttonPanel.setBorder(BorderFactory.createEmptyBorder(0, 20, 20, 20));
 
-		GridBagConstraints c = new GridBagConstraints();
+		final GridBagConstraints c = new GridBagConstraints();
 		c.weighty = 1.0;
 		c.fill = GridBagConstraints.VERTICAL;
 		c.gridx = 0;

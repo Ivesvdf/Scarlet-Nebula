@@ -20,8 +20,8 @@ public class StatisticsWindow extends JDialog
 
 		setLocationRelativeTo(parent);
 		setLocationByPlatform(true);
-		List<String> servernames = new ArrayList<String>(servers.size());
-		for (Server server : servers)
+		final List<String> servernames = new ArrayList<String>(servers.size());
+		for (final Server server : servers)
 		{
 			servernames.add(server.getFriendlyName());
 		}

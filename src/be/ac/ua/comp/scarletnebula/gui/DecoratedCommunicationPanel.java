@@ -46,8 +46,8 @@ public class DecoratedCommunicationPanel extends JPanel
 
 		// If there are no servers, or none of the servers are running, do not
 		// display the ssh console
-		Collection<Server> connectableServers = new ArrayList<Server>();
-		for (Server s : selectedServers)
+		final Collection<Server> connectableServers = new ArrayList<Server>();
+		for (final Server s : selectedServers)
 		{
 			if (s.getStatus() == VmState.RUNNING
 					&& s.getPublicDnsAddress() != null)
@@ -60,7 +60,7 @@ public class DecoratedCommunicationPanel extends JPanel
 		if (connectableServers.size() == 0)
 		{
 			log.info("Connection tab clicked and no servers selected to connect to.");
-			BetterTextLabel txt = new BetterTextLabel(
+			final BetterTextLabel txt = new BetterTextLabel(
 					"Please select at least one running server to connect to.");
 			txt.setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 20));
 			add(txt, BorderLayout.CENTER);
@@ -71,7 +71,7 @@ public class DecoratedCommunicationPanel extends JPanel
 		{
 			final Server connectServer = selectedServers.iterator().next();
 
-			JPanel propertiesPanel = new JPanel();
+			final JPanel propertiesPanel = new JPanel();
 			propertiesPanel.setLayout(new BoxLayout(propertiesPanel,
 					BoxLayout.LINE_AXIS));
 			propertiesPanel.add(Box.createHorizontalGlue());
@@ -82,7 +82,7 @@ public class DecoratedCommunicationPanel extends JPanel
 				@Override
 				public void actionPerformed(ActionEvent e)
 				{
-					ChangeServerSshLoginMethodWindow win = new ChangeServerSshLoginMethodWindow(
+					final ChangeServerSshLoginMethodWindow win = new ChangeServerSshLoginMethodWindow(
 							parent, connectServer);
 					win.addActionListener(new ActionListener()
 					{

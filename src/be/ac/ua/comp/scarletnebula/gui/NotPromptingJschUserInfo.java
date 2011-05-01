@@ -49,8 +49,8 @@ public class NotPromptingJschUserInfo implements UserInfo,
 	@Override
 	public boolean promptPassword(String message)
 	{
-		Object[] ob = { pword };
-		int result = JOptionPane.showConfirmDialog(null, ob, message,
+		final Object[] ob = { pword };
+		final int result = JOptionPane.showConfirmDialog(null, ob, message,
 				JOptionPane.OK_CANCEL_OPTION);
 		if (result == JOptionPane.OK_OPTION)
 		{
@@ -95,7 +95,7 @@ public class NotPromptingJschUserInfo implements UserInfo,
 
 		gbc.gridwidth = GridBagConstraints.RELATIVE;
 
-		JTextField[] texts = new JTextField[prompt.length];
+		final JTextField[] texts = new JTextField[prompt.length];
 		for (int i = 0; i < prompt.length; i++)
 		{
 			gbc.fill = GridBagConstraints.NONE;
@@ -122,7 +122,7 @@ public class NotPromptingJschUserInfo implements UserInfo,
 				+ name, JOptionPane.OK_CANCEL_OPTION,
 				JOptionPane.QUESTION_MESSAGE) == JOptionPane.OK_OPTION)
 		{
-			String[] response = new String[prompt.length];
+			final String[] response = new String[prompt.length];
 			for (int i = 0; i < prompt.length; i++)
 			{
 				response[i] = texts[i].getText();

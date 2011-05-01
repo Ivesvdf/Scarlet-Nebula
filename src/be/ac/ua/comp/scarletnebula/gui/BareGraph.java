@@ -55,7 +55,7 @@ public class BareGraph extends Graph
 	@Override
 	public ChartPanel getChartPanel()
 	{
-		XYPlot plot = new XYPlot(dataset, domain, range, renderer);
+		final XYPlot plot = new XYPlot(dataset, domain, range, renderer);
 		plot.setBackgroundPaint(Color.darkGray);
 		plot.setDomainGridlinePaint(Color.white);
 		plot.setRangeGridlinePaint(Color.white);
@@ -63,11 +63,11 @@ public class BareGraph extends Graph
 		plot.setDomainGridlinesVisible(true);
 		plot.setRangeGridlinesVisible(true);
 
-		JFreeChart chart = new JFreeChart(null, new Font("SansSerif",
+		final JFreeChart chart = new JFreeChart(null, new Font("SansSerif",
 				Font.BOLD, 24), plot, true);
 		chart.setBackgroundPaint(Color.white);
 		chart.removeLegend();
-		ChartPanel chartPanel = new ChartPanel(chart);
+		final ChartPanel chartPanel = new ChartPanel(chart);
 		chartPanel.setBorder(BorderFactory
 				.createBevelBorder(BevelBorder.LOWERED));
 

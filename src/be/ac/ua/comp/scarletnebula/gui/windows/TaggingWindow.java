@@ -27,7 +27,7 @@ public class TaggingWindow extends JDialog
 {
 	private static final long serialVersionUID = 1L;
 	private final TaggingPanel taggingPanel;
-	private Collection<WindowClosedListener> windowClosedListeners = new ArrayList<WindowClosedListener>();
+	private final Collection<WindowClosedListener> windowClosedListeners = new ArrayList<WindowClosedListener>();
 
 	/**
 	 * Constructor
@@ -62,9 +62,9 @@ public class TaggingWindow extends JDialog
 	 */
 	private JPanel getButtonPanel()
 	{
-		JPanel buttonPanel = new JPanel();
+		final JPanel buttonPanel = new JPanel();
 		buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.LINE_AXIS));
-		JButton okButton = ButtonFactory.createOkButton();
+		final JButton okButton = ButtonFactory.createOkButton();
 		okButton.addActionListener(new ActionListener()
 		{
 			@Override
@@ -108,7 +108,7 @@ public class TaggingWindow extends JDialog
 	 */
 	private void notifyClosedListeners()
 	{
-		for (WindowClosedListener listener : windowClosedListeners)
+		for (final WindowClosedListener listener : windowClosedListeners)
 			listener.windowClosed(taggingPanel.getTags());
 	}
 
@@ -182,7 +182,7 @@ public class TaggingWindow extends JDialog
 		@Override
 		public void windowClosing(WindowEvent e)
 		{
-			TaggingWindow window = (TaggingWindow) e.getSource();
+			final TaggingWindow window = (TaggingWindow) e.getSource();
 			window.close();
 		}
 

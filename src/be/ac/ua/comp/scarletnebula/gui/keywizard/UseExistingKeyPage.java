@@ -20,12 +20,12 @@ public class UseExistingKeyPage extends WizardPage
 {
 	private static final long serialVersionUID = 1L;
 	SelectKeyList keylist;
-	private CloudProvider provider;
+	private final CloudProvider provider;
 
 	UseExistingKeyPage(CloudProvider provider)
 	{
 		this.provider = provider;
-		BetterTextLabel lbl = new BetterTextLabel(
+		final BetterTextLabel lbl = new BetterTextLabel(
 				"Select the key you want to use from the following list. "
 						+ "Note that you'll be asked to provide a file containing the actual key later on.");
 		lbl.setBorder(BorderFactory.createEmptyBorder(20, 20, 0, 20));
@@ -39,18 +39,18 @@ public class UseExistingKeyPage extends WizardPage
 		{
 			keylist.fillWithUnknownKeys();
 		}
-		catch (InternalException e)
+		catch (final InternalException e)
 		{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		catch (CloudException e)
+		catch (final CloudException e)
 		{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
-		JScrollPane listScrollPane = new JScrollPane(keylist);
+		final JScrollPane listScrollPane = new JScrollPane(keylist);
 		listScrollPane.setBorder(BorderFactory.createCompoundBorder(
 				BorderFactory.createEmptyBorder(15, 20, 20, 20),
 				BorderFactory.createBevelBorder(BevelBorder.LOWERED)));
@@ -61,7 +61,7 @@ public class UseExistingKeyPage extends WizardPage
 	@Override
 	public WizardPage next(DataRecorder recorder)
 	{
-		String selectedKey = keylist.getSelectedKey();
+		final String selectedKey = keylist.getSelectedKey();
 
 		if (selectedKey == null)
 		{

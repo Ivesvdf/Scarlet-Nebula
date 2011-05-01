@@ -29,7 +29,7 @@ public class TaggingPanel extends JPanel
 	private static final long serialVersionUID = 1L;
 	private final TagList taglist = new TagList();
 	private static Log log = LogFactory.getLog(TaggingPanel.class);
-	private ActionListener addTagActionListener;
+	private final ActionListener addTagActionListener;
 
 	public TaggingPanel()
 	{
@@ -40,7 +40,7 @@ public class TaggingPanel extends JPanel
 	{
 		super(new BorderLayout());
 
-		for (String tag : initialTags)
+		for (final String tag : initialTags)
 		{
 			taglist.addTag(new TagItem(tag));
 		}
@@ -57,10 +57,10 @@ public class TaggingPanel extends JPanel
 
 		taglist.setBorder(BorderFactory.createBevelBorder(BevelBorder.LOWERED));
 
-		JScrollPane tagScrollPane = new JScrollPane(taglist);
+		final JScrollPane tagScrollPane = new JScrollPane(taglist);
 		tagScrollPane.setBorder(null);
 
-		JPanel centerPanel = new JPanel(new BorderLayout());
+		final JPanel centerPanel = new JPanel(new BorderLayout());
 		centerPanel.add(inputField, BorderLayout.NORTH);
 		centerPanel.add(tagScrollPane, BorderLayout.CENTER);
 		centerPanel.setMaximumSize(new Dimension(250, 500));
@@ -90,7 +90,7 @@ public class TaggingPanel extends JPanel
 		@Override
 		public void actionPerformed(ActionEvent e)
 		{
-			String tagTxt = inputField.getText();
+			final String tagTxt = inputField.getText();
 			inputField.setText("");
 			if (!Pattern.matches("^\\s*$", tagTxt))
 				taglist.add(tagTxt);
@@ -124,10 +124,10 @@ public class TaggingPanel extends JPanel
 
 		public Collection<String> getTags()
 		{
-			Collection<String> tags = new ArrayList<String>();
-			for (Component c : getComponents())
+			final Collection<String> tags = new ArrayList<String>();
+			for (final Component c : getComponents())
 			{
-				TagItem tag = (TagItem) c;
+				final TagItem tag = (TagItem) c;
 				tags.add(tag.getTagString());
 				log.debug("Tag:" + tag.getTagString());
 			}
@@ -150,14 +150,14 @@ public class TaggingPanel extends JPanel
 			add(new JLabel(tag));
 			add(Box.createHorizontalGlue());
 
-			JButton deleteButton = new JButton(new ImageIcon(getClass()
+			final JButton deleteButton = new JButton(new ImageIcon(getClass()
 					.getResource("/images/remove16.png")));
 			deleteButton.addActionListener(new ActionListener()
 			{
 				@Override
 				public void actionPerformed(ActionEvent e)
 				{
-					JPanel taglist = (JPanel) TagItem.this.getParent();
+					final JPanel taglist = (JPanel) TagItem.this.getParent();
 					taglist.remove(TagItem.this);
 					taglist.revalidate();
 					taglist.repaint();

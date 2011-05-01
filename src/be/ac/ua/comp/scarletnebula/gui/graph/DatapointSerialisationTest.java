@@ -11,16 +11,16 @@ public class DatapointSerialisationTest
 	@Test
 	public void serialiseTest()
 	{
-		Gson gson = new Gson();
-		Datapoint dp = getTestDataPoint();
-		Datapoint[] dps = { dp, dp, dp };
+		final Gson gson = new Gson();
+		final Datapoint dp = getTestDataPoint();
+		final Datapoint[] dps = { dp, dp, dp };
 		System.out.println(gson.toJson(dps));
 		assertEquals(gson.toJson(dps), getSerialisedDatapoints());
 	}
 
 	private Datapoint getTestDataPoint()
 	{
-		Datapoint dp = new Datapoint(Datapoint.Type.RELATIVE, "CPU", 0.63, // value
+		final Datapoint dp = new Datapoint(Datapoint.Type.RELATIVE, "CPU", 0.63, // value
 				0.5, // low Warning
 				0.85, // medium warning
 				0.95, // high warning
@@ -31,13 +31,13 @@ public class DatapointSerialisationTest
 	@Test
 	public void deserialiseTest()
 	{
-		Gson gson = new Gson();
-		Datapoint[] dps = gson.fromJson(getSerialisedDatapoints(),
+		final Gson gson = new Gson();
+		final Datapoint[] dps = gson.fromJson(getSerialisedDatapoints(),
 				Datapoint[].class);
 
 		assertEquals(dps.length, 3);
 		System.out.println(getSerialisedDatapoints());
-		for (Datapoint dp : dps)
+		for (final Datapoint dp : dps)
 			assertEquals(getTestDataPoint(), dp);
 	}
 

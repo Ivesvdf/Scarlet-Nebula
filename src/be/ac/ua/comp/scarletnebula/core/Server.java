@@ -30,8 +30,8 @@ public class Server
 	private static Log log = LogFactory.getLog(Server.class);
 
 	private VirtualMachine serverImpl;
-	private Collection<ServerChangedObserver> serverChangedObservers = new ArrayList<ServerChangedObserver>();
-	private CloudProvider provider;
+	private final Collection<ServerChangedObserver> serverChangedObservers = new ArrayList<ServerChangedObserver>();
+	private final CloudProvider provider;
 	private String friendlyName;
 	private String keypair;
 	private String sshLogin;
@@ -39,7 +39,7 @@ public class Server
 	private Collection<String> tags;
 	private ServerStatisticsManager serverStatisticsManager;
 	private String statisticsCommand;
-	private String preferredDatastream;
+	private final String preferredDatastream;
 	private boolean useSshPassword;
 
 	public Server(VirtualMachine server, CloudProvider inputProvider,
@@ -127,18 +127,18 @@ public class Server
 	 */
 	static Server load(VirtualMachine server, CloudProvider provider)
 	{
-		String propertiesfilename = getSaveFilename(provider, server);
-		Properties props = new Properties();
+		final String propertiesfilename = getSaveFilename(provider, server);
+		final Properties props = new Properties();
 		try
 		{
 			props.load(new FileInputStream(propertiesfilename));
 		}
-		catch (FileNotFoundException e)
+		catch (final FileNotFoundException e)
 		{
 			log.error("Save file for server " + server + " not found");
 			// Just ignore if the file isn't found.
 		}
-		catch (IOException e)
+		catch (final IOException e)
 		{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -197,8 +197,8 @@ public class Server
 	public void store()
 	{
 		// Write key to file
-		String dir = provider.getSaveFileDir();
-		File dirFile = new File(dir);
+		final String dir = provider.getSaveFileDir();
+		final File dirFile = new File(dir);
 
 		// Check if the key dir already exists
 		if (!dirFile.exists())
@@ -214,7 +214,7 @@ public class Server
 		// Write properties file.
 		try
 		{
-			Properties properties = new Properties();
+			final Properties properties = new Properties();
 			properties.setProperty("friendlyName", getFriendlyName());
 			properties.setProperty("keypair", keypair);
 			properties.setProperty("providerClassName",
@@ -226,17 +226,17 @@ public class Server
 			properties.setProperty("tags",
 					Utils.implode(new ArrayList<String>(tags), ","));
 
-			FileOutputStream outputstream = new FileOutputStream(
+			final FileOutputStream outputstream = new FileOutputStream(
 					getSaveFilename(provider, serverImpl));
 			properties.store(outputstream, null);
 			outputstream.close();
 		}
-		catch (FileNotFoundException e)
+		catch (final FileNotFoundException e)
 		{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		catch (IOException e)
+		catch (final IOException e)
 		{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -267,7 +267,7 @@ public class Server
 	@Override
 	public String toString()
 	{
-		String rv = serverImpl.getProviderVirtualMachineId() + " ("
+		final String rv = serverImpl.getProviderVirtualMachineId() + " ("
 				+ serverImpl.getCurrentState() + ") @ "
 				+ serverImpl.getPublicDnsAddress();
 		return rv;
@@ -287,7 +287,7 @@ public class Server
 	 */
 	public String[] getPublicIpAddresses()
 	{
-		String[] addresses = serverImpl.getPublicIpAddresses();
+		final String[] addresses = serverImpl.getPublicIpAddresses();
 
 		if (addresses == null)
 			return new String[0];
@@ -349,7 +349,7 @@ public class Server
 	public void refresh() throws InternalException, CloudException,
 			ServerDisappearedException
 	{
-		VirtualMachine refreshedServer = provider
+		final VirtualMachine refreshedServer = provider
 				.getServerImpl(getUnfriendlyName());
 
 		// If the sever disappeared in the mean while, throw an Exception
@@ -438,7 +438,7 @@ public class Server
 	 */
 	public void serverChanged()
 	{
-		for (ServerChangedObserver obs : serverChangedObservers)
+		for (final ServerChangedObserver obs : serverChangedObservers)
 			obs.serverChanged(this);
 	}
 
@@ -554,7 +554,7 @@ public class Server
 		{
 			refresh();
 		}
-		catch (Exception e)
+		catch (final Exception e)
 		{
 			log.error("Something happened while refreshing server " + this, e);
 			e.printStackTrace();
@@ -566,9 +566,9 @@ public class Server
 		// If the server's state still isn't the one we want it to be, try
 		// again, but only after waiting
 		// a logarithmic amount of time.
-		double wait = 15.0 * (Math.log10(attempt) + 1.0);
+		final double wait = 15.0 * (Math.log10(attempt) + 1.0);
 
-		java.util.Timer timer = new java.util.Timer();
+		final java.util.Timer timer = new java.util.Timer();
 		timer.schedule(new java.util.TimerTask()
 		{
 			@Override
@@ -635,7 +635,7 @@ public class Server
 	{
 		statisticsCommand = command;
 
-		ServerStatisticsManager manager = getServerStatistics();
+		final ServerStatisticsManager manager = getServerStatistics();
 		if (manager != null)
 			manager.reset();
 

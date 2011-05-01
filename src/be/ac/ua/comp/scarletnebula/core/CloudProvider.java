@@ -59,7 +59,7 @@ public class CloudProvider
 	private String endpoint;
 	private String defaultKeypair;
 
-	private ArrayList<Server> servers = new ArrayList<Server>();
+	private final ArrayList<Server> servers = new ArrayList<Server>();
 	Collection<ServerLinkUnlinkObserver> linkUnlinkObservers = new ArrayList<ServerLinkUnlinkObserver>();
 
 	/**
@@ -89,17 +89,17 @@ public class CloudProvider
 			providerImpl = (org.dasein.cloud.CloudProvider) Class.forName(
 					providerClassName).newInstance();
 		}
-		catch (InstantiationException e)
+		catch (final InstantiationException e)
 		{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		catch (IllegalAccessException e)
+		catch (final IllegalAccessException e)
 		{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		catch (ClassNotFoundException e)
+		catch (final ClassNotFoundException e)
 		{
 			log.fatal("Underlying cloud provider class " + providerClassName
 					+ " failed creation.");
@@ -126,7 +126,7 @@ public class CloudProvider
 	private void notifyObserversBecauseServerLinked(Server srv)
 	{
 
-		for (ServerLinkUnlinkObserver obs : linkUnlinkObservers)
+		for (final ServerLinkUnlinkObserver obs : linkUnlinkObservers)
 		{
 			obs.serverLinked(this, srv);
 			log.warn("Cloudprovider is updating his observers");
@@ -135,7 +135,7 @@ public class CloudProvider
 
 	private void notifyObserversBecauseServerUnlinked(Server srv)
 	{
-		for (ServerLinkUnlinkObserver obs : linkUnlinkObservers)
+		for (final ServerLinkUnlinkObserver obs : linkUnlinkObservers)
 			obs.serverUnlinked(this, srv);
 	}
 
@@ -153,7 +153,7 @@ public class CloudProvider
 			properties = new Properties();
 			properties.load(new FileInputStream(getConfigfileName(name)));
 		}
-		catch (IOException e)
+		catch (final IOException e)
 		{
 			e.printStackTrace();
 		}
@@ -204,12 +204,12 @@ public class CloudProvider
 			CloudException, IOException
 	{
 		log.warn("Getting for name " + unfriendlyName);
-		VirtualMachine server = getServerImpl(unfriendlyName);
+		final VirtualMachine server = getServerImpl(unfriendlyName);
 
 		if (server == null)
 			return null;
 
-		Server rv = Server.load(server, this);
+		final Server rv = Server.load(server, this);
 		return rv;
 
 	}
@@ -225,16 +225,16 @@ public class CloudProvider
 	public Collection<Server> loadLinkedServers() throws InternalException,
 			CloudException, IOException
 	{
-		File dir = new File(getSaveFileDir());
+		final File dir = new File(getSaveFileDir());
 
-		String[] files = dir.list();
+		final String[] files = dir.list();
 
 		if (files == null)
 			return servers;
 
-		for (String file : files)
+		for (final String file : files)
 		{
-			Server server = loadServer(file);
+			final Server server = loadServer(file);
 
 			// If the server cannot be made it was deleted and the file
 			// referencing it
@@ -267,7 +267,7 @@ public class CloudProvider
 	 */
 	private void deleteServerSaveFile(String unfriendlyName)
 	{
-		File toBeRemoved = new File(getSaveFileDir() + unfriendlyName);
+		final File toBeRemoved = new File(getSaveFileDir() + unfriendlyName);
 		final boolean result = toBeRemoved.delete();
 
 		if (!result)
@@ -285,7 +285,7 @@ public class CloudProvider
 	public void createKey(String keyname, boolean makeDefault)
 			throws InternalException, CloudException
 	{
-		ShellKeySupport shellKeySupport = providerImpl.getIdentityServices()
+		final ShellKeySupport shellKeySupport = providerImpl.getIdentityServices()
 				.getShellKeySupport();
 
 		KeyManager.addKey(providerClassName, keyname,
@@ -307,17 +307,17 @@ public class CloudProvider
 	private void assureSSHOnlyFirewall() throws InternalException,
 			CloudException
 	{
-		FirewallSupport fws = providerImpl.getNetworkServices()
+		final FirewallSupport fws = providerImpl.getNetworkServices()
 				.getFirewallSupport();
 
 		if (fws == null)
 			return;
 
-		Collection<Firewall> firewalls = fws.list();
+		final Collection<Firewall> firewalls = fws.list();
 
 		Firewall sshOnly = null;
 
-		for (Firewall fw : firewalls)
+		for (final Firewall fw : firewalls)
 		{
 			if (fw.getName().equals("sshonly"))
 			{
@@ -329,7 +329,7 @@ public class CloudProvider
 		if (sshOnly == null)
 		{
 			System.out.println("Creating sshonly");
-			String sshonlyId = fws.create("sshonly", "Allow only ssh traffic");
+			final String sshonlyId = fws.create("sshonly", "Allow only ssh traffic");
 			fws.authorize(sshonlyId, "0.0.0.0/0", Protocol.TCP, 22, 22);
 		}
 	}
@@ -347,15 +347,15 @@ public class CloudProvider
 	public ArrayList<Server> listUnlinkedServers() throws InternalException,
 			CloudException
 	{
-		ArrayList<Server> rv = new ArrayList<Server>();
+		final ArrayList<Server> rv = new ArrayList<Server>();
 		// List all servers
-		for (VirtualMachine testServer : virtualMachineServices
+		for (final VirtualMachine testServer : virtualMachineServices
 				.listVirtualMachines())
 		{
 			// For each server, check if this server is already linked. Do
 			// this based on his unfriendly id
 			boolean found = false;
-			for (Iterator<Server> linkedServerIterator = servers.iterator(); linkedServerIterator
+			for (final Iterator<Server> linkedServerIterator = servers.iterator(); linkedServerIterator
 					.hasNext() && !found;)
 			{
 				if (linkedServerIterator.next().getUnfriendlyName()
@@ -367,8 +367,8 @@ public class CloudProvider
 
 			if (!found)
 			{
-				List<String> daseinTags = new ArrayList<String>();
-				for (String key : testServer.getTags().keySet())
+				final List<String> daseinTags = new ArrayList<String>();
+				for (final String key : testServer.getTags().keySet())
 				{
 					daseinTags.add(key + ":" + testServer.getTags().get(key));
 				}
@@ -434,24 +434,24 @@ public class CloudProvider
 			String imageId, Collection<String> tags, String keypairOrPassword)
 			throws InternalException, CloudException
 	{
-		String dataCenterId = "eu-west-1b";
-		String vlan = null;
-		String[] firewalls = new String[] { "sshonly" };
+		final String dataCenterId = "eu-west-1b";
+		final String vlan = null;
+		final String[] firewalls = new String[] { "sshonly" };
 
-		Collection<org.dasein.cloud.Tag> daseinTags = new ArrayList<org.dasein.cloud.Tag>();
+		final Collection<org.dasein.cloud.Tag> daseinTags = new ArrayList<org.dasein.cloud.Tag>();
 		int i = 0;
 
-		for (String tag : tags)
+		for (final String tag : tags)
 		{
 			daseinTags.add(new org.dasein.cloud.Tag("tag" + (++i), tag));
 		}
 
-		VirtualMachine daseinServer = virtualMachineServices.launch(imageId,
+		final VirtualMachine daseinServer = virtualMachineServices.launch(imageId,
 				getVMProductWithName(productName), dataCenterId, serverName,
 				"", keypairOrPassword, vlan, false, false, firewalls,
 				daseinTags.toArray(new org.dasein.cloud.Tag[0]));
 
-		Server server = new Server(daseinServer, // Dasein server implementation
+		final Server server = new Server(daseinServer, // Dasein server implementation
 				this, // Cloud provider
 				keypairOrPassword, // Keypair used
 				serverName, // Server's friendly name
@@ -488,7 +488,7 @@ public class CloudProvider
 
 	private String getDefaultStatisticsCommand()
 	{
-		StringBuffer sb = new StringBuffer();
+		final StringBuffer sb = new StringBuffer();
 
 		try
 		{
@@ -504,7 +504,7 @@ public class CloudProvider
 				sb.append("\n");
 			}
 		}
-		catch (Exception e)
+		catch (final Exception e)
 		{
 			log.error(
 					"Could not read default statistics command, continuing with empty string",
@@ -517,22 +517,22 @@ public class CloudProvider
 	{
 		try
 		{
-			Iterable<VirtualMachineProduct> products = virtualMachineServices
+			final Iterable<VirtualMachineProduct> products = virtualMachineServices
 					.listProducts(Architecture.I32);
 
-			for (VirtualMachineProduct product : products)
+			for (final VirtualMachineProduct product : products)
 			{
 				if (name == product.getName())
 					return product;
 			}
 			return null;
 		}
-		catch (InternalException e)
+		catch (final InternalException e)
 		{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		catch (CloudException e)
+		catch (final CloudException e)
 		{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -581,9 +581,9 @@ public class CloudProvider
 
 	private org.dasein.cloud.ProviderContext getCurrentContext()
 	{
-		String accountNumber = "0";
+		final String accountNumber = "0";
 
-		org.dasein.cloud.ProviderContext context = new org.dasein.cloud.ProviderContext();
+		final org.dasein.cloud.ProviderContext context = new org.dasein.cloud.ProviderContext();
 
 		context.setAccountNumber("000000000000");
 		context.setAccessPublic(apiKey.getBytes());
@@ -605,20 +605,20 @@ public class CloudProvider
 		{
 			products = virtualMachineServices.listProducts(Architecture.I32);
 		}
-		catch (InternalException e)
+		catch (final InternalException e)
 		{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		catch (CloudException e)
+		catch (final CloudException e)
 		{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
-		ArrayList<String> rv = new ArrayList<String>();
+		final ArrayList<String> rv = new ArrayList<String>();
 
-		for (VirtualMachineProduct product : products)
+		for (final VirtualMachineProduct product : products)
 		{
 			rv.add(product.getName());
 		}
@@ -650,12 +650,12 @@ public class CloudProvider
 			images = computeServices.getImageSupport().searchMachineImages("",
 					platform, architecture);
 		}
-		catch (CloudException e)
+		catch (final CloudException e)
 		{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		catch (InternalException e)
+		catch (final InternalException e)
 		{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -723,7 +723,7 @@ public class CloudProvider
 	 */
 	public boolean hasServer(String friendlyName)
 	{
-		for (Server s : servers)
+		for (final Server s : servers)
 			if (s.getFriendlyName().equals(friendlyName))
 				return true;
 
@@ -768,7 +768,7 @@ public class CloudProvider
 	public void store()
 	{
 		// First assure the providers/ directory exists
-		File dir = new File("providers");
+		final File dir = new File("providers");
 
 		if (!dir.exists() || !dir.isDirectory())
 		{
@@ -779,7 +779,7 @@ public class CloudProvider
 		}
 
 		// Now write to the file properties file
-		Properties prop = new Properties();
+		final Properties prop = new Properties();
 
 		prop.setProperty("class", providerClassName);
 		prop.setProperty("apikey", apiKey);
@@ -791,11 +791,11 @@ public class CloudProvider
 		{
 			prop.store(new FileOutputStream(getConfigfileName(name)), null);
 		}
-		catch (FileNotFoundException e)
+		catch (final FileNotFoundException e)
 		{
 			log.error("Properties file describing cloud provider could not be created.");
 		}
-		catch (IOException e)
+		catch (final IOException e)
 		{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -809,15 +809,15 @@ public class CloudProvider
 
 	static Collection<String> getProviderNames()
 	{
-		File dir = new File("providers");
+		final File dir = new File("providers");
 
 		if (!dir.exists() || !dir.isDirectory())
 			return new ArrayList<String>();
 
-		Collection<String> files = Arrays.asList(dir.list());
-		Collection<String> rv = new ArrayList<String>(files.size());
+		final Collection<String> files = Arrays.asList(dir.list());
+		final Collection<String> rv = new ArrayList<String>(files.size());
 
-		for (String file : files)
+		for (final String file : files)
 		{
 			rv.add(file.replaceFirst(".properties$", ""));
 		}
@@ -828,7 +828,7 @@ public class CloudProvider
 	{
 		// Not using servers.contains because this seems to use Server.equals
 		// which isn't implemented...
-		for (Server linkedServer : servers)
+		for (final Server linkedServer : servers)
 		{
 			if (server == linkedServer)
 				return true;
@@ -855,18 +855,18 @@ public class CloudProvider
 	public Collection<String> getUnknownKeys() throws InternalException,
 			CloudException
 	{
-		ShellKeySupport shellKeySupport = providerImpl.getIdentityServices()
+		final ShellKeySupport shellKeySupport = providerImpl.getIdentityServices()
 				.getShellKeySupport();
 
-		Collection<String> keys = shellKeySupport.list();
-		Collection<String> knownKeys = KeyManager.getKeyNames(getName());
+		final Collection<String> keys = shellKeySupport.list();
+		final Collection<String> knownKeys = KeyManager.getKeyNames(getName());
 		keys.removeAll(knownKeys);
 		return keys;
 	}
 
 	public boolean unlinkedKeyExists(String checkKeyname)
 	{
-		ShellKeySupport shellKeySupport = providerImpl.getIdentityServices()
+		final ShellKeySupport shellKeySupport = providerImpl.getIdentityServices()
 				.getShellKeySupport();
 
 		boolean exists = false;
@@ -874,7 +874,7 @@ public class CloudProvider
 		{
 			exists = shellKeySupport.list().contains(checkKeyname);
 		}
-		catch (Exception e)
+		catch (final Exception e)
 		{
 			log.error("Could not list keys.", e);
 		}

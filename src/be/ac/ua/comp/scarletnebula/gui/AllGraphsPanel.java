@@ -26,7 +26,7 @@ public class AllGraphsPanel extends JPanel implements NewDatastreamListener,
 	final private static Log log = LogFactory.getLog(AllGraphsPanel.class);
 
 	final private Server server;
-	private ServerStatisticsManager statisticsManager;
+	private final ServerStatisticsManager statisticsManager;
 
 	public AllGraphsPanel(Server server)
 	{
@@ -46,12 +46,12 @@ public class AllGraphsPanel extends JPanel implements NewDatastreamListener,
 
 	private void placeComponents()
 	{
-		GridBagConstraints constraints = new GridBagConstraints();
+		final GridBagConstraints constraints = new GridBagConstraints();
 
 		int numberOfComponentsPlaced = 0;
 		int currXPos = 0;
 
-		for (String streamname : statisticsManager.getAvailableDatastreams())
+		for (final String streamname : statisticsManager.getAvailableDatastreams())
 		{
 			log.info("drawing stream");
 			constraints.fill = GridBagConstraints.HORIZONTAL;

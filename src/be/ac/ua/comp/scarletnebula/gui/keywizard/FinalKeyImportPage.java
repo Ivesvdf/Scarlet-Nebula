@@ -9,9 +9,9 @@ import be.ac.ua.comp.scarletnebula.gui.BetterTextLabel;
 public class FinalKeyImportPage extends AbstractFinalKeyWizardPage
 {
 	private static final long serialVersionUID = 1L;
-	private CloudProvider provider;
-	private String keyname;
-	private File keyFile;
+	private final CloudProvider provider;
+	private final String keyname;
+	private final File keyFile;
 
 	public FinalKeyImportPage(CloudProvider provider, String keyname,
 			File keyFile)

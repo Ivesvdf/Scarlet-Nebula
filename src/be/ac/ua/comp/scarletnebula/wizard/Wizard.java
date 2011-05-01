@@ -144,7 +144,7 @@ public class Wizard
 
 		wizardTemplate.container.removeAll();
 
-		for (Component c : page.getComponents())
+		for (final Component c : page.getComponents())
 			c.setVisible(true);
 
 		wizardTemplate.container.add(page);
@@ -154,7 +154,7 @@ public class Wizard
 
 	private void next()
 	{
-		WizardPage nextPage = visitedPages.peek().next(recorder);
+		final WizardPage nextPage = visitedPages.peek().next(recorder);
 
 		// If no next page is given, the wizard shouldn't do anything
 		if (nextPage == null)

@@ -54,7 +54,7 @@ class ServerCellRenderer implements ListCellRenderer
 			return getNewServerServer(list, index, isSelected);
 		final Server server = (Server) value;
 
-		JPanel p = createServerPanel(server, list, index, isSelected);
+		final JPanel p = createServerPanel(server, list, index, isSelected);
 		final Color foreground = getForegroundColor(list, index, isSelected);
 
 		final JLabel label = getServernameComponent(server, foreground);
@@ -77,7 +77,7 @@ class ServerCellRenderer implements ListCellRenderer
 		}
 
 		p.setLayout(new GridBagLayout());
-		GridBagConstraints c = new GridBagConstraints();
+		final GridBagConstraints c = new GridBagConstraints();
 		c.fill = GridBagConstraints.HORIZONTAL;
 		c.weightx = 1.0;
 		c.gridx = 0;
@@ -115,7 +115,7 @@ class ServerCellRenderer implements ListCellRenderer
 
 	private JLabel getServernameComponent(Server server, final Color foreground)
 	{
-		JLabel label = new JLabel(server.getFriendlyName(),
+		final JLabel label = new JLabel(server.getFriendlyName(),
 				getServerIcon(server), SwingConstants.LEFT);
 		label.setOpaque(false);
 
@@ -125,9 +125,9 @@ class ServerCellRenderer implements ListCellRenderer
 
 	private JLabel getTagComponent(Server server, final Color foreground)
 	{
-		JLabel tags = new JLabel();
+		final JLabel tags = new JLabel();
 
-		Font tagFont = new Font(tags.getFont().getName(), Font.PLAIN, 11);
+		final Font tagFont = new Font(tags.getFont().getName(), Font.PLAIN, 11);
 		tags.setFont(tagFont);
 		tags.setText(Utils.implode(new ArrayList<String>(server.getTags()),
 				", "));
@@ -140,7 +140,7 @@ class ServerCellRenderer implements ListCellRenderer
 		Color background;
 
 		// check if this cell represents the current DnD drop location
-		JList.DropLocation dropLocation = list.getDropLocation();
+		final JList.DropLocation dropLocation = list.getDropLocation();
 		if (dropLocation != null && !dropLocation.isInsert()
 				&& dropLocation.getIndex() == index)
 		{
@@ -163,7 +163,7 @@ class ServerCellRenderer implements ListCellRenderer
 		Color foreground;
 
 		// check if this cell represents the current DnD drop location
-		JList.DropLocation dropLocation = list.getDropLocation();
+		final JList.DropLocation dropLocation = list.getDropLocation();
 		if (dropLocation != null && !dropLocation.isInsert()
 				&& dropLocation.getIndex() == index)
 		{
@@ -183,7 +183,7 @@ class ServerCellRenderer implements ListCellRenderer
 	private JPanel createServerPanel(Server server, JList list, int index,
 			boolean isSelected)
 	{
-		JXPanel p = new JXPanel();
+		final JXPanel p = new JXPanel();
 		p.setLayout(new GridBagLayout());
 		final Color background = Colors.alpha(
 				getBackgroundColor(list, index, isSelected), 0.4f);
@@ -193,14 +193,14 @@ class ServerCellRenderer implements ListCellRenderer
 		Color color1 = Colors.White.color(0.5f);
 		Color color2 = Colors.Gray.color(0.95f);
 
-		Point2D start = new Point2D.Float(0, 0);
+		final Point2D start = new Point2D.Float(0, 0);
 		Point2D stop = new Point2D.Float(150, 500);
 
 		if (server != null && !server.sshWillFail()
 				&& server.getServerStatistics() != null)
 		{
-			ServerStatisticsManager manager = server.getServerStatistics();
-			Datastream.WarnLevel warnlevel = manager.getHighestWarnLevel();
+			final ServerStatisticsManager manager = server.getServerStatistics();
+			final Datastream.WarnLevel warnlevel = manager.getHighestWarnLevel();
 
 			if (warnlevel == Datastream.WarnLevel.HIGH)
 			{
@@ -222,10 +222,10 @@ class ServerCellRenderer implements ListCellRenderer
 			}
 		}
 
-		LinearGradientPaint gradientPaint = new LinearGradientPaint(start,
+		final LinearGradientPaint gradientPaint = new LinearGradientPaint(start,
 				stop, new float[] { 0.0f, 1.0f },
 				new Color[] { color1, color2 });
-		MattePainter mattePainter = new MattePainter(gradientPaint, true);
+		final MattePainter mattePainter = new MattePainter(gradientPaint, true);
 		p.setBackgroundPainter(mattePainter);
 
 		if (isSelected)
@@ -250,8 +250,8 @@ class ServerCellRenderer implements ListCellRenderer
 	private Component getNewServerServer(JList list, int index,
 			boolean isSelected)
 	{
-		JPanel p = createServerPanel(null, list, index, isSelected);
-		JLabel label = new JLabel("Start a new server", new ImageIcon(
+		final JPanel p = createServerPanel(null, list, index, isSelected);
+		final JLabel label = new JLabel("Start a new server", new ImageIcon(
 				getClass().getResource("/images/add.png")), SwingConstants.LEFT);
 		label.setFont(new Font(label.getFont().getName(), Font.PLAIN, 16));
 		// Border for better horizontal alignment
@@ -294,20 +294,20 @@ class ServerCellRenderer implements ListCellRenderer
 
 		}
 
-		ImageIcon icon = new ImageIcon(getClass().getResource(filename));
+		final ImageIcon icon = new ImageIcon(getClass().getResource(filename));
 		return icon;
 	}
 
 	public JXPanel onRollOver(JXPanel input)
 	{
-		Color color1 = Colors.White.color(0.5f);
-		Color color2 = Colors.Black.color(0.8f);
+		final Color color1 = Colors.White.color(0.5f);
+		final Color color2 = Colors.Black.color(0.8f);
 		// Color color2 = Colors.Red.color(0.2f);
 
-		LinearGradientPaint gradientPaint = new LinearGradientPaint(0.0f, 0.0f,
+		final LinearGradientPaint gradientPaint = new LinearGradientPaint(0.0f, 0.0f,
 				250, 500, new float[] { 0.0f, 1.0f }, new Color[] { color1,
 						color2 });
-		MattePainter mattePainter = new MattePainter(gradientPaint, true);
+		final MattePainter mattePainter = new MattePainter(gradientPaint, true);
 
 		input.setBackgroundPainter(new CompoundPainter<Object>(mattePainter,
 				input.getBackgroundPainter()));

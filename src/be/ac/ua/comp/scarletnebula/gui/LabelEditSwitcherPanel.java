@@ -31,8 +31,8 @@ public class LabelEditSwitcherPanel extends JPanel implements MouseListener,
 {
 	private static final long serialVersionUID = 1L;
 	private String content;
-	private Collection<ContentChangedListener> listeners = new ArrayList<ContentChangedListener>();
-	private JTextField textField;
+	private final Collection<ContentChangedListener> listeners = new ArrayList<ContentChangedListener>();
+	private final JTextField textField;
 
 	/**
 	 * Constructs a LabelEditSwitcherPanel based on the initial JLabel content
@@ -77,7 +77,7 @@ public class LabelEditSwitcherPanel extends JPanel implements MouseListener,
 	{
 		setLayout(new GridBagLayout());
 
-		GridBagConstraints c = new GridBagConstraints();
+		final GridBagConstraints c = new GridBagConstraints();
 		c.fill = GridBagConstraints.HORIZONTAL;
 		c.weightx = 1.0;
 		c.gridx = 0;
@@ -160,7 +160,7 @@ public class LabelEditSwitcherPanel extends JPanel implements MouseListener,
 
 			goToLabel();
 
-			for (ContentChangedListener l : listeners)
+			for (final ContentChangedListener l : listeners)
 			{
 				l.changed(content);
 			}

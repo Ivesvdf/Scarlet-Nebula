@@ -11,7 +11,7 @@ public class SearchHelper
 {
 	public static Collection<String> tokenize(String searchString)
 	{
-		Collection<String> tokens = new LinkedList<String>();
+		final Collection<String> tokens = new LinkedList<String>();
 
 		String tmp = "";
 		char openLiteral = 0;
@@ -74,8 +74,8 @@ public class SearchHelper
 	 */
 	public static String matchPrefix(String prefix, String token)
 	{
-		Pattern p = Pattern.compile("^" + prefix + ":(.*)$");
-		Matcher matcher = p.matcher(token);
+		final Pattern p = Pattern.compile("^" + prefix + ":(.*)$");
+		final Matcher matcher = p.matcher(token);
 		final boolean matches = matcher.matches();
 		return matches ? matcher.group(1) : null;
 	}
@@ -84,7 +84,7 @@ public class SearchHelper
 			boolean negated)
 	{
 		boolean found = false;
-		for (String tag : tags)
+		for (final String tag : tags)
 		{
 			if (tag.equalsIgnoreCase(term))
 			{
@@ -113,10 +113,10 @@ public class SearchHelper
 		boolean found = false;
 		try
 		{
-			VmState testState = VmState.valueOf(term.toUpperCase());
+			final VmState testState = VmState.valueOf(term.toUpperCase());
 			found = (testState == status);
 		}
-		catch (IllegalArgumentException e)
+		catch (final IllegalArgumentException e)
 		{
 
 		}

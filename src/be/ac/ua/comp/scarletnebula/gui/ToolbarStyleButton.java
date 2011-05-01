@@ -24,7 +24,7 @@ public class ToolbarStyleButton extends JButton
 		setMargin(new Insets(0, 0, 0, 0));
 		setBorder(BorderFactory.createEmptyBorder(3, 3, 3, 3));
 
-		UIDefaults def = new UIDefaults();
+		final UIDefaults def = new UIDefaults();
 		final Painter<Object> notAPainter = new Painter<Object>()
 		{
 			@Override

@@ -46,12 +46,12 @@ public class SelectKeyList extends JList
 
 	public String getSelectedKey()
 	{
-		int selection = getSelectedIndex();
+		final int selection = getSelectedIndex();
 
 		if (selection < 0)
 			return null;
 
-		JLabel label = (JLabel) model.get(selection);
+		final JLabel label = (JLabel) model.get(selection);
 		return label.getText();
 	}
 
@@ -62,7 +62,7 @@ public class SelectKeyList extends JList
 				int index, boolean isSelected, boolean cellHasFocus)
 		{
 
-			JLabel renderer = (JLabel) value;
+			final JLabel renderer = (JLabel) value;
 			renderer.setOpaque(true);
 
 			Color foreground;
@@ -86,13 +86,13 @@ public class SelectKeyList extends JList
 
 	public void fillWithKnownKeys()
 	{
-		for (String keyname : KeyManager.getKeyNames(provider.getName()))
+		for (final String keyname : KeyManager.getKeyNames(provider.getName()))
 			add(keyname);
 	}
 
 	public void fillWithUnknownKeys() throws InternalException, CloudException
 	{
-		for (String keyname : provider.getUnknownKeys())
+		for (final String keyname : provider.getUnknownKeys())
 		{
 			add(keyname);
 		}

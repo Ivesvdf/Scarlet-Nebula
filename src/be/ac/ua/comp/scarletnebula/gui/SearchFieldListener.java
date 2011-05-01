@@ -9,7 +9,7 @@ import javax.swing.event.DocumentListener;
 
 class SearchFieldListener implements ActionListener, DocumentListener
 {
-	private JTextField searchField;
+	private final JTextField searchField;
 	ServerListModel serverListModel;
 
 	public SearchFieldListener(JTextField inputSearchField,
@@ -23,7 +23,7 @@ class SearchFieldListener implements ActionListener, DocumentListener
 	@Override
 	public void actionPerformed(ActionEvent e)
 	{
-		String servername = searchField.getText();
+		final String servername = searchField.getText();
 
 		// listModel.insertElementAt(searchField.getText(), index);
 		// If we just wanted to add to the end, we'd do this:

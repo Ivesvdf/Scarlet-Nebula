@@ -23,7 +23,7 @@ public class SSHTerminalWindow extends JDialog
 
 		if (servers.size() == 1)
 		{
-			Server server = servers.iterator().next();
+			final Server server = servers.iterator().next();
 			setTitle(server.getFriendlyName() + " terminal");
 			setLayout(new BorderLayout());
 

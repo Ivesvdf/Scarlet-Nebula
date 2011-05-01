@@ -65,7 +65,7 @@ public class DroppingFifoQueue<T>
 	 */
 	public List<T> asList()
 	{
-		List<T> rv = new ArrayList<T>();
+		final List<T> rv = new ArrayList<T>();
 
 		if (lastValid == -1)
 		{

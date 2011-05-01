@@ -28,8 +28,8 @@ public class Tag extends JLabel
 	@Override
 	protected void paintComponent(Graphics g)
 	{
-		int width = getWidth();
-		int height = getHeight();
+		final int width = getWidth();
+		final int height = getHeight();
 
 		// Paint a rounded rectangle in the background.
 		g.setColor(new Color(180, 180, 180));
@@ -41,7 +41,7 @@ public class Tag extends JLabel
 
 	static public void main(String[] args)
 	{
-		JFrame f = new JFrame();
+		final JFrame f = new JFrame();
 		f.setLayout(new FlowLayout());
 		f.getContentPane().add(new Tag("Webserver"));
 		f.getContentPane().add(new Tag("DNS"));

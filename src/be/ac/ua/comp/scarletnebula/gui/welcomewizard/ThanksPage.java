@@ -18,7 +18,7 @@ public class ThanksPage extends WizardPage
 	ThanksPage()
 	{
 		setLayout(new GridBagLayout());
-		GridBagConstraints c = new GridBagConstraints();
+		final GridBagConstraints c = new GridBagConstraints();
 		c.fill = GridBagConstraints.HORIZONTAL;
 
 		c.weightx = 1.0;
@@ -28,7 +28,7 @@ public class ThanksPage extends WizardPage
 		c.anchor = GridBagConstraints.PAGE_START;
 
 		setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
-		JLabel thanks = new JLabel(
+		final JLabel thanks = new JLabel(
 				"<html><font size=\"+3\" color=blue>Thanks!</font></html>");
 		thanks.setAlignmentX(LEFT_ALIGNMENT);
 		thanks.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));

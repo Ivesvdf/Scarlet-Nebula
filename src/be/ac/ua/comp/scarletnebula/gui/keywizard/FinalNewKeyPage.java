@@ -14,8 +14,8 @@ public class FinalNewKeyPage extends AbstractFinalKeyWizardPage
 	private static final long serialVersionUID = 1L;
 	private static final Log log = LogFactory.getLog(ChooseImagePage.class);
 
-	private CloudProvider provider;
-	private String keyname;
+	private final CloudProvider provider;
+	private final String keyname;
 
 	public FinalNewKeyPage(CloudProvider provider, String keyname)
 	{
@@ -37,7 +37,7 @@ public class FinalNewKeyPage extends AbstractFinalKeyWizardPage
 				{
 					provider.createKey(keyname, makeKeyDefault());
 				}
-				catch (Exception e)
+				catch (final Exception e)
 				{
 					return e;
 				}
@@ -49,7 +49,7 @@ public class FinalNewKeyPage extends AbstractFinalKeyWizardPage
 			{
 				try
 				{
-					Exception result = get();
+					final Exception result = get();
 
 					if (result != null)
 					{
@@ -61,7 +61,7 @@ public class FinalNewKeyPage extends AbstractFinalKeyWizardPage
 										JOptionPane.ERROR_MESSAGE);
 					}
 				}
-				catch (Exception ignore)
+				catch (final Exception ignore)
 				{
 				}
 			}

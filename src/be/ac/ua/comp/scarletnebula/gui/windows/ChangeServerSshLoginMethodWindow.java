@@ -100,9 +100,9 @@ public class ChangeServerSshLoginMethodWindow extends JDialog
 		topText.setBorder(BorderFactory.createEmptyBorder(15, 15, 10, 15));
 
 		final String layoutString = "right:max(40dlu;p), 4dlu, max(20dlu;p):grow, 7dlu:grow";
-		FormLayout layout = new FormLayout(layoutString, "");
+		final FormLayout layout = new FormLayout(layoutString, "");
 		// add rows dynamically
-		DefaultFormBuilder loginPanelsBuilder = new DefaultFormBuilder(layout);
+		final DefaultFormBuilder loginPanelsBuilder = new DefaultFormBuilder(layout);
 		loginPanelsBuilder.setDefaultDialogBorder();
 		loginPanelsBuilder.append("Username", normalUsername);
 		loginPanelsBuilder.nextLine();
@@ -111,13 +111,13 @@ public class ChangeServerSshLoginMethodWindow extends JDialog
 		loginPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
 		loginPanel.setBorder(BorderFactory.createEmptyBorder(0, 40, 0, 0));
 
-		FormLayout layout2 = new FormLayout(layoutString, "");
-		DefaultFormBuilder keyPanelsBuilder = new DefaultFormBuilder(layout2);
+		final FormLayout layout2 = new FormLayout(layoutString, "");
+		final DefaultFormBuilder keyPanelsBuilder = new DefaultFormBuilder(layout2);
 		keyPanelsBuilder.setDefaultDialogBorder();
 		keyPanelsBuilder.append("Username", keyUsername);
 		keyPanelsBuilder.nextLine();
 
-		Collection<String> keynames = KeyManager.getKeyNames(server.getCloud()
+		final Collection<String> keynames = KeyManager.getKeyNames(server.getCloud()
 				.getName());
 		keypairCombo = new JComboBox(keynames.toArray(new String[0]));
 		keyPanelsBuilder.append("Keypair", keypairCombo);
@@ -192,7 +192,7 @@ public class ChangeServerSshLoginMethodWindow extends JDialog
 
 	private JPanel getButtonPanel()
 	{
-		JPanel buttonPanel = new JPanel();
+		final JPanel buttonPanel = new JPanel();
 		buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.LINE_AXIS));
 		buttonPanel.add(Box.createHorizontalGlue());
 
@@ -235,7 +235,7 @@ public class ChangeServerSshLoginMethodWindow extends JDialog
 
 	private void fireActionListeners()
 	{
-		for (ActionListener actionListener : actionListeners)
+		for (final ActionListener actionListener : actionListeners)
 		{
 			actionListener.actionPerformed(new ActionEvent(this, actionId++,
 					"Window closed"));

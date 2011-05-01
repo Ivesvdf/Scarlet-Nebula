@@ -12,7 +12,7 @@ public class BetterTextLabel extends JLabel
 	{
 		super("");
 
-		boolean isAlreayHTML = (label.indexOf("<html>") == 0);
+		final boolean isAlreayHTML = (label.indexOf("<html>") == 0);
 
 		if (!isAlreayHTML)
 		{

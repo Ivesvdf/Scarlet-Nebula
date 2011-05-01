@@ -7,7 +7,7 @@ public class CloudProviderTemplate
 {
 	public class Endpoint
 	{
-		private String url;
+		private final String url;
 		private String name;
 		private String shortname;
 
@@ -44,9 +44,9 @@ public class CloudProviderTemplate
 		}
 	}
 
-	private String name;
-	private String classname;
-	private String shortname;
+	private final String name;
+	private final String classname;
+	private final String shortname;
 
 	Collection<Endpoint> endpoints = new ArrayList<Endpoint>();
 

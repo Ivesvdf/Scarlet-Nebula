@@ -18,8 +18,8 @@ import com.jgoodies.forms.layout.FormLayout;
 public class SelectNewKeynamePage extends WizardPage
 {
 	private static final long serialVersionUID = 1L;
-	private CloudProvider provider;
-	private JTextField namefield = new JTextField();
+	private final CloudProvider provider;
+	private final JTextField namefield = new JTextField();
 
 	public SelectNewKeynamePage(CloudProvider provider)
 	{
@@ -35,9 +35,9 @@ public class SelectNewKeynamePage extends WizardPage
 		final String username = System.getProperty("user.name");
 		namefield.setText((username != null ? username : "default") + "key");
 
-		FormLayout layout = new FormLayout(
+		final FormLayout layout = new FormLayout(
 				"right:max(40dlu;p), 4dlu, min(50dlu;p):grow", "");
-		DefaultFormBuilder builder = new DefaultFormBuilder(layout);
+		final DefaultFormBuilder builder = new DefaultFormBuilder(layout);
 		builder.setDefaultDialogBorder();
 		builder.append("Name", namefield);
 

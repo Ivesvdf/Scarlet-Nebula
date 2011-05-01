@@ -43,13 +43,13 @@ public class AddProviderWizard extends Wizard implements WizardListener
 	@Override
 	public void onFinish(DataRecorder recorder)
 	{
-		AddProviderWizardDataRecorder rec = (AddProviderWizardDataRecorder) recorder;
+		final AddProviderWizardDataRecorder rec = (AddProviderWizardDataRecorder) recorder;
 
 		CloudManager.get().registerNewCloudProvider(rec.getName(),
 				rec.getTemplate().getClassname(), rec.getEndpoint().getURL(),
 				rec.getApiKey(), rec.getApiSecret());
 
-		for (ProviderAddedListener p : providerAddedListeners)
+		for (final ProviderAddedListener p : providerAddedListeners)
 			p.providerWasAdded(rec.getName());
 
 		new KeyWizard(null, CloudManager.get().getCloudProviderByName(

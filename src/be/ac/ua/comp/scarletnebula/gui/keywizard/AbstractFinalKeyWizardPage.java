@@ -41,7 +41,7 @@ public abstract class AbstractFinalKeyWizardPage extends WizardPage
 		@Override
 		protected Boolean doInBackground() throws Exception
 		{
-			boolean exists = provider.unlinkedKeyExists(checkKeyname);
+			final boolean exists = provider.unlinkedKeyExists(checkKeyname);
 			return !exists;
 		}
 	}
@@ -80,7 +80,7 @@ public abstract class AbstractFinalKeyWizardPage extends WizardPage
 							.setText("<html><font color=\"red\"><b>Warning!</b> Keyname already in use! Proceed at your own risk.</font></html>");
 				}
 			}
-			catch (Exception e)
+			catch (final Exception e)
 			{
 				log.error("The impossible happened ", e);
 			}
@@ -97,7 +97,7 @@ public abstract class AbstractFinalKeyWizardPage extends WizardPage
 	private static final long serialVersionUID = 1L;
 	private final JCheckBox makeDefault;
 	private static Log log = LogFactory.getLog(CloudProvider.class);
-	private JLabel keyValidityMessage = new JLabel();
+	private final JLabel keyValidityMessage = new JLabel();
 
 	protected AbstractFinalKeyWizardPage(final CloudProvider provider,
 			String toptext, final String checkKeyname)
@@ -120,14 +120,14 @@ public abstract class AbstractFinalKeyWizardPage extends WizardPage
 		add(keyValidityMessage, BorderLayout.CENTER);
 		add(makeDefault, BorderLayout.SOUTH);
 
-		JPanel textAndThrobber = new JPanel(new BorderLayout());
+		final JPanel textAndThrobber = new JPanel(new BorderLayout());
 
 		textAndThrobber.add(toptextLabel, BorderLayout.NORTH);
 		if (!checkKeyname.isEmpty())
 		{
 			final ThrobberBarWithText throbber = new ThrobberBarWithText(
 					"Verifying key uniqueness...");
-			CollapsablePanel throbberPanel = new CollapsablePanel(throbber,
+			final CollapsablePanel throbberPanel = new CollapsablePanel(throbber,
 					false);
 			throbberPanel.setBorder(BorderFactory.createEmptyBorder(10, 0, 10,
 					0));

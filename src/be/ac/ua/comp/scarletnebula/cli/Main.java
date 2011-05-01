@@ -1,6 +1,5 @@
 package be.ac.ua.comp.scarletnebula.cli;
 
-
 public class Main
 {
 	/*

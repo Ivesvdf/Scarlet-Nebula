@@ -81,7 +81,7 @@ public enum Colors
 	@Override
 	public String toString()
 	{
-		StringBuilder sb = new StringBuilder();
+		final StringBuilder sb = new StringBuilder();
 		sb.append("r=").append(_myColor.getRed()).append(", g=")
 				.append(_myColor.getGreen()).append(", b=")
 				.append(_myColor.getBlue()).append("\n");
@@ -90,7 +90,7 @@ public enum Colors
 
 	public String toHexString()
 	{
-		StringBuilder sb = new StringBuilder();
+		final StringBuilder sb = new StringBuilder();
 		sb.append("#");
 		sb.append(Integer.toHexString(_myColor.getRed()));
 		sb.append(Integer.toHexString(_myColor.getGreen()));

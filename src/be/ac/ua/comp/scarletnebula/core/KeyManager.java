@@ -39,7 +39,7 @@ public class KeyManager
 			out.write(keystring);
 			out.close();
 		}
-		catch (IOException e)
+		catch (final IOException e)
 		{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -66,11 +66,11 @@ public class KeyManager
 		{
 			Utils.copyFile(key, new File(getKeyFilename(providerName, keyname)));
 		}
-		catch (FileNotFoundException e)
+		catch (final FileNotFoundException e)
 		{
 			e.printStackTrace();
 		}
-		catch (IOException e)
+		catch (final IOException e)
 		{
 			e.printStackTrace();
 		}
@@ -78,11 +78,11 @@ public class KeyManager
 
 	static public Collection<String> getKeyNames(String providerName)
 	{
-		File dirFile = assureDirectory(providerName);
+		final File dirFile = assureDirectory(providerName);
 
-		Collection<String> keynames = new ArrayList<String>();
+		final Collection<String> keynames = new ArrayList<String>();
 
-		for (String keyfile : dirFile.list())
+		for (final String keyfile : dirFile.list())
 		{
 			keynames.add(keyfile.replaceAll("\\.key$", ""));
 		}
@@ -91,8 +91,8 @@ public class KeyManager
 
 	static private File assureDirectory(String providerName)
 	{
-		String dir = getKeyPath(providerName);
-		File dirFile = new File(dir);
+		final String dir = getKeyPath(providerName);
+		final File dirFile = new File(dir);
 
 		// Check if the key dir already exists
 		if (!dirFile.exists())
@@ -115,7 +115,7 @@ public class KeyManager
 	static String getKeyFilename(String providerName, String keyname)
 			throws FileNotFoundException
 	{
-		String filename = getKeyPath(providerName) + keyname + ".key";
+		final String filename = getKeyPath(providerName) + keyname + ".key";
 
 		return filename;
 	}

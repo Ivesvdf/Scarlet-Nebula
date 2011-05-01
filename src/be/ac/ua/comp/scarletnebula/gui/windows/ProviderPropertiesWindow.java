@@ -10,7 +10,7 @@ import be.ac.ua.comp.scarletnebula.core.CloudProvider;
 public class ProviderPropertiesWindow extends JDialog
 {
 	private static final long serialVersionUID = 1L;
-	private CloudProvider provider;
+	private final CloudProvider provider;
 
 	public ProviderPropertiesWindow(JDialog parent, CloudProvider provider)
 	{
@@ -21,7 +21,7 @@ public class ProviderPropertiesWindow extends JDialog
 		setLocationByPlatform(true);
 		setSize(450, 300);
 
-		JTabbedPane tabbedPane = new JTabbedPane();
+		final JTabbedPane tabbedPane = new JTabbedPane();
 		tabbedPane.addTab("Key Management", new InteractiveKeyPanel(provider));
 		add(tabbedPane, BorderLayout.CENTER);
 		setVisible(true);

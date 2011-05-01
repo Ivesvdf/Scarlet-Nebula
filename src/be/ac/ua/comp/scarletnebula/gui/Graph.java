@@ -37,7 +37,7 @@ public abstract class Graph implements NewDatapointListener
 			false);
 	final long maximumAge;
 	private int maxSeriesID = 0;
-	private Collection<Server> serversToRefresh = new ArrayList<Server>();
+	private final Collection<Server> serversToRefresh = new ArrayList<Server>();
 
 	/**
 	 * Constructor
@@ -71,10 +71,10 @@ public abstract class Graph implements NewDatapointListener
 	public final void registerRelativeDatastream(Server server,
 			String streamname, Color color)
 	{
-		ServerStatisticsManager manager = server.getServerStatistics();
+		final ServerStatisticsManager manager = server.getServerStatistics();
 		manager.addNewDatapointListener(this, streamname);
 
-		TimeSeries series = new TimeSeries(streamname);
+		final TimeSeries series = new TimeSeries(streamname);
 		series.setMaximumItemAge(maximumAge);
 		datastreams.put(streamname, series);
 		dataset.addSeries(series);
@@ -120,7 +120,7 @@ public abstract class Graph implements NewDatapointListener
 
 	public void addListOfDatapoints(List<TimedDatapoint> datapoints)
 	{
-		for (TimedDatapoint datapoint : datapoints)
+		for (final TimedDatapoint datapoint : datapoints)
 		{
 			newDataPoint(new Millisecond(new Date(datapoint.getTimeMs())),
 					datapoint);
@@ -159,7 +159,7 @@ public abstract class Graph implements NewDatapointListener
 							datapoint.getValue());
 				}
 
-				for (Server server : serversToRefresh)
+				for (final Server server : serversToRefresh)
 					server.serverChanged();
 			}
 		});

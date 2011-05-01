@@ -41,7 +41,7 @@ public class Datapoint
 		{
 			return false;
 		}
-		Datapoint o = (Datapoint) obj;
+		final Datapoint o = (Datapoint) obj;
 		return this.datapointType == o.datapointType
 				&& this.datastream.equals(o.datastream)
 				&& this.value == o.value

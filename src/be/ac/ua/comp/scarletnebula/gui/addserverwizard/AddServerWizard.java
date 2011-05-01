@@ -32,7 +32,7 @@ public class AddServerWizard implements WizardListener
 
 		// Only show the choose provider page if more than one provider is
 		// available.
-		AddServerWizardDataRecorder rec = new AddServerWizardDataRecorder();
+		final AddServerWizardDataRecorder rec = new AddServerWizardDataRecorder();
 
 		WizardPage firstPage = null;
 
@@ -44,12 +44,12 @@ public class AddServerWizard implements WizardListener
 								parent,
 								"Please add a new CloudProvider before starting new servers.",
 								"First add Provider", JOptionPane.ERROR_MESSAGE);
-				AddProviderWizard wiz = new AddProviderWizard();
+				final AddProviderWizard wiz = new AddProviderWizard();
 				wiz.startModal(parent);
 				return;
 			case 1: // One provider -- user has to pick this one so skip the
 					// page
-				CloudProvider prov = (CloudProvider) CloudManager.get()
+				final CloudProvider prov = (CloudProvider) CloudManager.get()
 						.getLinkedCloudProviders().toArray()[0];
 				rec.provider = prov;
 				firstPage = new InstanceInformationPage(prov);
@@ -58,7 +58,7 @@ public class AddServerWizard implements WizardListener
 				firstPage = new ChooseProviderPage();
 				break;
 		}
-		Wizard wiz = new Wizard(firstPage, rec, new SimpleWizardTemplate());
+		final Wizard wiz = new Wizard(firstPage, rec, new SimpleWizardTemplate());
 		wiz.addWizardListener(this);
 		wiz.startModal("Start new server", 400, 300, gui);
 	}
@@ -66,7 +66,7 @@ public class AddServerWizard implements WizardListener
 	@Override
 	public void onFinish(DataRecorder recorder)
 	{
-		AddServerWizardDataRecorder rec = (AddServerWizardDataRecorder) recorder;
+		final AddServerWizardDataRecorder rec = (AddServerWizardDataRecorder) recorder;
 		final String instancename = rec.instanceName;
 		final String instancesize = rec.instanceSize;
 		final String image = rec.image;
@@ -84,11 +84,11 @@ public class AddServerWizard implements WizardListener
 
 		try
 		{
-			Server server = provider.startServer(instancename, instancesize,
+			final Server server = provider.startServer(instancename, instancesize,
 					image, tags, keypairOrPassword);
 			server.refreshUntilServerHasState(VmState.RUNNING);
 		}
-		catch (Exception e)
+		catch (final Exception e)
 		{
 			log.error("Could not start server", e);
 		}

@@ -25,16 +25,16 @@ public class SelectEndpointPage extends WizardPage
 	{
 		this.template = template;
 
-		Collection<String> endpointNames = new ArrayList<String>();
+		final Collection<String> endpointNames = new ArrayList<String>();
 
-		for (CloudProviderTemplate.Endpoint e : template.getEndPoints())
+		for (final CloudProviderTemplate.Endpoint e : template.getEndPoints())
 			endpointNames.add(e.getName());
 
 		endpoints = new JList(endpointNames.toArray());
 		endpoints.setSelectedIndex(0);
 		endpoints.setBorder(BorderFactory
 				.createBevelBorder(BevelBorder.LOWERED));
-		JScrollPane scrollPane = new JScrollPane(endpoints);
+		final JScrollPane scrollPane = new JScrollPane(endpoints);
 		scrollPane.setBorder(new EmptyBorder(20, 20, 10, 20));
 
 		// providerlist.setPreferredSize(new Dimension(260, 20));
@@ -52,7 +52,7 @@ public class SelectEndpointPage extends WizardPage
 	{
 		CloudProviderTemplate.Endpoint endpoint = null;
 
-		for (CloudProviderTemplate.Endpoint e : template.getEndPoints())
+		for (final CloudProviderTemplate.Endpoint e : template.getEndPoints())
 		{
 			if (e.getName().equals(endpoints.getSelectedValue()))
 			{
@@ -61,7 +61,7 @@ public class SelectEndpointPage extends WizardPage
 			}
 		}
 
-		AddProviderWizardDataRecorder rec = (AddProviderWizardDataRecorder) recorder;
+		final AddProviderWizardDataRecorder rec = (AddProviderWizardDataRecorder) recorder;
 		rec.setEndpoint(endpoint);
 
 		return new ProvideAccessPage();

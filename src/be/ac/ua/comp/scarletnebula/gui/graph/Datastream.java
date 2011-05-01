@@ -24,7 +24,7 @@ public class Datastream
 			super(dp.datapointType, dp.datastream, dp.value, dp.lowWarnLevel,
 					dp.mediumWarnLevel, dp.highWarnLevel, dp.max);
 
-			Calendar c = Calendar.getInstance();
+			final Calendar c = Calendar.getInstance();
 			timeMs = c.getTimeInMillis();
 		}
 	}
@@ -37,11 +37,11 @@ public class Datastream
 	private final Collection<NewDatapointListener> newDatapointListeners = new ArrayList<NewDatapointListener>();
 	private final Datapoint.Type type;
 	private final String streamname;
-	private Double max;
-	private Double lowWarnLevel;
-	private Double mediumWarnLevel;
-	private Double highWarnLevel;
-	private DroppingFifoQueue<TimedDatapoint> processedDatapoints = new DroppingFifoQueue<TimedDatapoint>(
+	private final Double max;
+	private final Double lowWarnLevel;
+	private final Double mediumWarnLevel;
+	private final Double highWarnLevel;
+	private final DroppingFifoQueue<TimedDatapoint> processedDatapoints = new DroppingFifoQueue<TimedDatapoint>(
 			120);
 	private WarnLevel currentWarnLevel = WarnLevel.NONE;
 
@@ -97,7 +97,7 @@ public class Datastream
 
 	protected void updateNewDatapointObservers(Datapoint datapoint)
 	{
-		for (NewDatapointListener listener : newDatapointListeners)
+		for (final NewDatapointListener listener : newDatapointListeners)
 		{
 			listener.newDataPoint(datapoint);
 		}

@@ -9,9 +9,14 @@ import be.ac.ua.comp.scarletnebula.wizard.WizardPage;
 public class FinalServerAddPage extends WizardPage
 {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	public FinalServerAddPage(AddServerWizardDataRecorder rec)
 	{
-		BetterTextLabel lbl = new BetterTextLabel(
+		final BetterTextLabel lbl = new BetterTextLabel(
 				"<html>Press <b>Finish</b> to start the server.");
 		lbl.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
 		add(lbl);

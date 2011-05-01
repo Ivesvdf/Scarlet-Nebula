@@ -100,7 +100,7 @@ public class ServerListModel extends AbstractListModel
 	 */
 	public void makeInvisible(int index)
 	{
-		Server tmp = visibleServers.get(index);
+		final Server tmp = visibleServers.get(index);
 		visibleServers.remove(index);
 		invisibleServers.add(tmp);
 		fireIntervalRemoved(this, index, index);
@@ -113,12 +113,12 @@ public class ServerListModel extends AbstractListModel
 	 */
 	public void filter(String filterString)
 	{
-		LinkedList<Server> allServers = new LinkedList<Server>();
+		final LinkedList<Server> allServers = new LinkedList<Server>();
 
 		allServers.addAll(visibleServers);
 		allServers.addAll(invisibleServers);
 
-		int oldVisibleCount = getSize();
+		final int oldVisibleCount = getSize();
 
 		visibleServers.clear();
 		invisibleServers.clear();
@@ -127,8 +127,8 @@ public class ServerListModel extends AbstractListModel
 
 		// Make a collection of tokens from a filterString, pass that to each
 		// server and ask it if matches.
-		Collection<String> filterTerms = SearchHelper.tokenize(filterString);
-		for (Server server : allServers)
+		final Collection<String> filterTerms = SearchHelper.tokenize(filterString);
+		for (final Server server : allServers)
 		{
 			if (server.match(filterTerms))
 			{
@@ -174,7 +174,7 @@ public class ServerListModel extends AbstractListModel
 	public void clear()
 	{
 		invisibleServers.addAll(visibleServers);
-		int visibleServerCount = getSize();
+		final int visibleServerCount = getSize();
 		visibleServers.clear();
 		fireIntervalRemoved(this, 0, visibleServerCount - 1);
 	}
@@ -187,9 +187,9 @@ public class ServerListModel extends AbstractListModel
 	 */
 	public Collection<Server> getVisibleServersAtIndices(int[] indices)
 	{
-		Collection<Server> servers = new ArrayList<Server>();
+		final Collection<Server> servers = new ArrayList<Server>();
 
-		for (int i : indices)
+		for (final int i : indices)
 		{
 			final Server server = getVisibleServerAtIndex(i);
 			if (server != null)
@@ -226,7 +226,7 @@ public class ServerListModel extends AbstractListModel
 	 */
 	public void removeServer(Server server)
 	{
-		int index = visibleServerToIndex(server);
+		final int index = visibleServerToIndex(server);
 		log.debug("Server we're removing is at index" + index);
 		visibleServers.remove(server);
 		fireIntervalRemoved(this, index, index);

@@ -4,11 +4,9 @@ public interface ServerLinkUnlinkObserver
 {
 
 	/**
-	 * Method will be called when a server was linked with this run of Scarlet Nebula. 
-	 * This is indicative of one of three things:
-	 * - A server was loaded from file
-	 * - A server was created
-	 * - An unlinked server was linked
+	 * Method will be called when a server was linked with this run of Scarlet
+	 * Nebula. This is indicative of one of three things: - A server was loaded
+	 * from file - A server was created - An unlinked server was linked
 	 * 
 	 * @param cloudProvider
 	 * @param srv

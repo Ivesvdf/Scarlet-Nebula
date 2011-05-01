@@ -74,7 +74,7 @@ public class SearchHelperTest
 	@Test
 	public void testMatchTags()
 	{
-		Collection<String> testTags = new ArrayList<String>();
+		final Collection<String> testTags = new ArrayList<String>();
 		testTags.add("dns");
 		testTags.add("ftp");
 		assertTrue(SearchHelper.matchTags("dns", testTags, false));

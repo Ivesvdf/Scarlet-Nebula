@@ -20,6 +20,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
+import javax.swing.ScrollPaneConstants;
 import javax.swing.WindowConstants;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -48,19 +49,19 @@ public class PropertiesWindow extends JDialog
 
 	private static Log log = LogFactory.getLog(PropertiesWindow.class);
 
-	private JPanel overviewTab = new JPanel();
-	private JPanel statisticsTab = new JPanel();
-	private JPanel communicationTab = new JPanel();
+	private final JPanel overviewTab = new JPanel();
+	private final JPanel statisticsTab = new JPanel();
+	private final JPanel communicationTab = new JPanel();
 
-	private JLabel statusLabel = new JLabel();
-	private JLabel dnsLabel = new JLabel();
-	private JLabel ipLabel = new JLabel();
-	private JLabel cloudLabel = new JLabel();
-	private JLabel unfriendlyNameLabel = new JLabel();
-	private JLabel sizeLabel = new JLabel();
-	private JLabel imageLabel = new JLabel();
-	private JLabel architectureLabel = new JLabel();
-	private JLabel platformLabel = new JLabel();
+	private final JLabel statusLabel = new JLabel();
+	private final JLabel dnsLabel = new JLabel();
+	private final JLabel ipLabel = new JLabel();
+	private final JLabel cloudLabel = new JLabel();
+	private final JLabel unfriendlyNameLabel = new JLabel();
+	private final JLabel sizeLabel = new JLabel();
+	private final JLabel imageLabel = new JLabel();
+	private final JLabel architectureLabel = new JLabel();
+	private final JLabel platformLabel = new JLabel();
 
 	private boolean statisticsTabIsFilled = false;
 
@@ -105,8 +106,8 @@ public class PropertiesWindow extends JDialog
 
 	private JPanel getBottomPanel()
 	{
-		JPanel bottomPanel = new JPanel();
-		JButton okButton = ButtonFactory.createOkButton();
+		final JPanel bottomPanel = new JPanel();
+		final JButton okButton = ButtonFactory.createOkButton();
 		okButton.addActionListener(new ActionListener()
 		{
 			@Override
@@ -145,8 +146,8 @@ public class PropertiesWindow extends JDialog
 			@Override
 			public void stateChanged(ChangeEvent e)
 			{
-				JTabbedPane tabSource = (JTabbedPane) e.getSource();
-				JPanel selectedPanel = (JPanel) tabSource
+				final JTabbedPane tabSource = (JTabbedPane) e.getSource();
+				final JPanel selectedPanel = (JPanel) tabSource
 						.getSelectedComponent();
 
 				if (selectedPanel == communicationTab)
@@ -182,11 +183,11 @@ public class PropertiesWindow extends JDialog
 	{
 		overviewTab.setLayout(new BorderLayout());
 
-		FormLayout layout = new FormLayout(
+		final FormLayout layout = new FormLayout(
 				"right:max(40dlu;p), 4dlu, min(50dlu;p):grow, 7dlu, "
 						+ "right:max(40dlu;p), 4dlu, min(50dlu;p):grow", "");
 		// add rows dynamically
-		DefaultFormBuilder builder = new DefaultFormBuilder(layout);
+		final DefaultFormBuilder builder = new DefaultFormBuilder(layout);
 		builder.setDefaultDialogBorder();
 		builder.appendSeparator("General Information");
 
@@ -246,8 +247,8 @@ public class PropertiesWindow extends JDialog
 
 	private JScrollPane getStatisticsPanel(final Collection<Server> servers)
 	{
-		JPanel statisticsPanel = new JPanel(new BorderLayout());
-		JPanel propertiesPart = new JPanel();
+		final JPanel statisticsPanel = new JPanel(new BorderLayout());
+		final JPanel propertiesPart = new JPanel();
 		propertiesPart.setLayout(new BoxLayout(propertiesPart,
 				BoxLayout.LINE_AXIS));
 		propertiesPart.add(Box.createHorizontalGlue());
@@ -258,7 +259,7 @@ public class PropertiesWindow extends JDialog
 			@Override
 			public void actionPerformed(ActionEvent e)
 			{
-				StatisticsPropertiesWindow win = new StatisticsPropertiesWindow(
+				final StatisticsPropertiesWindow win = new StatisticsPropertiesWindow(
 						PropertiesWindow.this, servers);
 				win.addActionListener(new ActionListener()
 				{
@@ -280,11 +281,11 @@ public class PropertiesWindow extends JDialog
 		if (servers.size() > 1)
 			log.fatal("more than one server in statisticspanel");
 
-		Server server = servers.iterator().next();
+		final Server server = servers.iterator().next();
 
-		AllGraphsPanel allGraphsPanel = new AllGraphsPanel(server);
+		final AllGraphsPanel allGraphsPanel = new AllGraphsPanel(server);
 
-		JPanel graphCollectionWrapper = new JPanel(new BorderLayout());
+		final JPanel graphCollectionWrapper = new JPanel(new BorderLayout());
 		graphCollectionWrapper.setBorder(BorderFactory.createEmptyBorder(10,
 				20, 10, 20));
 		graphCollectionWrapper.add(allGraphsPanel, BorderLayout.CENTER);
@@ -292,8 +293,8 @@ public class PropertiesWindow extends JDialog
 		statisticsPanel.add(graphCollectionWrapper, BorderLayout.CENTER);
 
 		final JScrollPane scrollPanel = new JScrollPane(statisticsPanel,
-				JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
-				JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+				ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
+				ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 		return scrollPanel;
 	}
 
@@ -306,7 +307,7 @@ public class PropertiesWindow extends JDialog
 					@Override
 					public void run(final JLabel text)
 					{
-						ChangeServerSshLoginMethodWindow window = new ChangeServerSshLoginMethodWindow(
+						final ChangeServerSshLoginMethodWindow window = new ChangeServerSshLoginMethodWindow(
 								PropertiesWindow.this, server);
 						window.addActionListener(new ActionListener()
 						{
@@ -341,21 +342,21 @@ public class PropertiesWindow extends JDialog
 
 	private Component getSingleServerTagComponent(final Server server)
 	{
-		ChangeableLabel tagLabel = new ChangeableLabel(Utils.implode(
+		final ChangeableLabel tagLabel = new ChangeableLabel(Utils.implode(
 				new ArrayList<String>(server.getTags()), ", "),
 				new Executable<JLabel>()
 				{
 					@Override
 					public void run(final JLabel label)
 					{
-						TaggingWindow win = new TaggingWindow(
+						final TaggingWindow win = new TaggingWindow(
 								PropertiesWindow.this, server.getTags());
 						win.addWindowClosedListener(new TaggingWindow.WindowClosedListener()
 						{
 							@Override
 							public void windowClosed(Collection<String> newTags)
 							{
-								for (String t : newTags)
+								for (final String t : newTags)
 									log.warn(t);
 
 								label.setText(Utils.implode(
@@ -374,8 +375,8 @@ public class PropertiesWindow extends JDialog
 			final Collection<Server> servers)
 	{
 		Component servernameComponent;
-		List<String> names = new ArrayList<String>(servers.size());
-		for (Server server : servers)
+		final List<String> names = new ArrayList<String>(servers.size());
+		for (final Server server : servers)
 		{
 			names.add(server.getFriendlyName());
 		}
@@ -385,7 +386,7 @@ public class PropertiesWindow extends JDialog
 
 	private Component getSingleServerServerNameComponent(final Server server)
 	{
-		JTextField servernameTextField = new JTextField();
+		final JTextField servernameTextField = new JTextField();
 		servernameTextField.setInputVerifier(new ServernameInputVerifier(
 				servernameTextField, server));
 		final LabelEditSwitcherPanel servername = new LabelEditSwitcherPanel(
@@ -434,7 +435,7 @@ public class PropertiesWindow extends JDialog
 		// Until multiple selected servers are supported, pick the last server
 		Server selectedServer = null;
 
-		for (Server s : selectedServers)
+		for (final Server s : selectedServers)
 			selectedServer = s;
 
 		statusLabel.setText(selectedServer.getStatus().toString());
@@ -442,7 +443,7 @@ public class PropertiesWindow extends JDialog
 
 		String ipString = "";
 
-		for (String ip : selectedServer.getPublicIpAddresses())
+		for (final String ip : selectedServer.getPublicIpAddresses())
 			ipString += ip + "\n";
 
 		ipLabel.setText(ipString);

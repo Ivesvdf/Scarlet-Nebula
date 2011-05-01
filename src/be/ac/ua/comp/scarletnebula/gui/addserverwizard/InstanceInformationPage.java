@@ -29,16 +29,16 @@ class InstanceInformationPage extends WizardPage
 				+ provider.listLinkedServers().size());
 		instanceNameField.selectAll();
 
-		Collection<String> sizes = provider.getPossibleInstanceSizes();
-		for (String size : sizes)
+		final Collection<String> sizes = provider.getPossibleInstanceSizes();
+		for (final String size : sizes)
 			instanceSizeList.addItem(size);
 
 		instanceSizeList.setSelectedIndex(0);
 
-		FormLayout layout = new FormLayout(
+		final FormLayout layout = new FormLayout(
 				"right:max(40dlu;p), 4dlu, max(50dlu;p):grow, 7dlu", "");
 
-		DefaultFormBuilder builder = new DefaultFormBuilder(layout);
+		final DefaultFormBuilder builder = new DefaultFormBuilder(layout);
 		builder.setDefaultDialogBorder();
 
 		builder.append("Instance name", instanceNameField);
@@ -52,16 +52,15 @@ class InstanceInformationPage extends WizardPage
 	public WizardPage next(DataRecorder recorder)
 	{
 		WizardPage returnPage;
-		final InputVerifier inputVerifier = instanceNameField.getInputVerifier();
-		if (inputVerifier != null
-				&& !inputVerifier.verify(
-						instanceNameField))
+		final InputVerifier inputVerifier = instanceNameField
+				.getInputVerifier();
+		if (inputVerifier != null && !inputVerifier.verify(instanceNameField))
 		{
 			returnPage = null;
 		}
 		else
 		{
-			AddServerWizardDataRecorder rec = (AddServerWizardDataRecorder) recorder;
+			final AddServerWizardDataRecorder rec = (AddServerWizardDataRecorder) recorder;
 
 			rec.instanceName = instanceNameField.getText();
 			rec.instanceSize = (String) instanceSizeList.getSelectedItem();

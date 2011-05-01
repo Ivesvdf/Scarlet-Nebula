@@ -22,17 +22,17 @@ public class ChooseNamePage extends WizardPage
 	ChooseNamePage(AddProviderWizardDataRecorder recorder)
 	{
 		setLayout(new BorderLayout());
-		BetterTextLabel text = new BetterTextLabel(
+		final BetterTextLabel text = new BetterTextLabel(
 				"What name would you like to use to describe this account with "
 						+ recorder.getTemplate().getName() + "?");
 		text.setBorder(BorderFactory.createEmptyBorder(10, 10, 20, 10));
 		add(text, BorderLayout.NORTH);
 
 		// And the textfields below
-		FormLayout layout = new FormLayout(
+		final FormLayout layout = new FormLayout(
 				"right:max(40dlu;p), 4dlu, max(50dlu;p):grow, 7dlu", "");
 
-		DefaultFormBuilder builder = new DefaultFormBuilder(layout);
+		final DefaultFormBuilder builder = new DefaultFormBuilder(layout);
 		builder.setDefaultDialogBorder();
 
 		builder.append("Account Name", name);
@@ -50,8 +50,8 @@ public class ChooseNamePage extends WizardPage
 	@Override
 	public WizardPage next(DataRecorder recorder)
 	{
-		AddProviderWizardDataRecorder rec = (AddProviderWizardDataRecorder) recorder;
-		String providerName = name.getText();
+		final AddProviderWizardDataRecorder rec = (AddProviderWizardDataRecorder) recorder;
+		final String providerName = name.getText();
 
 		if (providerName.length() == 0)
 		{
@@ -62,7 +62,7 @@ public class ChooseNamePage extends WizardPage
 		}
 
 		// Check to see if this name hasn't been taken
-		for (String aProviderName : CloudManager.get()
+		for (final String aProviderName : CloudManager.get()
 				.getLinkedCloudProviderNames())
 		{
 			if (aProviderName.equals(providerName))

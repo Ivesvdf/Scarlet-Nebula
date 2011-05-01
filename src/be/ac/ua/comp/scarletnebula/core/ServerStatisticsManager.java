@@ -32,31 +32,31 @@ public class ServerStatisticsManager
 			{
 				final SSHCommandConnection connection = (SSHCommandConnection) server
 						.newCommandConnection(new NotPromptingJschUserInfo());
-				ChannelInputStreamTuple tup = connection
+				final ChannelInputStreamTuple tup = connection
 						.executeContinuousCommand(server.getStatisticsCommand());
 
-				InputStream pollingInputStream = tup.inputStream;
-				Channel sshChannel = tup.channel;
+				final InputStream pollingInputStream = tup.inputStream;
+				final Channel sshChannel = tup.channel;
 
 				StringBuilder result = new StringBuilder();
 				final int buffersize = 1024;
-				byte[] tmp = new byte[buffersize];
+				final byte[] tmp = new byte[buffersize];
 
 				while (!stop)
 				{
 					while (pollingInputStream.available() > 0)
 					{
-						int i = pollingInputStream.read(tmp, 0, buffersize);
+						final int i = pollingInputStream.read(tmp, 0, buffersize);
 						if (i < 0)
 							break;
 						result.append(new String(tmp, 0, i));
 						// Split on newlines
 						while (result.indexOf("\n") >= 0)
 						{
-							int nlPos = result.indexOf("\n");
-							String before = result.substring(0, nlPos);
+							final int nlPos = result.indexOf("\n");
+							final String before = result.substring(0, nlPos);
 							newDatapoint(before);
-							String after = result.substring(nlPos + 1);
+							final String after = result.substring(nlPos + 1);
 
 							result = new StringBuilder(after);
 						}
@@ -70,14 +70,14 @@ public class ServerStatisticsManager
 					{
 						Thread.sleep(1000);
 					}
-					catch (Exception ee)
+					catch (final Exception ee)
 					{
 					}
 				}
 				sshChannel.disconnect();
 
 			}
-			catch (Exception e)
+			catch (final Exception e)
 			{
 				log.error("Problem executing continuous command.", e);
 			}
@@ -132,7 +132,7 @@ public class ServerStatisticsManager
 			// for that streamname
 			if (futureHookups.containsKey(datastreamName))
 			{
-				for (NewDatapointListener listener : futureHookups
+				for (final NewDatapointListener listener : futureHookups
 						.get(datastreamName))
 				{
 					log.info("Adding future hookup listener to newly created stream.");
@@ -157,7 +157,7 @@ public class ServerStatisticsManager
 
 	private void updateNewDatastreamObservers(Datapoint datapoint)
 	{
-		for (NewDatastreamListener listener : newDatastreamListeners)
+		for (final NewDatastreamListener listener : newDatastreamListeners)
 		{
 			listener.newDataStream(datapoint);
 		}
@@ -265,9 +265,9 @@ public class ServerStatisticsManager
 
 	public void reset()
 	{
-		for (String streamname : availableStreams.keySet())
+		for (final String streamname : availableStreams.keySet())
 		{
-			for (DeleteDatastreamListener listener : deleteDatastreamListeners)
+			for (final DeleteDatastreamListener listener : deleteDatastreamListeners)
 			{
 				listener.deleteDataStream(streamname);
 			}
@@ -281,7 +281,7 @@ public class ServerStatisticsManager
 	{
 		Datastream.WarnLevel highestWarnLevel = Datastream.WarnLevel.NONE;
 
-		for (Datastream datastream : availableStreams.values())
+		for (final Datastream datastream : availableStreams.values())
 		{
 			if (datastream.getCurrentWarnLevel().compareTo(highestWarnLevel) > 0)
 			{

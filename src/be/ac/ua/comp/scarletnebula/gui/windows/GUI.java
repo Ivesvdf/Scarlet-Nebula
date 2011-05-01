@@ -81,7 +81,7 @@ public class GUI extends JFrame implements ListSelectionListener,
 		setTitle("Scarlet Nebula");
 		setSize(700, 400);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
-		ImageIcon icon = new ImageIcon(getClass().getResource(
+		final ImageIcon icon = new ImageIcon(getClass().getResource(
 				"/images/icon48.png"));
 		setIconImage(icon.getImage());
 
@@ -108,7 +108,7 @@ public class GUI extends JFrame implements ListSelectionListener,
 		{
 			CloudManager.get().loadAllLinkedServers();
 		}
-		catch (Exception e)
+		catch (final Exception e)
 		{
 			e.printStackTrace();
 		}
@@ -116,7 +116,7 @@ public class GUI extends JFrame implements ListSelectionListener,
 		// If there are no linked cloudproviders, start the new provider wizard
 		if (CloudManager.get().getLinkedCloudProviders().size() == 0)
 		{
-			SwingWorker<Object, Object> welcomeWizardWorker = new SwingWorker<Object, Object>()
+			final SwingWorker<Object, Object> welcomeWizardWorker = new SwingWorker<Object, Object>()
 			{
 				@Override
 				protected Object doInBackground() throws Exception
@@ -132,7 +132,7 @@ public class GUI extends JFrame implements ListSelectionListener,
 
 	private JPanel getMainPanel()
 	{
-		JPanel mainPanel = new JPanel()
+		final JPanel mainPanel = new JPanel()
 		{
 			private static final long serialVersionUID = 1L;
 
@@ -205,10 +205,10 @@ public class GUI extends JFrame implements ListSelectionListener,
 					}
 				});
 
-		SearchField searchField = new SearchField(filterTextField);
+		final SearchField searchField = new SearchField(filterTextField);
 
-		ImageIcon closeIcon = Utils.icon("cross16.png");
-		JButton closeButton = new JButton(closeIcon);
+		final ImageIcon closeIcon = Utils.icon("cross16.png");
+		final JButton closeButton = new JButton(closeIcon);
 		closeButton.setBounds(10, 10, closeIcon.getIconWidth(),
 				closeIcon.getIconHeight());
 		closeButton.setMargin(new Insets(0, 0, 0, 0));
@@ -231,7 +231,7 @@ public class GUI extends JFrame implements ListSelectionListener,
 		searchPanel.setVisible(false);
 		searchPanel.setAlignmentX(RIGHT_ALIGNMENT);
 
-		GridBagConstraints c = new GridBagConstraints();
+		final GridBagConstraints c = new GridBagConstraints();
 		c.anchor = GridBagConstraints.LAST_LINE_END;
 		c.fill = GridBagConstraints.NONE;
 		c.gridx = 0;
@@ -260,7 +260,7 @@ public class GUI extends JFrame implements ListSelectionListener,
 		try
 		{
 			boolean found = false;
-			for (LookAndFeelInfo info : UIManager.getInstalledLookAndFeels())
+			for (final LookAndFeelInfo info : UIManager.getInstalledLookAndFeels())
 			{
 				if ("Nimbus".equals(info.getName()))
 				{
@@ -273,7 +273,7 @@ public class GUI extends JFrame implements ListSelectionListener,
 				UIManager.setLookAndFeel(UIManager
 						.getSystemLookAndFeelClassName());
 		}
-		catch (Exception e)
+		catch (final Exception e)
 		{
 			log.error("Cannot set look and feel", e);
 		}
@@ -297,11 +297,11 @@ public class GUI extends JFrame implements ListSelectionListener,
 
 	private void addToolbar()
 	{
-		JToolBar toolbar = new JToolBar();
+		final JToolBar toolbar = new JToolBar();
 
-		Icon addIcon = Utils.icon("add16.png");
+		final Icon addIcon = Utils.icon("add16.png");
 
-		JButton addButton = new JButton(addIcon);
+		final JButton addButton = new JButton(addIcon);
 		addButton.addActionListener(new ActionListener()
 		{
 			@Override
@@ -313,8 +313,8 @@ public class GUI extends JFrame implements ListSelectionListener,
 		addButton.setBounds(10, 10, addIcon.getIconWidth(),
 				addIcon.getIconHeight());
 
-		Icon refreshIcon = Utils.icon("refresh16.png");
-		JButton refreshButton = new JButton(refreshIcon);
+		final Icon refreshIcon = Utils.icon("refresh16.png");
+		final JButton refreshButton = new JButton(refreshIcon);
 		refreshButton.addActionListener(new ActionListener()
 		{
 			@Override
@@ -326,8 +326,8 @@ public class GUI extends JFrame implements ListSelectionListener,
 		refreshButton.setBounds(10, 10, refreshIcon.getIconWidth(),
 				refreshIcon.getIconHeight());
 
-		Icon searchIcon = Utils.icon("search16.png");
-		JButton searchButton = new JButton(searchIcon);
+		final Icon searchIcon = Utils.icon("search16.png");
+		final JButton searchButton = new JButton(searchIcon);
 		searchButton.addActionListener(new ActionListener()
 		{
 			@Override
@@ -348,10 +348,10 @@ public class GUI extends JFrame implements ListSelectionListener,
 
 	private void addMenubar()
 	{
-		JMenuBar menuBar = new JMenuBar();
-		JMenu providerMenu = getProviderMenu();
-		JMenu serverMenu = getServerMenu();
-		JMenu helpMenu = getHelpMenu();
+		final JMenuBar menuBar = new JMenuBar();
+		final JMenu providerMenu = getProviderMenu();
+		final JMenu serverMenu = getServerMenu();
+		final JMenu helpMenu = getHelpMenu();
 
 		menuBar.add(providerMenu);
 		menuBar.add(serverMenu);
@@ -363,10 +363,10 @@ public class GUI extends JFrame implements ListSelectionListener,
 
 	private JMenu getServerMenu()
 	{
-		JMenu serverMenu = new JMenu("Servers");
+		final JMenu serverMenu = new JMenu("Servers");
 		serverMenu.setMnemonic(KeyEvent.VK_S);
 
-		JMenuItem startServerItem = new JMenuItem("Start new server",
+		final JMenuItem startServerItem = new JMenuItem("Start new server",
 				Utils.icon("add16.png"));
 		startServerItem.setMnemonic(KeyEvent.VK_S);
 		startServerItem.addActionListener(new ActionListener()
@@ -379,7 +379,7 @@ public class GUI extends JFrame implements ListSelectionListener,
 		});
 		serverMenu.add(startServerItem);
 
-		JMenuItem searchServerItem = new JMenuItem("Filter servers",
+		final JMenuItem searchServerItem = new JMenuItem("Filter servers",
 				Utils.icon("search16.png"));
 		searchServerItem.setMnemonic(KeyEvent.VK_F);
 		searchServerItem.addActionListener(new ActionListener()
@@ -396,23 +396,23 @@ public class GUI extends JFrame implements ListSelectionListener,
 
 	private JMenu getHelpMenu()
 	{
-		JMenu helpMenu = new JMenu("Help");
+		final JMenu helpMenu = new JMenu("Help");
 		helpMenu.setMnemonic(KeyEvent.VK_H);
 
 		// Pick a random message to display in the help menu
-		String messages[] = { "(You won't find any help here)",
+		final String messages[] = { "(You won't find any help here)",
 				"(Nobody can help you)", "(Keep on lookin' if you need help)",
 				"(Heeeeelp!)", "(You might want to try google for help)",
 				"(Try yelling loudly if you need help)" };
 
-		Random generator = new Random(System.currentTimeMillis());
+		final Random generator = new Random(System.currentTimeMillis());
 
-		JMenuItem noHelpItem = new JMenuItem(
+		final JMenuItem noHelpItem = new JMenuItem(
 				messages[generator.nextInt(messages.length)]);
 		noHelpItem.setEnabled(false);
 		helpMenu.add(noHelpItem);
 
-		JMenuItem aboutItem = new JMenuItem("About...");
+		final JMenuItem aboutItem = new JMenuItem("About...");
 		aboutItem.addActionListener(new ActionListener()
 		{
 			@Override
@@ -428,12 +428,12 @@ public class GUI extends JFrame implements ListSelectionListener,
 
 	private JMenu getProviderMenu()
 	{
-		JMenu providerMenu = new JMenu("Providers");
+		final JMenu providerMenu = new JMenu("Providers");
 		providerMenu.setMnemonic(KeyEvent.VK_P);
 		providerMenu.getAccessibleContext().setAccessibleDescription(
 				"Managing cloud providers.");
 
-		JMenuItem manageProvidersItem = new JMenuItem("Manage Providers");
+		final JMenuItem manageProvidersItem = new JMenuItem("Manage Providers");
 		manageProvidersItem.setMnemonic(KeyEvent.VK_M);
 		manageProvidersItem.addActionListener(new ActionListener()
 		{
@@ -446,7 +446,7 @@ public class GUI extends JFrame implements ListSelectionListener,
 
 		providerMenu.add(manageProvidersItem);
 
-		JMenuItem detectAllUnlinkedInstances = new JMenuItem(
+		final JMenuItem detectAllUnlinkedInstances = new JMenuItem(
 				"Link/Unlink Instances");
 		detectAllUnlinkedInstances.addActionListener(new ActionListener()
 		{
@@ -470,24 +470,24 @@ public class GUI extends JFrame implements ListSelectionListener,
 	// TODO: Remove this ftion?
 	protected void detectAllUnlinkedInstances()
 	{
-		Collection<CloudProvider> providers = CloudManager.get()
+		final Collection<CloudProvider> providers = CloudManager.get()
 				.getLinkedCloudProviders();
 
 		for (final CloudProvider prov : providers)
 		{
 			try
 			{
-				Collection<Server> unlinkedServers = prov.listUnlinkedServers();
+				final Collection<Server> unlinkedServers = prov.listUnlinkedServers();
 				log.debug("Provider " + prov.getName() + " has "
 						+ unlinkedServers.size() + " unlinked instances.");
 
-				for (Server server : unlinkedServers)
+				for (final Server server : unlinkedServers)
 				{
 					prov.linkUnlinkedServer(server);
 					addServer(server);
 				}
 			}
-			catch (Exception e)
+			catch (final Exception e)
 			{
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -499,26 +499,26 @@ public class GUI extends JFrame implements ListSelectionListener,
 
 	private void openAboutBox()
 	{
-		AboutWindow aboutWindow = new AboutWindow(this);
+		final AboutWindow aboutWindow = new AboutWindow(this);
 		aboutWindow.setVisible(true);
 	}
 
 	public void terminateSelectedServers()
 	{
-		Collection<Server> servers = serverList.getSelectedServers();
+		final Collection<Server> servers = serverList.getSelectedServers();
 
-		for (Server server : servers)
+		for (final Server server : servers)
 		{
 			try
 			{
 				server.terminate();
 				server.refreshUntilServerHasState(VmState.TERMINATED);
 			}
-			catch (CloudException e)
+			catch (final CloudException e)
 			{
 				e.printStackTrace();
 			}
-			catch (InternalException e)
+			catch (final InternalException e)
 			{
 				e.printStackTrace();
 			}
@@ -550,7 +550,7 @@ public class GUI extends JFrame implements ListSelectionListener,
 		 * topLeftPane.add(searchField);
 		 */
 
-		JPanel leftPanel = new JPanel();
+		final JPanel leftPanel = new JPanel();
 		leftPanel.setLayout(new BorderLayout());
 
 		// leftPanel.add(topLeftPane, BorderLayout.PAGE_START);
@@ -561,30 +561,30 @@ public class GUI extends JFrame implements ListSelectionListener,
 
 	public void refreshSelectedServers()
 	{
-		int indices[] = serverList.getSelectedIndices();
+		final int indices[] = serverList.getSelectedIndices();
 
-		Collection<Server> servers = serverListModel
+		final Collection<Server> servers = serverListModel
 				.getVisibleServersAtIndices(indices);
 
 		// fillRightPartition();
 
-		for (Server server : servers)
+		for (final Server server : servers)
 		{
 			try
 			{
 				server.refresh();
 			}
-			catch (InternalException e)
+			catch (final InternalException e)
 			{
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			catch (CloudException e)
+			catch (final CloudException e)
 			{
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			catch (ServerDisappearedException e)
+			catch (final ServerDisappearedException e)
 			{
 				log.info("Server disappeared.", e);
 				removeServer(server);
@@ -629,7 +629,7 @@ public class GUI extends JFrame implements ListSelectionListener,
 							"No CloudProvider accounts found",
 							JOptionPane.ERROR_MESSAGE);
 
-			AddProviderWizard wiz = new AddProviderWizard();
+			final AddProviderWizard wiz = new AddProviderWizard();
 			wiz.startModal(this);
 		}
 		else
@@ -645,7 +645,7 @@ public class GUI extends JFrame implements ListSelectionListener,
 			@Override
 			public void run()
 			{
-				GUI ex = new GUI();
+				final GUI ex = new GUI();
 			}
 		});
 	}
@@ -672,21 +672,21 @@ public class GUI extends JFrame implements ListSelectionListener,
 
 	public void pauseSelectedServers()
 	{
-		Collection<Server> selectedServers = serverList.getSelectedServers();
+		final Collection<Server> selectedServers = serverList.getSelectedServers();
 
 		try
 		{
-			for (Server server : selectedServers)
+			for (final Server server : selectedServers)
 			{
 				server.pause();
 				server.refreshUntilServerHasState(VmState.PAUSED);
 			}
 		}
-		catch (CloudException e)
+		catch (final CloudException e)
 		{
 			error(e.getMessage());
 		}
-		catch (InternalException e)
+		catch (final InternalException e)
 		{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -695,18 +695,18 @@ public class GUI extends JFrame implements ListSelectionListener,
 
 	public void rebootSelectedServers()
 	{
-		Collection<Server> selectedServers = serverList.getSelectedServers();
+		final Collection<Server> selectedServers = serverList.getSelectedServers();
 
 		try
 		{
-			for (Server server : selectedServers)
+			for (final Server server : selectedServers)
 				server.reboot();
 		}
-		catch (CloudException e)
+		catch (final CloudException e)
 		{
 			e.printStackTrace();
 		}
-		catch (InternalException e)
+		catch (final InternalException e)
 		{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -715,9 +715,9 @@ public class GUI extends JFrame implements ListSelectionListener,
 
 	public void unlinkSelectedServers()
 	{
-		Collection<Server> selectedServers = serverList.getSelectedServers();
+		final Collection<Server> selectedServers = serverList.getSelectedServers();
 
-		for (Server server : selectedServers)
+		for (final Server server : selectedServers)
 		{
 			// Server will be automatically removed from the view on the left
 			// because of the hooked observers

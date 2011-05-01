@@ -23,7 +23,7 @@ public class SearchField extends JPanel
 		setBackground(Color.WHITE);
 		textfield.setBackground(Color.WHITE);
 		textfield.setBorder(null);
-		JLabel iconLabel = new JLabel(Utils.icon("search16.png"));
+		final JLabel iconLabel = new JLabel(Utils.icon("search16.png"));
 		iconLabel.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 5));
 		add(iconLabel, BorderLayout.WEST);
 		add(textfield, BorderLayout.CENTER);

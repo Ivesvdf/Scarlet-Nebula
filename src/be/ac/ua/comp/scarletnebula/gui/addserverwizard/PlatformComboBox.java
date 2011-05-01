@@ -12,7 +12,7 @@ public class PlatformComboBox extends JComboBox
 	{
 		super();
 
-		for (Platform platform : org.dasein.cloud.compute.Platform.values())
+		for (final Platform platform : org.dasein.cloud.compute.Platform.values())
 		{
 			addItem(toProperCase(platform.name().replace('_', ' ')).replace(
 					"Bsd", "BSD").replace("Os", "OS"));
@@ -33,7 +33,7 @@ public class PlatformComboBox extends JComboBox
 		String result = "";
 		for (int i = 0; i < input.length(); i++)
 		{
-			String next = input.substring(i, i + 1);
+			final String next = input.substring(i, i + 1);
 			if (i == 0 || (i > 0 && input.substring(i - 1, i).equals(" ")))
 			{
 				result += next.toUpperCase();

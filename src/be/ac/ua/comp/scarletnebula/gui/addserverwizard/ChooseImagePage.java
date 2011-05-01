@@ -61,15 +61,15 @@ public class ChooseImagePage extends WizardPage
 				model);
 		table.setRowSorter(sorter);
 
-		JPanel aboveTable = new JPanel(new BorderLayout());
-		JPanel searchPanel = getSearchPanel(sorter);
+		final JPanel aboveTable = new JPanel(new BorderLayout());
+		final JPanel searchPanel = getSearchPanel(sorter);
 
 		aboveTable.add(searchPanel, BorderLayout.NORTH);
 		aboveTable.add(throbberPanel, BorderLayout.SOUTH);
 
 		add(aboveTable, BorderLayout.NORTH);
 
-		JScrollPane tableScrollPane = new JScrollPane(table);
+		final JScrollPane tableScrollPane = new JScrollPane(table);
 		tableScrollPane.setBorder(BorderFactory.createCompoundBorder(
 				BorderFactory.createEmptyBorder(5, 20, 10, 20),
 				BorderFactory.createBevelBorder(BevelBorder.LOWERED)));
@@ -80,13 +80,13 @@ public class ChooseImagePage extends WizardPage
 
 	private JPanel getSearchPanel(final TableRowSorter<TableModel> sorter)
 	{
-		JPanel searchPanel = new JPanel(new GridBagLayout());
+		final JPanel searchPanel = new JPanel(new GridBagLayout());
 		searchPanel.setBorder(BorderFactory.createEmptyBorder(10, 20, 5, 20));
 
 		add(searchPanel, BorderLayout.NORTH);
 		final PlatformComboBox platformComboBox = new PlatformComboBox();
 
-		GridBagConstraints c = new GridBagConstraints();
+		final GridBagConstraints c = new GridBagConstraints();
 		c.weightx = 0.0;
 		c.fill = GridBagConstraints.HORIZONTAL;
 		c.gridx = 0;
@@ -119,9 +119,9 @@ public class ChooseImagePage extends WizardPage
 	@Override
 	public WizardPage next(DataRecorder recorder)
 	{
-		AddServerWizardDataRecorder rec = (AddServerWizardDataRecorder) recorder;
+		final AddServerWizardDataRecorder rec = (AddServerWizardDataRecorder) recorder;
 
-		int selection = table.getSelectedRow();
+		final int selection = table.getSelectedRow();
 
 		if (selection < 0)
 		{
@@ -133,7 +133,7 @@ public class ChooseImagePage extends WizardPage
 							"Select image", JOptionPane.ERROR_MESSAGE);
 			return null;
 		}
-		MachineImage image = model.getRow(selection);
+		final MachineImage image = model.getRow(selection);
 		rec.image = image.getProviderMachineImageId();
 		return new TaggingPage();
 	}
@@ -169,7 +169,7 @@ public class ChooseImagePage extends WizardPage
 			{
 				model.clear();
 
-				ImageModelFillerTask task = new ImageModelFillerTask(
+				final ImageModelFillerTask task = new ImageModelFillerTask(
 						Utils.findWindow(ChooseImagePage.this), throbberPanel,
 						table, model, provider, currentPlatform,
 						currentArchitecture);
@@ -179,7 +179,7 @@ public class ChooseImagePage extends WizardPage
 				previousSelectedPlatform = currentPlatform;
 
 			}
-			String expr = searchField.getText();
+			final String expr = searchField.getText();
 			sorter.setRowFilter(RowFilter.regexFilter(expr));
 			sorter.setSortKeys(null);
 		}
@@ -210,12 +210,12 @@ public class ChooseImagePage extends WizardPage
 		@Override
 		public MachineImageTableModel doInBackground()
 		{
-			Iterable<MachineImage> images = provider.getAvailableMachineImages(
+			final Iterable<MachineImage> images = provider.getAvailableMachineImages(
 					platform, architecture);
 			if (images == null)
 				log.error("No images available");
 
-			for (MachineImage image : images)
+			for (final MachineImage image : images)
 			{
 				if (isCancelled())
 					return model;

@@ -48,16 +48,16 @@ public class SSHPanel extends JPanel
 			@Override
 			public void componentResized(ComponentEvent e)
 			{
-				Component c = e.getComponent();
+				final Component c = e.getComponent();
 				int cw = c.getWidth();
 				int ch = c.getHeight();
 
-				JPanel source = ((JPanel) c);
+				final JPanel source = ((JPanel) c);
 
-				int cwm = source.getBorder() != null ? source.getBorder()
+				final int cwm = source.getBorder() != null ? source.getBorder()
 						.getBorderInsets(c).left
 						+ source.getBorder().getBorderInsets(c).right : 0;
-				int chm = source.getBorder() != null ? source.getBorder()
+				final int chm = source.getBorder() != null ? source.getBorder()
 						.getBorderInsets(c).bottom
 						+ source.getBorder().getBorderInsets(c).top : 0;
 				cw -= cwm;
@@ -92,7 +92,7 @@ public class SSHPanel extends JPanel
 				BorderFactory.createEmptyBorder(20, 20, 20, 20),
 				BorderFactory.createBevelBorder(BevelBorder.LOWERED)));
 
-		Thread connectionThread = new Thread()
+		final Thread connectionThread = new Thread()
 		{
 			@Override
 			public void run()
@@ -101,7 +101,7 @@ public class SSHPanel extends JPanel
 				Connection connection = null;
 				try
 				{
-					SSHCommandConnection commandConnection = (SSHCommandConnection) server
+					final SSHCommandConnection commandConnection = (SSHCommandConnection) server
 							.newCommandConnection(new NotPromptingJschUserInfo());
 
 					connection = commandConnection.getJSchTerminalConnection();
@@ -109,17 +109,17 @@ public class SSHPanel extends JPanel
 					term.requestFocusInWindow();
 					term.start(connection);
 				}
-				catch (JSchException e)
+				catch (final JSchException e)
 				{
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-				catch (IOException e)
+				catch (final IOException e)
 				{
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-				catch (Exception e)
+				catch (final Exception e)
 				{
 					// TODO Auto-generated catch block
 					e.printStackTrace();

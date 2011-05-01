@@ -23,7 +23,7 @@ public class TaggingPage extends WizardPage
 	{
 		setLayout(new BorderLayout());
 
-		BetterTextLabel lbl = new BetterTextLabel(
+		final BetterTextLabel lbl = new BetterTextLabel(
 				"Enter some labels that describe the functionality of this server. E.g. dns, webserver, ...");
 		lbl.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
 		add(lbl, BorderLayout.NORTH);
@@ -37,8 +37,8 @@ public class TaggingPage extends WizardPage
 	{
 		// Extract tags
 		taggingPanel.simulateEnter();
-		Collection<String> tags = taggingPanel.getTags();
-		AddServerWizardDataRecorder rec = (AddServerWizardDataRecorder) recorder;
+		final Collection<String> tags = taggingPanel.getTags();
+		final AddServerWizardDataRecorder rec = (AddServerWizardDataRecorder) recorder;
 		rec.tags = tags;
 		return new FinalServerAddPage(rec);
 	}

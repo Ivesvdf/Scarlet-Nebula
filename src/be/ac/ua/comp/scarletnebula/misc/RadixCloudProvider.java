@@ -164,7 +164,7 @@ public class RadixCloudProvider extends CloudProvider
 				Platform arg1, Architecture arg2) throws CloudException,
 				InternalException
 		{
-			MachineImage foo = new MachineImage()
+			final MachineImage foo = new MachineImage()
 			{
 				private static final long serialVersionUID = 1L;
 
@@ -414,7 +414,7 @@ public class RadixCloudProvider extends CloudProvider
 		public VirtualMachine getVirtualMachine(String arg0)
 				throws InternalException, CloudException
 		{
-			VirtualMachine m = createdServers.get(UUID.fromString(arg0));
+			final VirtualMachine m = createdServers.get(UUID.fromString(arg0));
 
 			return m;
 		}
@@ -442,9 +442,9 @@ public class RadixCloudProvider extends CloudProvider
 				String arg6, boolean arg7, boolean arg8, String[] arg9,
 				Tag... arg10) throws InternalException, CloudException
 		{
-			RadixVirtualMachine vm = new RadixVirtualMachine();
+			final RadixVirtualMachine vm = new RadixVirtualMachine();
 			vm.setName(arg3);
-			UUID uuid = UUID.randomUUID();
+			final UUID uuid = UUID.randomUUID();
 			vm.setProviderVirtualMachineId(uuid.toString());
 
 			createdServers.put(uuid, vm);
@@ -463,7 +463,7 @@ public class RadixCloudProvider extends CloudProvider
 		public Iterable<VirtualMachineProduct> listProducts(Architecture arg0)
 				throws InternalException, CloudException
 		{
-			VirtualMachineProduct p = new VirtualMachineProduct()
+			final VirtualMachineProduct p = new VirtualMachineProduct()
 			{
 				private static final long serialVersionUID = 1L;
 

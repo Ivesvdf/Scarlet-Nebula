@@ -46,7 +46,7 @@ public class ServerList extends JXList implements ComponentListener
 		@Override
 		protected Component doHighlight(Component arg0, ComponentAdapter arg1)
 		{
-			JXPanel objectToBeRendered = (JXPanel) arg0;
+			final JXPanel objectToBeRendered = (JXPanel) arg0;
 			serverCellRenderer.onRollOver(objectToBeRendered);
 			return objectToBeRendered;
 		}
@@ -56,13 +56,13 @@ public class ServerList extends JXList implements ComponentListener
 	{
 		private void testClearSelection(MouseEvent e)
 		{
-			JList list = (JList) e.getSource();
+			final JList list = (JList) e.getSource();
 
-			Point currentPos = e.getPoint();
+			final Point currentPos = e.getPoint();
 
 			for (int i = 0; i < list.getModel().getSize(); i++)
 			{
-				Rectangle r = list.getCellBounds(i, i);
+				final Rectangle r = list.getCellBounds(i, i);
 				if (r.contains(currentPos))
 					return;
 			}
@@ -115,17 +115,17 @@ public class ServerList extends JXList implements ComponentListener
 
 	public Collection<Server> getSelectedServers()
 	{
-		int indices[] = getSelectedIndices();
+		final int indices[] = getSelectedIndices();
 		return serverListModel.getVisibleServersAtIndices(indices);
 	}
 
 	@Override
 	public void componentResized(ComponentEvent e)
 	{
-		JList list = (JList) e.getSource();
-		JViewport viewport = (JViewport) list.getParent();
+		final JList list = (JList) e.getSource();
+		final JViewport viewport = (JViewport) list.getParent();
 
-		Dimension newSize = viewport.getExtentSize();
+		final Dimension newSize = viewport.getExtentSize();
 		final int totalWidth = newSize.width - list.getInsets().left
 				- list.getInsets().right - 1;
 		final int serverCount = totalWidth / 200;
@@ -165,8 +165,8 @@ public class ServerList extends JXList implements ComponentListener
 
 	public boolean startNewServerServerSelected()
 	{
-		int indices[] = getSelectedIndices();
-		for (int index : indices)
+		final int indices[] = getSelectedIndices();
+		for (final int index : indices)
 		{
 			if (serverListModel.getVisibleServerAtIndex(index) == null)
 				return true;

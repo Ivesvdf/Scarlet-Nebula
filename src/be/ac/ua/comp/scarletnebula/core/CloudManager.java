@@ -31,11 +31,11 @@ public class CloudManager
 		populateCloudProviderTemplates();
 
 		// Load all providers and put them in the list
-		for (String provname : CloudProvider.getProviderNames())
+		for (final String provname : CloudProvider.getProviderNames())
 		{
-			CloudProvider cloudProvider = new CloudProvider(provname);
+			final CloudProvider cloudProvider = new CloudProvider(provname);
 
-			for (ServerLinkUnlinkObserver obs : linkUnlinkObservers)
+			for (final ServerLinkUnlinkObserver obs : linkUnlinkObservers)
 				cloudProvider.addServerLinkUnlinkObserver(obs);
 
 			providers.put(provname, cloudProvider);
@@ -48,14 +48,14 @@ public class CloudManager
 
 		// Also add this observer to the cloudproviders that are already in the
 		// system.
-		for (CloudProvider prov : providers.values())
+		for (final CloudProvider prov : providers.values())
 			prov.addServerLinkUnlinkObserver(obs);
 	}
 
 	private void populateCloudProviderTemplates()
 	{
 		// AWS
-		CloudProviderTemplate aws = new CloudProviderTemplate(
+		final CloudProviderTemplate aws = new CloudProviderTemplate(
 				"Amazon Elastic Compute Cloud", "Amazon EC2",
 				"org.dasein.cloud.aws.AWSCloud");
 		aws.addEndPoint("EU (Ireland)", "EU",
@@ -70,13 +70,13 @@ public class CloudManager
 		providerTemplates.add(aws);
 
 		// Rackspace
-		CloudProviderTemplate rackspace = new CloudProviderTemplate(
+		final CloudProviderTemplate rackspace = new CloudProviderTemplate(
 				"Rackspace (not implemented)", "Rackspace",
 				"org.dasein.cloud.aws.AWSCloud");
 		providerTemplates.add(rackspace);
 
 		// Radix
-		CloudProviderTemplate radix = new CloudProviderTemplate("Radix",
+		final CloudProviderTemplate radix = new CloudProviderTemplate("Radix",
 				"Radix", "be.ac.ua.comp.scarletnebula.misc.RadixCloudProvider");
 		radix.addEndPoint("default", "default", "radix.cmi.ua.ac.be");
 		providerTemplates.add(radix);
@@ -142,7 +142,7 @@ public class CloudManager
 	 */
 	public boolean serverExists(String name)
 	{
-		for (CloudProvider prov : providers.values())
+		for (final CloudProvider prov : providers.values())
 			if (prov.hasServer(name))
 				return true;
 
@@ -157,11 +157,11 @@ public class CloudManager
 	public void registerNewCloudProvider(String name, String classname,
 			String endpoint, String apiKey, String apiSecret)
 	{
-		CloudProvider prov = new CloudProvider(name, classname, endpoint,
+		final CloudProvider prov = new CloudProvider(name, classname, endpoint,
 				apiKey, apiSecret, "");
 		prov.store();
 
-		for (ServerLinkUnlinkObserver obs : linkUnlinkObservers)
+		for (final ServerLinkUnlinkObserver obs : linkUnlinkObservers)
 			prov.addServerLinkUnlinkObserver(obs);
 
 		providers.put(name, prov);
@@ -169,24 +169,24 @@ public class CloudManager
 
 	public void deleteCloudProvider(String provname)
 	{
-		CloudProvider provider = providers.get(provname);
+		final CloudProvider provider = providers.get(provname);
 		providers.remove(provname);
 		System.out.println(getLinkedCloudProviders().size());
 
 		// Remove all of his servers
-		Collection<Server> linkedServers = provider.listLinkedServers();
-		for (Server server : linkedServers)
+		final Collection<Server> linkedServers = provider.listLinkedServers();
+		for (final Server server : linkedServers)
 			server.unlink();
 
 		// Remove his server directory
-		File serverdir = new File("servers/" + provname);
+		final File serverdir = new File("servers/" + provname);
 
 		if (serverdir.list() != null)
 		{
 			// If there are still files in the directory, delete them
-			for (String file : serverdir.list())
+			for (final String file : serverdir.list())
 			{
-				File f = new File(file);
+				final File f = new File(file);
 				f.delete();
 			}
 		}
@@ -195,14 +195,14 @@ public class CloudManager
 		serverdir.delete();
 
 		// And delete his configfile
-		File config = new File(CloudProvider.getConfigfileName(provname));
+		final File config = new File(CloudProvider.getConfigfileName(provname));
 		config.delete();
 	}
 
 	public void loadAllLinkedServers() throws InternalException,
 			CloudException, IOException
 	{
-		for (CloudProvider prov : providers.values())
+		for (final CloudProvider prov : providers.values())
 			prov.loadLinkedServers();
 	}
 }

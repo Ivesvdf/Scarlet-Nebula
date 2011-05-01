@@ -11,7 +11,7 @@ public class DroppingFifoQueueTest
 	@Test
 	public void basicTest()
 	{
-		DroppingFifoQueue<Integer> queue = new DroppingFifoQueue<Integer>(6);
+		final DroppingFifoQueue<Integer> queue = new DroppingFifoQueue<Integer>(6);
 
 		queue.add(99);
 

@@ -26,11 +26,11 @@ public abstract class LoudInputVerifier extends InputVerifier implements
 {
 
 	private JDialog popup;
-	private JLabel messageLabel;
+	private final JLabel messageLabel;
 	final private JLabel image;
 	private Point point;
 	private Dimension cDim;
-	private Color color = new Color(243, 255, 159);
+	private final Color color = new Color(243, 255, 159);
 	final private JTextField textField;
 
 	/**
@@ -60,7 +60,7 @@ public abstract class LoudInputVerifier extends InputVerifier implements
 	@Override
 	public boolean shouldYieldFocus(JComponent c)
 	{
-		JDialog parentDialog = (JDialog) SwingUtilities.getAncestorOfClass(
+		final JDialog parentDialog = (JDialog) SwingUtilities.getAncestorOfClass(
 				JDialog.class, c);
 
 		if (!verify(c) && parentDialog != null)
@@ -135,7 +135,7 @@ public abstract class LoudInputVerifier extends InputVerifier implements
 	 */
 	private void initComponents(JDialog popup)
 	{
-		JPanel content = new JPanel(new FlowLayout());
+		final JPanel content = new JPanel(new FlowLayout());
 		popup.setUndecorated(true);
 		content.setBackground(color);
 		content.add(image);

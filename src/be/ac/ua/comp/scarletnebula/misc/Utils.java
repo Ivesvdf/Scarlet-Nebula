@@ -115,7 +115,7 @@ public class Utils
 		{
 			f = new File(url.toURI());
 		}
-		catch (URISyntaxException e)
+		catch (final URISyntaxException e)
 		{
 			f = new File(url.getPath());
 		}

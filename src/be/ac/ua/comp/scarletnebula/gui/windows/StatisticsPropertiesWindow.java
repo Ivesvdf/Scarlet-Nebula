@@ -53,10 +53,10 @@ public class StatisticsPropertiesWindow extends JDialog
 
 		if (servers.size() > 1)
 		{
-			String firstServersText = servers.iterator().next()
+			final String firstServersText = servers.iterator().next()
 					.getStatisticsCommand();
 
-			for (Server server : servers)
+			for (final Server server : servers)
 			{
 				if (!server.getStatisticsCommand().equals(firstServersText))
 				{
@@ -79,7 +79,7 @@ public class StatisticsPropertiesWindow extends JDialog
 
 		commandArea.setBorder(BorderFactory
 				.createBevelBorder(BevelBorder.LOWERED));
-		JScrollPane commandAreaScrollPane = new JScrollPane(commandArea);
+		final JScrollPane commandAreaScrollPane = new JScrollPane(commandArea);
 		commandAreaScrollPane.setBorder(BorderFactory.createEmptyBorder(15, 20,
 				15, 20));
 		add(textLabel, BorderLayout.NORTH);
@@ -90,7 +90,7 @@ public class StatisticsPropertiesWindow extends JDialog
 
 	private JPanel getButtonPanel(final Collection<Server> servers)
 	{
-		JPanel buttonPanel = new JPanel();
+		final JPanel buttonPanel = new JPanel();
 		final JButton cancelButton = ButtonFactory.createCancelButton();
 		cancelButton.addActionListener(new ActionListener()
 		{
@@ -109,7 +109,7 @@ public class StatisticsPropertiesWindow extends JDialog
 			{
 				if (servers.size() > 1)
 				{
-					int result = JOptionPane
+					final int result = JOptionPane
 							.showConfirmDialog(
 									StatisticsPropertiesWindow.this,
 									"You are changing the Statistics command for multiple servers, are you sure you wish to proceed?",
@@ -142,14 +142,14 @@ public class StatisticsPropertiesWindow extends JDialog
 
 	private void saveAndClose(Collection<Server> servers)
 	{
-		for (Server server : servers)
+		for (final Server server : servers)
 		{
 			server.setStatisticsCommand(commandArea.getText());
 		}
 		dispose();
 		final ActionEvent actionEvent = new ActionEvent(this, maxEventId++,
 				"Window Closed");
-		for (ActionListener listener : actionListeners)
+		for (final ActionListener listener : actionListeners)
 		{
 			listener.actionPerformed(actionEvent);
 		}

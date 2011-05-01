@@ -23,8 +23,8 @@ public class SelectProviderTemplatePage extends WizardPage
 
 	SelectProviderTemplatePage()
 	{
-		Collection<String> names = new ArrayList<String>();
-		for (CloudProviderTemplate t : CloudManager.get().getTemplates())
+		final Collection<String> names = new ArrayList<String>();
+		for (final CloudProviderTemplate t : CloudManager.get().getTemplates())
 		{
 			names.add(t.getName());
 		}
@@ -33,7 +33,7 @@ public class SelectProviderTemplatePage extends WizardPage
 		providerlist.setBorder(BorderFactory
 				.createBevelBorder(BevelBorder.LOWERED));
 
-		JScrollPane scrollPane = new JScrollPane(providerlist);
+		final JScrollPane scrollPane = new JScrollPane(providerlist);
 		scrollPane.setBorder(new EmptyBorder(20, 20, 20, 20));
 
 		setLayout(new BorderLayout());
@@ -43,17 +43,17 @@ public class SelectProviderTemplatePage extends WizardPage
 	@Override
 	public WizardPage next(DataRecorder recorder)
 	{
-		String name = (String) providerlist.getSelectedValue();
+		final String name = (String) providerlist.getSelectedValue();
 		CloudProviderTemplate template = null;
 
 		// Retreive the classname from name
-		for (CloudProviderTemplate t : CloudManager.get().getTemplates())
+		for (final CloudProviderTemplate t : CloudManager.get().getTemplates())
 		{
 			if (t.getName().equals(name))
 				template = t;
 		}
 
-		AddProviderWizardDataRecorder rec = (AddProviderWizardDataRecorder) recorder;
+		final AddProviderWizardDataRecorder rec = (AddProviderWizardDataRecorder) recorder;
 		rec.setTemplate(template);
 		return new SelectEndpointPage(template);
 	}

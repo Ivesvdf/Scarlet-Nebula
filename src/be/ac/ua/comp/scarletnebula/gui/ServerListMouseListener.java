@@ -19,9 +19,9 @@ import be.ac.ua.comp.scarletnebula.misc.Utils;
 
 public class ServerListMouseListener implements MouseListener
 {
-	private GUI gui;
-	private ServerListModel serverListModel;
-	private ServerList serverlist;
+	private final GUI gui;
+	private final ServerListModel serverListModel;
+	private final ServerList serverlist;
 
 	public ServerListMouseListener(GUI gui, ServerList serverlist,
 			ServerListModel serverListModel)
@@ -44,8 +44,8 @@ public class ServerListMouseListener implements MouseListener
 	{
 		if (e.isPopupTrigger())
 		{
-			ServerList list = (ServerList) e.getSource();
-			int indexOfSelectedServer = list.locationToIndex(e.getPoint());
+			final ServerList list = (ServerList) e.getSource();
+			final int indexOfSelectedServer = list.locationToIndex(e.getPoint());
 
 			// TODO:
 			// When no servers OR a single server is selected, choose what
@@ -71,10 +71,10 @@ public class ServerListMouseListener implements MouseListener
 			final Collection<Server> selectedServers = list
 					.getSelectedServers();
 
-			VmState status = clickedServer.getStatus();
+			final VmState status = clickedServer.getStatus();
 
-			JPopupMenu popup = new JPopupMenu();
-			JMenuItem pauseResume = new JMenuItem(
+			final JPopupMenu popup = new JPopupMenu();
+			final JMenuItem pauseResume = new JMenuItem(
 					(status == VmState.PAUSED) ? "Resume" : "Pause",
 					Utils.icon("paused.png"));
 
@@ -87,7 +87,7 @@ public class ServerListMouseListener implements MouseListener
 				}
 			});
 
-			JMenuItem reboot = new JMenuItem("Reboot",
+			final JMenuItem reboot = new JMenuItem("Reboot",
 					Utils.icon("restarting.png"));
 			reboot.addActionListener(new ActionListener()
 			{
@@ -98,7 +98,7 @@ public class ServerListMouseListener implements MouseListener
 				}
 			});
 
-			JMenuItem terminate = new JMenuItem("Terminate",
+			final JMenuItem terminate = new JMenuItem("Terminate",
 					Utils.icon("terminated.png"));
 			terminate.addActionListener(new ActionListener()
 			{
@@ -109,7 +109,7 @@ public class ServerListMouseListener implements MouseListener
 				}
 			});
 
-			JMenuItem refresh = new JMenuItem("Refresh",
+			final JMenuItem refresh = new JMenuItem("Refresh",
 					Utils.icon("refresh16.png"));
 			refresh.addActionListener(new ActionListener()
 			{
@@ -121,7 +121,7 @@ public class ServerListMouseListener implements MouseListener
 				}
 			});
 
-			JMenuItem unlink = new JMenuItem("Unlink Instance",
+			final JMenuItem unlink = new JMenuItem("Unlink Instance",
 					Utils.icon("unlink16.png"));
 			unlink.addActionListener(new ActionListener()
 			{
@@ -132,7 +132,7 @@ public class ServerListMouseListener implements MouseListener
 				}
 			});
 
-			JMenuItem console = new JMenuItem("Start terminal",
+			final JMenuItem console = new JMenuItem("Start terminal",
 					Utils.icon("console16.png"));
 			console.addActionListener(new ActionListener()
 			{
@@ -143,7 +143,7 @@ public class ServerListMouseListener implements MouseListener
 				}
 			});
 
-			JMenuItem statistics = new JMenuItem("View statistics",
+			final JMenuItem statistics = new JMenuItem("View statistics",
 					Utils.icon("statistics16.png"));
 			statistics.addActionListener(new ActionListener()
 			{

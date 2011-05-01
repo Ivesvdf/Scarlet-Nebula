@@ -28,7 +28,7 @@ public class CreateUseChoicePage extends WizardPage
 		setLayout(new BorderLayout());
 		this.provider = provider;
 		// The text on top
-		BetterTextLabel txt = new BetterTextLabel(
+		final BetterTextLabel txt = new BetterTextLabel(
 				"After starting new servers, you'll connect to these servers through an SSH connection. "
 						+ "Before you can securely connect to a server, you need an SSH key. \n\n"
 						+ "Would you like to create a new key or use an existing key?");
@@ -40,7 +40,7 @@ public class CreateUseChoicePage extends WizardPage
 		group.add(useButton);
 		group.setSelected(createButton.getModel(), true);
 
-		JPanel buttonPanel = new JPanel();
+		final JPanel buttonPanel = new JPanel();
 		buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.PAGE_AXIS));
 		buttonPanel.add(createButton);
 		buttonPanel.add(Box.createVerticalStrut(10));

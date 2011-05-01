@@ -31,7 +31,7 @@ public class SSHCommandConnection extends CommandConnection
 			String keypairfilenameOrPassword, UserInfo ui,
 			LoginMethod loginMethod) throws Exception
 	{
-		JSch jsch = new JSch();
+		final JSch jsch = new JSch();
 
 		if (loginMethod == LoginMethod.KEY)
 		{
@@ -39,7 +39,7 @@ public class SSHCommandConnection extends CommandConnection
 		}
 		session = jsch.getSession(username, address, 22);
 
-		java.util.Properties config = new java.util.Properties();
+		final java.util.Properties config = new java.util.Properties();
 
 		config.put("compression.s2c", "zlib,none");
 		config.put("compression.c2s", "zlib,none");
@@ -74,23 +74,23 @@ public class SSHCommandConnection extends CommandConnection
 	public String executeCommand(String command) throws JSchException,
 			IOException
 	{
-		ChannelExec channel = (ChannelExec) session.openChannel("exec");
+		final ChannelExec channel = (ChannelExec) session.openChannel("exec");
 		channel.setCommand(command);
 
 		channel.setInputStream(null);
 		channel.setErrStream(System.err);
 
-		InputStream in = channel.getInputStream();
+		final InputStream in = channel.getInputStream();
 
 		channel.connect();
 
-		StringBuilder result = new StringBuilder();
-		byte[] tmp = new byte[1024];
+		final StringBuilder result = new StringBuilder();
+		final byte[] tmp = new byte[1024];
 		while (true)
 		{
 			while (in.available() > 0)
 			{
-				int i = in.read(tmp, 0, 1024);
+				final int i = in.read(tmp, 0, 1024);
 				if (i < 0)
 					break;
 				result.append(new String(tmp, 0, i));
@@ -104,7 +104,7 @@ public class SSHCommandConnection extends CommandConnection
 			{
 				Thread.sleep(1000);
 			}
-			catch (Exception ee)
+			catch (final Exception ee)
 			{
 			}
 		}
@@ -123,7 +123,7 @@ public class SSHCommandConnection extends CommandConnection
 		channel.setInputStream(null);
 		channel.setErrStream(System.err);
 
-		InputStream in = channel.getInputStream();
+		final InputStream in = channel.getInputStream();
 
 		channel.connect();
 
@@ -139,17 +139,17 @@ public class SSHCommandConnection extends CommandConnection
 	public Connection getJSchTerminalConnection() throws JSchException,
 			IOException
 	{
-		Channel channel = session.openChannel("shell");
+		final Channel channel = session.openChannel("shell");
 
-		OutputStream out = channel.getOutputStream();
-		InputStream in = channel.getInputStream();
+		final OutputStream out = channel.getOutputStream();
+		final InputStream in = channel.getInputStream();
 
 		channel.connect();
 		final OutputStream fout = out;
 		final InputStream fin = in;
 		final Channel fchannel = channel;
 
-		Connection connection = new Connection()
+		final Connection connection = new Connection()
 		{
 			@Override
 			public InputStream getInputStream()
@@ -168,8 +168,8 @@ public class SSHCommandConnection extends CommandConnection
 			{
 				if (fchannel instanceof ChannelShell)
 				{
-					int c = term.getColumnCount();
-					int r = term.getRowCount();
+					final int c = term.getColumnCount();
+					final int r = term.getRowCount();
 					((ChannelShell) fchannel).setPtySize(c, r,
 							c * term.getCharWidth(), r * term.getCharHeight());
 				}
@@ -188,28 +188,28 @@ public class SSHCommandConnection extends CommandConnection
 	{
 		try
 		{
-			SSHCommandConnection connection = SSHCommandConnection
+			final SSHCommandConnection connection = SSHCommandConnection
 					.newConnectionWithPassword("radix.cmi.ua.ac.be", "p080558",
 							"somepassword", new NotPromptingJschUserInfo());
 
-			ChannelInputStreamTuple tuple = connection
+			final ChannelInputStreamTuple tuple = connection
 					.executeContinuousCommand("date"); // while [[ 1 ]]; do echo
 														// \"incoming data\"; date; sleep 1; done");
 
-			InputStream in = tuple.inputStream;
-			Channel channel = tuple.channel;
+			final InputStream in = tuple.inputStream;
+			final Channel channel = tuple.channel;
 
 			System.out.println();
 
 			StringBuilder result = new StringBuilder();
 			final int buffersize = 1024;
-			byte[] tmp = new byte[buffersize];
+			final byte[] tmp = new byte[buffersize];
 			while (true)
 			{
 
 				while (in.available() > 0)
 				{
-					int i = in.read(tmp, 0, buffersize);
+					final int i = in.read(tmp, 0, buffersize);
 					if (i < 0)
 						break;
 					result.append(new String(tmp, 0, i));
@@ -217,11 +217,11 @@ public class SSHCommandConnection extends CommandConnection
 					// Start of weird shit
 					while (result.indexOf("\n") >= 0)
 					{
-						int nlPos = result.indexOf("\n");
-						String before = result.substring(0, nlPos);
+						final int nlPos = result.indexOf("\n");
+						final String before = result.substring(0, nlPos);
 						System.out.println("Newline detected: came before it:"
 								+ before);
-						String after = result.substring(nlPos + 1);
+						final String after = result.substring(nlPos + 1);
 
 						result = new StringBuilder(after);
 					}
@@ -237,14 +237,14 @@ public class SSHCommandConnection extends CommandConnection
 					System.out.println("sleeping");
 					Thread.sleep(1000);
 				}
-				catch (Exception ee)
+				catch (final Exception ee)
 				{
 				}
 			}
 			channel.disconnect();
 
 		}
-		catch (Exception e)
+		catch (final Exception e)
 		{
 			// TODO Auto-generated catch block
 			e.printStackTrace();

@@ -76,7 +76,7 @@ public class LinkUnlinkWindow extends JDialog
 
 	private JPanel getBorderedThrobber(final ThrobberBarWithText throbber)
 	{
-		JPanel borderedThrobber = new JPanel(new BorderLayout());
+		final JPanel borderedThrobber = new JPanel(new BorderLayout());
 		borderedThrobber.add(throbber, BorderLayout.CENTER);
 		borderedThrobber.setBorder(BorderFactory
 				.createEmptyBorder(10, 0, 10, 0));
@@ -85,10 +85,10 @@ public class LinkUnlinkWindow extends JDialog
 
 	private JPanel getBottomPanel()
 	{
-		JPanel bottomPanel = new JPanel();
+		final JPanel bottomPanel = new JPanel();
 		bottomPanel.setLayout(new BoxLayout(bottomPanel, BoxLayout.X_AXIS));
 		bottomPanel.add(Box.createHorizontalGlue());
-		JButton cancelButton = ButtonFactory.createCancelButton();
+		final JButton cancelButton = ButtonFactory.createCancelButton();
 		cancelButton.addActionListener(new ActionListener()
 		{
 			@Override
@@ -100,7 +100,7 @@ public class LinkUnlinkWindow extends JDialog
 
 		bottomPanel.add(cancelButton);
 		bottomPanel.add(Box.createHorizontalStrut(10));
-		JButton okButton = ButtonFactory.createOkButton();
+		final JButton okButton = ButtonFactory.createOkButton();
 		okButton.addActionListener(new ActionListener()
 		{
 			@Override
@@ -118,20 +118,20 @@ public class LinkUnlinkWindow extends JDialog
 
 	private final JPanel getMainPanel()
 	{
-		JPanel mainPanel = new JPanel(new GridBagLayout());
+		final JPanel mainPanel = new JPanel(new GridBagLayout());
 		mainPanel.setBorder(BorderFactory.createEmptyBorder(10, 0, 0, 0));
 		final ServerList linkedServerList = new ServerList(
 				linkedServerListModel);
 		linkedServerList.setBorder(BorderFactory
 				.createBevelBorder(BevelBorder.LOWERED));
-		JScrollPane linkedServerScrollPane = new JScrollPane(linkedServerList);
+		final JScrollPane linkedServerScrollPane = new JScrollPane(linkedServerList);
 		linkedServerScrollPane.setBorder(BorderFactory.createTitledBorder(
 				new EmptyBorder(5, 20, 20, 20), "Linked Servers"));
 		// Doesn't matter what this is set to, as long as it's the same as the
 		// one for unlinkedServerScrollPane
 		linkedServerScrollPane.setPreferredSize(new Dimension(10, 10));
 
-		GridBagConstraints c = new GridBagConstraints();
+		final GridBagConstraints c = new GridBagConstraints();
 
 		c.fill = GridBagConstraints.BOTH;
 		c.gridx = 0;
@@ -145,7 +145,7 @@ public class LinkUnlinkWindow extends JDialog
 				unlinkedServerListModel);
 		unlinkedServerList.setBorder(BorderFactory
 				.createBevelBorder(BevelBorder.LOWERED));
-		JScrollPane unlinkedServerScrollPane = new JScrollPane(
+		final JScrollPane unlinkedServerScrollPane = new JScrollPane(
 				unlinkedServerList);
 		unlinkedServerScrollPane.setBorder(BorderFactory.createTitledBorder(
 				new EmptyBorder(5, 20, 20, 20), "Unlinked Servers"));
@@ -154,12 +154,12 @@ public class LinkUnlinkWindow extends JDialog
 		// one for unlinkedServerScrollPane
 		unlinkedServerScrollPane.setPreferredSize(new Dimension(10, 10));
 
-		JPanel middlePanel = new JPanel();
+		final JPanel middlePanel = new JPanel();
 		middlePanel.setLayout(new BoxLayout(middlePanel, BoxLayout.Y_AXIS));
 		middlePanel.add(Box.createVerticalGlue());
 
-		JButton linkSelectionButton = new JButton("<");
-		JButton unlinkSelectionButton = new JButton(">");
+		final JButton linkSelectionButton = new JButton("<");
+		final JButton unlinkSelectionButton = new JButton(">");
 
 		linkSelectionButton.addActionListener(new ActionListener()
 		{
@@ -167,12 +167,12 @@ public class LinkUnlinkWindow extends JDialog
 			public void actionPerformed(ActionEvent e)
 			{
 				// Move selection from unlinked to linked list
-				int selection = unlinkedServerList.getSelectedIndex();
+				final int selection = unlinkedServerList.getSelectedIndex();
 
 				if (selection < 0)
 					return;
 
-				Server server = unlinkedServerListModel
+				final Server server = unlinkedServerListModel
 						.getVisibleServerAtIndex(selection);
 
 				unlinkedServerListModel.removeServer(server);
@@ -187,12 +187,12 @@ public class LinkUnlinkWindow extends JDialog
 			public void actionPerformed(ActionEvent e)
 			{
 				// Move selection from linked to unlinked list
-				int selection = linkedServerList.getSelectedIndex();
+				final int selection = linkedServerList.getSelectedIndex();
 
 				if (selection < 0)
 					return;
 
-				int answer = JOptionPane
+				final int answer = JOptionPane
 						.showOptionDialog(
 								LinkUnlinkWindow.this,
 								"You are about to unlink a server. "
@@ -205,7 +205,7 @@ public class LinkUnlinkWindow extends JDialog
 				if (answer != JOptionPane.YES_OPTION)
 					return;
 
-				Server server = linkedServerListModel
+				final Server server = linkedServerListModel
 						.getVisibleServerAtIndex(selection);
 
 				linkedServerListModel.removeServer(server);
@@ -239,7 +239,7 @@ public class LinkUnlinkWindow extends JDialog
 	{
 		// Walk over all servers in the linked serverlist and link those that
 		// aren't linked
-		for (Server server : linkedServerListModel.getVisibleServers())
+		for (final Server server : linkedServerListModel.getVisibleServers())
 		{
 			if (!server.getCloud().isLinked(server))
 			{
@@ -251,7 +251,7 @@ public class LinkUnlinkWindow extends JDialog
 
 		// Walk over all servers in the unlinked serverlist and unlink those
 		// that are linked
-		for (Server server : unlinkedServerListModel.getVisibleServers())
+		for (final Server server : unlinkedServerListModel.getVisibleServers())
 		{
 			if (server.getCloud().isLinked(server))
 			{
@@ -262,18 +262,18 @@ public class LinkUnlinkWindow extends JDialog
 
 	private void fillUnlinkedList(final ServerListModel unlinkedServerListModel)
 	{
-		SwingWorkerWithThrobber<ServerListModel, Server> fillUnlinkedListWorker = new SwingWorkerWithThrobber<ServerListModel, Server>(
+		final SwingWorkerWithThrobber<ServerListModel, Server> fillUnlinkedListWorker = new SwingWorkerWithThrobber<ServerListModel, Server>(
 				throbberPanel)
 		{
 			@Override
 			protected ServerListModel doInBackground() throws Exception
 			{
-				for (CloudProvider prov : CloudManager.get()
+				for (final CloudProvider prov : CloudManager.get()
 						.getLinkedCloudProviders())
 				{
 					try
 					{
-						for (Server server : prov.listUnlinkedServers())
+						for (final Server server : prov.listUnlinkedServers())
 						{
 							unlinkedServerListModel.addServer(server);
 							if (isCancelled())
@@ -282,7 +282,7 @@ public class LinkUnlinkWindow extends JDialog
 							}
 						}
 					}
-					catch (Exception e)
+					catch (final Exception e)
 					{
 						log.error("Error while querying unlinked servers.");
 					}
@@ -295,9 +295,9 @@ public class LinkUnlinkWindow extends JDialog
 
 	private void fillLinkedList(ServerListModel linkedServerListModel)
 	{
-		for (CloudProvider prov : CloudManager.get().getLinkedCloudProviders())
+		for (final CloudProvider prov : CloudManager.get().getLinkedCloudProviders())
 		{
-			for (Server server : prov.listLinkedServers())
+			for (final Server server : prov.listLinkedServers())
 			{
 				linkedServerListModel.addServer(server);
 			}

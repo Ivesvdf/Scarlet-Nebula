@@ -21,7 +21,7 @@ public class SSHSessionWindow extends JDialog
 			setTitle("SSH to " + servers.iterator().next().getFriendlyName());
 		}
 
-		DecoratedCommunicationPanel panel = new DecoratedCommunicationPanel(
+		final DecoratedCommunicationPanel panel = new DecoratedCommunicationPanel(
 				this, servers);
 		setLayout(new BorderLayout());
 		add(panel, BorderLayout.CENTER);

@@ -31,13 +31,13 @@ public class ManageKeysDialog extends JDialog
 
 		final SelectKeyList keyList = new SelectKeyList(provider);
 
-		JScrollPane keyListScrollPane = new JScrollPane(keyList);
+		final JScrollPane keyListScrollPane = new JScrollPane(keyList);
 		keyListScrollPane.setBorder(BorderFactory.createEmptyBorder(20, 20, 20,
 				20));
 
 		setLayout(new BorderLayout());
 
-		JButton addButton = new JButton(new ImageIcon(getClass().getResource(
+		final JButton addButton = new JButton(new ImageIcon(getClass().getResource(
 				"/images/add22.png")));
 		addButton.addActionListener(new ActionListener()
 		{
@@ -48,16 +48,16 @@ public class ManageKeysDialog extends JDialog
 			}
 		});
 
-		JButton loadButton = new JButton("Import");
+		final JButton loadButton = new JButton("Import");
 
-		JButton removeButton = new JButton(new ImageIcon(getClass()
+		final JButton removeButton = new JButton(new ImageIcon(getClass()
 				.getResource("/images/remove22.png")));
 		removeButton.addActionListener(new ActionListener()
 		{
 			@Override
 			public void actionPerformed(ActionEvent e)
 			{
-				int index = keyList.getSelectedIndex();
+				final int index = keyList.getSelectedIndex();
 
 				// No selection
 				if (index < 0)
@@ -67,7 +67,7 @@ public class ManageKeysDialog extends JDialog
 			}
 		});
 
-		JPanel buttonPanel = new JPanel();
+		final JPanel buttonPanel = new JPanel();
 		buttonPanel.setBorder(BorderFactory.createEmptyBorder(0, 20, 20, 20));
 		buttonPanel.add(addButton);
 		buttonPanel.add(loadButton);

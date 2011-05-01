@@ -28,7 +28,7 @@ class ChooseProviderPage extends WizardPage
 		providerList.setBorder(BorderFactory
 				.createBevelBorder(BevelBorder.LOWERED));
 
-		JScrollPane providerListScrollPane = new JScrollPane(providerList);
+		final JScrollPane providerListScrollPane = new JScrollPane(providerList);
 		providerListScrollPane.setBorder(BorderFactory.createEmptyBorder(0, 20,
 				10, 20));
 
@@ -43,10 +43,10 @@ class ChooseProviderPage extends WizardPage
 	@Override
 	public WizardPage next(DataRecorder recorder)
 	{
-		AddServerWizardDataRecorder rec = (AddServerWizardDataRecorder) recorder;
+		final AddServerWizardDataRecorder rec = (AddServerWizardDataRecorder) recorder;
 
-		String providername = (String) providerList.getSelectedValue();
-		CloudProvider provider = CloudManager.get().getCloudProviderByName(
+		final String providername = (String) providerList.getSelectedValue();
+		final CloudProvider provider = CloudManager.get().getCloudProviderByName(
 				providername);
 
 		rec.provider = provider;

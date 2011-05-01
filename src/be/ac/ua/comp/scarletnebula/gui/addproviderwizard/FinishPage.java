@@ -23,11 +23,11 @@ public class FinishPage extends WizardPage
 				+ (rec.getEndpoint() != null ? " on its "
 						+ rec.getEndpoint().getName() + " endpoint." : ".");
 
-		CloudProvider tmpProvider = new CloudProvider(rec.getName(), rec
+		final CloudProvider tmpProvider = new CloudProvider(rec.getName(), rec
 				.getTemplate().getClassname(), rec.getEndpoint().getURL(),
 				rec.getApiKey(), rec.getApiSecret(), ""); // default keypair
 
-		boolean credentialsOk = tmpProvider.test();
+		final boolean credentialsOk = tmpProvider.test();
 
 		if (credentialsOk)
 		{
@@ -38,7 +38,7 @@ public class FinishPage extends WizardPage
 			txt += "<br/><br/><font color=\"red\"><b>Warning!</b> Could not connect to this CloudProvider! "
 					+ "Continue at your own risk or press the Previous button to try again. </font></html>";
 		}
-		BetterTextLabel toptext = new BetterTextLabel(txt);
+		final BetterTextLabel toptext = new BetterTextLabel(txt);
 
 		toptext.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
 		add(toptext);

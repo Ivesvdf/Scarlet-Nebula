@@ -56,7 +56,7 @@ public class DecoratedGraph extends Graph
 	@Override
 	public ChartPanel getChartPanel()
 	{
-		XYPlot plot = new XYPlot(dataset, domain, range, renderer);
+		final XYPlot plot = new XYPlot(dataset, domain, range, renderer);
 		plot.setBackgroundPaint(Color.darkGray);
 		plot.setDomainGridlinePaint(Color.white);
 		plot.setRangeGridlinePaint(Color.white);
@@ -85,7 +85,7 @@ public class DecoratedGraph extends Graph
 			double sum = 0;
 			final List<TimedDatapoint> datapoints = stream
 					.getRecentlyProcessedDatapoints();
-			for (TimedDatapoint dp : datapoints)
+			for (final TimedDatapoint dp : datapoints)
 			{
 				sum += dp.getValue();
 			}
@@ -93,11 +93,11 @@ public class DecoratedGraph extends Graph
 					.size() * 5)), new DecimalFormat(), 1));
 		}
 
-		JFreeChart chart = new JFreeChart(stream.getStreamname(), new Font(
+		final JFreeChart chart = new JFreeChart(stream.getStreamname(), new Font(
 				"SansSerif", Font.PLAIN, 20), plot, true);
 		chart.setBackgroundPaint(Color.white);
 		chart.removeLegend();
-		ChartPanel chartPanel = new ChartPanel(chart);
+		final ChartPanel chartPanel = new ChartPanel(chart);
 		// chartPanel.setBorder(BorderFactory
 		// .createBevelBorder(BevelBorder.LOWERED));
 
