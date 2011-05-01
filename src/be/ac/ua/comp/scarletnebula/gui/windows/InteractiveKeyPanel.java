@@ -12,7 +12,7 @@ import javax.swing.JDialog;
 import javax.swing.JPanel;
 
 import be.ac.ua.comp.scarletnebula.core.CloudProvider;
-import be.ac.ua.comp.scarletnebula.gui.newkeywizard.NewKeyWizard;
+import be.ac.ua.comp.scarletnebula.gui.keywizards.NewKeyWizard;
 import be.ac.ua.comp.scarletnebula.misc.Utils;
 
 public class InteractiveKeyPanel extends JPanel

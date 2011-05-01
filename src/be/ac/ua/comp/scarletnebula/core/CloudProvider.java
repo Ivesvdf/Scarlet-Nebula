@@ -275,7 +275,8 @@ public class CloudProvider
 	}
 
 	/**
-	 * Creates a new key with name "keyname"
+	 * Creates a new key with name "keyname", changes the default key if it has
+	 * to and stores the server to file.
 	 * 
 	 * @param acs
 	 * @param keyname
@@ -285,8 +286,8 @@ public class CloudProvider
 	public void createKey(String keyname, boolean makeDefault)
 			throws InternalException, CloudException
 	{
-		final ShellKeySupport shellKeySupport = providerImpl.getIdentityServices()
-				.getShellKeySupport();
+		final ShellKeySupport shellKeySupport = providerImpl
+				.getIdentityServices().getShellKeySupport();
 
 		KeyManager.addKey(providerClassName, keyname,
 				shellKeySupport.createKeypair(keyname));
@@ -294,6 +295,7 @@ public class CloudProvider
 		if (makeDefault)
 		{
 			setDefaultKeypair(keyname);
+			store();
 		}
 	}
 
@@ -329,7 +331,8 @@ public class CloudProvider
 		if (sshOnly == null)
 		{
 			System.out.println("Creating sshonly");
-			final String sshonlyId = fws.create("sshonly", "Allow only ssh traffic");
+			final String sshonlyId = fws.create("sshonly",
+					"Allow only ssh traffic");
 			fws.authorize(sshonlyId, "0.0.0.0/0", Protocol.TCP, 22, 22);
 		}
 	}
@@ -355,8 +358,8 @@ public class CloudProvider
 			// For each server, check if this server is already linked. Do
 			// this based on his unfriendly id
 			boolean found = false;
-			for (final Iterator<Server> linkedServerIterator = servers.iterator(); linkedServerIterator
-					.hasNext() && !found;)
+			for (final Iterator<Server> linkedServerIterator = servers
+					.iterator(); linkedServerIterator.hasNext() && !found;)
 			{
 				if (linkedServerIterator.next().getUnfriendlyName()
 						.equals(testServer.getName()))
@@ -446,12 +449,13 @@ public class CloudProvider
 			daseinTags.add(new org.dasein.cloud.Tag("tag" + (++i), tag));
 		}
 
-		final VirtualMachine daseinServer = virtualMachineServices.launch(imageId,
-				getVMProductWithName(productName), dataCenterId, serverName,
-				"", keypairOrPassword, vlan, false, false, firewalls,
-				daseinTags.toArray(new org.dasein.cloud.Tag[0]));
+		final VirtualMachine daseinServer = virtualMachineServices.launch(
+				imageId, getVMProductWithName(productName), dataCenterId,
+				serverName, "", keypairOrPassword, vlan, false, false,
+				firewalls, daseinTags.toArray(new org.dasein.cloud.Tag[0]));
 
-		final Server server = new Server(daseinServer, // Dasein server implementation
+		final Server server = new Server(daseinServer, // Dasein server
+														// implementation
 				this, // Cloud provider
 				keypairOrPassword, // Keypair used
 				serverName, // Server's friendly name
@@ -855,8 +859,8 @@ public class CloudProvider
 	public Collection<String> getUnknownKeys() throws InternalException,
 			CloudException
 	{
-		final ShellKeySupport shellKeySupport = providerImpl.getIdentityServices()
-				.getShellKeySupport();
+		final ShellKeySupport shellKeySupport = providerImpl
+				.getIdentityServices().getShellKeySupport();
 
 		final Collection<String> keys = shellKeySupport.list();
 		final Collection<String> knownKeys = KeyManager.getKeyNames(getName());
@@ -866,8 +870,8 @@ public class CloudProvider
 
 	public boolean unlinkedKeyExists(String checkKeyname)
 	{
-		final ShellKeySupport shellKeySupport = providerImpl.getIdentityServices()
-				.getShellKeySupport();
+		final ShellKeySupport shellKeySupport = providerImpl
+				.getIdentityServices().getShellKeySupport();
 
 		boolean exists = false;
 		try
@@ -881,6 +885,17 @@ public class CloudProvider
 		return exists;
 	}
 
+	/**
+	 * Imports a key to the Scarlet Nebula system, and optionally makes it
+	 * default and saves the server.
+	 * 
+	 * @param keyname
+	 *            The key's name
+	 * @param keyFile
+	 *            The file to copy from
+	 * @param makeDefault
+	 *            True if it should become default, false otherwise.
+	 */
 	public void importKey(String keyname, File keyFile, boolean makeDefault)
 	{
 		KeyManager.addKey(getName(), keyname, keyFile);
@@ -888,6 +903,7 @@ public class CloudProvider
 		if (makeDefault)
 		{
 			setDefaultKeypair(keyname);
+			store();
 		}
 	}
 }

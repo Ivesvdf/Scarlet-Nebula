@@ -7,7 +7,7 @@ import javax.swing.JDialog;
 import javax.swing.JFrame;
 
 import be.ac.ua.comp.scarletnebula.core.CloudManager;
-import be.ac.ua.comp.scarletnebula.gui.keywizard.KeyWizard;
+import be.ac.ua.comp.scarletnebula.gui.keywizards.KeyWizard;
 import be.ac.ua.comp.scarletnebula.wizard.DataRecorder;
 import be.ac.ua.comp.scarletnebula.wizard.SimpleWizardTemplate;
 import be.ac.ua.comp.scarletnebula.wizard.Wizard;

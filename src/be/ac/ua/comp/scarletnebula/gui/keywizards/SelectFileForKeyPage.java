@@ -1,4 +1,4 @@
-package be.ac.ua.comp.scarletnebula.gui.keywizard;
+package be.ac.ua.comp.scarletnebula.gui.keywizards;
 
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;

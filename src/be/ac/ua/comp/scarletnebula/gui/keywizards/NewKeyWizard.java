@@ -1,9 +1,8 @@
-package be.ac.ua.comp.scarletnebula.gui.newkeywizard;
+package be.ac.ua.comp.scarletnebula.gui.keywizards;
 
 import javax.swing.JDialog;
 
 import be.ac.ua.comp.scarletnebula.core.CloudProvider;
-import be.ac.ua.comp.scarletnebula.gui.keywizard.SelectNewKeynamePage;
 import be.ac.ua.comp.scarletnebula.wizard.SimpleWizardTemplate;
 import be.ac.ua.comp.scarletnebula.wizard.Wizard;
 
