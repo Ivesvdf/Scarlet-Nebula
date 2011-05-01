@@ -41,7 +41,7 @@ public class LabelEditSwitcherPanel extends JPanel implements MouseListener,
 	 * @param initialContent
 	 *            The text that will initially be shown by the JLabel
 	 */
-	public LabelEditSwitcherPanel(String initialContent)
+	public LabelEditSwitcherPanel(final String initialContent)
 	{
 		this(initialContent, new JTextField());
 	}
@@ -56,7 +56,7 @@ public class LabelEditSwitcherPanel extends JPanel implements MouseListener,
 	 *            The JTextField that will be shown after the user goes from
 	 *            display to edit mode
 	 */
-	public LabelEditSwitcherPanel(String initialContent, JTextField theTextField)
+	public LabelEditSwitcherPanel(final String initialContent, final JTextField theTextField)
 	{
 		super(new BorderLayout());
 		addMouseListener(this);
@@ -110,7 +110,7 @@ public class LabelEditSwitcherPanel extends JPanel implements MouseListener,
 	 * @param listener
 	 *            The listener to be added
 	 */
-	public void addContentChangedListener(ContentChangedListener listener)
+	public void addContentChangedListener(final ContentChangedListener listener)
 	{
 		listeners.add(listener);
 	}
@@ -125,7 +125,7 @@ public class LabelEditSwitcherPanel extends JPanel implements MouseListener,
 			ActionListener
 	{
 		@Override
-		public void actionPerformed(ActionEvent e)
+		public void actionPerformed(final ActionEvent e)
 		{
 			goToEdit();
 		}
@@ -142,19 +142,21 @@ public class LabelEditSwitcherPanel extends JPanel implements MouseListener,
 	{
 		private final JTextField edit;
 
-		private TryGoingBackToLabelActionHandler(JTextField edit)
+		private TryGoingBackToLabelActionHandler(final JTextField edit)
 		{
 			this.edit = edit;
 		}
 
 		@Override
-		public void actionPerformed(ActionEvent e)
+		public void actionPerformed(final ActionEvent e)
 		{
 			// Check if input is valid before switching
 			if (edit.getInputVerifier() != null)
 			{
 				if (!edit.getInputVerifier().verify(edit))
+				{
 					return;
+				}
 			}
 			content = edit.getText();
 
@@ -183,7 +185,7 @@ public class LabelEditSwitcherPanel extends JPanel implements MouseListener,
 	 * @see MouseListener
 	 */
 	@Override
-	public void mouseClicked(MouseEvent e)
+	public void mouseClicked(final MouseEvent e)
 	{
 	}
 
@@ -191,13 +193,15 @@ public class LabelEditSwitcherPanel extends JPanel implements MouseListener,
 	 * @see MouseListener
 	 */
 	@Override
-	public void mousePressed(MouseEvent e)
+	public void mousePressed(final MouseEvent e)
 	{
 		if (e.getClickCount() == 2)
 		{
 			// Hack to see if we're in labelmode
 			if (getComponentCount() == 2)
+			{
 				goToEdit();
+			}
 		}
 
 	}
@@ -206,7 +210,7 @@ public class LabelEditSwitcherPanel extends JPanel implements MouseListener,
 	 * @see MouseListener
 	 */
 	@Override
-	public void mouseReleased(MouseEvent e)
+	public void mouseReleased(final MouseEvent e)
 	{
 	}
 
@@ -214,7 +218,7 @@ public class LabelEditSwitcherPanel extends JPanel implements MouseListener,
 	 * @see MouseListener
 	 */
 	@Override
-	public void mouseEntered(MouseEvent e)
+	public void mouseEntered(final MouseEvent e)
 	{
 	}
 
@@ -222,7 +226,7 @@ public class LabelEditSwitcherPanel extends JPanel implements MouseListener,
 	 * @see MouseListener
 	 */
 	@Override
-	public void mouseExited(MouseEvent e)
+	public void mouseExited(final MouseEvent e)
 	{
 	}
 
@@ -251,7 +255,7 @@ public class LabelEditSwitcherPanel extends JPanel implements MouseListener,
 	 * @see KeyListener
 	 */
 	@Override
-	public void keyTyped(KeyEvent e)
+	public void keyTyped(final KeyEvent e)
 	{
 		// TODO Auto-generated method stub
 
@@ -261,7 +265,7 @@ public class LabelEditSwitcherPanel extends JPanel implements MouseListener,
 	 * @see KeyListener
 	 */
 	@Override
-	public void keyPressed(KeyEvent e)
+	public void keyPressed(final KeyEvent e)
 	{
 		if (e.getKeyCode() == KeyEvent.VK_ESCAPE)
 		{
@@ -277,7 +281,7 @@ public class LabelEditSwitcherPanel extends JPanel implements MouseListener,
 	 * @see KeyListener
 	 */
 	@Override
-	public void keyReleased(KeyEvent e)
+	public void keyReleased(final KeyEvent e)
 	{
 		// TODO Auto-generated method stub
 

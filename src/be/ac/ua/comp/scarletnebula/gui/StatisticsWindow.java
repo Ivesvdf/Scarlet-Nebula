@@ -14,7 +14,7 @@ public class StatisticsWindow extends JDialog
 {
 	private static final long serialVersionUID = 1L;
 
-	StatisticsWindow(JFrame parent, Collection<Server> servers)
+	StatisticsWindow(final JFrame parent, final Collection<Server> servers)
 	{
 		super(parent, false);
 

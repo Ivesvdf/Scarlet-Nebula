@@ -15,7 +15,7 @@ public abstract class WizardPage extends JPanel
 		super();
 	}
 
-	public WizardPage(LayoutManager manager)
+	public WizardPage(final LayoutManager manager)
 	{
 		super(manager);
 	}

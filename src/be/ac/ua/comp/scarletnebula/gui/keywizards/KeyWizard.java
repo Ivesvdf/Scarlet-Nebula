@@ -8,7 +8,7 @@ import be.ac.ua.comp.scarletnebula.wizard.Wizard;
 
 public class KeyWizard extends Wizard
 {
-	public KeyWizard(Frame parent, CloudProvider provider)
+	public KeyWizard(final Frame parent, final CloudProvider provider)
 	{
 		super(new CreateUseChoicePage(provider), new KeyRecorder(),
 				new SimpleWizardTemplate());

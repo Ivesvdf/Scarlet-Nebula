@@ -21,7 +21,7 @@ public class SelectNewKeynamePage extends WizardPage
 	private final CloudProvider provider;
 	private final JTextField namefield = new JTextField();
 
-	public SelectNewKeynamePage(CloudProvider provider)
+	public SelectNewKeynamePage(final CloudProvider provider)
 	{
 		super(new BorderLayout());
 		final BetterTextLabel toptext = new BetterTextLabel(
@@ -49,7 +49,7 @@ public class SelectNewKeynamePage extends WizardPage
 	}
 
 	@Override
-	public WizardPage next(DataRecorder recorder)
+	public WizardPage next(final DataRecorder recorder)
 	{
 		WizardPage finalPage;
 		if (!namefield.getInputVerifier().verify(namefield))

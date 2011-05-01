@@ -36,20 +36,24 @@ public class CloudManager
 			final CloudProvider cloudProvider = new CloudProvider(provname);
 
 			for (final ServerLinkUnlinkObserver obs : linkUnlinkObservers)
+			{
 				cloudProvider.addServerLinkUnlinkObserver(obs);
+			}
 
 			providers.put(provname, cloudProvider);
 		}
 	}
 
-	public void addServerLinkUnlinkObserver(ServerLinkUnlinkObserver obs)
+	public void addServerLinkUnlinkObserver(final ServerLinkUnlinkObserver obs)
 	{
 		linkUnlinkObservers.add(obs);
 
 		// Also add this observer to the cloudproviders that are already in the
 		// system.
 		for (final CloudProvider prov : providers.values())
+		{
 			prov.addServerLinkUnlinkObserver(obs);
+		}
 	}
 
 	private void populateCloudProviderTemplates()
@@ -128,7 +132,7 @@ public class CloudManager
 	 * @param name
 	 * @return
 	 */
-	public CloudProvider getCloudProviderByName(String name)
+	public CloudProvider getCloudProviderByName(final String name)
 	{
 		return providers.get(name);
 	}
@@ -140,11 +144,15 @@ public class CloudManager
 	 * @param name
 	 * @return
 	 */
-	public boolean serverExists(String name)
+	public boolean serverExists(final String name)
 	{
 		for (final CloudProvider prov : providers.values())
+		{
 			if (prov.hasServer(name))
+			{
 				return true;
+			}
+		}
 
 		return false;
 	}
@@ -154,20 +162,22 @@ public class CloudManager
 		return providerTemplates;
 	}
 
-	public void registerNewCloudProvider(String name, String classname,
-			String endpoint, String apiKey, String apiSecret)
+	public void registerNewCloudProvider(final String name, final String classname,
+			final String endpoint, final String apiKey, final String apiSecret)
 	{
 		final CloudProvider prov = new CloudProvider(name, classname, endpoint,
 				apiKey, apiSecret, "");
 		prov.store();
 
 		for (final ServerLinkUnlinkObserver obs : linkUnlinkObservers)
+		{
 			prov.addServerLinkUnlinkObserver(obs);
+		}
 
 		providers.put(name, prov);
 	}
 
-	public void deleteCloudProvider(String provname)
+	public void deleteCloudProvider(final String provname)
 	{
 		final CloudProvider provider = providers.get(provname);
 		providers.remove(provname);
@@ -176,7 +186,9 @@ public class CloudManager
 		// Remove all of his servers
 		final Collection<Server> linkedServers = provider.listLinkedServers();
 		for (final Server server : linkedServers)
+		{
 			server.unlink();
+		}
 
 		// Remove his server directory
 		final File serverdir = removeDirContainingFiles("servers/" + provname);
@@ -191,7 +203,7 @@ public class CloudManager
 		config.delete();
 	}
 
-	private File removeDirContainingFiles(String dirname)
+	private File removeDirContainingFiles(final String dirname)
 	{
 		final File dir = new File(dirname);
 
@@ -211,6 +223,8 @@ public class CloudManager
 			CloudException, IOException
 	{
 		for (final CloudProvider prov : providers.values())
+		{
 			prov.loadLinkedServers();
+		}
 	}
 }

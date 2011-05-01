@@ -28,7 +28,7 @@ public class AllGraphsPanel extends JPanel implements NewDatastreamListener,
 	final private Server server;
 	private final ServerStatisticsManager statisticsManager;
 
-	public AllGraphsPanel(Server server)
+	public AllGraphsPanel(final Server server)
 	{
 		super(new GridBagLayout());
 		this.server = server;
@@ -51,7 +51,8 @@ public class AllGraphsPanel extends JPanel implements NewDatastreamListener,
 		int numberOfComponentsPlaced = 0;
 		int currXPos = 0;
 
-		for (final String streamname : statisticsManager.getAvailableDatastreams())
+		for (final String streamname : statisticsManager
+				.getAvailableDatastreams())
 		{
 			log.info("drawing stream");
 			constraints.fill = GridBagConstraints.HORIZONTAL;
@@ -82,7 +83,7 @@ public class AllGraphsPanel extends JPanel implements NewDatastreamListener,
 	}
 
 	@Override
-	public void newDataStream(Datapoint datapoint)
+	public void newDataStream(final Datapoint datapoint)
 	{
 		resetPanel();
 	}
@@ -95,7 +96,7 @@ public class AllGraphsPanel extends JPanel implements NewDatastreamListener,
 	}
 
 	@Override
-	public void deleteDataStream(String streamname)
+	public void deleteDataStream(final String streamname)
 	{
 		resetPanel();
 	}

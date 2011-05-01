@@ -18,7 +18,7 @@ public abstract class WorkerPropertyChangeListener implements
 {
 
 	@Override
-	public void propertyChange(PropertyChangeEvent evt)
+	public void propertyChange(final PropertyChangeEvent evt)
 	{
 		if ("progress".equals(evt.getPropertyName()))
 		{

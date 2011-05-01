@@ -12,8 +12,8 @@ class SearchFieldListener implements ActionListener, DocumentListener
 	private final JTextField searchField;
 	ServerListModel serverListModel;
 
-	public SearchFieldListener(JTextField inputSearchField,
-			ServerListModel serverListModel)
+	public SearchFieldListener(final JTextField inputSearchField,
+			final ServerListModel serverListModel)
 	{
 		this.searchField = inputSearchField;
 		this.serverListModel = serverListModel;
@@ -21,7 +21,7 @@ class SearchFieldListener implements ActionListener, DocumentListener
 
 	// Search on ENTER press
 	@Override
-	public void actionPerformed(ActionEvent e)
+	public void actionPerformed(final ActionEvent e)
 	{
 		final String servername = searchField.getText();
 
@@ -37,19 +37,19 @@ class SearchFieldListener implements ActionListener, DocumentListener
 
 	// Required by DocumentListener.
 	@Override
-	public void removeUpdate(DocumentEvent e)
+	public void removeUpdate(final DocumentEvent e)
 	{
 	}
 
 	@Override
-	public void insertUpdate(DocumentEvent e)
+	public void insertUpdate(final DocumentEvent e)
 	{
 		// TODO Auto-generated method stub
 
 	}
 
 	@Override
-	public void changedUpdate(DocumentEvent e)
+	public void changedUpdate(final DocumentEvent e)
 	{
 		// TODO Auto-generated method stub
 

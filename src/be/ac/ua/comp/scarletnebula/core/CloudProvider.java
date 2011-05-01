@@ -70,7 +70,7 @@ public class CloudProvider
 	 * @param name
 	 *            Name of the provider. Used to search for a savefile.
 	 */
-	public CloudProvider(String name)
+	public CloudProvider(final String name)
 	{
 		load(name);
 
@@ -123,7 +123,7 @@ public class CloudProvider
 		}
 	}
 
-	private void notifyObserversBecauseServerLinked(Server srv)
+	private void notifyObserversBecauseServerLinked(final Server srv)
 	{
 
 		for (final ServerLinkUnlinkObserver obs : linkUnlinkObservers)
@@ -133,10 +133,12 @@ public class CloudProvider
 		}
 	}
 
-	private void notifyObserversBecauseServerUnlinked(Server srv)
+	private void notifyObserversBecauseServerUnlinked(final Server srv)
 	{
 		for (final ServerLinkUnlinkObserver obs : linkUnlinkObservers)
+		{
 			obs.serverUnlinked(this, srv);
+		}
 	}
 
 	/**
@@ -144,7 +146,7 @@ public class CloudProvider
 	 * 
 	 * @param name
 	 */
-	private void load(String name)
+	private void load(final String name)
 	{
 		Properties properties = null;
 
@@ -179,8 +181,8 @@ public class CloudProvider
 	 * @param apisecret
 	 * @param defaultKeypair
 	 */
-	public CloudProvider(String name, String classname, String endpoint,
-			String apikey, String apisecret, String defaultKeypair)
+	public CloudProvider(final String name, final String classname, final String endpoint,
+			final String apikey, final String apisecret, final String defaultKeypair)
 	{
 		this.name = name;
 		this.providerClassName = classname;
@@ -200,14 +202,16 @@ public class CloudProvider
 	 * @throws CloudException
 	 * @throws IOException
 	 */
-	public Server loadServer(String unfriendlyName) throws InternalException,
+	public Server loadServer(final String unfriendlyName) throws InternalException,
 			CloudException, IOException
 	{
 		log.warn("Getting for name " + unfriendlyName);
 		final VirtualMachine server = getServerImpl(unfriendlyName);
 
 		if (server == null)
+		{
 			return null;
+		}
 
 		final Server rv = Server.load(server, this);
 		return rv;
@@ -230,7 +234,9 @@ public class CloudProvider
 		final String[] files = dir.list();
 
 		if (files == null)
+		{
 			return servers;
+		}
 
 		for (final String file : files)
 		{
@@ -254,7 +260,7 @@ public class CloudProvider
 		return servers;
 	}
 
-	private void addServer(Server server)
+	private void addServer(final Server server)
 	{
 		notifyObserversBecauseServerLinked(server);
 		servers.add(server);
@@ -265,13 +271,15 @@ public class CloudProvider
 	 * 
 	 * @param unfriendlyName
 	 */
-	private void deleteServerSaveFile(String unfriendlyName)
+	private void deleteServerSaveFile(final String unfriendlyName)
 	{
 		final File toBeRemoved = new File(getSaveFileDir() + unfriendlyName);
 		final boolean result = toBeRemoved.delete();
 
 		if (!result)
+		{
 			log.error("Could not remove savefile for server " + unfriendlyName);
+		}
 	}
 
 	/**
@@ -283,7 +291,7 @@ public class CloudProvider
 	 * @throws InternalException
 	 * @throws CloudException
 	 */
-	public void createKey(String keyname, boolean makeDefault)
+	public void createKey(final String keyname, final boolean makeDefault)
 			throws InternalException, CloudException
 	{
 		final ShellKeySupport shellKeySupport = providerImpl
@@ -313,7 +321,9 @@ public class CloudProvider
 				.getFirewallSupport();
 
 		if (fws == null)
+		{
 			return;
+		}
 
 		final Collection<Firewall> firewalls = fws.list();
 
@@ -394,7 +404,7 @@ public class CloudProvider
 		return rv;
 	}
 
-	private String nullToEmpty(String input)
+	private String nullToEmpty(final String input)
 	{
 		return (input == null) ? "" : input;
 	}
@@ -418,7 +428,7 @@ public class CloudProvider
 	 * @throws InternalException
 	 * @throws CloudException
 	 */
-	public void terminateServer(String unfriendlyName)
+	public void terminateServer(final String unfriendlyName)
 			throws InternalException, CloudException
 	{
 		virtualMachineServices.terminate(unfriendlyName);
@@ -433,8 +443,8 @@ public class CloudProvider
 	 * @throws InternalException
 	 * @throws CloudException
 	 */
-	public Server startServer(String serverName, String productName,
-			String imageId, Collection<String> tags, String keypairOrPassword)
+	public Server startServer(final String serverName, final String productName,
+			final String imageId, final Collection<String> tags, final String keypairOrPassword)
 			throws InternalException, CloudException
 	{
 		final String dataCenterId = "eu-west-1b";
@@ -488,7 +498,7 @@ public class CloudProvider
 		{
 			if (!keys.isEmpty())
 			{
-				String newDefaultKey = keys.iterator().next();
+				final String newDefaultKey = keys.iterator().next();
 				setDefaultKeypair(newDefaultKey);
 				store();
 			}
@@ -504,7 +514,7 @@ public class CloudProvider
 	 * @param newDefaultKeypair
 	 *            The name of the new keypair that will become default.
 	 */
-	public void setDefaultKeypair(String newDefaultKeypair)
+	public void setDefaultKeypair(final String newDefaultKeypair)
 	{
 		if (KeyManager.getKeyNames(getName()).contains(newDefaultKeypair))
 		{
@@ -539,7 +549,7 @@ public class CloudProvider
 		return sb.toString();
 	}
 
-	public VirtualMachineProduct getVMProductWithName(String name)
+	public VirtualMachineProduct getVMProductWithName(final String name)
 	{
 		try
 		{
@@ -549,7 +559,9 @@ public class CloudProvider
 			for (final VirtualMachineProduct product : products)
 			{
 				if (name == product.getName())
+				{
 					return product;
+				}
 			}
 			return null;
 		}
@@ -659,14 +671,14 @@ public class CloudProvider
 		return providerClassName;
 	}
 
-	public VirtualMachine getServerImpl(String unfriendlyName)
+	public VirtualMachine getServerImpl(final String unfriendlyName)
 			throws InternalException, CloudException
 	{
 		return virtualMachineServices.getVirtualMachine(unfriendlyName);
 	}
 
-	public Iterable<MachineImage> getAvailableMachineImages(Platform platform,
-			Architecture architecture)
+	public Iterable<MachineImage> getAvailableMachineImages(final Platform platform,
+			final Architecture architecture)
 	{
 		Iterable<MachineImage> images = null;
 		try
@@ -692,7 +704,7 @@ public class CloudProvider
 	 * 
 	 * @param server
 	 */
-	public void linkUnlinkedServer(Server server)
+	public void linkUnlinkedServer(final Server server)
 	{
 		server.store();
 		addServer(server);
@@ -706,7 +718,7 @@ public class CloudProvider
 	 * @throws InternalException
 	 * @throws CloudException
 	 */
-	void pause(Server server) throws InternalException, CloudException
+	void pause(final Server server) throws InternalException, CloudException
 	{
 		virtualMachineServices.pause(server.getUnfriendlyName());
 	}
@@ -719,7 +731,7 @@ public class CloudProvider
 	 * @throws CloudException
 	 * @throws InternalException
 	 */
-	void reboot(Server server) throws CloudException, InternalException
+	void reboot(final Server server) throws CloudException, InternalException
 	{
 		virtualMachineServices.reboot(server.getUnfriendlyName());
 	}
@@ -730,7 +742,7 @@ public class CloudProvider
 	 * 
 	 * @param selectedServer
 	 */
-	public void unlink(Server selectedServer)
+	public void unlink(final Server selectedServer)
 	{
 		servers.remove(selectedServer);
 		deleteServerSaveFile(selectedServer.getUnfriendlyName());
@@ -745,11 +757,15 @@ public class CloudProvider
 	 * @return True if a linked server with name "friendlyName" exists,
 	 *         otherwise false
 	 */
-	public boolean hasServer(String friendlyName)
+	public boolean hasServer(final String friendlyName)
 	{
 		for (final Server s : servers)
+		{
 			if (s.getFriendlyName().equals(friendlyName))
+			{
 				return true;
+			}
+		}
 
 		return false;
 	}
@@ -826,7 +842,7 @@ public class CloudProvider
 		}
 	}
 
-	static String getConfigfileName(String providername)
+	static String getConfigfileName(final String providername)
 	{
 		return "providers/" + providername + ".properties";
 	}
@@ -836,7 +852,9 @@ public class CloudProvider
 		final File dir = new File("providers");
 
 		if (!dir.exists() || !dir.isDirectory())
+		{
 			return new ArrayList<String>();
+		}
 
 		final Collection<String> files = Arrays.asList(dir.list());
 		final Collection<String> rv = new ArrayList<String>(files.size());
@@ -848,20 +866,22 @@ public class CloudProvider
 		return rv;
 	}
 
-	public boolean isLinked(Server server)
+	public boolean isLinked(final Server server)
 	{
 		// Not using servers.contains because this seems to use Server.equals
 		// which isn't implemented...
 		for (final Server linkedServer : servers)
 		{
 			if (server == linkedServer)
+			{
 				return true;
+			}
 		}
 
 		return false;
 	}
 
-	public void addServerLinkUnlinkObserver(ServerLinkUnlinkObserver obs)
+	public void addServerLinkUnlinkObserver(final ServerLinkUnlinkObserver obs)
 	{
 		linkUnlinkObservers.add(obs);
 	}
@@ -888,7 +908,7 @@ public class CloudProvider
 		return keys;
 	}
 
-	public boolean unlinkedKeyExists(String checkKeyname)
+	public boolean unlinkedKeyExists(final String checkKeyname)
 	{
 		final ShellKeySupport shellKeySupport = providerImpl
 				.getIdentityServices().getShellKeySupport();
@@ -916,7 +936,7 @@ public class CloudProvider
 	 * @param makeDefault
 	 *            True if it should become default, false otherwise.
 	 */
-	public void importKey(String keyname, File keyFile, boolean makeDefault)
+	public void importKey(final String keyname, final File keyFile, final boolean makeDefault)
 	{
 		KeyManager.addKey(getName(), keyname, keyFile);
 
@@ -934,7 +954,7 @@ public class CloudProvider
 	 * @throws CloudException
 	 * @throws InternalException
 	 */
-	public void deleteKey(String key) throws InternalException, CloudException
+	public void deleteKey(final String key) throws InternalException, CloudException
 	{
 		KeyManager.deleteKey(getName(), key);
 

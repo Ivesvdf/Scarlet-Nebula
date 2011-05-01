@@ -26,22 +26,22 @@ public enum Colors
 	// constructors
 	// XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 
-	Colors(Color c)
+	Colors(final Color c)
 	{
 		_myColor = c;
 	}
 
-	Colors(int r, int g, int b)
+	Colors(final int r, final int g, final int b)
 	{
 		_myColor = new Color(r, g, b);
 	}
 
-	Colors(int r, int g, int b, int alpha)
+	Colors(final int r, final int g, final int b, final int alpha)
 	{
 		_myColor = new Color(r, g, b, alpha);
 	}
 
-	Colors(float r, float g, float b, float alpha)
+	Colors(final float r, final float g, final float b, final float alpha)
 	{
 		_myColor = new Color(r, g, b, alpha);
 	}
@@ -56,13 +56,13 @@ public enum Colors
 	// methods
 	// XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 
-	public Color alpha(float t)
+	public Color alpha(final float t)
 	{
 		return new Color(_myColor.getRed(), _myColor.getGreen(),
 				_myColor.getBlue(), (int) (t * 255f));
 	}
 
-	public static Color alpha(Color c, float t)
+	public static Color alpha(final Color c, final float t)
 	{
 		return new Color(c.getRed(), c.getGreen(), c.getBlue(),
 				(int) (t * 255f));
@@ -73,7 +73,7 @@ public enum Colors
 		return _myColor;
 	}
 
-	public Color color(float f)
+	public Color color(final float f)
 	{
 		return alpha(f);
 	}

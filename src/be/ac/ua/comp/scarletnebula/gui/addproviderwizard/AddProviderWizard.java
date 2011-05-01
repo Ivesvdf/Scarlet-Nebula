@@ -25,23 +25,23 @@ public class AddProviderWizard extends Wizard implements WizardListener
 		addWizardListener(this);
 	}
 
-	public void startModal(JDialog parent)
+	public void startModal(final JDialog parent)
 	{
 		startModal("Add a new Cloud Provider", 400, 300, parent);
 	}
 
-	public void startModal(JFrame parent)
+	public void startModal(final JFrame parent)
 	{
 		startModal("Add a new Cloud Provider", 400, 300, parent);
 	}
 
-	public void addProviderAddedListener(ProviderAddedListener pal)
+	public void addProviderAddedListener(final ProviderAddedListener pal)
 	{
 		providerAddedListeners.add(pal);
 	}
 
 	@Override
-	public void onFinish(DataRecorder recorder)
+	public void onFinish(final DataRecorder recorder)
 	{
 		final AddProviderWizardDataRecorder rec = (AddProviderWizardDataRecorder) recorder;
 
@@ -50,14 +50,16 @@ public class AddProviderWizard extends Wizard implements WizardListener
 				rec.getApiKey(), rec.getApiSecret());
 
 		for (final ProviderAddedListener p : providerAddedListeners)
+		{
 			p.providerWasAdded(rec.getName());
+		}
 
 		new KeyWizard(null, CloudManager.get().getCloudProviderByName(
 				rec.getName()));
 	}
 
 	@Override
-	public void onCancel(DataRecorder recorder)
+	public void onCancel(final DataRecorder recorder)
 	{
 		// Do nothing...
 	}

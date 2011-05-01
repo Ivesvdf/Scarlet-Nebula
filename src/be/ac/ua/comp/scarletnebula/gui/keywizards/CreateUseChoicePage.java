@@ -23,7 +23,7 @@ public class CreateUseChoicePage extends WizardPage
 	ButtonGroup group = new ButtonGroup();
 	CloudProvider provider;
 
-	CreateUseChoicePage(CloudProvider provider)
+	CreateUseChoicePage(final CloudProvider provider)
 	{
 		setLayout(new BorderLayout());
 		this.provider = provider;
@@ -51,7 +51,7 @@ public class CreateUseChoicePage extends WizardPage
 	}
 
 	@Override
-	public WizardPage next(DataRecorder recorder)
+	public WizardPage next(final DataRecorder recorder)
 	{
 		if (group.getSelection() == createButton.getModel())
 		{

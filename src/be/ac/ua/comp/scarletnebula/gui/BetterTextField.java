@@ -23,7 +23,7 @@ public class BetterTextField extends JTextField
 	/**
 	 * @see JTextField
 	 */
-	public BetterTextField(int columns)
+	public BetterTextField(final int columns)
 	{
 		super(columns);
 	}
@@ -56,7 +56,7 @@ public class BetterTextField extends JTextField
 		addFocusListener(new FocusListener()
 		{
 			@Override
-			public void focusLost(FocusEvent e)
+			public void focusLost(final FocusEvent e)
 			{
 				if (getText().length() == 0)
 				{
@@ -67,7 +67,7 @@ public class BetterTextField extends JTextField
 			}
 
 			@Override
-			public void focusGained(FocusEvent e)
+			public void focusGained(final FocusEvent e)
 			{
 				if (originalPlaceholderText)
 				{
@@ -90,9 +90,13 @@ public class BetterTextField extends JTextField
 		String result = null;
 
 		if (placeholderDisplayed)
+		{
 			result = "";
+		}
 		else
+		{
 			result = super.getText();
+		}
 
 		return result;
 	}

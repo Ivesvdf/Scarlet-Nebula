@@ -11,7 +11,7 @@ public class CloudProviderTemplate
 		private String name;
 		private String shortname;
 
-		public Endpoint(String name, String shortname, String url)
+		public Endpoint(final String name, final String shortname, final String url)
 		{
 			this.name = name;
 			this.shortname = shortname;
@@ -33,12 +33,12 @@ public class CloudProviderTemplate
 			return url;
 		}
 
-		public void setName(String name)
+		public void setName(final String name)
 		{
 			this.name = name;
 		}
 
-		public void setShortName(String shortname)
+		public void setShortName(final String shortname)
 		{
 			this.shortname = shortname;
 		}
@@ -53,14 +53,14 @@ public class CloudProviderTemplate
 	boolean allowCustomEndpoint = false;
 	boolean usesAccessKey = true;
 
-	public CloudProviderTemplate(String name, String shortname, String classname)
+	public CloudProviderTemplate(final String name, final String shortname, final String classname)
 	{
 		this.name = name;
 		this.shortname = shortname;
 		this.classname = classname;
 	}
 
-	public void addEndPoint(String name, String shortname, String url)
+	public void addEndPoint(final String name, final String shortname, final String url)
 	{
 		endpoints.add(new Endpoint(name, shortname, url));
 	}
@@ -90,12 +90,12 @@ public class CloudProviderTemplate
 		return usesAccessKey;
 	}
 
-	public void setAllowCustomEndpoint(boolean val)
+	public void setAllowCustomEndpoint(final boolean val)
 	{
 		allowCustomEndpoint = val;
 	}
 
-	public void setUsesAccessKey(boolean b)
+	public void setUsesAccessKey(final boolean b)
 	{
 		usesAccessKey = b;
 	}

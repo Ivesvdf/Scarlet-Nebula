@@ -19,7 +19,7 @@ public class ChooseNamePage extends WizardPage
 	private static final long serialVersionUID = 1L;
 	JTextField name = new JTextField();
 
-	ChooseNamePage(AddProviderWizardDataRecorder recorder)
+	ChooseNamePage(final AddProviderWizardDataRecorder recorder)
 	{
 		setLayout(new BorderLayout());
 		final BetterTextLabel text = new BetterTextLabel(
@@ -48,7 +48,7 @@ public class ChooseNamePage extends WizardPage
 	}
 
 	@Override
-	public WizardPage next(DataRecorder recorder)
+	public WizardPage next(final DataRecorder recorder)
 	{
 		final AddProviderWizardDataRecorder rec = (AddProviderWizardDataRecorder) recorder;
 		final String providerName = name.getText();

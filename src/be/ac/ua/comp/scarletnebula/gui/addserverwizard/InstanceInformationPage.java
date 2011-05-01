@@ -21,7 +21,7 @@ class InstanceInformationPage extends WizardPage
 	final JTextField instanceNameField = new JTextField();
 	final JComboBox instanceSizeList = new JComboBox();
 
-	InstanceInformationPage(CloudProvider provider)
+	InstanceInformationPage(final CloudProvider provider)
 	{
 		instanceNameField.setInputVerifier(new ServernameInputVerifier(
 				instanceNameField));
@@ -31,7 +31,9 @@ class InstanceInformationPage extends WizardPage
 
 		final Collection<String> sizes = provider.getPossibleInstanceSizes();
 		for (final String size : sizes)
+		{
 			instanceSizeList.addItem(size);
+		}
 
 		instanceSizeList.setSelectedIndex(0);
 
@@ -49,7 +51,7 @@ class InstanceInformationPage extends WizardPage
 	}
 
 	@Override
-	public WizardPage next(DataRecorder recorder)
+	public WizardPage next(final DataRecorder recorder)
 	{
 		WizardPage returnPage;
 		final InputVerifier inputVerifier = instanceNameField

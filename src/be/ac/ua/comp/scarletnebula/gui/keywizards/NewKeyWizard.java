@@ -8,9 +8,9 @@ import be.ac.ua.comp.scarletnebula.wizard.Wizard;
 
 public class NewKeyWizard extends Wizard
 {
-	private JDialog parent;
+	private final JDialog parent;
 
-	public NewKeyWizard(JDialog parent, CloudProvider provider)
+	public NewKeyWizard(final JDialog parent, final CloudProvider provider)
 	{
 		super(new SelectNewKeynamePage(provider), new KeyRecorder(),
 				new SimpleWizardTemplate());

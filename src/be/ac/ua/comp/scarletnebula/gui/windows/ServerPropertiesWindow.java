@@ -71,7 +71,7 @@ public class ServerPropertiesWindow extends JDialog
 
 	private DecoratedCommunicationPanel decoratedCommunicationPanel = null;
 
-	public ServerPropertiesWindow(GUI gui, Collection<Server> selectedServers)
+	public ServerPropertiesWindow(final GUI gui, final Collection<Server> selectedServers)
 	{
 		super(gui, true);
 		this.selectedServers = selectedServers;
@@ -110,7 +110,7 @@ public class ServerPropertiesWindow extends JDialog
 		okButton.addActionListener(new ActionListener()
 		{
 			@Override
-			public void actionPerformed(ActionEvent e)
+			public void actionPerformed(final ActionEvent e)
 			{
 				ServerPropertiesWindow.this.dispose();
 			}
@@ -143,17 +143,21 @@ public class ServerPropertiesWindow extends JDialog
 		{
 
 			@Override
-			public void stateChanged(ChangeEvent e)
+			public void stateChanged(final ChangeEvent e)
 			{
 				final JTabbedPane tabSource = (JTabbedPane) e.getSource();
 				final JPanel selectedPanel = (JPanel) tabSource
 						.getSelectedComponent();
 
 				if (selectedPanel == communicationTab)
+				{
 					ServerPropertiesWindow.this
 							.communicationTabGotFocus(servers);
+				}
 				if (selectedPanel == statisticsTab)
+				{
 					ServerPropertiesWindow.this.statisticsTabGotFocus(servers);
+				}
 			}
 
 		});
@@ -162,10 +166,12 @@ public class ServerPropertiesWindow extends JDialog
 		return total;
 	}
 
-	protected void statisticsTabGotFocus(Collection<Server> servers)
+	protected void statisticsTabGotFocus(final Collection<Server> servers)
 	{
 		if (statisticsTabIsFilled)
+		{
 			return;
+		}
 		else
 		{
 			statisticsTabIsFilled = true;
@@ -249,12 +255,12 @@ public class ServerPropertiesWindow extends JDialog
 	}
 
 	private Component getMultipleServersProviderComponent(
-			Collection<Server> servers)
+			final Collection<Server> servers)
 	{
-		List<String> names = new ArrayList<String>(servers.size());
-		for (Server server : servers)
+		final List<String> names = new ArrayList<String>(servers.size());
+		for (final Server server : servers)
 		{
-			String provname = server.getCloud().getName();
+			final String provname = server.getCloud().getName();
 			if (!names.contains(provname))
 			{
 				names.add(provname);
@@ -289,14 +295,14 @@ public class ServerPropertiesWindow extends JDialog
 		statisticsPropertiesButton.addActionListener(new ActionListener()
 		{
 			@Override
-			public void actionPerformed(ActionEvent e)
+			public void actionPerformed(final ActionEvent e)
 			{
 				final StatisticsPropertiesWindow win = new StatisticsPropertiesWindow(
 						ServerPropertiesWindow.this, servers);
 				win.addActionListener(new ActionListener()
 				{
 					@Override
-					public void actionPerformed(ActionEvent e)
+					public void actionPerformed(final ActionEvent e)
 					{
 
 					}
@@ -309,7 +315,9 @@ public class ServerPropertiesWindow extends JDialog
 		propertiesPart.setBorder(BorderFactory.createEmptyBorder(10, 0, 0, 0));
 
 		if (servers.size() > 1)
+		{
 			log.fatal("more than one server in statisticspanel");
+		}
 
 		final Server server = servers.iterator().next();
 
@@ -345,7 +353,7 @@ public class ServerPropertiesWindow extends JDialog
 						window.addActionListener(new ActionListener()
 						{
 							@Override
-							public void actionPerformed(ActionEvent e)
+							public void actionPerformed(final ActionEvent e)
 							{
 								text.setText(getTextRepresentationOfSshSituation(server));
 							}
@@ -358,7 +366,7 @@ public class ServerPropertiesWindow extends JDialog
 		return sshLabel;
 	}
 
-	private String getTextRepresentationOfSshSituation(Server server)
+	private String getTextRepresentationOfSshSituation(final Server server)
 	{
 		String rv = "";
 
@@ -387,10 +395,12 @@ public class ServerPropertiesWindow extends JDialog
 						win.addWindowClosedListener(new TaggingWindow.WindowClosedListener()
 						{
 							@Override
-							public void windowClosed(Collection<String> newTags)
+							public void windowClosed(final Collection<String> newTags)
 							{
 								for (final String t : newTags)
+								{
 									log.warn(t);
+								}
 
 								label.setText(Utils.implode(
 										new ArrayList<String>(newTags), ", "));
@@ -428,7 +438,7 @@ public class ServerPropertiesWindow extends JDialog
 				.addContentChangedListener(new LabelEditSwitcherPanel.ContentChangedListener()
 				{
 					@Override
-					public void changed(String newContents)
+					public void changed(final String newContents)
 					{
 						server.setFriendlyName(newContents);
 						server.store();
@@ -437,7 +447,7 @@ public class ServerPropertiesWindow extends JDialog
 		return servername;
 	}
 
-	protected void communicationTabGotFocus(Collection<Server> selectedServers)
+	protected void communicationTabGotFocus(final Collection<Server> selectedServers)
 	{
 		if (decoratedCommunicationPanel == null)
 		{
@@ -450,7 +460,7 @@ public class ServerPropertiesWindow extends JDialog
 		}
 	}
 
-	private void updateOverviewTab(Collection<Server> selectedServers)
+	private void updateOverviewTab(final Collection<Server> selectedServers)
 	{
 		if (selectedServers.size() == 0)
 		{
@@ -469,7 +479,9 @@ public class ServerPropertiesWindow extends JDialog
 		Server selectedServer = null;
 
 		for (final Server s : selectedServers)
+		{
 			selectedServer = s;
+		}
 
 		statusLabel.setText(selectedServer.getStatus().toString());
 		dnsLabel.setText(selectedServer.getPublicDnsAddress());
@@ -477,7 +489,9 @@ public class ServerPropertiesWindow extends JDialog
 		String ipString = "";
 
 		for (final String ip : selectedServer.getPublicIpAddresses())
+		{
 			ipString += ip + "\n";
+		}
 
 		ipLabel.setText(ipString);
 		cloudLabel.setText(selectedServer.getCloud().getName());
@@ -486,7 +500,9 @@ public class ServerPropertiesWindow extends JDialog
 		imageLabel.setText(selectedServer.getImage());
 		architectureLabel.setText(selectedServer.getArchitecture().toString());
 		if (selectedServer.getPlatform() != Platform.UNKNOWN)
+		{
 			platformLabel.setText(selectedServer.getPlatform().toString());
+		}
 
 	}
 

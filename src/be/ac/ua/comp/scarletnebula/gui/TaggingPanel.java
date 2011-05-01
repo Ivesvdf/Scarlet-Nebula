@@ -36,7 +36,7 @@ public class TaggingPanel extends JPanel
 		this(new ArrayList<String>());
 	}
 
-	public TaggingPanel(Collection<String> initialTags)
+	public TaggingPanel(final Collection<String> initialTags)
 	{
 		super(new BorderLayout());
 
@@ -82,18 +82,20 @@ public class TaggingPanel extends JPanel
 	{
 		private final BetterTextField inputField;
 
-		private AddTagActionListener(BetterTextField inputField)
+		private AddTagActionListener(final BetterTextField inputField)
 		{
 			this.inputField = inputField;
 		}
 
 		@Override
-		public void actionPerformed(ActionEvent e)
+		public void actionPerformed(final ActionEvent e)
 		{
 			final String tagTxt = inputField.getText();
 			inputField.setText("");
 			if (!Pattern.matches("^\\s*$", tagTxt))
+			{
 				taglist.add(tagTxt);
+			}
 		}
 	}
 
@@ -109,12 +111,12 @@ public class TaggingPanel extends JPanel
 
 		}
 
-		void add(String tag)
+		void add(final String tag)
 		{
 			addTag(new TagItem(tag));
 		}
 
-		void addTag(TagItem tag)
+		void addTag(final TagItem tag)
 		{
 			tag.setAlignmentX(LEFT_ALIGNMENT);
 			add(tag);
@@ -140,7 +142,7 @@ public class TaggingPanel extends JPanel
 		private static final long serialVersionUID = 1L;
 		String tag;
 
-		TagItem(String tag)
+		TagItem(final String tag)
 		{
 			this.tag = tag;
 			setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
@@ -155,7 +157,7 @@ public class TaggingPanel extends JPanel
 			deleteButton.addActionListener(new ActionListener()
 			{
 				@Override
-				public void actionPerformed(ActionEvent e)
+				public void actionPerformed(final ActionEvent e)
 				{
 					final JPanel taglist = (JPanel) TagItem.this.getParent();
 					taglist.remove(TagItem.this);

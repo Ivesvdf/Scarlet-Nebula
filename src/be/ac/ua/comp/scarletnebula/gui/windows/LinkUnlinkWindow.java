@@ -46,7 +46,7 @@ public class LinkUnlinkWindow extends JDialog
 			CreateNewServerServer.NO_NEW_SERVER);
 	private final CollapsablePanel throbberPanel;
 
-	LinkUnlinkWindow(JFrame parent)
+	LinkUnlinkWindow(final JFrame parent)
 	{
 		super(parent, "Link/Unlink Providers", true);
 
@@ -92,7 +92,7 @@ public class LinkUnlinkWindow extends JDialog
 		cancelButton.addActionListener(new ActionListener()
 		{
 			@Override
-			public void actionPerformed(ActionEvent e)
+			public void actionPerformed(final ActionEvent e)
 			{
 				LinkUnlinkWindow.this.dispose();
 			}
@@ -104,7 +104,7 @@ public class LinkUnlinkWindow extends JDialog
 		okButton.addActionListener(new ActionListener()
 		{
 			@Override
-			public void actionPerformed(ActionEvent e)
+			public void actionPerformed(final ActionEvent e)
 			{
 				actuallyLinkUnlink();
 				LinkUnlinkWindow.this.dispose();
@@ -124,7 +124,8 @@ public class LinkUnlinkWindow extends JDialog
 				linkedServerListModel);
 		linkedServerList.setBorder(BorderFactory
 				.createBevelBorder(BevelBorder.LOWERED));
-		final JScrollPane linkedServerScrollPane = new JScrollPane(linkedServerList);
+		final JScrollPane linkedServerScrollPane = new JScrollPane(
+				linkedServerList);
 		linkedServerScrollPane.setBorder(BorderFactory.createTitledBorder(
 				new EmptyBorder(5, 20, 20, 20), "Linked Servers"));
 		// Doesn't matter what this is set to, as long as it's the same as the
@@ -164,13 +165,15 @@ public class LinkUnlinkWindow extends JDialog
 		linkSelectionButton.addActionListener(new ActionListener()
 		{
 			@Override
-			public void actionPerformed(ActionEvent e)
+			public void actionPerformed(final ActionEvent e)
 			{
 				// Move selection from unlinked to linked list
 				final int selection = unlinkedServerList.getSelectedIndex();
 
 				if (selection < 0)
+				{
 					return;
+				}
 
 				final Server server = unlinkedServerListModel
 						.getVisibleServerAtIndex(selection);
@@ -184,13 +187,15 @@ public class LinkUnlinkWindow extends JDialog
 		unlinkSelectionButton.addActionListener(new ActionListener()
 		{
 			@Override
-			public void actionPerformed(ActionEvent e)
+			public void actionPerformed(final ActionEvent e)
 			{
 				// Move selection from linked to unlinked list
 				final int selection = linkedServerList.getSelectedIndex();
 
 				if (selection < 0)
+				{
 					return;
+				}
 
 				final int answer = JOptionPane
 						.showOptionDialog(
@@ -203,7 +208,9 @@ public class LinkUnlinkWindow extends JDialog
 								JOptionPane.WARNING_MESSAGE, null, null, null);
 
 				if (answer != JOptionPane.YES_OPTION)
+				{
 					return;
+				}
 
 				final Server server = linkedServerListModel
 						.getVisibleServerAtIndex(selection);
@@ -293,9 +300,10 @@ public class LinkUnlinkWindow extends JDialog
 		fillUnlinkedListWorker.execute();
 	}
 
-	private void fillLinkedList(ServerListModel linkedServerListModel)
+	private void fillLinkedList(final ServerListModel linkedServerListModel)
 	{
-		for (final CloudProvider prov : CloudManager.get().getLinkedCloudProviders())
+		for (final CloudProvider prov : CloudManager.get()
+				.getLinkedCloudProviders())
 		{
 			for (final Server server : prov.listLinkedServers())
 			{
@@ -305,7 +313,7 @@ public class LinkUnlinkWindow extends JDialog
 	}
 
 	@Override
-	protected void processWindowEvent(WindowEvent e)
+	protected void processWindowEvent(final WindowEvent e)
 	{
 		super.processWindowEvent(e);
 		if (e.getID() == WindowEvent.WINDOW_CLOSING)

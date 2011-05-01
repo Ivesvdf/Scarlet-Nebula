@@ -20,8 +20,8 @@ public class Wizard
 
 	WizardTemplate wizardTemplate = null;
 
-	public Wizard(WizardPage startPage, DataRecorder recorder,
-			WizardTemplate wizardTemplate)
+	public Wizard(final WizardPage startPage, final DataRecorder recorder,
+			final WizardTemplate wizardTemplate)
 	{
 		this.recorder = recorder;
 		this.wizardTemplate = wizardTemplate;
@@ -33,7 +33,7 @@ public class Wizard
 	 * 
 	 * @param window
 	 */
-	public void start(JDialog window)
+	public void start(final JDialog window)
 	{
 		this.window = window;
 
@@ -51,7 +51,7 @@ public class Wizard
 	 * @param parent
 	 *            Owner of the window, null if no owner
 	 */
-	public void startModal(String title, int width, int height, Dialog parent)
+	public void startModal(final String title, final int width, final int height, final Dialog parent)
 	{
 		window = new JDialog(parent, true);
 		configureDialog(title, width, height, window, parent);
@@ -67,14 +67,14 @@ public class Wizard
 	 * @param parent
 	 *            Owner of the window, null if no owner
 	 */
-	public void startModal(String title, int width, int height, Frame parent)
+	public void startModal(final String title, final int width, final int height, final Frame parent)
 	{
 		window = new JDialog(parent, true);
 		configureDialog(title, width, height, window, parent);
 	}
 
-	private void configureDialog(String title, int width, int height,
-			JDialog dialog, Component parent)
+	private void configureDialog(final String title, final int width, final int height,
+			final JDialog dialog, final Component parent)
 	{
 		dialog.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 		dialog.setSize(new Dimension(width, height));
@@ -92,14 +92,14 @@ public class Wizard
 		renderPage(visitedPages.peek());
 	}
 
-	private void initializeButtons(JDialog window)
+	private void initializeButtons(final JDialog window)
 	{
 		wizardTemplate.setupWindow(window);
 
 		wizardTemplate.previousButton.addActionListener(new ActionListener()
 		{
 			@Override
-			public void actionPerformed(ActionEvent e)
+			public void actionPerformed(final ActionEvent e)
 			{
 				previous();
 			}
@@ -108,7 +108,7 @@ public class Wizard
 		wizardTemplate.nextButton.addActionListener(new ActionListener()
 		{
 			@Override
-			public void actionPerformed(ActionEvent e)
+			public void actionPerformed(final ActionEvent e)
 			{
 				next();
 			}
@@ -117,7 +117,7 @@ public class Wizard
 		wizardTemplate.finishButton.addActionListener(new ActionListener()
 		{
 			@Override
-			public void actionPerformed(ActionEvent e)
+			public void actionPerformed(final ActionEvent e)
 			{
 				finish();
 			}
@@ -126,17 +126,19 @@ public class Wizard
 		wizardTemplate.cancelButton.addActionListener(new ActionListener()
 		{
 			@Override
-			public void actionPerformed(ActionEvent e)
+			public void actionPerformed(final ActionEvent e)
 			{
 				cancel();
 			}
 		});
 	}
 
-	private void renderPage(WizardPage page)
+	private void renderPage(final WizardPage page)
 	{
 		if (page == null)
+		{
 			return;
+		}
 
 		wizardTemplate.nextButton.setEnabled(page.nextIsEnabled());
 		wizardTemplate.finishButton.setEnabled(page.finishIsEnabled());
@@ -145,7 +147,9 @@ public class Wizard
 		wizardTemplate.container.removeAll();
 
 		for (final Component c : page.getComponents())
+		{
 			c.setVisible(true);
+		}
 
 		wizardTemplate.container.add(page);
 		wizardTemplate.container.revalidate();
@@ -158,7 +162,9 @@ public class Wizard
 
 		// If no next page is given, the wizard shouldn't do anything
 		if (nextPage == null)
+		{
 			return;
+		}
 
 		visitedPages.push(nextPage);
 		displayPage();
@@ -177,17 +183,21 @@ public class Wizard
 		window.dispose();
 
 		if (listener != null)
+		{
 			listener.onFinish(recorder);
+		}
 	}
 
 	private void cancel()
 	{
 		window.dispose();
 		if (listener != null)
+		{
 			listener.onCancel(recorder);
+		}
 	}
 
-	public void addWizardListener(WizardListener l)
+	public void addWizardListener(final WizardListener l)
 	{
 		listener = l;
 	}

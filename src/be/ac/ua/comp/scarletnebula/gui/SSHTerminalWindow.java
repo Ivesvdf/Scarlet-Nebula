@@ -13,7 +13,7 @@ public class SSHTerminalWindow extends JDialog
 {
 	private static final long serialVersionUID = 1L;
 
-	SSHTerminalWindow(JFrame parent, Collection<Server> servers)
+	SSHTerminalWindow(final JFrame parent, final Collection<Server> servers)
 	{
 		super(parent, false);
 		setIconImage(Utils.icon("console16.png").getImage());

@@ -12,7 +12,7 @@ public class ThrobberBarWithText extends JLabel
 {
 	private static final long serialVersionUID = 1L;
 
-	public ThrobberBarWithText(String text)
+	public ThrobberBarWithText(final String text)
 	{
 		super(text, Utils.icon("throbber.gif"), SwingConstants.CENTER);
 		setOpaque(true);

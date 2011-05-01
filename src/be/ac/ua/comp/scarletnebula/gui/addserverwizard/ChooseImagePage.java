@@ -117,7 +117,7 @@ public class ChooseImagePage extends WizardPage
 	}
 
 	@Override
-	public WizardPage next(DataRecorder recorder)
+	public WizardPage next(final DataRecorder recorder)
 	{
 		final AddServerWizardDataRecorder rec = (AddServerWizardDataRecorder) recorder;
 
@@ -145,9 +145,9 @@ public class ChooseImagePage extends WizardPage
 		private final PlatformComboBox platformComboBox;
 		private final BetterTextField searchField;
 
-		private SearchFieldListener(ArchitectureComboBox architectureComboBox,
-				TableRowSorter<TableModel> sorter,
-				PlatformComboBox platformComboBox, BetterTextField searchField)
+		private SearchFieldListener(final ArchitectureComboBox architectureComboBox,
+				final TableRowSorter<TableModel> sorter,
+				final PlatformComboBox platformComboBox, final BetterTextField searchField)
 		{
 			this.architectureComboBox = architectureComboBox;
 			this.sorter = sorter;
@@ -156,7 +156,7 @@ public class ChooseImagePage extends WizardPage
 		}
 
 		@Override
-		public void actionPerformed(ActionEvent e)
+		public void actionPerformed(final ActionEvent e)
 		{
 			log.debug("Filtering table");
 			final Platform currentPlatform = platformComboBox.getSelection();
@@ -194,10 +194,10 @@ public class ChooseImagePage extends WizardPage
 		Architecture architecture;
 		JTable table;
 
-		ImageModelFillerTask(final Window win, Collapsable throbber,
-				JTable jtable, MachineImageTableModel model,
-				CloudProvider provider, Platform platform,
-				Architecture architecture)
+		ImageModelFillerTask(final Window win, final Collapsable throbber,
+				final JTable jtable, final MachineImageTableModel model,
+				final CloudProvider provider, final Platform platform,
+				final Architecture architecture)
 		{
 			super(throbber);
 			this.model = model;
@@ -210,22 +210,26 @@ public class ChooseImagePage extends WizardPage
 		@Override
 		public MachineImageTableModel doInBackground()
 		{
-			final Iterable<MachineImage> images = provider.getAvailableMachineImages(
-					platform, architecture);
+			final Iterable<MachineImage> images = provider
+					.getAvailableMachineImages(platform, architecture);
 			if (images == null)
+			{
 				log.error("No images available");
+			}
 
 			for (final MachineImage image : images)
 			{
 				if (isCancelled())
+				{
 					return model;
+				}
 				publish(image);
 			}
 			return model;
 		}
 
 		@Override
-		protected void process(List<MachineImage> toAdd)
+		protected void process(final List<MachineImage> toAdd)
 		{
 			model.addImages(toAdd);
 		}

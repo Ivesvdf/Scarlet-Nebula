@@ -8,7 +8,7 @@ import be.ac.ua.comp.scarletnebula.wizard.Wizard;
 public class WelcomeWizard extends Wizard
 {
 
-	public WelcomeWizard(Frame parent)
+	public WelcomeWizard(final Frame parent)
 	{
 		super(new ThanksPage(), null, new SimpleWizardTemplate());
 

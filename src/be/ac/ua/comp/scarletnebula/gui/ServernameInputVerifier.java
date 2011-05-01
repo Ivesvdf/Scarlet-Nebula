@@ -22,7 +22,7 @@ public class ServernameInputVerifier extends LoudInputVerifier
 	 *            A server that should be excluded from the unique-ness test --
 	 *            ie the server whose name we're checking.
 	 */
-	public ServernameInputVerifier(JTextField textfield, Server excludeServer)
+	public ServernameInputVerifier(final JTextField textfield, final Server excludeServer)
 	{
 		super(
 				textfield,
@@ -30,7 +30,7 @@ public class ServernameInputVerifier extends LoudInputVerifier
 		this.excludeServer = excludeServer;
 	}
 
-	public ServernameInputVerifier(JTextField textfield)
+	public ServernameInputVerifier(final JTextField textfield)
 	{
 		this(textfield, null);
 	}
@@ -39,7 +39,7 @@ public class ServernameInputVerifier extends LoudInputVerifier
 	 * @see InputVerifier
 	 */
 	@Override
-	public boolean verify(JComponent input)
+	public boolean verify(final JComponent input)
 	{
 		final String text = ((JTextField) input).getText();
 

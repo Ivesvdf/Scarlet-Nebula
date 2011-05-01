@@ -33,7 +33,7 @@ public class DecoratedGraph extends Graph
 	 * @param maximumAge
 	 *            The age after which data is no longer displayed in the graph
 	 */
-	public DecoratedGraph(long maximumAge, Datastream stream)
+	public DecoratedGraph(final long maximumAge, final Datastream stream)
 	{
 		super(maximumAge);
 		this.stream = stream;
@@ -93,8 +93,8 @@ public class DecoratedGraph extends Graph
 					.size() * 5)), new DecimalFormat(), 1));
 		}
 
-		final JFreeChart chart = new JFreeChart(stream.getStreamname(), new Font(
-				"SansSerif", Font.PLAIN, 20), plot, true);
+		final JFreeChart chart = new JFreeChart(stream.getStreamname(),
+				new Font("SansSerif", Font.PLAIN, 20), plot, true);
 		chart.setBackgroundPaint(Color.white);
 		chart.removeLegend();
 		final ChartPanel chartPanel = new ChartPanel(chart);

@@ -25,7 +25,7 @@ public class ManageProvidersWindow extends JDialog
 {
 	private static final long serialVersionUID = 1L;
 
-	ManageProvidersWindow(JFrame parent)
+	ManageProvidersWindow(final JFrame parent)
 	{
 		super(parent, "Manage Providers", true);
 
@@ -51,14 +51,14 @@ public class ManageProvidersWindow extends JDialog
 		addButton.addActionListener(new ActionListener()
 		{
 			@Override
-			public void actionPerformed(ActionEvent e)
+			public void actionPerformed(final ActionEvent e)
 			{
 				final AddProviderWizard wiz = new AddProviderWizard();
 
 				wiz.addProviderAddedListener(new ProviderAddedListener()
 				{
 					@Override
-					public void providerWasAdded(String name)
+					public void providerWasAdded(final String name)
 					{
 						providerListModel.addElement(name);
 					}
@@ -72,12 +72,14 @@ public class ManageProvidersWindow extends JDialog
 		modifyButton.addActionListener(new ActionListener()
 		{
 			@Override
-			public void actionPerformed(ActionEvent e)
+			public void actionPerformed(final ActionEvent e)
 			{
 				final int index = providerList.getSelectedIndex();
 
 				if (index < 0)
+				{
 					return;
+				}
 
 				final String provname = (String) providerListModel.get(index);
 				final CloudProvider provider = CloudManager.get()
@@ -92,13 +94,15 @@ public class ManageProvidersWindow extends JDialog
 		removeButton.addActionListener(new ActionListener()
 		{
 			@Override
-			public void actionPerformed(ActionEvent e)
+			public void actionPerformed(final ActionEvent e)
 			{
 				final int index = providerList.getSelectedIndex();
 
 				// No selection
 				if (index < 0)
+				{
 					return;
+				}
 
 				final int answer = JOptionPane
 						.showConfirmDialog(
@@ -132,9 +136,10 @@ public class ManageProvidersWindow extends JDialog
 		setVisible(true);
 	}
 
-	private void fillProviderList(DefaultListModel providerListModel)
+	private void fillProviderList(final DefaultListModel providerListModel)
 	{
-		for (final String name : CloudManager.get().getLinkedCloudProviderNames())
+		for (final String name : CloudManager.get()
+				.getLinkedCloudProviderNames())
 		{
 			providerListModel.addElement(name);
 		}

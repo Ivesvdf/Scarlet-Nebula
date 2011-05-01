@@ -27,7 +27,7 @@ public class SelectFileForKeyPage extends WizardPage
 	private final String keyname;
 	private CloudProvider provider;
 
-	SelectFileForKeyPage(CloudProvider provider, String keyname)
+	SelectFileForKeyPage(final CloudProvider provider, final String keyname)
 	{
 		final BetterTextLabel txt = new BetterTextLabel(
 				"Please select the keyfile associated with SSH key " + keyname
@@ -42,9 +42,10 @@ public class SelectFileForKeyPage extends WizardPage
 		openButton.addActionListener(new ActionListener()
 		{
 			@Override
-			public void actionPerformed(ActionEvent e)
+			public void actionPerformed(final ActionEvent e)
 			{
-				final int rv = fileChooser.showOpenDialog(SelectFileForKeyPage.this);
+				final int rv = fileChooser
+						.showOpenDialog(SelectFileForKeyPage.this);
 				if (rv == JFileChooser.APPROVE_OPTION)
 				{
 					final File selectedFile = fileChooser.getSelectedFile();
@@ -62,7 +63,7 @@ public class SelectFileForKeyPage extends WizardPage
 	}
 
 	@Override
-	public WizardPage next(DataRecorder recorder)
+	public WizardPage next(final DataRecorder recorder)
 	{
 		if (selectedFile.length() == 0)
 		{

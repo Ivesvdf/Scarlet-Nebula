@@ -33,7 +33,7 @@ public class ChangeServerSshLoginMethodWindow extends JDialog
 			ActionListener
 	{
 		@Override
-		public void actionPerformed(ActionEvent e)
+		public void actionPerformed(final ActionEvent e)
 		{
 			keyUsername.setEnabled(false);
 			keypairCombo.setEnabled(false);
@@ -45,7 +45,7 @@ public class ChangeServerSshLoginMethodWindow extends JDialog
 	private final class UseKeyButtonActionListener implements ActionListener
 	{
 		@Override
-		public void actionPerformed(ActionEvent e)
+		public void actionPerformed(final ActionEvent e)
 		{
 			keyUsername.setEnabled(true);
 			keypairCombo.setEnabled(true);
@@ -70,7 +70,8 @@ public class ChangeServerSshLoginMethodWindow extends JDialog
 	final private Collection<ActionListener> actionListeners = new ArrayList<ActionListener>();
 	private int actionId = 1;
 
-	public ChangeServerSshLoginMethodWindow(JDialog parent, Server server)
+	public ChangeServerSshLoginMethodWindow(final JDialog parent,
+			final Server server)
 	{
 		super(parent, "Change login method", true);
 		setSize(400, 350);
@@ -102,7 +103,8 @@ public class ChangeServerSshLoginMethodWindow extends JDialog
 		final String layoutString = "right:max(40dlu;p), 4dlu, max(20dlu;p):grow, 7dlu:grow";
 		final FormLayout layout = new FormLayout(layoutString, "");
 		// add rows dynamically
-		final DefaultFormBuilder loginPanelsBuilder = new DefaultFormBuilder(layout);
+		final DefaultFormBuilder loginPanelsBuilder = new DefaultFormBuilder(
+				layout);
 		loginPanelsBuilder.setDefaultDialogBorder();
 		loginPanelsBuilder.append("Username", normalUsername);
 		loginPanelsBuilder.nextLine();
@@ -112,13 +114,14 @@ public class ChangeServerSshLoginMethodWindow extends JDialog
 		loginPanel.setBorder(BorderFactory.createEmptyBorder(0, 40, 0, 0));
 
 		final FormLayout layout2 = new FormLayout(layoutString, "");
-		final DefaultFormBuilder keyPanelsBuilder = new DefaultFormBuilder(layout2);
+		final DefaultFormBuilder keyPanelsBuilder = new DefaultFormBuilder(
+				layout2);
 		keyPanelsBuilder.setDefaultDialogBorder();
 		keyPanelsBuilder.append("Username", keyUsername);
 		keyPanelsBuilder.nextLine();
 
-		final Collection<String> keynames = KeyManager.getKeyNames(server.getCloud()
-				.getName());
+		final Collection<String> keynames = KeyManager.getKeyNames(server
+				.getCloud().getName());
 		keypairCombo = new JComboBox(keynames.toArray(new String[0]));
 		keyPanelsBuilder.append("Keypair", keypairCombo);
 
@@ -160,7 +163,7 @@ public class ChangeServerSshLoginMethodWindow extends JDialog
 		prefillTextfields(server);
 	}
 
-	private void prefillTextfields(Server server)
+	private void prefillTextfields(final Server server)
 	{
 		normalUsername.setText(server.getSshUsername());
 		normalPassword.setText(server.getSshPassword());
@@ -201,7 +204,7 @@ public class ChangeServerSshLoginMethodWindow extends JDialog
 		cancelButton.addActionListener(new ActionListener()
 		{
 			@Override
-			public void actionPerformed(ActionEvent e)
+			public void actionPerformed(final ActionEvent e)
 			{
 				dispose();
 			}
@@ -212,7 +215,7 @@ public class ChangeServerSshLoginMethodWindow extends JDialog
 		okButton.addActionListener(new ActionListener()
 		{
 			@Override
-			public void actionPerformed(ActionEvent e)
+			public void actionPerformed(final ActionEvent e)
 			{
 				saveAndClose();
 			}
@@ -228,7 +231,7 @@ public class ChangeServerSshLoginMethodWindow extends JDialog
 		return buttonPanel;
 	}
 
-	public void addActionListener(ActionListener actionListener)
+	public void addActionListener(final ActionListener actionListener)
 	{
 		actionListeners.add(actionListener);
 	}

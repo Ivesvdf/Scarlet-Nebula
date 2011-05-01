@@ -12,7 +12,7 @@ public class Tag extends JLabel
 {
 	private static final long serialVersionUID = 1L;
 
-	public Tag(String s)
+	public Tag(final String s)
 	{
 		super(s);
 
@@ -26,7 +26,7 @@ public class Tag extends JLabel
 	}
 
 	@Override
-	protected void paintComponent(Graphics g)
+	protected void paintComponent(final Graphics g)
 	{
 		final int width = getWidth();
 		final int height = getHeight();
@@ -39,7 +39,7 @@ public class Tag extends JLabel
 		super.paintComponent(g);
 	}
 
-	static public void main(String[] args)
+	static public void main(final String[] args)
 	{
 		final JFrame f = new JFrame();
 		f.setLayout(new FlowLayout());

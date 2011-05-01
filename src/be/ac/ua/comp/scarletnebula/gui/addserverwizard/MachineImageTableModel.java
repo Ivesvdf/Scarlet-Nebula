@@ -13,7 +13,7 @@ public class MachineImageTableModel extends AbstractTableModel
 	private List<String> columnNames = null;
 	private List<MachineImage> rows = null;
 
-	MachineImageTableModel(List<MachineImage> rows)
+	MachineImageTableModel(final List<MachineImage> rows)
 	{
 		final String[] columns = { "Name", "Description" };
 		this.columnNames = Arrays.asList(columns);
@@ -21,13 +21,13 @@ public class MachineImageTableModel extends AbstractTableModel
 	}
 
 	@Override
-	public String getColumnName(int col)
+	public String getColumnName(final int col)
 	{
 		return columnNames.get(col);
 	}
 
 	@Override
-	public boolean isCellEditable(int rowIndex, int columnIndex)
+	public boolean isCellEditable(final int rowIndex, final int columnIndex)
 	{
 		return false;
 	}
@@ -45,18 +45,18 @@ public class MachineImageTableModel extends AbstractTableModel
 	}
 
 	@Override
-	public Class<?> getColumnClass(int c)
+	public Class<?> getColumnClass(final int c)
 	{
 		return String.class;
 	}
 
-	public MachineImage getRow(int rowIndex)
+	public MachineImage getRow(final int rowIndex)
 	{
 		return rows.get(rowIndex);
 	}
 
 	@Override
-	public Object getValueAt(int rowIndex, int columnIndex)
+	public Object getValueAt(final int rowIndex, final int columnIndex)
 	{
 		final MachineImage img = rows.get(rowIndex);
 
@@ -74,7 +74,9 @@ public class MachineImageTableModel extends AbstractTableModel
 	public void clear()
 	{
 		if (getRowCount() == 0)
+		{
 			return;
+		}
 
 		final int rowcount = getRowCount();
 		rows.clear();

@@ -14,7 +14,7 @@ public class FinalServerAddPage extends WizardPage
 	 */
 	private static final long serialVersionUID = 1L;
 
-	public FinalServerAddPage(AddServerWizardDataRecorder rec)
+	public FinalServerAddPage(final AddServerWizardDataRecorder rec)
 	{
 		final BetterTextLabel lbl = new BetterTextLabel(
 				"<html>Press <b>Finish</b> to start the server.");
@@ -23,7 +23,7 @@ public class FinalServerAddPage extends WizardPage
 	}
 
 	@Override
-	public WizardPage next(DataRecorder recorder)
+	public WizardPage next(final DataRecorder recorder)
 	{
 		// TODO Auto-generated method stub
 		return null;

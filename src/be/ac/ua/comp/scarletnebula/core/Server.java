@@ -42,11 +42,11 @@ public class Server
 	private final String preferredDatastream;
 	private boolean useSshPassword;
 
-	public Server(VirtualMachine server, CloudProvider inputProvider,
-			String inputKeypair, String inputFriendlyName,
-			Collection<String> tags, boolean useSshPassword, String sshLogin,
-			String sshPassword, String statisticsCommand,
-			String preferredDatastream)
+	public Server(final VirtualMachine server, final CloudProvider inputProvider,
+			final String inputKeypair, final String inputFriendlyName,
+			final Collection<String> tags, final boolean useSshPassword, final String sshLogin,
+			final String sshPassword, final String statisticsCommand,
+			final String preferredDatastream)
 	{
 		provider = inputProvider;
 		keypair = inputKeypair;
@@ -60,7 +60,7 @@ public class Server
 		setFriendlyName(inputFriendlyName);
 	}
 
-	public void sendFile(String filename)
+	public void sendFile(final String filename)
 	{
 	}
 
@@ -96,7 +96,7 @@ public class Server
 	 * @throws Exception
 	 * @throws FileNotFoundException
 	 */
-	public CommandConnection newCommandConnection(UserInfo ui) throws Exception
+	public CommandConnection newCommandConnection(final UserInfo ui) throws Exception
 	{
 		SSHCommandConnection rv = null;
 
@@ -125,7 +125,7 @@ public class Server
 	 * @throws IOException
 	 * @throws FileNotFoundException
 	 */
-	static Server load(VirtualMachine server, CloudProvider provider)
+	static Server load(final VirtualMachine server, final CloudProvider provider)
 	{
 		final String propertiesfilename = getSaveFilename(provider, server);
 		final Properties props = new Properties();
@@ -186,7 +186,7 @@ public class Server
 	 * @param instanceName
 	 * @return
 	 */
-	static String getSaveFilename(CloudProvider provider, VirtualMachine server)
+	static String getSaveFilename(final CloudProvider provider, final VirtualMachine server)
 	{
 		return provider.getSaveFileDir() + server.getProviderVirtualMachineId();
 	}
@@ -290,9 +290,13 @@ public class Server
 		final String[] addresses = serverImpl.getPublicIpAddresses();
 
 		if (addresses == null)
+		{
 			return new String[0];
+		}
 		else
+		{
 			return addresses;
+		}
 	}
 
 	public String getStatisticsCommand()
@@ -305,7 +309,7 @@ public class Server
 	 * 
 	 * @param friendlyName
 	 */
-	final public void setFriendlyName(String friendlyName)
+	final public void setFriendlyName(final String friendlyName)
 	{
 		this.friendlyName = friendlyName;
 	}
@@ -354,7 +358,9 @@ public class Server
 
 		// If the sever disappeared in the mean while, throw an Exception
 		if (refreshedServer == null)
+		{
 			throw new ServerDisappearedException(this);
+		}
 
 		serverImpl = refreshedServer;
 
@@ -395,7 +401,9 @@ public class Server
 	public void pause() throws InternalException, CloudException
 	{
 		if (serverImpl.isPausable())
+		{
 			provider.pause(this);
+		}
 		return;
 	}
 
@@ -417,7 +425,7 @@ public class Server
 	 * @param sco
 	 *            The observer that will be notified when the server changes.
 	 */
-	public void addServerChangedObserver(ServerChangedObserver sco)
+	public void addServerChangedObserver(final ServerChangedObserver sco)
 	{
 		serverChangedObservers.add(sco);
 	}
@@ -428,7 +436,7 @@ public class Server
 	 * @param sco
 	 *            The observer that will be deleted.
 	 */
-	public void removeServerChangedObserver(ServerChangedObserver sco)
+	public void removeServerChangedObserver(final ServerChangedObserver sco)
 	{
 		serverChangedObservers.remove(sco);
 	}
@@ -439,7 +447,9 @@ public class Server
 	public void serverChanged()
 	{
 		for (final ServerChangedObserver obs : serverChangedObservers)
+		{
 			obs.serverChanged(this);
+		}
 	}
 
 	/**
@@ -461,7 +471,7 @@ public class Server
 	 * @param name
 	 * @return
 	 */
-	public static boolean exists(String name)
+	public static boolean exists(final String name)
 	{
 		return CloudManager.get().serverExists(name);
 	}
@@ -471,17 +481,21 @@ public class Server
 		return tags;
 	}
 
-	public boolean match(Collection<String> filterTerms)
+	public boolean match(final Collection<String> filterTerms)
 	{
 		for (String token : filterTerms)
 		{
 			final boolean negated = token.startsWith("-");
 
 			if (negated)
+			{
 				token = token.substring(1);
+			}
 
 			if (token.length() == 0)
+			{
 				continue;
+			}
 
 			final int colonPosition = token.indexOf(':');
 
@@ -492,20 +506,32 @@ public class Server
 				final String term = token.substring(colonPosition + 1);
 
 				if ("tag".equals(prefix))
+				{
 					return SearchHelper.matchTags(term, getTags(), negated);
+				}
 				else if ("name".equals(prefix) || "inname".equals(prefix))
+				{
 					return SearchHelper.matchName(term, getFriendlyName(),
 							negated);
+				}
 				else if ("size".equals(prefix))
+				{
 					return SearchHelper.matchSize(term, getSize(), negated);
+				}
 				else if ("status".equals(prefix) || "state".equals(prefix))
+				{
 					return SearchHelper.matchStatus(term, getStatus(), negated);
+				}
 				else if ("provider".equals(prefix)
 						|| "inprovider".equals(prefix))
+				{
 					return SearchHelper.matchCloudProvider(term, getCloud()
 							.getName(), negated);
+				}
 				else
+				{
 					return false;
+				}
 			}
 			else
 			{
@@ -548,7 +574,9 @@ public class Server
 			final int attempt)
 	{
 		if (getStatus() == state || attempt > 20)
+		{
 			return;
+		}
 
 		try
 		{
@@ -561,7 +589,9 @@ public class Server
 		}
 
 		if (getStatus() == state)
+		{
 			return;
+		}
 
 		// If the server's state still isn't the one we want it to be, try
 		// again, but only after waiting
@@ -584,7 +614,7 @@ public class Server
 
 	}
 
-	public void setTags(Collection<String> newTags)
+	public void setTags(final Collection<String> newTags)
 	{
 		tags = newTags;
 		serverChanged();
@@ -595,7 +625,7 @@ public class Server
 		return keypair;
 	}
 
-	public void assureKeypairLogin(String username, String keyname)
+	public void assureKeypairLogin(final String username, final String keyname)
 	{
 		sshLogin = username;
 		keypair = (keyname != null ? keyname : "");
@@ -621,7 +651,7 @@ public class Server
 		stopConnections();
 	}
 
-	public void assurePasswordLogin(String username, String password)
+	public void assurePasswordLogin(final String username, final String password)
 	{
 		sshLogin = username;
 		sshPassword = password;
@@ -631,13 +661,15 @@ public class Server
 		serverChanged();
 	}
 
-	public void setStatisticsCommand(String command)
+	public void setStatisticsCommand(final String command)
 	{
 		statisticsCommand = command;
 
 		final ServerStatisticsManager manager = getServerStatistics();
 		if (manager != null)
+		{
 			manager.reset();
+		}
 
 		serverChanged();
 	}

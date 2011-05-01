@@ -15,7 +15,7 @@ public class SearchField extends JPanel
 	private static final long serialVersionUID = 1L;
 	private final JTextField textfield;
 
-	public SearchField(JTextField inputfield)
+	public SearchField(final JTextField inputfield)
 	{
 		super(new BorderLayout());
 		textfield = inputfield;

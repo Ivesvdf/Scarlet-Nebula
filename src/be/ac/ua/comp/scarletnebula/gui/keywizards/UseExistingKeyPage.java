@@ -36,16 +36,16 @@ public class UseExistingKeyPage extends WizardPage
 
 		keylist = new SelectKeyList(provider);
 
-		ThrobberBarWithText throbber = new ThrobberBarWithText("Loading keys");
-		JPanel throbberContainer = new JPanel(new BorderLayout());
+		final ThrobberBarWithText throbber = new ThrobberBarWithText("Loading keys");
+		final JPanel throbberContainer = new JPanel(new BorderLayout());
 		throbberContainer.add(throbber, BorderLayout.CENTER);
 		throbberContainer.setBorder(BorderFactory.createEmptyBorder(15, 0, 15,
 				0));
 
-		CollapsablePanel collapsableThrobber = new CollapsablePanel(
+		final CollapsablePanel collapsableThrobber = new CollapsablePanel(
 				throbberContainer, false);
 
-		JPanel aboveKeylist = new JPanel(new BorderLayout());
+		final JPanel aboveKeylist = new JPanel(new BorderLayout());
 		aboveKeylist.add(lbl, BorderLayout.PAGE_START);
 		aboveKeylist.add(collapsableThrobber, BorderLayout.PAGE_END);
 		add(aboveKeylist, BorderLayout.NORTH);
@@ -64,9 +64,9 @@ public class UseExistingKeyPage extends WizardPage
 			}
 
 			@Override
-			protected void process(List<String> keynames)
+			protected void process(final List<String> keynames)
 			{
-				for (String keyname : keynames)
+				for (final String keyname : keynames)
 				{
 					keylist.add(keyname);
 				}
@@ -82,7 +82,7 @@ public class UseExistingKeyPage extends WizardPage
 	}
 
 	@Override
-	public WizardPage next(DataRecorder recorder)
+	public WizardPage next(final DataRecorder recorder)
 	{
 		final String selectedKey = keylist.getSelectedKey();
 

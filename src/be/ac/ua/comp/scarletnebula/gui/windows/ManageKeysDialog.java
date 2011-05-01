@@ -20,7 +20,7 @@ public class ManageKeysDialog extends JDialog
 	CloudProvider provider;
 	GUI gui;
 
-	ManageKeysDialog(GUI gui, CloudProvider provider)
+	ManageKeysDialog(final GUI gui, final CloudProvider provider)
 	{
 		super(gui, "Manage Keys", true);
 		this.provider = provider;
@@ -37,12 +37,12 @@ public class ManageKeysDialog extends JDialog
 
 		setLayout(new BorderLayout());
 
-		final JButton addButton = new JButton(new ImageIcon(getClass().getResource(
-				"/images/add22.png")));
+		final JButton addButton = new JButton(new ImageIcon(getClass()
+				.getResource("/images/add22.png")));
 		addButton.addActionListener(new ActionListener()
 		{
 			@Override
-			public void actionPerformed(ActionEvent e)
+			public void actionPerformed(final ActionEvent e)
 			{
 
 			}
@@ -55,13 +55,15 @@ public class ManageKeysDialog extends JDialog
 		removeButton.addActionListener(new ActionListener()
 		{
 			@Override
-			public void actionPerformed(ActionEvent e)
+			public void actionPerformed(final ActionEvent e)
 			{
 				final int index = keyList.getSelectedIndex();
 
 				// No selection
 				if (index < 0)
+				{
 					return;
+				}
 
 				keyList.remove(index);
 			}

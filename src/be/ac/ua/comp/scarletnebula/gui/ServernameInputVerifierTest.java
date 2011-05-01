@@ -26,7 +26,7 @@ public class ServernameInputVerifierTest
 
 	}
 
-	private boolean test(String text)
+	private boolean test(final String text)
 	{
 		final ServernameInputVerifier verifier = new ServernameInputVerifier(
 				null, null);

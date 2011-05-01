@@ -11,7 +11,8 @@ public class DroppingFifoQueueTest
 	@Test
 	public void basicTest()
 	{
-		final DroppingFifoQueue<Integer> queue = new DroppingFifoQueue<Integer>(6);
+		final DroppingFifoQueue<Integer> queue = new DroppingFifoQueue<Integer>(
+				6);
 
 		queue.add(99);
 
@@ -34,7 +35,9 @@ public class DroppingFifoQueueTest
 		assertEquals(Arrays.asList(98, 97, 96, 95, 94, 93), queue.asList());
 
 		for (int i = 0; i < 100; i++)
+		{
 			queue.add(35);
+		}
 
 		assertEquals(6, queue.asList().size());
 	}

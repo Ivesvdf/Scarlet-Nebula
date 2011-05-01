@@ -16,7 +16,7 @@ public class AddProviderWizardDataRecorder implements DataRecorder
 		return template;
 	}
 
-	public void setTemplate(CloudProviderTemplate template)
+	public void setTemplate(final CloudProviderTemplate template)
 	{
 		this.template = template;
 	}
@@ -26,7 +26,7 @@ public class AddProviderWizardDataRecorder implements DataRecorder
 		return endpoint;
 	}
 
-	public void setEndpoint(CloudProviderTemplate.Endpoint endpoint)
+	public void setEndpoint(final CloudProviderTemplate.Endpoint endpoint)
 	{
 		this.endpoint = endpoint;
 	}
@@ -36,7 +36,7 @@ public class AddProviderWizardDataRecorder implements DataRecorder
 		return apiKey;
 	}
 
-	public void setApiKey(String apiKey)
+	public void setApiKey(final String apiKey)
 	{
 		this.apiKey = apiKey;
 	}
@@ -46,12 +46,12 @@ public class AddProviderWizardDataRecorder implements DataRecorder
 		return apiSecret;
 	}
 
-	public void setApiSecret(String apiSecret)
+	public void setApiSecret(final String apiSecret)
 	{
 		this.apiSecret = apiSecret;
 	}
 
-	public void setName(String name)
+	public void setName(final String name)
 	{
 		this.name = name;
 	}

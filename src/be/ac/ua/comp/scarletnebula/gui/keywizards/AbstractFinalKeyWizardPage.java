@@ -30,8 +30,8 @@ public abstract class AbstractFinalKeyWizardPage extends WizardPage
 		private final String checkKeyname;
 		private final CloudProvider provider;
 
-		private TestKeyExistsWorker(Collapsable throbber, String checkKeyname,
-				CloudProvider provider)
+		private TestKeyExistsWorker(final Collapsable throbber, final String checkKeyname,
+				final CloudProvider provider)
 		{
 			super(throbber);
 			this.checkKeyname = checkKeyname;
@@ -52,18 +52,18 @@ public abstract class AbstractFinalKeyWizardPage extends WizardPage
 		private final SwingWorkerWithThrobber<Boolean, String> checkKeyWorker;
 
 		private SetWarningMessagePropertyListener(
-				SwingWorkerWithThrobber<Boolean, String> checkKeyWorker)
+				final SwingWorkerWithThrobber<Boolean, String> checkKeyWorker)
 		{
 			this.checkKeyWorker = checkKeyWorker;
 		}
 
 		@Override
-		public void taskStarted(PropertyChangeEvent evt)
+		public void taskStarted(final PropertyChangeEvent evt)
 		{
 		}
 
 		@Override
-		public void taskIsFinished(PropertyChangeEvent evt)
+		public void taskIsFinished(final PropertyChangeEvent evt)
 		{
 			try
 			{
@@ -88,8 +88,8 @@ public abstract class AbstractFinalKeyWizardPage extends WizardPage
 		}
 
 		@Override
-		public void progressChanged(Object source, int newProgress,
-				PropertyChangeEvent evt)
+		public void progressChanged(final Object source, final int newProgress,
+				final PropertyChangeEvent evt)
 		{
 		}
 	}
@@ -100,7 +100,7 @@ public abstract class AbstractFinalKeyWizardPage extends WizardPage
 	private final JLabel keyValidityMessage = new JLabel();
 
 	protected AbstractFinalKeyWizardPage(final CloudProvider provider,
-			String toptext, final String checkKeyname)
+			final String toptext, final String checkKeyname)
 	{
 		super(new BorderLayout());
 		final BetterTextLabel toptextLabel = new BetterTextLabel(toptext);
@@ -149,7 +149,7 @@ public abstract class AbstractFinalKeyWizardPage extends WizardPage
 	}
 
 	@Override
-	public WizardPage next(DataRecorder recorder)
+	public WizardPage next(final DataRecorder recorder)
 	{
 		performAction((KeyRecorder) recorder);
 

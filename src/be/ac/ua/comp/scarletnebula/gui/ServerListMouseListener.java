@@ -23,8 +23,8 @@ public class ServerListMouseListener implements MouseListener
 	private final ServerListModel serverListModel;
 	private final ServerList serverlist;
 
-	public ServerListMouseListener(GUI gui, ServerList serverlist,
-			ServerListModel serverListModel)
+	public ServerListMouseListener(final GUI gui, final ServerList serverlist,
+			final ServerListModel serverListModel)
 	{
 		super();
 		this.gui = gui;
@@ -33,19 +33,20 @@ public class ServerListMouseListener implements MouseListener
 	}
 
 	@Override
-	public void mouseClicked(MouseEvent e)
+	public void mouseClicked(final MouseEvent e)
 	{
 		// TODO Auto-generated method stub
 
 	}
 
 	@Override
-	public void mousePressed(MouseEvent e)
+	public void mousePressed(final MouseEvent e)
 	{
 		if (e.isPopupTrigger())
 		{
 			final ServerList list = (ServerList) e.getSource();
-			final int indexOfSelectedServer = list.locationToIndex(e.getPoint());
+			final int indexOfSelectedServer = list
+					.locationToIndex(e.getPoint());
 
 			// TODO:
 			// When no servers OR a single server is selected, choose what
@@ -66,7 +67,9 @@ public class ServerListMouseListener implements MouseListener
 				list.setSelectedIndices(new int[0]);
 			}
 			if (clickedServer == null)
+			{
 				return;
+			}
 
 			final Collection<Server> selectedServers = list
 					.getSelectedServers();
@@ -81,7 +84,7 @@ public class ServerListMouseListener implements MouseListener
 			pauseResume.addActionListener(new ActionListener()
 			{
 				@Override
-				public void actionPerformed(ActionEvent e)
+				public void actionPerformed(final ActionEvent e)
 				{
 					gui.pauseSelectedServers();
 				}
@@ -92,7 +95,7 @@ public class ServerListMouseListener implements MouseListener
 			reboot.addActionListener(new ActionListener()
 			{
 				@Override
-				public void actionPerformed(ActionEvent e)
+				public void actionPerformed(final ActionEvent e)
 				{
 					gui.rebootSelectedServers();
 				}
@@ -103,7 +106,7 @@ public class ServerListMouseListener implements MouseListener
 			terminate.addActionListener(new ActionListener()
 			{
 				@Override
-				public void actionPerformed(ActionEvent e)
+				public void actionPerformed(final ActionEvent e)
 				{
 					gui.terminateSelectedServers();
 				}
@@ -115,7 +118,7 @@ public class ServerListMouseListener implements MouseListener
 			{
 
 				@Override
-				public void actionPerformed(ActionEvent e)
+				public void actionPerformed(final ActionEvent e)
 				{
 					gui.refreshSelectedServers();
 				}
@@ -126,7 +129,7 @@ public class ServerListMouseListener implements MouseListener
 			unlink.addActionListener(new ActionListener()
 			{
 				@Override
-				public void actionPerformed(ActionEvent e)
+				public void actionPerformed(final ActionEvent e)
 				{
 					gui.unlinkSelectedServers();
 				}
@@ -137,7 +140,7 @@ public class ServerListMouseListener implements MouseListener
 			console.addActionListener(new ActionListener()
 			{
 				@Override
-				public void actionPerformed(ActionEvent e)
+				public void actionPerformed(final ActionEvent e)
 				{
 					new SSHTerminalWindow(gui, selectedServers);
 				}
@@ -148,7 +151,7 @@ public class ServerListMouseListener implements MouseListener
 			statistics.addActionListener(new ActionListener()
 			{
 				@Override
-				public void actionPerformed(ActionEvent e)
+				public void actionPerformed(final ActionEvent e)
 				{
 					new StatisticsWindow(gui, selectedServers);
 				}
@@ -195,21 +198,21 @@ public class ServerListMouseListener implements MouseListener
 	}
 
 	@Override
-	public void mouseReleased(MouseEvent e)
+	public void mouseReleased(final MouseEvent e)
 	{
 		// TODO Auto-generated method stub
 
 	}
 
 	@Override
-	public void mouseEntered(MouseEvent e)
+	public void mouseEntered(final MouseEvent e)
 	{
 		// TODO Auto-generated method stub
 
 	}
 
 	@Override
-	public void mouseExited(MouseEvent e)
+	public void mouseExited(final MouseEvent e)
 	{
 		// TODO Auto-generated method stub
 

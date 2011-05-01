@@ -27,9 +27,9 @@ public class SSHCommandConnection extends CommandConnection
 		PASSWORD, KEY
 	};
 
-	private SSHCommandConnection(String address, String username,
-			String keypairfilenameOrPassword, UserInfo ui,
-			LoginMethod loginMethod) throws Exception
+	private SSHCommandConnection(final String address, final String username,
+			final String keypairfilenameOrPassword, final UserInfo ui,
+			final LoginMethod loginMethod) throws Exception
 	{
 		final JSch jsch = new JSch();
 
@@ -56,22 +56,22 @@ public class SSHCommandConnection extends CommandConnection
 	}
 
 	static public SSHCommandConnection newConnectionWithPassword(
-			String address, String username, String password, UserInfo ui)
+			final String address, final String username, final String password, final UserInfo ui)
 			throws Exception
 	{
 		return new SSHCommandConnection(address, username, password, ui,
 				LoginMethod.PASSWORD);
 	}
 
-	static public SSHCommandConnection newConnectionWithKey(String address,
-			String username, String key, UserInfo ui) throws Exception
+	static public SSHCommandConnection newConnectionWithKey(final String address,
+			final String username, final String key, final UserInfo ui) throws Exception
 	{
 		return new SSHCommandConnection(address, username, key, ui,
 				LoginMethod.KEY);
 	}
 
 	@Override
-	public String executeCommand(String command) throws JSchException,
+	public String executeCommand(final String command) throws JSchException,
 			IOException
 	{
 		final ChannelExec channel = (ChannelExec) session.openChannel("exec");
@@ -92,7 +92,9 @@ public class SSHCommandConnection extends CommandConnection
 			{
 				final int i = in.read(tmp, 0, 1024);
 				if (i < 0)
+				{
 					break;
+				}
 				result.append(new String(tmp, 0, i));
 			}
 			if (channel.isClosed())
@@ -114,7 +116,7 @@ public class SSHCommandConnection extends CommandConnection
 		return result.toString();
 	}
 
-	public ChannelInputStreamTuple executeContinuousCommand(String command)
+	public ChannelInputStreamTuple executeContinuousCommand(final String command)
 			throws JSchException, IOException
 	{
 		final ChannelExec channel = (ChannelExec) session.openChannel("exec");
@@ -164,7 +166,7 @@ public class SSHCommandConnection extends CommandConnection
 			}
 
 			@Override
-			public void requestResize(Term term)
+			public void requestResize(final Term term)
 			{
 				if (fchannel instanceof ChannelShell)
 				{
@@ -184,7 +186,7 @@ public class SSHCommandConnection extends CommandConnection
 		return connection;
 	}
 
-	public static void main(String[] args)
+	public static void main(final String[] args)
 	{
 		try
 		{
@@ -211,7 +213,9 @@ public class SSHCommandConnection extends CommandConnection
 				{
 					final int i = in.read(tmp, 0, buffersize);
 					if (i < 0)
+					{
 						break;
+					}
 					result.append(new String(tmp, 0, i));
 
 					// Start of weird shit
@@ -256,7 +260,7 @@ public class SSHCommandConnection extends CommandConnection
 		public Channel channel;
 		public InputStream inputStream;
 
-		ChannelInputStreamTuple(Channel channel, InputStream inputStream)
+		ChannelInputStreamTuple(final Channel channel, final InputStream inputStream)
 		{
 			this.channel = channel;
 			this.inputStream = inputStream;

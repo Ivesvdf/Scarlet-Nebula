@@ -17,7 +17,7 @@ public class DroppingFifoQueue<T>
 	private int lastValid;
 	private final int maxCapacity;
 
-	public DroppingFifoQueue(int maxCapacity)
+	public DroppingFifoQueue(final int maxCapacity)
 	{
 		this.maxCapacity = maxCapacity;
 		this.lastValid = -1;
@@ -28,7 +28,7 @@ public class DroppingFifoQueue<T>
 		}
 	}
 
-	public void add(T newElement)
+	public void add(final T newElement)
 	{
 
 		if (nextToTake == lastValid)
@@ -92,7 +92,7 @@ public class DroppingFifoQueue<T>
 	 *            Position from where to advance
 	 * @return The new position after advancing
 	 */
-	private int advance(int oldPos)
+	private int advance(final int oldPos)
 	{
 		return (oldPos + 1) % maxCapacity;
 	}
@@ -104,13 +104,17 @@ public class DroppingFifoQueue<T>
 	 *            Position from where to move one step back
 	 * @return The new position after moving one position backwards
 	 */
-	private int retreat(int oldPos)
+	private int retreat(final int oldPos)
 	{
 		int newPos = 0;
 		if (oldPos > 0)
+		{
 			newPos = oldPos - 1;
+		}
 		else
+		{
 			newPos = maxCapacity - 1;
+		}
 		return newPos;
 	}
 }

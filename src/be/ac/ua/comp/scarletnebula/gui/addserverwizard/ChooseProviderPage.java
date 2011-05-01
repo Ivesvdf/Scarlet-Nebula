@@ -41,13 +41,13 @@ class ChooseProviderPage extends WizardPage
 	}
 
 	@Override
-	public WizardPage next(DataRecorder recorder)
+	public WizardPage next(final DataRecorder recorder)
 	{
 		final AddServerWizardDataRecorder rec = (AddServerWizardDataRecorder) recorder;
 
 		final String providername = (String) providerList.getSelectedValue();
-		final CloudProvider provider = CloudManager.get().getCloudProviderByName(
-				providername);
+		final CloudProvider provider = CloudManager.get()
+				.getCloudProviderByName(providername);
 
 		rec.provider = provider;
 

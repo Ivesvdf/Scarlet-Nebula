@@ -26,7 +26,7 @@ public class AddServerWizard implements WizardListener
 	private static Log log = LogFactory.getLog(Server.class);
 	private static final long serialVersionUID = 1L;
 
-	public AddServerWizard(JFrame parent, final GUI gui)
+	public AddServerWizard(final JFrame parent, final GUI gui)
 	{
 		this.gui = gui;
 
@@ -58,13 +58,14 @@ public class AddServerWizard implements WizardListener
 				firstPage = new ChooseProviderPage();
 				break;
 		}
-		final Wizard wiz = new Wizard(firstPage, rec, new SimpleWizardTemplate());
+		final Wizard wiz = new Wizard(firstPage, rec,
+				new SimpleWizardTemplate());
 		wiz.addWizardListener(this);
 		wiz.startModal("Start new server", 400, 300, gui);
 	}
 
 	@Override
-	public void onFinish(DataRecorder recorder)
+	public void onFinish(final DataRecorder recorder)
 	{
 		final AddServerWizardDataRecorder rec = (AddServerWizardDataRecorder) recorder;
 		final String instancename = rec.instanceName;
@@ -84,8 +85,8 @@ public class AddServerWizard implements WizardListener
 
 		try
 		{
-			final Server server = provider.startServer(instancename, instancesize,
-					image, tags, keypairOrPassword);
+			final Server server = provider.startServer(instancename,
+					instancesize, image, tags, keypairOrPassword);
 			server.refreshUntilServerHasState(VmState.RUNNING);
 		}
 		catch (final Exception e)
@@ -95,7 +96,7 @@ public class AddServerWizard implements WizardListener
 	}
 
 	@Override
-	public void onCancel(DataRecorder recorder)
+	public void onCancel(final DataRecorder recorder)
 	{
 		// TODO Auto-generated method stub
 

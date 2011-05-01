@@ -8,9 +8,9 @@ import be.ac.ua.comp.scarletnebula.wizard.Wizard;
 
 public class ImportKeyWizard extends Wizard
 {
-	private JDialog parent;
+	private final JDialog parent;
 
-	public ImportKeyWizard(JDialog parent, CloudProvider provider)
+	public ImportKeyWizard(final JDialog parent, final CloudProvider provider)
 	{
 		super(new UseExistingKeyPage(provider), new KeyRecorder(),
 				new SimpleWizardTemplate());

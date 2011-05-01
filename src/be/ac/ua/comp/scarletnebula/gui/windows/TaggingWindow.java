@@ -37,7 +37,7 @@ public class TaggingWindow extends JDialog
 	 * @param tags
 	 *            The initial tags to be displayed in this windows
 	 */
-	TaggingWindow(final JDialog parent, Collection<String> tags)
+	TaggingWindow(final JDialog parent, final Collection<String> tags)
 	{
 		super(parent, "Edit tags", true);
 		setLayout(new BorderLayout());
@@ -68,7 +68,7 @@ public class TaggingWindow extends JDialog
 		okButton.addActionListener(new ActionListener()
 		{
 			@Override
-			public void actionPerformed(ActionEvent e)
+			public void actionPerformed(final ActionEvent e)
 			{
 				close();
 			}
@@ -109,7 +109,9 @@ public class TaggingWindow extends JDialog
 	private void notifyClosedListeners()
 	{
 		for (final WindowClosedListener listener : windowClosedListeners)
+		{
 			listener.windowClosed(taggingPanel.getTags());
+		}
 	}
 
 	/**
@@ -128,7 +130,7 @@ public class TaggingWindow extends JDialog
 	 * @param listener
 	 *            The class subscribing
 	 */
-	public void addWindowClosedListener(WindowClosedListener listener)
+	public void addWindowClosedListener(final WindowClosedListener listener)
 	{
 		windowClosedListeners.add(listener);
 	}
@@ -146,7 +148,7 @@ public class TaggingWindow extends JDialog
 		 * @see WindowListener
 		 */
 		@Override
-		public void windowOpened(WindowEvent e)
+		public void windowOpened(final WindowEvent e)
 		{
 		}
 
@@ -154,7 +156,7 @@ public class TaggingWindow extends JDialog
 		 * @see WindowListener
 		 */
 		@Override
-		public void windowIconified(WindowEvent e)
+		public void windowIconified(final WindowEvent e)
 		{
 		}
 
@@ -162,7 +164,7 @@ public class TaggingWindow extends JDialog
 		 * @see WindowListener
 		 */
 		@Override
-		public void windowDeiconified(WindowEvent e)
+		public void windowDeiconified(final WindowEvent e)
 		{
 		}
 
@@ -170,7 +172,7 @@ public class TaggingWindow extends JDialog
 		 * @see WindowListener
 		 */
 		@Override
-		public void windowDeactivated(WindowEvent e)
+		public void windowDeactivated(final WindowEvent e)
 		{
 		}
 
@@ -180,7 +182,7 @@ public class TaggingWindow extends JDialog
 		 * Window
 		 */
 		@Override
-		public void windowClosing(WindowEvent e)
+		public void windowClosing(final WindowEvent e)
 		{
 			final TaggingWindow window = (TaggingWindow) e.getSource();
 			window.close();
@@ -190,7 +192,7 @@ public class TaggingWindow extends JDialog
 		 * @see WindowListener
 		 */
 		@Override
-		public void windowClosed(WindowEvent e)
+		public void windowClosed(final WindowEvent e)
 		{
 		}
 
@@ -198,7 +200,7 @@ public class TaggingWindow extends JDialog
 		 * @see WindowListener
 		 */
 		@Override
-		public void windowActivated(WindowEvent e)
+		public void windowActivated(final WindowEvent e)
 		{
 			// TODO Auto-generated method stub
 

@@ -21,14 +21,16 @@ public class SelectEndpointPage extends WizardPage
 	JList endpoints = null;
 	CloudProviderTemplate template = null;
 
-	SelectEndpointPage(CloudProviderTemplate template)
+	SelectEndpointPage(final CloudProviderTemplate template)
 	{
 		this.template = template;
 
 		final Collection<String> endpointNames = new ArrayList<String>();
 
 		for (final CloudProviderTemplate.Endpoint e : template.getEndPoints())
+		{
 			endpointNames.add(e.getName());
+		}
 
 		endpoints = new JList(endpointNames.toArray());
 		endpoints.setSelectedIndex(0);
@@ -48,7 +50,7 @@ public class SelectEndpointPage extends WizardPage
 	}
 
 	@Override
-	public WizardPage next(DataRecorder recorder)
+	public WizardPage next(final DataRecorder recorder)
 	{
 		CloudProviderTemplate.Endpoint endpoint = null;
 

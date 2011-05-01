@@ -23,7 +23,7 @@ public class SelectKeyList extends JList
 	DefaultListModel model;
 	CloudProvider provider;
 
-	public SelectKeyList(CloudProvider provider)
+	public SelectKeyList(final CloudProvider provider)
 	{
 		super(new DefaultListModel());
 		model = (DefaultListModel) getModel();
@@ -35,7 +35,7 @@ public class SelectKeyList extends JList
 
 	}
 
-	public void add(String keyname)
+	public void add(final String keyname)
 	{
 		model.addElement(new JLabel(keyname, new ImageIcon(getClass()
 				.getResource("/images/key16.png")), SwingConstants.LEFT));
@@ -46,7 +46,9 @@ public class SelectKeyList extends JList
 		final int selection = getSelectedIndex();
 
 		if (selection < 0)
+		{
 			return null;
+		}
 
 		final JLabel label = (JLabel) model.get(selection);
 		return label.getText();
@@ -55,8 +57,8 @@ public class SelectKeyList extends JList
 	class LabelCellRenderer implements ListCellRenderer
 	{
 		@Override
-		public Component getListCellRendererComponent(JList list, Object value,
-				int index, boolean isSelected, boolean cellHasFocus)
+		public Component getListCellRendererComponent(final JList list, final Object value,
+				final int index, final boolean isSelected, final boolean cellHasFocus)
 		{
 
 			final JLabel renderer = (JLabel) value;
@@ -84,7 +86,9 @@ public class SelectKeyList extends JList
 	public void fillWithKnownKeys()
 	{
 		for (final String keyname : KeyManager.getKeyNames(provider.getName()))
+		{
 			add(keyname);
+		}
 	}
 
 }

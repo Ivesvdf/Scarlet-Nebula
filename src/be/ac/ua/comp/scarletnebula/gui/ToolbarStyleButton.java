@@ -14,7 +14,7 @@ public class ToolbarStyleButton extends JButton
 {
 	private static final long serialVersionUID = 1L;
 
-	public ToolbarStyleButton(Icon icon)
+	public ToolbarStyleButton(final Icon icon)
 	{
 		super(icon);
 		setBorderPainted(false);
@@ -28,7 +28,7 @@ public class ToolbarStyleButton extends JButton
 		final Painter<Object> notAPainter = new Painter<Object>()
 		{
 			@Override
-			public void paint(Graphics2D g, Object c, int w, int h)
+			public void paint(final Graphics2D g, final Object c, final int w, final int h)
 			{
 			}
 		};

@@ -15,7 +15,7 @@ public class AboutWindow extends JDialog
 {
 	private static final long serialVersionUID = 1L;
 
-	AboutWindow(JFrame parent)
+	AboutWindow(final JFrame parent)
 	{
 		super(parent, "About...", true);
 		setMaximumSize(new Dimension(400, 400));
@@ -25,8 +25,8 @@ public class AboutWindow extends JDialog
 		setLocationByPlatform(true);
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 
-		final JLabel compLogo = new JLabel(new ImageIcon(getClass().getResource(
-				"/images/comp.gif")));
+		final JLabel compLogo = new JLabel(new ImageIcon(getClass()
+				.getResource("/images/comp.gif")));
 		compLogo.setBorder(new EmptyBorder(0, 20, 20, 20));
 
 		final JLabel progName = new JLabel("Scarlet Nebula");

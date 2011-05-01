@@ -18,7 +18,7 @@ public class NotPromptingJschUserInfo implements UserInfo,
 		UIKeyboardInteractive
 {
 	@Override
-	public boolean promptYesNo(String str)
+	public boolean promptYesNo(final String str)
 	{
 		return true;
 
@@ -47,7 +47,7 @@ public class NotPromptingJschUserInfo implements UserInfo,
 	}
 
 	@Override
-	public boolean promptPassword(String message)
+	public boolean promptPassword(final String message)
 	{
 		final Object[] ob = { pword };
 		final int result = JOptionPane.showConfirmDialog(null, ob, message,
@@ -64,13 +64,13 @@ public class NotPromptingJschUserInfo implements UserInfo,
 	}
 
 	@Override
-	public boolean promptPassphrase(String message)
+	public boolean promptPassphrase(final String message)
 	{
 		return true;
 	}
 
 	@Override
-	public void showMessage(String message)
+	public void showMessage(final String message)
 	{
 		JOptionPane.showMessageDialog(null, message);
 	}
@@ -81,8 +81,8 @@ public class NotPromptingJschUserInfo implements UserInfo,
 	private Container panel;
 
 	@Override
-	public String[] promptKeyboardInteractive(String destination, String name,
-			String instruction, String[] prompt, boolean[] echo)
+	public String[] promptKeyboardInteractive(final String destination, final String name,
+			final String instruction, final String[] prompt, final boolean[] echo)
 	{
 		panel = new JPanel();
 		panel.setLayout(new GridBagLayout());

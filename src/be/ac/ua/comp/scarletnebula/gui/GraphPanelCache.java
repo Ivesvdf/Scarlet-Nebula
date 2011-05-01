@@ -22,22 +22,22 @@ public class GraphPanelCache
 		return instance;
 	}
 
-	public void addToBareServerCache(Server server, ChartPanel panel)
+	public void addToBareServerCache(final Server server, final ChartPanel panel)
 	{
 		bareServerCache.put(server, panel);
 	}
 
-	public void clearBareServerCache(Server server)
+	public void clearBareServerCache(final Server server)
 	{
 		bareServerCache.remove(server);
 	}
 
-	public boolean inBareServerCache(Server server)
+	public boolean inBareServerCache(final Server server)
 	{
 		return bareServerCache.containsKey(server);
 	}
 
-	public ChartPanel getBareChartPanel(Server server)
+	public ChartPanel getBareChartPanel(final Server server)
 	{
 		return bareServerCache.get(server);
 	}

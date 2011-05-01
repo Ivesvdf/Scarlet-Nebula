@@ -31,7 +31,7 @@ public class SearchHelperTest
 				"tag:the \" way it is");
 	}
 
-	public void testTokenizerString(String input, String... result)
+	public void testTokenizerString(final String input, final String... result)
 	{
 		final Collection<String> resultCollection = Arrays.asList(result);
 		final Collection<String> tokenizedCollection = SearchHelper
@@ -48,8 +48,8 @@ public class SearchHelperTest
 		testMatcherString("name", "name:a long name", "a long name");
 	}
 
-	private void testMatcherString(String prefix, String token,
-			String supposedResult)
+	private void testMatcherString(final String prefix, final String token,
+			final String supposedResult)
 	{
 		assertEquals(supposedResult, SearchHelper.matchPrefix(prefix, token));
 	}

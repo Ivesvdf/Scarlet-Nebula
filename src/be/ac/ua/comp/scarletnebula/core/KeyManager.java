@@ -25,10 +25,12 @@ public class KeyManager
 	 * @param keyname
 	 * @param keystring
 	 */
-	static void addKey(String providerName, String keyname, String keystring)
+	static void addKey(final String providerName, final String keyname, final String keystring)
 	{
 		if (assureDirectory(providerName) == null)
+		{
 			return;
+		}
 
 		// Now store the key to file
 		BufferedWriter out;
@@ -56,11 +58,13 @@ public class KeyManager
 	 * @param key
 	 *            Contents of the key
 	 */
-	public static void addKey(String providerName, String keyname, File key)
+	public static void addKey(final String providerName, final String keyname, final File key)
 	{
 
 		if (assureDirectory(providerName) == null)
+		{
 			return;
+		}
 
 		try
 		{
@@ -76,7 +80,7 @@ public class KeyManager
 		}
 	}
 
-	static public Collection<String> getKeyNames(String providerName)
+	static public Collection<String> getKeyNames(final String providerName)
 	{
 		final File dirFile = assureDirectory(providerName);
 
@@ -89,7 +93,7 @@ public class KeyManager
 		return keynames;
 	}
 
-	static private File assureDirectory(String providerName)
+	static private File assureDirectory(final String providerName)
 	{
 		final String dir = getKeyPath(providerName);
 		final File dirFile = new File(dir);
@@ -107,19 +111,19 @@ public class KeyManager
 		return dirFile;
 	}
 
-	static String getKeyPath(String providerName)
+	static String getKeyPath(final String providerName)
 	{
 		return "keys/" + providerName + "/";
 	}
 
-	static String getKeyFilename(String providerName, String keyname)
+	static String getKeyFilename(final String providerName, final String keyname)
 	{
 		final String filename = getKeyPath(providerName) + keyname + ".key";
 
 		return filename;
 	}
 
-	public static void deleteKey(String providerName, String keyname)
+	public static void deleteKey(final String providerName, final String keyname)
 	{
 		final File keyFile = new File(getKeyFilename(providerName, keyname));
 

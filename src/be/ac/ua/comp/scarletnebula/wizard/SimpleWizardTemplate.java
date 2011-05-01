@@ -11,7 +11,7 @@ import javax.swing.JPanel;
 public class SimpleWizardTemplate extends WizardTemplate
 {
 	@Override
-	void setupWindow(JDialog window)
+	void setupWindow(final JDialog window)
 	{
 		final JPanel buttonPanel = new JPanel();
 		buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.LINE_AXIS));

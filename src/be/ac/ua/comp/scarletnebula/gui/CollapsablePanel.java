@@ -26,14 +26,16 @@ public class CollapsablePanel extends JPanel implements Collapsable
 	 *            True if the component should be visible to start with, false
 	 *            otherwise
 	 */
-	public CollapsablePanel(Component containedComponent,
-			boolean originallyVisible)
+	public CollapsablePanel(final Component containedComponent,
+			final boolean originallyVisible)
 	{
 		super(new BorderLayout());
 		this.storedComponent = containedComponent;
 
 		if (originallyVisible)
+		{
 			uncollapse();
+		}
 	}
 
 	/*

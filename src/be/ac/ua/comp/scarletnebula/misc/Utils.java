@@ -25,7 +25,7 @@ public class Utils
 	 *            The place the source file will be copied to
 	 * @throws IOException
 	 */
-	public static void copyFile(File sourceFile, File destFile)
+	public static void copyFile(final File sourceFile, final File destFile)
 			throws IOException
 	{
 		if (!destFile.exists())
@@ -65,7 +65,7 @@ public class Utils
 	 *         pieces in their respective orders, with a glue string between
 	 *         each of them (but not before the first or after the last one).
 	 */
-	public static String implode(List<String> pieces, String glue)
+	public static String implode(final List<String> pieces, final String glue)
 	{
 		String out = "";
 		for (int i = 0; i < pieces.size(); i++)
@@ -87,7 +87,7 @@ public class Utils
 	 *            returned
 	 * @return The parent window if one is found, null otherwise
 	 */
-	public static Window findWindow(Component c)
+	public static Window findWindow(final Component c)
 	{
 		return (Window) SwingUtilities.getAncestorOfClass(Window.class, c);
 	}
@@ -101,12 +101,12 @@ public class Utils
 	 *            Filename including extension excluding path
 	 * @return The icon described by name
 	 */
-	public static ImageIcon icon(String name)
+	public static ImageIcon icon(final String name)
 	{
 		return new ImageIcon(Utils.class.getResource("/images/" + name));
 	}
 
-	public static File internalFile(String name)
+	public static File internalFile(final String name)
 	{
 		final URL url = Utils.class.getResource("/" + name);
 

@@ -17,7 +17,7 @@ public class FinalNewKeyPage extends AbstractFinalKeyWizardPage
 	private final CloudProvider provider;
 	private final String keyname;
 
-	public FinalNewKeyPage(CloudProvider provider, String keyname)
+	public FinalNewKeyPage(final CloudProvider provider, final String keyname)
 	{
 		super(provider, "Click Finish to create a new SSH key named " + keyname
 				+ " for provider " + provider.getName(), keyname);
@@ -26,7 +26,7 @@ public class FinalNewKeyPage extends AbstractFinalKeyWizardPage
 	}
 
 	@Override
-	protected void performAction(KeyRecorder recorder)
+	protected void performAction(final KeyRecorder recorder)
 	{
 		recorder.keyname = keyname;
 		recorder.makeDefault = makeKeyDefault();

@@ -54,7 +54,7 @@ public class ThanksPage extends WizardPage
 	}
 
 	@Override
-	public WizardPage next(DataRecorder recorder)
+	public WizardPage next(final DataRecorder recorder)
 	{
 		return new CreateCloudProviderPage();
 	}

@@ -28,7 +28,7 @@ public class StatisticsPropertiesWindow extends JDialog
 	final private JTextArea commandArea = new JTextArea();
 	private int maxEventId = 0;
 
-	public StatisticsPropertiesWindow(JDialog parent, Collection<Server> servers)
+	public StatisticsPropertiesWindow(final JDialog parent, final Collection<Server> servers)
 	{
 		super(parent, "Statistics Properties", true);
 
@@ -95,7 +95,7 @@ public class StatisticsPropertiesWindow extends JDialog
 		cancelButton.addActionListener(new ActionListener()
 		{
 			@Override
-			public void actionPerformed(ActionEvent e)
+			public void actionPerformed(final ActionEvent e)
 			{
 				dispose();
 			}
@@ -105,7 +105,7 @@ public class StatisticsPropertiesWindow extends JDialog
 		{
 
 			@Override
-			public void actionPerformed(ActionEvent e)
+			public void actionPerformed(final ActionEvent e)
 			{
 				if (servers.size() > 1)
 				{
@@ -117,10 +117,14 @@ public class StatisticsPropertiesWindow extends JDialog
 									JOptionPane.WARNING_MESSAGE);
 
 					if (result == JOptionPane.OK_OPTION)
+					{
 						saveAndClose(servers);
+					}
 				}
 				else
+				{
 					saveAndClose(servers);
+				}
 
 			}
 		});
@@ -135,12 +139,12 @@ public class StatisticsPropertiesWindow extends JDialog
 		return buttonPanel;
 	}
 
-	public void addActionListener(ActionListener listener)
+	public void addActionListener(final ActionListener listener)
 	{
 		actionListeners.add(listener);
 	}
 
-	private void saveAndClose(Collection<Server> servers)
+	private void saveAndClose(final Collection<Server> servers)
 	{
 		for (final Server server : servers)
 		{

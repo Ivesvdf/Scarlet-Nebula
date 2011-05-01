@@ -46,9 +46,12 @@ public class ServerStatisticsManager
 				{
 					while (pollingInputStream.available() > 0)
 					{
-						final int i = pollingInputStream.read(tmp, 0, buffersize);
+						final int i = pollingInputStream.read(tmp, 0,
+								buffersize);
 						if (i < 0)
+						{
 							break;
+						}
 						result.append(new String(tmp, 0, i));
 						// Split on newlines
 						while (result.indexOf("\n") >= 0)
@@ -101,7 +104,7 @@ public class ServerStatisticsManager
 
 	private PollingRunnable pollingRunnable;
 
-	ServerStatisticsManager(Server server)
+	ServerStatisticsManager(final Server server)
 	{
 		this.server = server;
 
@@ -116,7 +119,7 @@ public class ServerStatisticsManager
 		log.info("Starting polling thread");
 	}
 
-	private void newDatapoint(String stringRepresentation)
+	private void newDatapoint(final String stringRepresentation)
 	{
 		final Datapoint datapoint = Datapoint.fromJson(stringRepresentation);
 
@@ -145,17 +148,17 @@ public class ServerStatisticsManager
 		availableStreams.get(datastreamName).newDatapoint(datapoint);
 	}
 
-	public void addNewDatastreamListener(NewDatastreamListener listener)
+	public void addNewDatastreamListener(final NewDatastreamListener listener)
 	{
 		newDatastreamListeners.add(listener);
 	}
 
-	public void addDeleteDatastreamListener(DeleteDatastreamListener listener)
+	public void addDeleteDatastreamListener(final DeleteDatastreamListener listener)
 	{
 		deleteDatastreamListeners.add(listener);
 	}
 
-	private void updateNewDatastreamObservers(Datapoint datapoint)
+	private void updateNewDatastreamObservers(final Datapoint datapoint)
 	{
 		for (final NewDatastreamListener listener : newDatastreamListeners)
 		{
@@ -220,8 +223,8 @@ public class ServerStatisticsManager
 	 * @param listener
 	 * @param datastream
 	 */
-	public void addNewDatapointListener(NewDatapointListener listener,
-			String datastream)
+	public void addNewDatapointListener(final NewDatapointListener listener,
+			final String datastream)
 	{
 		if (availableStreams.containsKey(datastream))
 		{
@@ -241,12 +244,12 @@ public class ServerStatisticsManager
 		}
 	}
 
-	public Datastream getDatastream(String streamname)
+	public Datastream getDatastream(final String streamname)
 	{
 		return availableStreams.get(streamname);
 	}
 
-	public List<TimedDatapoint> getHistoricalDatapoints(String streamname)
+	public List<TimedDatapoint> getHistoricalDatapoints(final String streamname)
 	{
 		List<TimedDatapoint> datapoints;
 

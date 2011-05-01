@@ -28,8 +28,8 @@ public class KeylistWithDefault extends JTable
 	private static final long serialVersionUID = 1L;
 	private static Log log = LogFactory.getLog(KeylistWithDefault.class);
 	private final ButtonGroup radioButtonGroup;
-	private CloudProvider provider;
-	private DefaultTableModel datamodel = new DefaultTableModel();
+	private final CloudProvider provider;
+	private final DefaultTableModel datamodel = new DefaultTableModel();
 
 	class RadioButtonRenderer implements TableCellRenderer
 	{
@@ -43,7 +43,7 @@ public class KeylistWithDefault extends JTable
 				return null;
 			}
 
-			JRadioButton radioButton = (JRadioButton) value;
+			final JRadioButton radioButton = (JRadioButton) value;
 			radioButton.setOpaque(true);
 
 			if (isSelected)
@@ -57,9 +57,13 @@ public class KeylistWithDefault extends JTable
 
 				// Fix for the row background colors.
 				if (row % 2 == 1)
+				{
 					radioButton.setBackground(Color.WHITE);
+				}
 				else
+				{
 					radioButton.setBackground(table.getBackground());
+				}
 			}
 			return (Component) value;
 		}
@@ -131,10 +135,12 @@ public class KeylistWithDefault extends JTable
 		setRowSelectionAllowed(true);
 
 		if (!keys.isEmpty())
+		{
 			setRowSelectionInterval(0, 0);
+		}
 	}
 
-	public void add(final String keyname, boolean defaultKey)
+	public void add(final String keyname, final boolean defaultKey)
 	{
 		final JRadioButton radioButton = new JRadioButton();
 
@@ -151,7 +157,7 @@ public class KeylistWithDefault extends JTable
 		radioButton.addActionListener(new ActionListener()
 		{
 			@Override
-			public void actionPerformed(ActionEvent e)
+			public void actionPerformed(final ActionEvent e)
 			{
 				provider.setDefaultKeypair(keyname);
 				provider.store();
@@ -168,8 +174,8 @@ public class KeylistWithDefault extends JTable
 	{
 		final int[] selectedRows = getSelectedRows();
 
-		Collection<String> keynames = new ArrayList<String>();
-		for (int rowIndex : selectedRows)
+		final Collection<String> keynames = new ArrayList<String>();
+		for (final int rowIndex : selectedRows)
 		{
 			keynames.add((String) datamodel.getValueAt(rowIndex, 1));
 		}
@@ -182,7 +188,7 @@ public class KeylistWithDefault extends JTable
 	 * @param key
 	 *            The key to remove
 	 */
-	public void removeKey(String key)
+	public void removeKey(final String key)
 	{
 		for (int row = 0; row < datamodel.getRowCount(); row++)
 		{

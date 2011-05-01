@@ -160,41 +160,43 @@ public class GUI extends JFrame implements ListSelectionListener,
 		filterTextField.addKeyListener(new KeyListener()
 		{
 			@Override
-			public void keyTyped(KeyEvent e)
+			public void keyTyped(final KeyEvent e)
 			{
 
 			}
 
 			@Override
-			public void keyReleased(KeyEvent e)
+			public void keyReleased(final KeyEvent e)
 			{
 			}
 
 			@Override
-			public void keyPressed(KeyEvent e)
+			public void keyPressed(final KeyEvent e)
 			{
 				if (e.getKeyCode() == KeyEvent.VK_ESCAPE)
+				{
 					hideFilter();
+				}
 			}
 		});
 		filterTextField.getDocument().addDocumentListener(
 				new DocumentListener()
 				{
 					@Override
-					public void removeUpdate(DocumentEvent e)
+					public void removeUpdate(final DocumentEvent e)
 					{
 						textChanged();
 
 					}
 
 					@Override
-					public void insertUpdate(DocumentEvent e)
+					public void insertUpdate(final DocumentEvent e)
 					{
 						textChanged();
 					}
 
 					@Override
-					public void changedUpdate(DocumentEvent e)
+					public void changedUpdate(final DocumentEvent e)
 					{
 
 					}
@@ -217,7 +219,7 @@ public class GUI extends JFrame implements ListSelectionListener,
 		closeButton.addActionListener(new ActionListener()
 		{
 			@Override
-			public void actionPerformed(ActionEvent e)
+			public void actionPerformed(final ActionEvent e)
 			{
 				hideFilter();
 			}
@@ -260,7 +262,8 @@ public class GUI extends JFrame implements ListSelectionListener,
 		try
 		{
 			boolean found = false;
-			for (final LookAndFeelInfo info : UIManager.getInstalledLookAndFeels())
+			for (final LookAndFeelInfo info : UIManager
+					.getInstalledLookAndFeels())
 			{
 				if ("Nimbus".equals(info.getName()))
 				{
@@ -270,8 +273,10 @@ public class GUI extends JFrame implements ListSelectionListener,
 				}
 			}
 			if (!found)
+			{
 				UIManager.setLookAndFeel(UIManager
 						.getSystemLookAndFeelClassName());
+			}
 		}
 		catch (final Exception e)
 		{
@@ -288,7 +293,7 @@ public class GUI extends JFrame implements ListSelectionListener,
 			private static final long serialVersionUID = 1L;
 
 			@Override
-			public void actionPerformed(ActionEvent e)
+			public void actionPerformed(final ActionEvent e)
 			{
 				showFilter();
 			}
@@ -305,7 +310,7 @@ public class GUI extends JFrame implements ListSelectionListener,
 		addButton.addActionListener(new ActionListener()
 		{
 			@Override
-			public void actionPerformed(ActionEvent e)
+			public void actionPerformed(final ActionEvent e)
 			{
 				startAddServerWizard();
 			}
@@ -318,7 +323,7 @@ public class GUI extends JFrame implements ListSelectionListener,
 		refreshButton.addActionListener(new ActionListener()
 		{
 			@Override
-			public void actionPerformed(ActionEvent e)
+			public void actionPerformed(final ActionEvent e)
 			{
 				refreshSelectedServers();
 			}
@@ -331,7 +336,7 @@ public class GUI extends JFrame implements ListSelectionListener,
 		searchButton.addActionListener(new ActionListener()
 		{
 			@Override
-			public void actionPerformed(ActionEvent e)
+			public void actionPerformed(final ActionEvent e)
 			{
 				showFilter();
 			}
@@ -372,7 +377,7 @@ public class GUI extends JFrame implements ListSelectionListener,
 		startServerItem.addActionListener(new ActionListener()
 		{
 			@Override
-			public void actionPerformed(ActionEvent e)
+			public void actionPerformed(final ActionEvent e)
 			{
 				startAddServerWizard();
 			}
@@ -385,7 +390,7 @@ public class GUI extends JFrame implements ListSelectionListener,
 		searchServerItem.addActionListener(new ActionListener()
 		{
 			@Override
-			public void actionPerformed(ActionEvent e)
+			public void actionPerformed(final ActionEvent e)
 			{
 				showFilter();
 			}
@@ -416,7 +421,7 @@ public class GUI extends JFrame implements ListSelectionListener,
 		aboutItem.addActionListener(new ActionListener()
 		{
 			@Override
-			public void actionPerformed(ActionEvent e)
+			public void actionPerformed(final ActionEvent e)
 			{
 				openAboutBox();
 			}
@@ -438,7 +443,7 @@ public class GUI extends JFrame implements ListSelectionListener,
 		manageProvidersItem.addActionListener(new ActionListener()
 		{
 			@Override
-			public void actionPerformed(ActionEvent e)
+			public void actionPerformed(final ActionEvent e)
 			{
 				new ManageProvidersWindow(GUI.this);
 			}
@@ -451,7 +456,7 @@ public class GUI extends JFrame implements ListSelectionListener,
 		detectAllUnlinkedInstances.addActionListener(new ActionListener()
 		{
 			@Override
-			public void actionPerformed(ActionEvent e)
+			public void actionPerformed(final ActionEvent e)
 			{
 				new LinkUnlinkWindow(GUI.this);
 				// detectAllUnlinkedInstances();
@@ -477,7 +482,8 @@ public class GUI extends JFrame implements ListSelectionListener,
 		{
 			try
 			{
-				final Collection<Server> unlinkedServers = prov.listUnlinkedServers();
+				final Collection<Server> unlinkedServers = prov
+						.listUnlinkedServers();
 				log.debug("Provider " + prov.getName() + " has "
 						+ unlinkedServers.size() + " unlinked instances.");
 
@@ -593,7 +599,7 @@ public class GUI extends JFrame implements ListSelectionListener,
 	}
 
 	@Override
-	public void valueChanged(ListSelectionEvent e)
+	public void valueChanged(final ListSelectionEvent e)
 	{
 		if (e.getValueIsAdjusting() == false)
 		{
@@ -638,7 +644,7 @@ public class GUI extends JFrame implements ListSelectionListener,
 		}
 	}
 
-	public static void main(String[] args)
+	public static void main(final String[] args)
 	{
 		SwingUtilities.invokeLater(new Runnable()
 		{
@@ -650,20 +656,20 @@ public class GUI extends JFrame implements ListSelectionListener,
 		});
 	}
 
-	public void error(String errorMessage)
+	public void error(final String errorMessage)
 	{
 		JOptionPane.showMessageDialog(this, errorMessage,
 				"An unexpected error occured.", JOptionPane.ERROR_MESSAGE);
 	}
 
-	private void addServer(Server server)
+	private void addServer(final Server server)
 	{
 		serverListModel.addServer(server);
 		server.addServerChangedObserver(this);
 	}
 
 	@Override
-	public void serverChanged(Server server)
+	public void serverChanged(final Server server)
 	{
 		// Update the list on the left
 		serverListModel.refreshServer(server);
@@ -672,7 +678,8 @@ public class GUI extends JFrame implements ListSelectionListener,
 
 	public void pauseSelectedServers()
 	{
-		final Collection<Server> selectedServers = serverList.getSelectedServers();
+		final Collection<Server> selectedServers = serverList
+				.getSelectedServers();
 
 		try
 		{
@@ -695,12 +702,15 @@ public class GUI extends JFrame implements ListSelectionListener,
 
 	public void rebootSelectedServers()
 	{
-		final Collection<Server> selectedServers = serverList.getSelectedServers();
+		final Collection<Server> selectedServers = serverList
+				.getSelectedServers();
 
 		try
 		{
 			for (final Server server : selectedServers)
+			{
 				server.reboot();
+			}
 		}
 		catch (final CloudException e)
 		{
@@ -715,7 +725,8 @@ public class GUI extends JFrame implements ListSelectionListener,
 
 	public void unlinkSelectedServers()
 	{
-		final Collection<Server> selectedServers = serverList.getSelectedServers();
+		final Collection<Server> selectedServers = serverList
+				.getSelectedServers();
 
 		for (final Server server : selectedServers)
 		{
@@ -727,19 +738,19 @@ public class GUI extends JFrame implements ListSelectionListener,
 		// fillRightPartition();
 	}
 
-	private void removeServer(Server server)
+	private void removeServer(final Server server)
 	{
 		serverListModel.removeServer(server);
 	}
 
 	@Override
-	public void serverLinked(CloudProvider cloudProvider, Server srv)
+	public void serverLinked(final CloudProvider cloudProvider, final Server srv)
 	{
 		addServer(srv);
 	}
 
 	@Override
-	public void serverUnlinked(CloudProvider cloudProvider, Server srv)
+	public void serverUnlinked(final CloudProvider cloudProvider, final Server srv)
 	{
 		removeServer(srv);
 		GraphPanelCache.get().clearBareServerCache(srv);

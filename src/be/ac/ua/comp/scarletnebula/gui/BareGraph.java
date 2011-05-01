@@ -34,7 +34,7 @@ public class BareGraph extends Graph
 	 * @param maximumAge
 	 *            The age after which data is no longer displayed in the graph
 	 */
-	public BareGraph(long maximumAge)
+	public BareGraph(final long maximumAge)
 	{
 		super(maximumAge);
 		domain.setVisible(false);

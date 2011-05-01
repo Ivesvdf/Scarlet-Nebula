@@ -45,7 +45,7 @@ public abstract class Graph implements NewDatapointListener
 	 * @param maximumAge
 	 *            The age after which data is no longer displayed in the graph
 	 */
-	public Graph(long maximumAge)
+	public Graph(final long maximumAge)
 	{
 		this.maximumAge = maximumAge;
 
@@ -68,8 +68,8 @@ public abstract class Graph implements NewDatapointListener
 	 * @param color
 	 *            The color this stream will be displayed in
 	 */
-	public final void registerRelativeDatastream(Server server,
-			String streamname, Color color)
+	public final void registerRelativeDatastream(final Server server,
+			final String streamname, final Color color)
 	{
 		final ServerStatisticsManager manager = server.getServerStatistics();
 		manager.addNewDatapointListener(this, streamname);
@@ -102,7 +102,7 @@ public abstract class Graph implements NewDatapointListener
 	 *            Current measurement for streamname
 	 */
 	@Override
-	public void newDataPoint(Datapoint datapoint)
+	public void newDataPoint(final Datapoint datapoint)
 	{
 		newDataPoint(new Millisecond(), datapoint);
 	}
@@ -113,12 +113,12 @@ public abstract class Graph implements NewDatapointListener
 	 * 
 	 * @param server
 	 */
-	public void addServerToRefresh(Server server)
+	public void addServerToRefresh(final Server server)
 	{
 		serversToRefresh.add(server);
 	}
 
-	public void addListOfDatapoints(List<TimedDatapoint> datapoints)
+	public void addListOfDatapoints(final List<TimedDatapoint> datapoints)
 	{
 		for (final TimedDatapoint datapoint : datapoints)
 		{
@@ -160,7 +160,9 @@ public abstract class Graph implements NewDatapointListener
 				}
 
 				for (final Server server : serversToRefresh)
+				{
 					server.serverChanged();
+				}
 			}
 		});
 	}

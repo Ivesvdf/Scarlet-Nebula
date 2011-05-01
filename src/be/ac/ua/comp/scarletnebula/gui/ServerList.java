@@ -36,15 +36,15 @@ public class ServerList extends JXList implements ComponentListener
 	{
 		private final ServerCellRenderer serverCellRenderer;
 
-		private RollOverHighlighter(HighlightPredicate predicate,
-				ServerCellRenderer serverCellRenderer)
+		private RollOverHighlighter(final HighlightPredicate predicate,
+				final ServerCellRenderer serverCellRenderer)
 		{
 			super(predicate);
 			this.serverCellRenderer = serverCellRenderer;
 		}
 
 		@Override
-		protected Component doHighlight(Component arg0, ComponentAdapter arg1)
+		protected Component doHighlight(final Component arg0, final ComponentAdapter arg1)
 		{
 			final JXPanel objectToBeRendered = (JXPanel) arg0;
 			serverCellRenderer.onRollOver(objectToBeRendered);
@@ -54,7 +54,7 @@ public class ServerList extends JXList implements ComponentListener
 
 	private final class ClearSelectionMouseAdapter extends MouseAdapter
 	{
-		private void testClearSelection(MouseEvent e)
+		private void testClearSelection(final MouseEvent e)
 		{
 			final JList list = (JList) e.getSource();
 
@@ -64,19 +64,21 @@ public class ServerList extends JXList implements ComponentListener
 			{
 				final Rectangle r = list.getCellBounds(i, i);
 				if (r.contains(currentPos))
+				{
 					return;
+				}
 			}
 			list.clearSelection();
 		}
 
 		@Override
-		public void mousePressed(MouseEvent e)
+		public void mousePressed(final MouseEvent e)
 		{
 			testClearSelection(e);
 		}
 
 		@Override
-		public void mouseReleased(MouseEvent e)
+		public void mouseReleased(final MouseEvent e)
 		{
 			testClearSelection(e);
 		}
@@ -86,7 +88,7 @@ public class ServerList extends JXList implements ComponentListener
 
 	ServerListModel serverListModel;
 
-	public ServerList(ServerListModel serverListModel)
+	public ServerList(final ServerListModel serverListModel)
 	{
 		super(serverListModel);
 		this.serverListModel = serverListModel;
@@ -120,7 +122,7 @@ public class ServerList extends JXList implements ComponentListener
 	}
 
 	@Override
-	public void componentResized(ComponentEvent e)
+	public void componentResized(final ComponentEvent e)
 	{
 		final JList list = (JList) e.getSource();
 		final JViewport viewport = (JViewport) list.getParent();
@@ -131,7 +133,9 @@ public class ServerList extends JXList implements ComponentListener
 		final int serverCount = totalWidth / 200;
 
 		if (serverCount == 0)
+		{
 			return;
+		}
 
 		final int serverWidth = totalWidth / serverCount;
 
@@ -143,21 +147,21 @@ public class ServerList extends JXList implements ComponentListener
 	}
 
 	@Override
-	public void componentMoved(ComponentEvent e)
+	public void componentMoved(final ComponentEvent e)
 	{
 		// TODO Auto-generated method stub
 
 	}
 
 	@Override
-	public void componentShown(ComponentEvent e)
+	public void componentShown(final ComponentEvent e)
 	{
 		// TODO Auto-generated method stub
 
 	}
 
 	@Override
-	public void componentHidden(ComponentEvent e)
+	public void componentHidden(final ComponentEvent e)
 	{
 		// TODO Auto-generated method stub
 
@@ -169,7 +173,9 @@ public class ServerList extends JXList implements ComponentListener
 		for (final int index : indices)
 		{
 			if (serverListModel.getVisibleServerAtIndex(index) == null)
+			{
 				return true;
+			}
 		}
 		return false;
 	}

@@ -7,7 +7,7 @@ public class WrappableLabel extends JTextArea
 {
 	private static final long serialVersionUID = 1L;
 
-	public WrappableLabel(String text)
+	public WrappableLabel(final String text)
 	{
 		super(text);
 		setLineWrap(true);

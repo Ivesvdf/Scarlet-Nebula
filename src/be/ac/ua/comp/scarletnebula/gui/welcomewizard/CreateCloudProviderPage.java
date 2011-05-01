@@ -25,8 +25,8 @@ public class CreateCloudProviderPage extends WizardPage
 		if (CloudManager.get().getLinkedCloudProviders().size() > 0)
 		{
 			// Get the newly created CloudProvider
-			final CloudProvider p = CloudManager.get().getLinkedCloudProviders()
-					.iterator().next();
+			final CloudProvider p = CloudManager.get()
+					.getLinkedCloudProviders().iterator().next();
 
 			setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
 			final JLabel txt = new JLabel(
@@ -70,7 +70,7 @@ public class CreateCloudProviderPage extends WizardPage
 	}
 
 	@Override
-	public WizardPage next(DataRecorder recorder)
+	public WizardPage next(final DataRecorder recorder)
 	{
 		return null;
 	}

@@ -8,14 +8,14 @@ import javax.swing.JTextField;
 public class TagInputVerifier extends LoudInputVerifier
 {
 
-	public TagInputVerifier(JTextField textField)
+	public TagInputVerifier(final JTextField textField)
 	{
 		super(textField,
 				"Only letters, numbers and spaces are allowed in a tag.");
 	}
 
 	@Override
-	public boolean verify(JComponent input)
+	public boolean verify(final JComponent input)
 	{
 		return Pattern.matches("^[a-zA-Z0-9 :]*",
 				((JTextField) input).getText());

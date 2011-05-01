@@ -41,12 +41,12 @@ public class SSHPanel extends JPanel
 		{
 
 			@Override
-			public void componentShown(ComponentEvent e)
+			public void componentShown(final ComponentEvent e)
 			{
 			}
 
 			@Override
-			public void componentResized(ComponentEvent e)
+			public void componentResized(final ComponentEvent e)
 			{
 				final Component c = e.getComponent();
 				int cw = c.getWidth();
@@ -74,13 +74,13 @@ public class SSHPanel extends JPanel
 			}
 
 			@Override
-			public void componentMoved(ComponentEvent e)
+			public void componentMoved(final ComponentEvent e)
 			{ // TODO Auto-generated method stub
 
 			}
 
 			@Override
-			public void componentHidden(ComponentEvent e)
+			public void componentHidden(final ComponentEvent e)
 			{ // TODO Auto-generated method stub
 
 			}

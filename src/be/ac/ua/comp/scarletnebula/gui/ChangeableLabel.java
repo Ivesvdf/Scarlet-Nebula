@@ -37,7 +37,7 @@ public class ChangeableLabel extends JPanel
 	 *            The Executable class that will be executed when the
 	 *            ChangeableLabel is executed.
 	 */
-	public ChangeableLabel(String originalText,
+	public ChangeableLabel(final String originalText,
 			final Executable<JLabel> executable)
 	{
 		setLayout(new GridBagLayout());
@@ -83,7 +83,7 @@ public class ChangeableLabel extends JPanel
 		 *            This parameter will be given to the run() method of the
 		 *            Executable when the ActionListener fires
 		 */
-		private ExecuteActionListener(Executable<T> executable, T argument)
+		private ExecuteActionListener(final Executable<T> executable, final T argument)
 		{
 			this.executable = executable;
 			this.argument = argument;
@@ -93,7 +93,7 @@ public class ChangeableLabel extends JPanel
 		 * @see ActionListener
 		 */
 		@Override
-		public void actionPerformed(ActionEvent e)
+		public void actionPerformed(final ActionEvent e)
 		{
 			executable.run(argument);
 		}
@@ -118,7 +118,7 @@ public class ChangeableLabel extends JPanel
 		 * @param argument
 		 *            The parameter given to the Executable's run method
 		 */
-		private ExecuteMouseListener(Executable<T> executable, T argument)
+		private ExecuteMouseListener(final Executable<T> executable, final T argument)
 		{
 			this.executable = executable;
 			this.argument = argument;
@@ -128,7 +128,7 @@ public class ChangeableLabel extends JPanel
 		 * @see MouseListener
 		 */
 		@Override
-		public void mouseClicked(MouseEvent e)
+		public void mouseClicked(final MouseEvent e)
 		{
 		}
 
@@ -136,7 +136,7 @@ public class ChangeableLabel extends JPanel
 		 * @see MouseListener
 		 */
 		@Override
-		public void mousePressed(MouseEvent e)
+		public void mousePressed(final MouseEvent e)
 		{
 			if (e.getClickCount() == 2)
 			{
@@ -148,7 +148,7 @@ public class ChangeableLabel extends JPanel
 		 * @see MouseListener
 		 */
 		@Override
-		public void mouseReleased(MouseEvent e)
+		public void mouseReleased(final MouseEvent e)
 		{
 		}
 
@@ -156,7 +156,7 @@ public class ChangeableLabel extends JPanel
 		 * @see MouseListener
 		 */
 		@Override
-		public void mouseEntered(MouseEvent e)
+		public void mouseEntered(final MouseEvent e)
 		{
 		}
 
@@ -164,7 +164,7 @@ public class ChangeableLabel extends JPanel
 		 * @see MouseListener
 		 */
 		@Override
-		public void mouseExited(MouseEvent e)
+		public void mouseExited(final MouseEvent e)
 		{
 		}
 	}

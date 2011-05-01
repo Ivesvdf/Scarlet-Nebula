@@ -19,7 +19,7 @@ public class Datastream
 			return timeMs;
 		}
 
-		public TimedDatapoint(Datapoint dp)
+		public TimedDatapoint(final Datapoint dp)
 		{
 			super(dp.datapointType, dp.datastream, dp.value, dp.lowWarnLevel,
 					dp.mediumWarnLevel, dp.highWarnLevel, dp.max);
@@ -75,7 +75,7 @@ public class Datastream
 		return highWarnLevel;
 	}
 
-	public Datastream(Datapoint datapoint)
+	public Datastream(final Datapoint datapoint)
 	{
 		this.max = datapoint.max;
 		this.lowWarnLevel = datapoint.lowWarnLevel;
@@ -90,12 +90,12 @@ public class Datastream
 		return type;
 	}
 
-	public void addNewDatapointListener(NewDatapointListener listener)
+	public void addNewDatapointListener(final NewDatapointListener listener)
 	{
 		newDatapointListeners.add(listener);
 	}
 
-	protected void updateNewDatapointObservers(Datapoint datapoint)
+	protected void updateNewDatapointObservers(final Datapoint datapoint)
 	{
 		for (final NewDatapointListener listener : newDatapointListeners)
 		{
@@ -103,7 +103,7 @@ public class Datastream
 		}
 	}
 
-	public void newDatapoint(Datapoint datapoint)
+	public void newDatapoint(final Datapoint datapoint)
 	{
 		if (datapoint.getHighWarnLevel() != null
 				&& datapoint.getValue() > datapoint.getHighWarnLevel())

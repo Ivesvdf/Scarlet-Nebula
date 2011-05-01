@@ -41,7 +41,7 @@ public class SelectProviderTemplatePage extends WizardPage
 	}
 
 	@Override
-	public WizardPage next(DataRecorder recorder)
+	public WizardPage next(final DataRecorder recorder)
 	{
 		final String name = (String) providerlist.getSelectedValue();
 		CloudProviderTemplate template = null;
@@ -50,7 +50,9 @@ public class SelectProviderTemplatePage extends WizardPage
 		for (final CloudProviderTemplate t : CloudManager.get().getTemplates())
 		{
 			if (t.getName().equals(name))
+			{
 				template = t;
+			}
 		}
 
 		final AddProviderWizardDataRecorder rec = (AddProviderWizardDataRecorder) recorder;

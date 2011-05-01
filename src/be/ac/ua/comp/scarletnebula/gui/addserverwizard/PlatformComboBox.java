@@ -12,7 +12,8 @@ public class PlatformComboBox extends JComboBox
 	{
 		super();
 
-		for (final Platform platform : org.dasein.cloud.compute.Platform.values())
+		for (final Platform platform : org.dasein.cloud.compute.Platform
+				.values())
 		{
 			addItem(toProperCase(platform.name().replace('_', ' ')).replace(
 					"Bsd", "BSD").replace("Os", "OS"));

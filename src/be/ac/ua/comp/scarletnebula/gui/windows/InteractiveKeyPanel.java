@@ -31,15 +31,15 @@ public class InteractiveKeyPanel extends JPanel
 	{
 		private final CloudProvider provider;
 
-		private AddKeyActionListener(CloudProvider provider)
+		private AddKeyActionListener(final CloudProvider provider)
 		{
 			this.provider = provider;
 		}
 
 		@Override
-		public void actionPerformed(ActionEvent e)
+		public void actionPerformed(final ActionEvent e)
 		{
-			NewKeyWizard wiz = new NewKeyWizard(
+			final NewKeyWizard wiz = new NewKeyWizard(
 					(JDialog) Utils.findWindow(InteractiveKeyPanel.this),
 					provider);
 			wiz.addWizardListener(new AddToListWizardListener());
@@ -52,15 +52,15 @@ public class InteractiveKeyPanel extends JPanel
 	{
 		private final CloudProvider provider;
 
-		private ModifySelectedActionListener(CloudProvider provider)
+		private ModifySelectedActionListener(final CloudProvider provider)
 		{
 			this.provider = provider;
 		}
 
 		@Override
-		public void actionPerformed(ActionEvent e)
+		public void actionPerformed(final ActionEvent e)
 		{
-			ImportKeyWizard wiz = new ImportKeyWizard(
+			final ImportKeyWizard wiz = new ImportKeyWizard(
 					(JDialog) Utils.findWindow(InteractiveKeyPanel.this),
 					provider);
 
@@ -75,21 +75,21 @@ public class InteractiveKeyPanel extends JPanel
 	{
 		private final CloudProvider provider;
 
-		private RemoveSelectedActionListener(CloudProvider provider)
+		private RemoveSelectedActionListener(final CloudProvider provider)
 		{
 			this.provider = provider;
 		}
 
 		@Override
-		public void actionPerformed(ActionEvent e)
+		public void actionPerformed(final ActionEvent e)
 		{
 			final Collection<String> keynames = keylist.getSelection();
-			String options[] = {
+			final String options[] = {
 					"Delete key" + (keynames.size() > 1 ? "s" : ""), "Cancel" };
 
 			if (!keynames.isEmpty())
 			{
-				int result = JOptionPane
+				final int result = JOptionPane
 						.showOptionDialog(
 								InteractiveKeyPanel.this,
 								"Deleting "
@@ -120,7 +120,7 @@ public class InteractiveKeyPanel extends JPanel
 									provider.deleteKey(key);
 								}
 							}
-							catch (Exception ignore)
+							catch (final Exception ignore)
 							{
 								// If the key can't be deleted, just leave it...
 							}
@@ -139,14 +139,14 @@ public class InteractiveKeyPanel extends JPanel
 		}
 
 		@Override
-		public void onFinish(DataRecorder recorder)
+		public void onFinish(final DataRecorder recorder)
 		{
-			KeyRecorder rec = (KeyRecorder) recorder;
+			final KeyRecorder rec = (KeyRecorder) recorder;
 			keylist.add(rec.keyname, rec.makeDefault);
 		}
 
 		@Override
-		public void onCancel(DataRecorder recorder)
+		public void onCancel(final DataRecorder recorder)
 		{
 
 		}
@@ -176,7 +176,7 @@ public class InteractiveKeyPanel extends JPanel
 				provider));
 
 		keylist = new KeylistWithDefault(provider);
-		JScrollPane keylistScrollPane = new JScrollPane(keylist);
+		final JScrollPane keylistScrollPane = new JScrollPane(keylist);
 		keylistScrollPane.setBorder(BorderFactory.createCompoundBorder(
 				BorderFactory.createEmptyBorder(15, 20, 15, 20),
 				BorderFactory.createBevelBorder(BevelBorder.LOWERED)));

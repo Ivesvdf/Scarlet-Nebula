@@ -25,7 +25,7 @@ public class ServerListModel extends AbstractListModel
 	LinkedList<Server> visibleServers = new LinkedList<Server>();
 	LinkedList<Server> invisibleServers = new LinkedList<Server>();
 
-	public ServerListModel(CreateNewServerServer displayNewServer)
+	public ServerListModel(final CreateNewServerServer displayNewServer)
 	{
 		this.displayNewServer = (displayNewServer == CreateNewServerServer.DISPLAY_NEW_SERVER);
 	}
@@ -42,12 +42,14 @@ public class ServerListModel extends AbstractListModel
 	 * "Create server" server.
 	 */
 	@Override
-	public Object getElementAt(int index)
+	public Object getElementAt(final int index)
 	{
 		// Returns null when returning the fake "create server" server, like it
 		// should
 		if (index >= visibleServers.size() || visibleServers.get(index) == null)
+		{
 			return null;
+		}
 
 		return visibleServers.get(index);
 	}
@@ -57,7 +59,7 @@ public class ServerListModel extends AbstractListModel
 	 * 
 	 * @param index
 	 */
-	public void refreshIndex(int index)
+	public void refreshIndex(final int index)
 	{
 		fireContentsChanged(this, index, index);
 	}
@@ -68,7 +70,7 @@ public class ServerListModel extends AbstractListModel
 	 * 
 	 * @param server
 	 */
-	public void refreshServer(Server server)
+	public void refreshServer(final Server server)
 	{
 		for (int i = 0; i < visibleServers.size(); i++)
 		{
@@ -85,7 +87,7 @@ public class ServerListModel extends AbstractListModel
 	 * 
 	 * @param server
 	 */
-	public void addServer(Server server)
+	public void addServer(final Server server)
 	{
 		visibleServers.add(server);
 
@@ -98,7 +100,7 @@ public class ServerListModel extends AbstractListModel
 	 * 
 	 * @param index
 	 */
-	public void makeInvisible(int index)
+	public void makeInvisible(final int index)
 	{
 		final Server tmp = visibleServers.get(index);
 		visibleServers.remove(index);
@@ -111,7 +113,7 @@ public class ServerListModel extends AbstractListModel
 	 * 
 	 * @param filterString
 	 */
-	public void filter(String filterString)
+	public void filter(final String filterString)
 	{
 		final LinkedList<Server> allServers = new LinkedList<Server>();
 
@@ -127,7 +129,8 @@ public class ServerListModel extends AbstractListModel
 
 		// Make a collection of tokens from a filterString, pass that to each
 		// server and ask it if matches.
-		final Collection<String> filterTerms = SearchHelper.tokenize(filterString);
+		final Collection<String> filterTerms = SearchHelper
+				.tokenize(filterString);
 		for (final Server server : allServers)
 		{
 			if (server.match(filterTerms))
@@ -149,7 +152,7 @@ public class ServerListModel extends AbstractListModel
 	 * @param index
 	 * @return
 	 */
-	public Server elementAt(int index)
+	public Server elementAt(final int index)
 	{
 		return (Server) getElementAt(index);
 	}
@@ -160,10 +163,12 @@ public class ServerListModel extends AbstractListModel
 	 * @param index
 	 * @return
 	 */
-	public Server getVisibleServerAtIndex(int index)
+	public Server getVisibleServerAtIndex(final int index)
 	{
 		if (index >= visibleServers.size())
+		{
 			return null;
+		}
 
 		return visibleServers.get(index);
 	}
@@ -185,7 +190,7 @@ public class ServerListModel extends AbstractListModel
 	 * @param indices
 	 * @return
 	 */
-	public Collection<Server> getVisibleServersAtIndices(int[] indices)
+	public Collection<Server> getVisibleServersAtIndices(final int[] indices)
 	{
 		final Collection<Server> servers = new ArrayList<Server>();
 
@@ -193,7 +198,9 @@ public class ServerListModel extends AbstractListModel
 		{
 			final Server server = getVisibleServerAtIndex(i);
 			if (server != null)
+			{
 				servers.add(server);
+			}
 		}
 
 		return servers;
@@ -206,7 +213,7 @@ public class ServerListModel extends AbstractListModel
 	 * @param server
 	 * @return
 	 */
-	private int visibleServerToIndex(Server server)
+	private int visibleServerToIndex(final Server server)
 	{
 		for (int i = 0; i < visibleServers.size(); i++)
 		{
@@ -224,7 +231,7 @@ public class ServerListModel extends AbstractListModel
 	 * 
 	 * @param server
 	 */
-	public void removeServer(Server server)
+	public void removeServer(final Server server)
 	{
 		final int index = visibleServerToIndex(server);
 		log.debug("Server we're removing is at index" + index);

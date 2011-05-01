@@ -18,9 +18,9 @@ public class Datapoint
 	Double highWarnLevel = null;
 	Double max = null;
 
-	public Datapoint(Type datapointType, String datastream, Double value,
-			Double lowWarnLevel, Double mediumWarnLevel, Double highWarnLevel,
-			Double max)
+	public Datapoint(final Type datapointType, final String datastream, final Double value,
+			final Double lowWarnLevel, final Double mediumWarnLevel, final Double highWarnLevel,
+			final Double max)
 	{
 		this.datapointType = datapointType;
 		this.datastream = datastream;
@@ -31,11 +31,13 @@ public class Datapoint
 		this.max = max;
 
 		if (datapointType == Type.RELATIVE)
+		{
 			this.max = 1.0;
+		}
 	}
 
 	@Override
-	public boolean equals(Object obj)
+	public boolean equals(final Object obj)
 	{
 		if (!(obj instanceof Datapoint))
 		{
@@ -51,7 +53,7 @@ public class Datapoint
 				&& equalOrBothNull(this.max, o.max);
 	}
 
-	private boolean equalOrBothNull(Object o1, Object o2)
+	private boolean equalOrBothNull(final Object o1, final Object o2)
 	{
 		return (o1 == null && o2 == null) || o1.equals(o2);
 	}
@@ -69,7 +71,7 @@ public class Datapoint
 		return gson.toJson(this);
 	}
 
-	public static Datapoint fromJson(String input)
+	public static Datapoint fromJson(final String input)
 	{
 		return gson.fromJson(input, Datapoint.class);
 	}

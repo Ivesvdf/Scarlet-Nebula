@@ -28,8 +28,8 @@ public class DecoratedCommunicationPanel extends JPanel
 	private static Log log = LogFactory
 			.getLog(DecoratedCommunicationPanel.class);
 
-	public DecoratedCommunicationPanel(JDialog parent,
-			Collection<Server> selectedServers)
+	public DecoratedCommunicationPanel(final JDialog parent,
+			final Collection<Server> selectedServers)
 	{
 		this.parent = parent;
 		clearAndFill(selectedServers);
@@ -80,14 +80,14 @@ public class DecoratedCommunicationPanel extends JPanel
 			propertiesButton.addActionListener(new ActionListener()
 			{
 				@Override
-				public void actionPerformed(ActionEvent e)
+				public void actionPerformed(final ActionEvent e)
 				{
 					final ChangeServerSshLoginMethodWindow win = new ChangeServerSshLoginMethodWindow(
 							parent, connectServer);
 					win.addActionListener(new ActionListener()
 					{
 						@Override
-						public void actionPerformed(ActionEvent e)
+						public void actionPerformed(final ActionEvent e)
 						{
 							clearAndFill(selectedServers);
 						}
@@ -101,7 +101,7 @@ public class DecoratedCommunicationPanel extends JPanel
 			restartButton.addActionListener(new ActionListener()
 			{
 				@Override
-				public void actionPerformed(ActionEvent e)
+				public void actionPerformed(final ActionEvent e)
 				{
 					clearAndFill(selectedServers);
 				}

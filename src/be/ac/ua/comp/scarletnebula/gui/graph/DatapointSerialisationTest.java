@@ -20,7 +20,8 @@ public class DatapointSerialisationTest
 
 	private Datapoint getTestDataPoint()
 	{
-		final Datapoint dp = new Datapoint(Datapoint.Type.RELATIVE, "CPU", 0.63, // value
+		final Datapoint dp = new Datapoint(Datapoint.Type.RELATIVE, "CPU",
+				0.63, // value
 				0.5, // low Warning
 				0.85, // medium warning
 				0.95, // high warning
@@ -38,7 +39,9 @@ public class DatapointSerialisationTest
 		assertEquals(dps.length, 3);
 		System.out.println(getSerialisedDatapoints());
 		for (final Datapoint dp : dps)
+		{
 			assertEquals(getTestDataPoint(), dp);
+		}
 	}
 
 	private String getSerialisedDatapoints()

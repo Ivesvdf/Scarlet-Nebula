@@ -12,7 +12,7 @@ public class FinishPage extends WizardPage
 {
 	private static final long serialVersionUID = 1L;
 
-	public FinishPage(AddProviderWizardDataRecorder rec)
+	public FinishPage(final AddProviderWizardDataRecorder rec)
 	{
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
@@ -57,7 +57,7 @@ public class FinishPage extends WizardPage
 	}
 
 	@Override
-	public WizardPage next(DataRecorder recorder)
+	public WizardPage next(final DataRecorder recorder)
 	{
 		return null;
 	}
