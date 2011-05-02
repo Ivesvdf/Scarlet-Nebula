@@ -1,4 +1,4 @@
-package be.ac.ua.comp.scarletnebula.gui;
+package be.ac.ua.comp.scarletnebula.gui.tests;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -6,6 +6,8 @@ import static org.junit.Assert.assertTrue;
 import javax.swing.JTextField;
 
 import org.junit.Test;
+
+import be.ac.ua.comp.scarletnebula.gui.inputverifiers.ServernameInputVerifier;
 
 public class ServernameInputVerifierTest
 {

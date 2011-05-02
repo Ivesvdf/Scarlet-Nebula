@@ -5,6 +5,8 @@ import java.util.regex.Pattern;
 import javax.swing.JComponent;
 import javax.swing.JTextField;
 
+import be.ac.ua.comp.scarletnebula.gui.inputverifiers.LoudInputVerifier;
+
 public class TagInputVerifier extends LoudInputVerifier
 {
 

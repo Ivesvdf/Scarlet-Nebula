@@ -14,10 +14,9 @@ import java.util.List;
 import java.util.regex.Pattern;
 
 import javax.swing.BoxLayout;
-import javax.swing.DefaultCellEditor;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
-import javax.swing.JComboBox;
+import javax.swing.JDialog;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -34,12 +33,15 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.dasein.cloud.network.Firewall;
 import org.dasein.cloud.network.FirewallRule;
+import org.dasein.cloud.network.Protocol;
 
 import be.ac.ua.comp.scarletnebula.core.CloudProvider;
+import be.ac.ua.comp.scarletnebula.gui.AddFirewallRuleWindow.AddFirewallRuleWindowClosedListener;
 import be.ac.ua.comp.scarletnebula.misc.SwingWorkerWithThrobber;
 import be.ac.ua.comp.scarletnebula.misc.Utils;
 
-public class InteractiveFirewallPanel extends JPanel
+public class InteractiveFirewallPanel extends JPanel implements
+		AddFirewallRuleWindowClosedListener
 {
 	private final class AddFirewallActionListener implements ActionListener
 	{
@@ -279,7 +281,6 @@ public class InteractiveFirewallPanel extends JPanel
 
 		private final RuleList ruleList;
 		private final JButton deleteRuleButton;
-		private final JButton addRuleButton;
 		private final JButton deleteFirewallButton;
 
 		public FirewallListSelectionListener(final RuleList ruleList,
@@ -287,7 +288,6 @@ public class InteractiveFirewallPanel extends JPanel
 				final JButton deleteFirewallButton)
 		{
 			this.ruleList = ruleList;
-			this.addRuleButton = addRuleButton;
 			this.deleteRuleButton = deleteRuleButton;
 			this.deleteFirewallButton = deleteFirewallButton;
 		}
@@ -340,8 +340,8 @@ public class InteractiveFirewallPanel extends JPanel
 		{
 			private final Firewall firewall;
 
-			private LoadRulesSwingWorkerWithThrobber(final Collapsable throbber,
-					final Firewall firewall)
+			private LoadRulesSwingWorkerWithThrobber(
+					final Collapsable throbber, final Firewall firewall)
 			{
 				super(throbber);
 				this.firewall = firewall;
@@ -397,13 +397,6 @@ public class InteractiveFirewallPanel extends JPanel
 			setModel(datamodel);
 			getColumn("Port").setMaxWidth(100);
 			getColumn("Protocol").setMaxWidth(100);
-
-			final JComboBox comboBox = new JComboBox();
-			comboBox.addItem("TCP");
-			comboBox.addItem("UDP");
-			getColumn("Protocol")
-					.setCellEditor(new DefaultCellEditor(comboBox));
-
 		}
 
 		public void clear()
@@ -436,9 +429,9 @@ public class InteractiveFirewallPanel extends JPanel
 	private final CloudProvider provider;
 	private static Log log = LogFactory.getLog(InteractiveFirewallPanel.class);
 	private final Collection<Firewall> firewalls = new ArrayList<Firewall>();
-	private final JButton addRulebutton = new JButton("Add rule",
+	private final JButton addRulebutton = new JButton("Add Rule",
 			Utils.icon("add16.png"));
-	private final JButton deleteRuleButton = new JButton("Delete rule",
+	private final JButton deleteRuleButton = new JButton("Delete Rule",
 			Utils.icon("remove16.png"));
 	private final JButton addFirewallButton = new JButton("Add Firewall",
 			Utils.icon("add16.png"));
@@ -496,6 +489,29 @@ public class InteractiveFirewallPanel extends JPanel
 		final JPanel ruleListPanel = new JPanel(new BorderLayout());
 		ruleListPanel.add(ruleListScroller, BorderLayout.CENTER);
 		final JPanel ruleListButtonPanel = new JPanel();
+		addRulebutton.addActionListener(new ActionListener()
+		{
+			@Override
+			public void actionPerformed(final ActionEvent e)
+			{
+				final AddFirewallRuleWindow win = new AddFirewallRuleWindow(
+						(JDialog) Utils
+								.findWindow(InteractiveFirewallPanel.this),
+						provider, (String) firewallList.getSelectedValue());
+				win.addAddFirewallRuleWindowClosed(InteractiveFirewallPanel.this);
+				win.setVisible(true);
+
+			}
+		});
+		deleteRuleButton.addActionListener(new ActionListener()
+		{
+			@Override
+			public void actionPerformed(final ActionEvent e)
+			{
+
+			}
+		});
+
 		ruleListButtonPanel.add(addRulebutton);
 		ruleListButtonPanel.add(deleteRuleButton);
 		addRulebutton.setEnabled(false);
@@ -549,5 +565,18 @@ public class InteractiveFirewallPanel extends JPanel
 	{
 		(new LoadFirewallsWorkerWithThrobber(loadingFirewallsThrobberPanel))
 				.execute();
+	}
+
+	@Override
+	public void addRuleWindowClosed(final int beginPort, final int endPort,
+			final Protocol protocol, final String cidr)
+	{
+		addRule(beginPort, endPort, protocol, cidr);
+	}
+
+	private void addRule(final int beginPort, final int endPort, final Protocol protocol,
+			final String cidr)
+	{
+
 	}
 }

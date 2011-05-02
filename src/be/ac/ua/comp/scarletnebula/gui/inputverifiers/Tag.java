@@ -1,4 +1,4 @@
-package be.ac.ua.comp.scarletnebula.gui;
+package be.ac.ua.comp.scarletnebula.gui.inputverifiers;
 
 import java.awt.Color;
 import java.awt.FlowLayout;

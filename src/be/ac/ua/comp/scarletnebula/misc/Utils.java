@@ -121,4 +121,34 @@ public class Utils
 		}
 		return f;
 	}
+
+	public static <T extends Comparable<? super T>> T min(final Iterable<T> inputs)
+	{
+		T lowest = inputs.iterator().next();
+
+		for (final T n : inputs)
+		{
+			if (lowest.compareTo(n) > 1)
+			{
+				lowest = n;
+			}
+		}
+
+		return lowest;
+	}
+
+	public static <T extends Comparable<? super T>> T max(final Iterable<T> inputs)
+	{
+		T highest = inputs.iterator().next();
+
+		for (final T n : inputs)
+		{
+			if (highest.compareTo(n) < 1)
+			{
+				highest = n;
+			}
+		}
+
+		return highest;
+	}
 }

@@ -8,7 +8,7 @@ import javax.swing.JTextField;
 
 import be.ac.ua.comp.scarletnebula.core.CloudProvider;
 import be.ac.ua.comp.scarletnebula.gui.BetterTextLabel;
-import be.ac.ua.comp.scarletnebula.gui.PlainTextVerifier;
+import be.ac.ua.comp.scarletnebula.gui.inputverifiers.PlainTextVerifier;
 import be.ac.ua.comp.scarletnebula.wizard.DataRecorder;
 import be.ac.ua.comp.scarletnebula.wizard.WizardPage;
 

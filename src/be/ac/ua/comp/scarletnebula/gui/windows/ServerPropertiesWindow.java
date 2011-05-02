@@ -34,7 +34,7 @@ import be.ac.ua.comp.scarletnebula.gui.ButtonFactory;
 import be.ac.ua.comp.scarletnebula.gui.ChangeableLabel;
 import be.ac.ua.comp.scarletnebula.gui.DecoratedCommunicationPanel;
 import be.ac.ua.comp.scarletnebula.gui.LabelEditSwitcherPanel;
-import be.ac.ua.comp.scarletnebula.gui.ServernameInputVerifier;
+import be.ac.ua.comp.scarletnebula.gui.inputverifiers.ServernameInputVerifier;
 import be.ac.ua.comp.scarletnebula.misc.Executable;
 import be.ac.ua.comp.scarletnebula.misc.Utils;
 
@@ -64,9 +64,6 @@ public class ServerPropertiesWindow extends JDialog
 
 	private boolean statisticsTabIsFilled = false;
 
-	private final GUI gui;
-	Collection<Server> selectedServers;
-
 	private ChangeableLabel sshLabel;
 
 	private DecoratedCommunicationPanel decoratedCommunicationPanel = null;
@@ -75,8 +72,6 @@ public class ServerPropertiesWindow extends JDialog
 			final Collection<Server> selectedServers)
 	{
 		super(gui, true);
-		this.selectedServers = selectedServers;
-		this.gui = gui;
 
 		setLayout(new BorderLayout());
 		setSize(550, 500);

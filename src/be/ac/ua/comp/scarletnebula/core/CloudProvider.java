@@ -325,43 +325,28 @@ public class CloudProvider
 	}
 
 	/**
-	 * Assures there's a rule that only allows SSH access. If no such rule
-	 * exists, it will be created.
+	 * Adds a new firewall rule to an already existing firewall on this
+	 * provider.
 	 * 
-	 * @throws InternalException
+	 * @param firewall
+	 *            The firewall to add the rule to
+	 * @param beginPort
+	 *            The lower edge of the port range that should be allowed
+	 * @param endPort
+	 *            The upper edge of the port range that should be allowed
+	 * @param protocol
+	 *            The protocol, UDP or TCP which should be allowed
+	 * @param CIDR
+	 *            The IP CIDR that should be allowed.
 	 * @throws CloudException
+	 * @throws InternalException
 	 */
-	private void assureSSHOnlyFirewall() throws InternalException,
-			CloudException
+	public void addFirewallRule(final Firewall firewall, final int beginPort, final int endPort,
+			final Protocol protocol, final String CIDR) throws CloudException,
+			InternalException
 	{
-		final FirewallSupport fws = providerImpl.getNetworkServices()
-				.getFirewallSupport();
-
-		if (fws == null)
-		{
-			return;
-		}
-
-		final Collection<Firewall> firewalls = fws.list();
-
-		Firewall sshOnly = null;
-
-		for (final Firewall fw : firewalls)
-		{
-			if (fw.getName().equals("sshonly"))
-			{
-				sshOnly = fw;
-				break;
-			}
-		}
-
-		if (sshOnly == null)
-		{
-			System.out.println("Creating sshonly");
-			final String sshonlyId = fws.create("sshonly",
-					"Allow only ssh traffic");
-			fws.authorize(sshonlyId, "0.0.0.0/0", Protocol.TCP, 22, 22);
-		}
+		firewallSupport.authorize(firewall.getProviderFirewallId(), CIDR,
+				protocol, beginPort, endPort);
 	}
 
 	/**

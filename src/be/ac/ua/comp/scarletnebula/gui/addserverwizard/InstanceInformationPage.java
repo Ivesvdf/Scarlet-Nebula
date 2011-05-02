@@ -4,7 +4,7 @@ import javax.swing.InputVerifier;
 import javax.swing.JTextField;
 
 import be.ac.ua.comp.scarletnebula.core.CloudProvider;
-import be.ac.ua.comp.scarletnebula.gui.ServernameInputVerifier;
+import be.ac.ua.comp.scarletnebula.gui.inputverifiers.ServernameInputVerifier;
 import be.ac.ua.comp.scarletnebula.wizard.DataRecorder;
 import be.ac.ua.comp.scarletnebula.wizard.WizardPage;
 
