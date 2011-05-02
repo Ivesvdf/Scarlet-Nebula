@@ -122,7 +122,8 @@ public class Utils
 		return f;
 	}
 
-	public static <T extends Comparable<? super T>> T min(final Iterable<T> inputs)
+	public static <T extends Comparable<? super T>> T min(
+			final Iterable<T> inputs)
 	{
 		T lowest = inputs.iterator().next();
 
@@ -137,7 +138,8 @@ public class Utils
 		return lowest;
 	}
 
-	public static <T extends Comparable<? super T>> T max(final Iterable<T> inputs)
+	public static <T extends Comparable<? super T>> T max(
+			final Iterable<T> inputs)
 	{
 		T highest = inputs.iterator().next();
 

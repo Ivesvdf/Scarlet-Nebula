@@ -5,25 +5,24 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.regex.Pattern;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
-import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+import org.dasein.cloud.network.Firewall;
 import org.dasein.cloud.network.Protocol;
 
 import be.ac.ua.comp.scarletnebula.core.CloudProvider;
+import be.ac.ua.comp.scarletnebula.gui.inputverifiers.IpAddressVerifier;
 import be.ac.ua.comp.scarletnebula.gui.inputverifiers.LoudInputVerifier;
 import be.ac.ua.comp.scarletnebula.gui.inputverifiers.PortRangeInputVerifier;
-import be.ac.ua.comp.scarletnebula.misc.Utils;
 
 import com.jgoodies.forms.builder.DefaultFormBuilder;
 import com.jgoodies.forms.layout.FormLayout;
@@ -32,54 +31,35 @@ public class AddFirewallRuleWindow extends JDialog
 {
 	public interface AddFirewallRuleWindowClosedListener
 	{
-		public void addRuleWindowClosed(int beginPort, int endPort,
-				Protocol protocol, String CIDR);
+		public void addRuleWindowClosed(Firewall firewall, int beginPort,
+				int endPort, Protocol protocol, String CIDR);
 	};
 
 	private final class OkActionListener implements ActionListener
 	{
-		public OkActionListener()
-		{
-		}
-
 		@Override
 		public void actionPerformed(final ActionEvent e)
 		{
-			final LoudInputVerifier inputVerifier = new LoudInputVerifier(
-					ipField, "E.g. 84.5.40.160 or 0.0.0.0/0")
-			{
-				@Override
-				public boolean verify(final JComponent input)
-				{
-					return Pattern.matches(
-							"(?:\\d{1,3}\\.){3}\\d{1,3}(?:/\\d\\d?)?",
-							((JTextField) input).getText());
-				}
-
-			};
+			final LoudInputVerifier inputVerifier = new IpAddressVerifier(
+					ipField, "E.g. 84.5.40.160 or 0.0.0.0/0");
 			ipField.setInputVerifier(inputVerifier);
 			if (inputVerifier.shouldYieldFocus(ipField)
 					&& portRangeField.getInputVerifier().shouldYieldFocus(
 							portRangeField))
 			{
-				final String portString = portRangeField.getText();
-				final String portParts[] = portString.split("-");
-				final Collection<Integer> ports = new ArrayList<Integer>(
-						portParts.length);
+				final InteractiveFirewallPanel.PortRange range = new InteractiveFirewallPanel.PortRange(
+						portRangeField.getText());
 
-				for (final String portPart : portParts)
-				{
-					ports.add(Integer.decode(portPart));
-				}
-
-				final int minPort = Utils.min(ports);
-				final int maxPort = Utils.max(ports);
 				for (final AddFirewallRuleWindowClosedListener listener : listeners)
 				{
-					listener.addRuleWindowClosed(minPort, maxPort, Protocol
-							.valueOf((String) protocolDropdown
-									.getSelectedItem()), ipField.getText());
+					listener.addRuleWindowClosed(firewall, range.startPort,
+							range.endPort, Protocol
+									.valueOf((String) protocolDropdown
+											.getSelectedItem()), ipField
+									.getText());
 				}
+
+				dispose();
 			}
 		}
 	}
@@ -99,11 +79,13 @@ public class AddFirewallRuleWindow extends JDialog
 	private final JComboBox protocolDropdown = new JComboBox(new Object[] {
 			"TCP", "UDP", "ICMP" });
 	private final JTextField ipField = new JTextField("0.0.0.0/0");
+	private final Firewall firewall;
 
-	public AddFirewallRuleWindow(final JDialog parent, final CloudProvider provider,
-			final String firewall)
+	public AddFirewallRuleWindow(final JDialog parent,
+			final CloudProvider provider, final Firewall firewall)
 	{
 		super(parent, "Add Rule", true);
+		this.firewall = firewall;
 		setLayout(new BorderLayout());
 		setSize(400, 250);
 		setLocationRelativeTo(null);

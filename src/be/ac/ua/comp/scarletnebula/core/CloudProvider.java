@@ -341,11 +341,19 @@ public class CloudProvider
 	 * @throws CloudException
 	 * @throws InternalException
 	 */
-	public void addFirewallRule(final Firewall firewall, final int beginPort, final int endPort,
-			final Protocol protocol, final String CIDR) throws CloudException,
-			InternalException
+	public void addFirewallRule(final Firewall firewall, final int beginPort,
+			final int endPort, final Protocol protocol, final String CIDR)
+			throws CloudException, InternalException
 	{
 		firewallSupport.authorize(firewall.getProviderFirewallId(), CIDR,
+				protocol, beginPort, endPort);
+	}
+
+	public void deleteFirewallRule(final Firewall firewall,
+			final int beginPort, final int endPort, final Protocol protocol,
+			final String CIDR) throws CloudException, InternalException
+	{
+		firewallSupport.revoke(firewall.getProviderFirewallId(), CIDR,
 				protocol, beginPort, endPort);
 	}
 
