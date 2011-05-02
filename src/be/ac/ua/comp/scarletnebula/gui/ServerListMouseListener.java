@@ -23,7 +23,8 @@ public class ServerListMouseListener implements MouseListener
 	{
 		private final Collection<Server> selectedServers;
 
-		private StartPropertiesActionListener(final Collection<Server> selectedServers)
+		private StartPropertiesActionListener(
+				final Collection<Server> selectedServers)
 		{
 			this.selectedServers = selectedServers;
 		}
@@ -39,7 +40,8 @@ public class ServerListMouseListener implements MouseListener
 	{
 		private final Collection<Server> selectedServers;
 
-		private StartStatisticsActionListener(final Collection<Server> selectedServers)
+		private StartStatisticsActionListener(
+				final Collection<Server> selectedServers)
 		{
 			this.selectedServers = selectedServers;
 		}
@@ -55,7 +57,8 @@ public class ServerListMouseListener implements MouseListener
 	{
 		private final Collection<Server> selectedServers;
 
-		private StartTerminalActionListener(final Collection<Server> selectedServers)
+		private StartTerminalActionListener(
+				final Collection<Server> selectedServers)
 		{
 			this.selectedServers = selectedServers;
 		}
@@ -238,7 +241,7 @@ public class ServerListMouseListener implements MouseListener
 		{
 			// If the user clicked a null server, this is taken as a hint
 			// to create a new server!
-			new AddServerWizard(gui, gui);
+			new AddServerWizard(gui);
 		}
 		else if (e.getClickCount() == 2
 				&& serverlist.getSelectedServers().size() > 0)

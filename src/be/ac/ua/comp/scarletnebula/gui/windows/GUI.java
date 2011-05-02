@@ -640,7 +640,7 @@ public class GUI extends JFrame implements ListSelectionListener,
 		}
 		else
 		{
-			new AddServerWizard(this, this);
+			new AddServerWizard(this);
 		}
 	}
 

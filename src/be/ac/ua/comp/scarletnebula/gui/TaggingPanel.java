@@ -145,7 +145,7 @@ public class TaggingPanel extends JPanel
 	private class TagItem extends JPanel
 	{
 		private static final long serialVersionUID = 1L;
-		private String tag;
+		private final String tag;
 
 		public String getTag()
 		{

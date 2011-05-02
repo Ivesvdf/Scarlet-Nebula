@@ -13,7 +13,6 @@ import be.ac.ua.comp.scarletnebula.core.CloudManager;
 import be.ac.ua.comp.scarletnebula.core.CloudProvider;
 import be.ac.ua.comp.scarletnebula.core.Server;
 import be.ac.ua.comp.scarletnebula.gui.addproviderwizard.AddProviderWizard;
-import be.ac.ua.comp.scarletnebula.gui.windows.GUI;
 import be.ac.ua.comp.scarletnebula.wizard.DataRecorder;
 import be.ac.ua.comp.scarletnebula.wizard.SimpleWizardTemplate;
 import be.ac.ua.comp.scarletnebula.wizard.Wizard;
@@ -22,13 +21,13 @@ import be.ac.ua.comp.scarletnebula.wizard.WizardPage;
 
 public class AddServerWizard implements WizardListener
 {
-	private final GUI gui;
 	private static Log log = LogFactory.getLog(Server.class);
 	private static final long serialVersionUID = 1L;
+	private JFrame parent;
 
-	public AddServerWizard(final JFrame parent, final GUI gui)
+	public AddServerWizard(final JFrame parent)
 	{
-		this.gui = gui;
+		this.parent = parent;
 
 		// Only show the choose provider page if more than one provider is
 		// available.
@@ -61,7 +60,7 @@ public class AddServerWizard implements WizardListener
 		final Wizard wiz = new Wizard(firstPage, rec,
 				new SimpleWizardTemplate());
 		wiz.addWizardListener(this);
-		wiz.startModal("Start new server", 400, 300, gui);
+		wiz.startModal("Start new server", 500, 400, parent);
 	}
 
 	@Override
@@ -70,14 +69,14 @@ public class AddServerWizard implements WizardListener
 		final AddServerWizardDataRecorder rec = (AddServerWizardDataRecorder) recorder;
 		final String instancename = rec.instanceName;
 		final String instancesize = rec.instanceSize;
-		final String image = rec.image;
+		final String image = rec.image.getProviderMachineImageId();
 		final CloudProvider provider = rec.provider;
 		final Collection<String> tags = rec.tags;
 		final String keypairOrPassword = rec.keypairOrPassword;
 
 		if (Server.exists(instancename))
 		{
-			JOptionPane.showMessageDialog(gui,
+			JOptionPane.showMessageDialog(parent,
 					"A server with this name already exists.",
 					"Server already exists", JOptionPane.ERROR_MESSAGE);
 			return;
@@ -98,7 +97,5 @@ public class AddServerWizard implements WizardListener
 	@Override
 	public void onCancel(final DataRecorder recorder)
 	{
-		// TODO Auto-generated method stub
-
 	}
 }

@@ -636,12 +636,13 @@ public class CloudProvider
 	 * 
 	 * @return
 	 */
-	public Collection<String> getPossibleInstanceSizes()
+	public Iterable<VirtualMachineProduct> getPossibleInstanceSizes(
+			final Architecture architecture)
 	{
 		Iterable<VirtualMachineProduct> products = null;
 		try
 		{
-			products = virtualMachineServices.listProducts(Architecture.I32);
+			products = virtualMachineServices.listProducts(architecture);
 		}
 		catch (final InternalException e)
 		{
@@ -654,13 +655,7 @@ public class CloudProvider
 			e.printStackTrace();
 		}
 
-		final ArrayList<String> rv = new ArrayList<String>();
-
-		for (final VirtualMachineProduct product : products)
-		{
-			rv.add(product.getName());
-		}
-		return rv;
+		return products;
 	}
 
 	/**

@@ -133,9 +133,8 @@ public class ChooseImagePage extends WizardPage
 							"Select image", JOptionPane.ERROR_MESSAGE);
 			return null;
 		}
-		final MachineImage image = model.getRow(selection);
-		rec.image = image.getProviderMachineImageId();
-		return new TaggingPage();
+		rec.image = model.getRow(selection);
+		return new ChooseSizePage(provider, rec.image);
 	}
 
 	private final class SearchFieldListener implements ActionListener
