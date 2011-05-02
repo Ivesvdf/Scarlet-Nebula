@@ -88,10 +88,12 @@ public class ChooseSizePage extends WizardPage
 	};
 
 	private static final long serialVersionUID = 1L;
-	private SizeList sizelist;
+	private final SizeList sizelist;
+	private final CloudProvider provider;
 
 	public ChooseSizePage(final CloudProvider provider, final MachineImage image)
 	{
+		this.provider = provider;
 		final Architecture architecture = image.getArchitecture();
 
 		sizelist = new SizeList(provider, architecture);
@@ -109,7 +111,7 @@ public class ChooseSizePage extends WizardPage
 	{
 		((AddServerWizardDataRecorder) recorder).instanceSize = ((VirtualMachineProduct) sizelist
 				.getSelectedValue()).getProductId();
-		return new TaggingPage();
+		return new FirewallPage(provider);
 	}
 
 }

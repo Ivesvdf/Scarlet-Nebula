@@ -27,7 +27,9 @@ import org.dasein.cloud.compute.VirtualMachineProduct;
 import org.dasein.cloud.compute.VirtualMachineSupport;
 import org.dasein.cloud.identity.ShellKeySupport;
 import org.dasein.cloud.network.Firewall;
+import org.dasein.cloud.network.FirewallRule;
 import org.dasein.cloud.network.FirewallSupport;
+import org.dasein.cloud.network.NetworkServices;
 import org.dasein.cloud.network.Protocol;
 
 import be.ac.ua.comp.scarletnebula.misc.Utils;
@@ -43,14 +45,10 @@ public class CloudProvider
 {
 	private static Log log = LogFactory.getLog(CloudProvider.class);
 
-	public enum CloudProviderName
-	{
-		AWS
-	};
-
 	private org.dasein.cloud.CloudProvider providerImpl;
-	private ComputeServices computeServices;
-	private VirtualMachineSupport virtualMachineServices;
+	private ComputeServices computeServices = null;
+	private VirtualMachineSupport virtualMachineServices = null;
+	private FirewallSupport firewallSupport = null;
 
 	private String name;
 	private String providerClassName;
@@ -120,6 +118,24 @@ public class CloudProvider
 			log.error(providerImpl.getCloudName()
 					+ " does not support Virtual Machines.");
 			return;
+		}
+
+		final NetworkServices networkServices = providerImpl
+				.getNetworkServices();
+		if (networkServices == null)
+		{
+			log.error(providerImpl.getCloudName()
+					+ " does not support network services.");
+		}
+		else
+		{
+			firewallSupport = networkServices.getFirewallSupport();
+			if (firewallSupport == null)
+			{
+				log.error(providerImpl.getCloudName()
+						+ " does not support firewalls.");
+				return;
+			}
 		}
 	}
 
@@ -346,6 +362,31 @@ public class CloudProvider
 					"Allow only ssh traffic");
 			fws.authorize(sshonlyId, "0.0.0.0/0", Protocol.TCP, 22, 22);
 		}
+	}
+
+	/**
+	 * @return All firewalls for this CloudProvider
+	 * @throws InternalException
+	 * @throws CloudException
+	 */
+	public Collection<Firewall> getFirewalls() throws InternalException,
+			CloudException
+	{
+		final FirewallSupport fws = providerImpl.getNetworkServices()
+				.getFirewallSupport();
+
+		if (fws == null)
+		{
+			return new ArrayList<Firewall>();
+		}
+
+		return fws.list();
+	}
+
+	public Collection<FirewallRule> getFirewallRules(final String firewall)
+			throws InternalException, CloudException
+	{
+		return firewallSupport.getRules(firewall);
 	}
 
 	/**
@@ -960,5 +1001,32 @@ public class CloudProvider
 		final ShellKeySupport shellKeySupport = providerImpl
 				.getIdentityServices().getShellKeySupport();
 		shellKeySupport.deleteKeypair(key);
+	}
+
+	/**
+	 * Creates a firewall in the cloudprovider and returns a pseudo-firewall
+	 * object. This object only contains a user friendly name and a provider id.
+	 * 
+	 * @param firewallName
+	 *            User friendly name of the firewall
+	 * @return A pseudo-firewall object. This object only contains a user
+	 *         friendly name and a provider id.
+	 * @throws InternalException
+	 * @throws CloudException
+	 */
+	public Firewall createFirewall(final String firewallName)
+			throws InternalException, CloudException
+	{
+		final String id = firewallSupport.create(firewallName, firewallName);
+		final Firewall firewall = new Firewall();
+		firewall.setName(firewallName);
+		firewall.setProviderFirewallId(id);
+		return firewall;
+	}
+
+	public void deleteFirewall(final Firewall firewall)
+			throws InternalException, CloudException
+	{
+		firewallSupport.delete(firewall.getProviderFirewallId());
 	}
 }

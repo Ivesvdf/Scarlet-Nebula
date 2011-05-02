@@ -51,6 +51,7 @@ class ChooseProviderPage extends WizardPage
 
 		rec.provider = provider;
 
-		return new InstanceInformationPage(provider);
+		// FIXME
+		return new FirewallPage(provider);// InstanceInformationPage(provider);
 	};
 };
