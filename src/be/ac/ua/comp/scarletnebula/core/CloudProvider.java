@@ -473,6 +473,8 @@ public class CloudProvider
 	 * Starts a new server.
 	 * 
 	 * @param serverName
+	 * @param firewalls
+	 *            TODO
 	 * @param size
 	 * @return
 	 * @throws InternalException
@@ -480,12 +482,12 @@ public class CloudProvider
 	 */
 	public Server startServer(final String serverName,
 			final String productName, final String imageId,
-			final Collection<String> tags, final String keypairOrPassword)
-			throws InternalException, CloudException
+			final Collection<String> tags, final String keypairOrPassword,
+			Collection<String> firewalls) throws InternalException,
+			CloudException
 	{
 		final String dataCenterId = "eu-west-1b";
 		final String vlan = null;
-		final String[] firewalls = new String[] { "sshonly" };
 
 		final Collection<org.dasein.cloud.Tag> daseinTags = new ArrayList<org.dasein.cloud.Tag>();
 		int i = 0;
@@ -498,7 +500,8 @@ public class CloudProvider
 		final VirtualMachine daseinServer = virtualMachineServices.launch(
 				imageId, getVMProductWithName(productName), dataCenterId,
 				serverName, "", keypairOrPassword, vlan, false, false,
-				firewalls, daseinTags.toArray(new org.dasein.cloud.Tag[0]));
+				firewalls.toArray(new String[0]),
+				daseinTags.toArray(new org.dasein.cloud.Tag[0]));
 
 		final Server server = new Server(daseinServer, // Dasein server
 														// implementation

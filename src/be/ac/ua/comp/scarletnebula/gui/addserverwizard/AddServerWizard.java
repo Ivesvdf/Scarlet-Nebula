@@ -73,6 +73,7 @@ public class AddServerWizard implements WizardListener
 		final CloudProvider provider = rec.provider;
 		final Collection<String> tags = rec.tags;
 		final String keypairOrPassword = rec.keypairOrPassword;
+		final Collection<String> firewallIds = rec.firewallIds;
 
 		if (Server.exists(instancename))
 		{
@@ -85,7 +86,7 @@ public class AddServerWizard implements WizardListener
 		try
 		{
 			final Server server = provider.startServer(instancename,
-					instancesize, image, tags, keypairOrPassword);
+					instancesize, image, tags, keypairOrPassword, firewallIds);
 			server.refreshUntilServerHasState(VmState.RUNNING);
 		}
 		catch (final Exception e)

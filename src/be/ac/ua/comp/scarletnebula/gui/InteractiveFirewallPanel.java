@@ -43,6 +43,72 @@ import be.ac.ua.comp.scarletnebula.misc.Utils;
 public class InteractiveFirewallPanel extends JPanel implements
 		AddFirewallRuleWindowClosedListener
 {
+	private final class AddRuleSwingWorker extends
+			SwingWorkerWithThrobber<Exception, Object>
+	{
+		private final String cidr;
+		private final int beginPort;
+		private final Protocol protocol;
+		private final int endPort;
+		private final Firewall firewall;
+
+		private AddRuleSwingWorker(Collapsable throbber, String cidr,
+				int beginPort, Protocol protocol, int endPort, Firewall firewall)
+		{
+			super(throbber);
+			this.cidr = cidr;
+			this.beginPort = beginPort;
+			this.protocol = protocol;
+			this.endPort = endPort;
+			this.firewall = firewall;
+		}
+
+		@Override
+		protected Exception doInBackground() throws Exception
+		{
+			try
+			{
+				provider.addFirewallRule(firewall, beginPort, endPort,
+						protocol, cidr);
+			}
+			catch (final Exception e)
+			{
+				return e;
+			}
+			return null;
+		}
+
+		@Override
+		public void done()
+		{
+			try
+			{
+				final Exception result = get();
+
+				if (result == null)
+				{
+					// Succeeded
+					ruleList.addRule(new FirewallRule(firewall
+							.getProviderFirewallId(), cidr, protocol,
+							beginPort, endPort));
+				}
+				else
+				{
+					log.error("Exception was thrown while creating new Rule",
+							result);
+					JOptionPane.showMessageDialog(
+							InteractiveFirewallPanel.this,
+							result.getLocalizedMessage(), "Error",
+							JOptionPane.ERROR_MESSAGE);
+				}
+			}
+			catch (final Exception ignore)
+			{
+
+			}
+		}
+	}
+
 	public static class PortRange
 	{
 		final public int startPort;
@@ -70,30 +136,27 @@ public class InteractiveFirewallPanel extends JPanel implements
 		@Override
 		public void actionPerformed(final ActionEvent e)
 		{
-			final Firewall selectedFirewall = getSelectedFirewall();
-
-			if (ruleList.getSelectedRow() < 0 || selectedFirewall == null)
+			for (final Firewall firewall : getSelectedFirewalls())
 			{
-				return;
-			}
-
-			(new SwingWorker<Object, Object>()
-			{
-				@Override
-				protected Object doInBackground() throws Exception
+				(new SwingWorker<Object, Object>()
 				{
-					final int selectedRow = ruleList.getSelectedRow();
-					final PortRange range = new PortRange(
-							ruleList.getPort(selectedRow));
-					final Protocol protocol = ruleList.getProtocol(selectedRow);
-					final String ip = ruleList.getSource(selectedRow);
+					@Override
+					protected Object doInBackground() throws Exception
+					{
+						final int selectedRow = ruleList.getSelectedRow();
+						final PortRange range = new PortRange(
+								ruleList.getPort(selectedRow));
+						final Protocol protocol = ruleList
+								.getProtocol(selectedRow);
+						final String ip = ruleList.getSource(selectedRow);
 
-					ruleList.datamodel.removeRow(selectedRow);
-					provider.deleteFirewallRule(selectedFirewall,
-							range.startPort, range.endPort, protocol, ip);
-					return null;
-				}
-			}).execute();
+						ruleList.datamodel.removeRow(selectedRow);
+						provider.deleteFirewallRule(firewall, range.startPort,
+								range.endPort, protocol, ip);
+						return null;
+					}
+				}).execute();
+			}
 		}
 	}
 
@@ -109,14 +172,17 @@ public class InteractiveFirewallPanel extends JPanel implements
 		@Override
 		public void actionPerformed(final ActionEvent e)
 		{
+			Collection<Firewall> firewalls = getSelectedFirewalls();
+			if (firewalls.size() != 1)
+			{
+				return;
+			}
 
-			getSelectedFirewall();
 			final AddFirewallRuleWindow win = new AddFirewallRuleWindow(
 					(JDialog) Utils.findWindow(InteractiveFirewallPanel.this),
-					provider, getSelectedFirewall());
+					provider, firewalls.iterator().next());
 			win.addAddFirewallRuleWindowClosed(InteractiveFirewallPanel.this);
 			win.setVisible(true);
-
 		}
 	}
 
@@ -350,7 +416,7 @@ public class InteractiveFirewallPanel extends JPanel implements
 		public FirewallList(final ListModel firewallListModel)
 		{
 			super(firewallListModel);
-			setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+			setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
 		}
 
 	}
@@ -638,19 +704,43 @@ public class InteractiveFirewallPanel extends JPanel implements
 		return allThrobbersPanel;
 	}
 
-	public Firewall getSelectedFirewall()
+	public Collection<Firewall> getSelectedFirewalls()
 	{
-		Firewall firewall = null;
-		for (final Firewall it : firewalls)
+		Collection<Firewall> rv = new ArrayList<Firewall>();
+		int indices[] = firewallList.getSelectedIndices();
+
+		for (int index : indices)
 		{
-			if (it.getName().equals(firewallList.getSelectedValue()))
+			String firewall = (String) firewallListModel.get(index);
+
+			for (Firewall comp : firewalls)
 			{
-				firewall = it;
+				if (comp.getName().equals(firewall))
+				{
+					rv.add(comp);
+				}
+			}
+		}
+
+		return rv;
+	}
+
+	public boolean selectedFirewallOpensPort(int port)
+	{
+		boolean found = false;
+		for (int row = 0; row < ruleList.getRowCount(); row++)
+		{
+			String portString = ruleList.getPort(row);
+			PortRange range = new PortRange(portString);
+
+			if (port >= range.startPort && port <= range.endPort)
+			{
+				found = true;
 				break;
 			}
 		}
 
-		return firewall;
+		return found;
 	}
 
 	private void addFirewall(final Firewall firewall)
@@ -676,54 +766,7 @@ public class InteractiveFirewallPanel extends JPanel implements
 	private void addRule(final Firewall firewall, final int beginPort,
 			final int endPort, final Protocol protocol, final String cidr)
 	{
-		(new SwingWorkerWithThrobber<Exception, Object>(
-				creatingRuleThrobberPanel)
-		{
-			@Override
-			protected Exception doInBackground() throws Exception
-			{
-				try
-				{
-					provider.addFirewallRule(firewall, beginPort, endPort,
-							protocol, cidr);
-				}
-				catch (final Exception e)
-				{
-					return e;
-				}
-				return null;
-			}
-
-			@Override
-			public void done()
-			{
-				try
-				{
-					final Exception result = get();
-
-					if (result == null)
-					{
-						// Succeeded
-						ruleList.addRule(new FirewallRule(firewall
-								.getProviderFirewallId(), cidr, protocol,
-								beginPort, endPort));
-					}
-					else
-					{
-						log.error(
-								"Exception was thrown while creating new Rule",
-								result);
-						JOptionPane.showMessageDialog(
-								InteractiveFirewallPanel.this,
-								result.getLocalizedMessage(), "Error",
-								JOptionPane.ERROR_MESSAGE);
-					}
-				}
-				catch (final Exception ignore)
-				{
-
-				}
-			}
-		}).execute();
+		(new AddRuleSwingWorker(creatingRuleThrobberPanel, cidr, beginPort,
+				protocol, endPort, firewall)).execute();
 	}
 }
