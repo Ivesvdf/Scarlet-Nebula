@@ -7,6 +7,8 @@ import javax.swing.JOptionPane;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.dasein.cloud.compute.MachineImage;
+import org.dasein.cloud.compute.VirtualMachineProduct;
 import org.dasein.cloud.compute.VmState;
 
 import be.ac.ua.comp.scarletnebula.core.CloudManager;
@@ -68,8 +70,8 @@ public class AddServerWizard implements WizardListener
 	{
 		final AddServerWizardDataRecorder rec = (AddServerWizardDataRecorder) recorder;
 		final String instancename = rec.instanceName;
-		final String instancesize = rec.instanceSize;
-		final String image = rec.image.getProviderMachineImageId();
+		final VirtualMachineProduct instancesize = rec.instanceSize;
+		final MachineImage image = rec.image;
 		final CloudProvider provider = rec.provider;
 		final Collection<String> tags = rec.tags;
 		final String keypairOrPassword = rec.keypairOrPassword;
@@ -86,12 +88,15 @@ public class AddServerWizard implements WizardListener
 		try
 		{
 			final Server server = provider.startServer(instancename,
-					instancesize, image, tags, keypairOrPassword, firewallIds);
+					instancesize, image, tags, provider.getDefaultKeypair(),
+					firewallIds);
 			server.refreshUntilServerHasState(VmState.RUNNING);
 		}
 		catch (final Exception e)
 		{
 			log.error("Could not start server", e);
+			JOptionPane.showMessageDialog(null, e.getLocalizedMessage(),
+					"Error", JOptionPane.ERROR_MESSAGE);
 		}
 	}
 

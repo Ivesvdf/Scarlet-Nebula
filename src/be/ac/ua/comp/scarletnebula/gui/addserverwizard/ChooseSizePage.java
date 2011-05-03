@@ -109,8 +109,8 @@ public class ChooseSizePage extends WizardPage
 	@Override
 	public WizardPage next(final DataRecorder recorder)
 	{
-		((AddServerWizardDataRecorder) recorder).instanceSize = ((VirtualMachineProduct) sizelist
-				.getSelectedValue()).getProductId();
+		((AddServerWizardDataRecorder) recorder).instanceSize = (VirtualMachineProduct) sizelist
+				.getSelectedValue();
 		return new FirewallPage(provider);
 	}
 

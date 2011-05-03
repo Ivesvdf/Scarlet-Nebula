@@ -481,7 +481,7 @@ public class CloudProvider
 	 * @throws CloudException
 	 */
 	public Server startServer(final String serverName,
-			final String productName, final String imageId,
+			final VirtualMachineProduct product, final MachineImage image,
 			final Collection<String> tags, final String keypairOrPassword,
 			Collection<String> firewalls) throws InternalException,
 			CloudException
@@ -498,10 +498,28 @@ public class CloudProvider
 		}
 
 		final VirtualMachine daseinServer = virtualMachineServices.launch(
-				imageId, getVMProductWithName(productName), dataCenterId,
+				image.getProviderMachineImageId(), product, dataCenterId,
 				serverName, "", keypairOrPassword, vlan, false, false,
 				firewalls.toArray(new String[0]),
 				daseinTags.toArray(new org.dasein.cloud.Tag[0]));
+
+		String rootUser = daseinServer.getRootUser();
+		if (rootUser == null || rootUser.isEmpty())
+		{
+			if (image.getName().toLowerCase().contains("ubuntu")
+					|| image.getDescription().toLowerCase().contains("ubuntu"))
+			{
+				rootUser = "ubuntu";
+			}
+			else if (image.getPlatform() != Platform.WINDOWS)
+			{
+				rootUser = "root";
+			}
+			else
+			{
+				rootUser = "";
+			}
+		}
 
 		final Server server = new Server(daseinServer, // Dasein server
 														// implementation
@@ -510,7 +528,7 @@ public class CloudProvider
 				serverName, // Server's friendly name
 				tags, // Tags this server was given
 				false, // server uses password to SSH
-				daseinServer.getRootUser(), // SSH login
+				rootUser, // SSH login
 				daseinServer.getRootPassword(), // SSH Password
 				getDefaultStatisticsCommand(), // Statistics command
 				"CPU"); // preferred datastream

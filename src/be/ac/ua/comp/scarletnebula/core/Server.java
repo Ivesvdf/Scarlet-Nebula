@@ -87,7 +87,8 @@ public class Server
 	 */
 	public boolean sshWillFail()
 	{
-		return sshLogin.isEmpty()
+		return getStatus() != VmState.RUNNING
+				|| sshLogin.isEmpty()
 				|| ((useSshPassword && sshPassword.isEmpty() || !useSshPassword
 						&& keypair.isEmpty()));
 	}

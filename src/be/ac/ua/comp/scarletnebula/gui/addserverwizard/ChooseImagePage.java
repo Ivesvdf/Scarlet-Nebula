@@ -133,7 +133,8 @@ public class ChooseImagePage extends WizardPage
 							"Select image", JOptionPane.ERROR_MESSAGE);
 			return null;
 		}
-		rec.image = model.getRow(selection);
+
+		rec.image = model.getRow(table.convertRowIndexToModel(selection));
 		return new ChooseSizePage(provider, rec.image);
 	}
 

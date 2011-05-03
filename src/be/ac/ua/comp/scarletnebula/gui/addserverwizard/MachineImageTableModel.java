@@ -15,7 +15,7 @@ public class MachineImageTableModel extends AbstractTableModel
 
 	MachineImageTableModel(final List<MachineImage> rows)
 	{
-		final String[] columns = { "Name", "Description" };
+		final String[] columns = { "Name", "Description", "Type" };
 		this.columnNames = Arrays.asList(columns);
 		this.rows = rows;
 	}
@@ -66,6 +66,8 @@ public class MachineImageTableModel extends AbstractTableModel
 				return img.getName();
 			case 1:
 				return img.getDescription();
+			case 2:
+				return img.getType().toString();
 		}
 
 		return null;
