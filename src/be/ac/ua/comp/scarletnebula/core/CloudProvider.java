@@ -498,10 +498,16 @@ public class CloudProvider
 		}
 
 		final VirtualMachine daseinServer = virtualMachineServices.launch(
-				image.getProviderMachineImageId(), product, dataCenterId,
-				serverName, "", keypairOrPassword, vlan, false, false,
-				firewalls.toArray(new String[0]),
-				daseinTags.toArray(new org.dasein.cloud.Tag[0]));
+				image.getProviderMachineImageId(), // image id
+				product, // vm product (size)
+				dataCenterId, // data center id
+				serverName, // friendly server name
+				"", // server description
+				keypairOrPassword, // keypair
+				vlan, // vlan
+				false, false,
+				(firewalls != null ? firewalls.toArray(new String[0]) : null), // firewalls
+				daseinTags.toArray(new org.dasein.cloud.Tag[0])); // tags
 
 		String rootUser = daseinServer.getRootUser();
 		if (rootUser == null || rootUser.isEmpty())
@@ -1042,5 +1048,10 @@ public class CloudProvider
 			throws InternalException, CloudException
 	{
 		firewallSupport.delete(firewall.getProviderFirewallId());
+	}
+
+	public boolean supportsFirewalls()
+	{
+		return firewallSupport != null;
 	}
 }

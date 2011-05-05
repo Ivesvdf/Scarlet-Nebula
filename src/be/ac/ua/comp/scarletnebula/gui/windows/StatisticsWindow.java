@@ -1,4 +1,4 @@
-package be.ac.ua.comp.scarletnebula.gui;
+package be.ac.ua.comp.scarletnebula.gui.windows;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -6,15 +6,18 @@ import java.util.List;
 
 import javax.swing.JDialog;
 import javax.swing.JFrame;
+import javax.swing.JScrollPane;
 
 import be.ac.ua.comp.scarletnebula.core.Server;
+import be.ac.ua.comp.scarletnebula.gui.AllGraphsPanel;
 import be.ac.ua.comp.scarletnebula.misc.Utils;
 
 public class StatisticsWindow extends JDialog
 {
 	private static final long serialVersionUID = 1L;
 
-	StatisticsWindow(final JFrame parent, final Collection<Server> servers)
+	public StatisticsWindow(final JFrame parent,
+			final Collection<Server> servers)
 	{
 		super(parent, false);
 
@@ -31,7 +34,7 @@ public class StatisticsWindow extends JDialog
 		final Server server = servers.iterator().next();
 
 		final AllGraphsPanel allGraphsPanel = new AllGraphsPanel(server);
-		add(allGraphsPanel);
+		add(new JScrollPane(allGraphsPanel));
 
 		setVisible(true);
 

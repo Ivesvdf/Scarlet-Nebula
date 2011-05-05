@@ -111,7 +111,15 @@ public class ChooseSizePage extends WizardPage
 	{
 		((AddServerWizardDataRecorder) recorder).instanceSize = (VirtualMachineProduct) sizelist
 				.getSelectedValue();
-		return new FirewallPage(provider);
+
+		if (provider.supportsFirewalls())
+		{
+			return new FirewallPage(provider);
+		}
+		else
+		{
+			return new TaggingPage();
+		}
 	}
 
 }

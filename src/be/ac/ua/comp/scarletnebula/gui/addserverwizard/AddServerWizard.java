@@ -4,6 +4,7 @@ import java.util.Collection;
 
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import javax.swing.SwingWorker;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -53,7 +54,7 @@ public class AddServerWizard implements WizardListener
 				final CloudProvider prov = (CloudProvider) CloudManager.get()
 						.getLinkedCloudProviders().toArray()[0];
 				rec.provider = prov;
-				firstPage = new InstanceInformationPage(prov);
+				firstPage = new ChooseImagePage(prov);
 				break;
 			default:
 				firstPage = new ChooseProviderPage();
@@ -76,6 +77,7 @@ public class AddServerWizard implements WizardListener
 		final Collection<String> tags = rec.tags;
 		final String keypairOrPassword = rec.keypairOrPassword;
 		final Collection<String> firewallIds = rec.firewallIds;
+		final int instanceCount = rec.instanceCount;
 
 		if (Server.exists(instancename))
 		{
@@ -85,19 +87,63 @@ public class AddServerWizard implements WizardListener
 			return;
 		}
 
-		try
+		(new SwingWorker<Exception, Server>()
 		{
-			final Server server = provider.startServer(instancename,
-					instancesize, image, tags, provider.getDefaultKeypair(),
-					firewallIds);
-			server.refreshUntilServerHasState(VmState.RUNNING);
-		}
-		catch (final Exception e)
-		{
-			log.error("Could not start server", e);
-			JOptionPane.showMessageDialog(null, e.getLocalizedMessage(),
-					"Error", JOptionPane.ERROR_MESSAGE);
-		}
+
+			@Override
+			protected Exception doInBackground() throws Exception
+			{
+				for (int serverStarted = 0; serverStarted < instanceCount; serverStarted++)
+				{
+					try
+					{
+						final String localServername;
+
+						if (instanceCount == 1)
+						{
+							localServername = instancename;
+						}
+						else
+						{
+							localServername = instancename + " "
+									+ serverStarted;
+						}
+
+						final Server server = provider.startServer(
+								localServername, instancesize, image, tags,
+								provider.getDefaultKeypair(), firewallIds);
+						server.refreshUntilServerHasState(VmState.RUNNING);
+					}
+					catch (final Exception e)
+					{
+						return e;
+					}
+				}
+				return null;
+			}
+
+			@Override
+			public void done()
+			{
+				try
+				{
+					Exception result = get();
+
+					if (result != null)
+					{
+						log.error("Could not start server", result);
+						JOptionPane.showMessageDialog(null,
+								result.getLocalizedMessage(), "Error",
+								JOptionPane.ERROR_MESSAGE);
+					}
+				}
+				catch (Exception ignore)
+				{
+				}
+
+			}
+		}).execute();
+
 	}
 
 	@Override

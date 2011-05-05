@@ -586,6 +586,10 @@ public class Server
 		{
 			refresh();
 		}
+		catch (final ServerDisappearedException e)
+		{
+			getCloud().unlink(this);
+		}
 		catch (final Exception e)
 		{
 			log.error("Something happened while refreshing server " + this, e);
@@ -686,5 +690,15 @@ public class Server
 	public String getSshPassword()
 	{
 		return sshPassword;
+	}
+
+	public boolean isPausable()
+	{
+		return serverImpl.isPausable();
+	}
+
+	public boolean isRebootable()
+	{
+		return serverImpl.isRebootable();
 	}
 }

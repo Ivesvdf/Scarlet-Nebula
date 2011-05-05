@@ -1,4 +1,4 @@
-package be.ac.ua.comp.scarletnebula.gui;
+package be.ac.ua.comp.scarletnebula.gui.windows;
 
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
@@ -20,6 +20,9 @@ import org.dasein.cloud.network.Firewall;
 import org.dasein.cloud.network.Protocol;
 
 import be.ac.ua.comp.scarletnebula.core.CloudProvider;
+import be.ac.ua.comp.scarletnebula.gui.ButtonFactory;
+import be.ac.ua.comp.scarletnebula.gui.InteractiveFirewallPanel;
+import be.ac.ua.comp.scarletnebula.gui.InteractiveFirewallPanel.PortRange;
 import be.ac.ua.comp.scarletnebula.gui.inputverifiers.IpAddressVerifier;
 import be.ac.ua.comp.scarletnebula.gui.inputverifiers.LoudInputVerifier;
 import be.ac.ua.comp.scarletnebula.gui.inputverifiers.PortRangeInputVerifier;

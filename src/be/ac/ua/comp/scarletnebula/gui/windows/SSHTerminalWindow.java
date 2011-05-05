@@ -1,4 +1,4 @@
-package be.ac.ua.comp.scarletnebula.gui;
+package be.ac.ua.comp.scarletnebula.gui.windows;
 
 import java.awt.BorderLayout;
 import java.util.Collection;
@@ -7,13 +7,15 @@ import javax.swing.JDialog;
 import javax.swing.JFrame;
 
 import be.ac.ua.comp.scarletnebula.core.Server;
+import be.ac.ua.comp.scarletnebula.gui.SSHPanel;
 import be.ac.ua.comp.scarletnebula.misc.Utils;
 
 public class SSHTerminalWindow extends JDialog
 {
 	private static final long serialVersionUID = 1L;
 
-	SSHTerminalWindow(final JFrame parent, final Collection<Server> servers)
+	public SSHTerminalWindow(final JFrame parent,
+			final Collection<Server> servers)
 	{
 		super(parent, false);
 		setIconImage(Utils.icon("console16.png").getImage());

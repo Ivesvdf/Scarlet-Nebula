@@ -165,11 +165,9 @@ public class RadixCloudProvider extends CloudProvider
 				final Platform arg1, final Architecture arg2)
 				throws CloudException, InternalException
 		{
-			final MachineImage foo = new MachineImage()
-			{
-				private static final long serialVersionUID = 1L;
-
-			};
+			final MachineImage foo = new MachineImage();
+			foo.setName("some name");
+			foo.setDescription("some descr");
 			return Arrays.asList(foo);
 		}
 
@@ -461,8 +459,7 @@ public class RadixCloudProvider extends CloudProvider
 		public Iterable<String> listFirewalls(final String arg0)
 				throws InternalException, CloudException
 		{
-			// TODO Auto-generated method stub
-			return null;
+			return Arrays.asList("bla");
 		}
 
 		@Override

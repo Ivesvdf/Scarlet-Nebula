@@ -36,7 +36,8 @@ import org.dasein.cloud.network.FirewallRule;
 import org.dasein.cloud.network.Protocol;
 
 import be.ac.ua.comp.scarletnebula.core.CloudProvider;
-import be.ac.ua.comp.scarletnebula.gui.AddFirewallRuleWindow.AddFirewallRuleWindowClosedListener;
+import be.ac.ua.comp.scarletnebula.gui.windows.AddFirewallRuleWindow;
+import be.ac.ua.comp.scarletnebula.gui.windows.AddFirewallRuleWindow.AddFirewallRuleWindowClosedListener;
 import be.ac.ua.comp.scarletnebula.misc.SwingWorkerWithThrobber;
 import be.ac.ua.comp.scarletnebula.misc.Utils;
 

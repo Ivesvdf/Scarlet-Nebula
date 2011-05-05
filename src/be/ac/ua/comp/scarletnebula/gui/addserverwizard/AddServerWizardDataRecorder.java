@@ -18,4 +18,5 @@ public class AddServerWizardDataRecorder implements DataRecorder
 	public Collection<String> tags = new ArrayList<String>();
 	public String keypairOrPassword = "";
 	public Collection<String> firewallIds = null;
+	public Integer instanceCount = 1;
 }

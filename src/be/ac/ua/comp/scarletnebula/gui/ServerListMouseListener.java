@@ -14,7 +14,9 @@ import org.dasein.cloud.compute.VmState;
 import be.ac.ua.comp.scarletnebula.core.Server;
 import be.ac.ua.comp.scarletnebula.gui.addserverwizard.AddServerWizard;
 import be.ac.ua.comp.scarletnebula.gui.windows.GUI;
+import be.ac.ua.comp.scarletnebula.gui.windows.SSHTerminalWindow;
 import be.ac.ua.comp.scarletnebula.gui.windows.ServerPropertiesWindow;
+import be.ac.ua.comp.scarletnebula.gui.windows.StatisticsWindow;
 import be.ac.ua.comp.scarletnebula.misc.Utils;
 
 public class ServerListMouseListener implements MouseListener
@@ -220,6 +222,16 @@ public class ServerListMouseListener implements MouseListener
 			{
 				console.setEnabled(false);
 				statistics.setEnabled(false);
+			}
+
+			if (!clickedServer.isPausable())
+			{
+				pauseResume.setEnabled(false);
+			}
+
+			if (!clickedServer.isRebootable())
+			{
+				reboot.setEnabled(false);
 			}
 
 			popup.add(pauseResume);

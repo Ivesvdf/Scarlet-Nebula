@@ -5,6 +5,7 @@ import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.util.Collection;
 
 import javax.swing.BorderFactory;
 import javax.swing.JPanel;
@@ -50,9 +51,12 @@ public class AllGraphsPanel extends JPanel implements NewDatastreamListener,
 
 		int numberOfComponentsPlaced = 0;
 		int currXPos = 0;
+		final int graphHeight = 150;
+		final int graphWidth = 100;
 
-		for (final String streamname : statisticsManager
-				.getAvailableDatastreams())
+		final Collection<String> datastreams = statisticsManager
+				.getAvailableDatastreams();
+		for (final String streamname : datastreams)
 		{
 			log.info("drawing stream");
 			constraints.fill = GridBagConstraints.HORIZONTAL;
@@ -67,7 +71,7 @@ public class AllGraphsPanel extends JPanel implements NewDatastreamListener,
 			graph.registerRelativeDatastream(server, streamname, Color.GREEN);
 			graph.addServerToRefresh(server);
 			final ChartPanel chartPanel = graph.getChartPanel();
-			chartPanel.setPreferredSize(new Dimension(100, 150));
+			chartPanel.setPreferredSize(new Dimension(graphWidth, graphHeight));
 			add(chartPanel, constraints);
 
 			if (currXPos == 0)

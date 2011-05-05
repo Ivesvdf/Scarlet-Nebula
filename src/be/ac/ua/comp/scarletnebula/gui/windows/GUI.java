@@ -40,8 +40,6 @@ import javax.swing.event.ListSelectionListener;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.dasein.cloud.CloudException;
-import org.dasein.cloud.InternalException;
 import org.dasein.cloud.compute.VmState;
 
 import be.ac.ua.comp.scarletnebula.core.CloudManager;
@@ -472,37 +470,6 @@ public class GUI extends JFrame implements ListSelectionListener,
 		// fillRightPartition();
 	}
 
-	// TODO: Remove this ftion?
-	protected void detectAllUnlinkedInstances()
-	{
-		final Collection<CloudProvider> providers = CloudManager.get()
-				.getLinkedCloudProviders();
-
-		for (final CloudProvider prov : providers)
-		{
-			try
-			{
-				final Collection<Server> unlinkedServers = prov
-						.listUnlinkedServers();
-				log.debug("Provider " + prov.getName() + " has "
-						+ unlinkedServers.size() + " unlinked instances.");
-
-				for (final Server server : unlinkedServers)
-				{
-					prov.linkUnlinkedServer(server);
-					addServer(server);
-				}
-			}
-			catch (final Exception e)
-			{
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-
-		// fillRightPartition();
-	}
-
 	private void openAboutBox()
 	{
 		final AboutWindow aboutWindow = new AboutWindow(this);
@@ -513,22 +480,45 @@ public class GUI extends JFrame implements ListSelectionListener,
 	{
 		final Collection<Server> servers = serverList.getSelectedServers();
 
-		for (final Server server : servers)
+		(new SwingWorker<Exception, Object>()
 		{
-			try
+			@Override
+			protected Exception doInBackground() throws Exception
 			{
-				server.terminate();
-				server.refreshUntilServerHasState(VmState.TERMINATED);
+				for (final Server server : servers)
+				{
+					try
+					{
+						server.terminate();
+						server.refreshUntilServerHasState(VmState.TERMINATED);
+					}
+					catch (Exception e)
+					{
+						return e;
+					}
+				}
+				return null;
 			}
-			catch (final CloudException e)
+
+			@Override
+			public void done()
 			{
-				e.printStackTrace();
+				try
+				{
+					Exception result = get();
+
+					if (result != null)
+					{
+						log.error(result);
+						error(result);
+					}
+				}
+				catch (Exception ignore)
+				{
+				}
 			}
-			catch (final InternalException e)
-			{
-				e.printStackTrace();
-			}
-		}
+		}).execute();
+
 	}
 
 	private JPanel getServerListPanel()
@@ -574,28 +564,57 @@ public class GUI extends JFrame implements ListSelectionListener,
 
 		// fillRightPartition();
 
-		for (final Server server : servers)
+		(new SwingWorker<Exception, Object>()
 		{
-			try
+			@Override
+			protected Exception doInBackground() throws Exception
 			{
-				server.refresh();
+				for (final Server server : servers)
+				{
+					try
+					{
+						server.refresh();
+					}
+
+					catch (final ServerDisappearedException e)
+					{
+						SwingUtilities.invokeLater(new Runnable()
+						{
+
+							@Override
+							public void run()
+							{
+								log.info("Server disappeared.", e);
+								removeServer(server);
+							}
+						});
+					}
+					catch (Exception e)
+					{
+						return e;
+					}
+				}
+				return null;
 			}
-			catch (final InternalException e)
+
+			@Override
+			public void done()
 			{
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				try
+				{
+					Exception result = get();
+
+					if (result != null)
+					{
+						log.error("Error while refreshing");
+						error(result.getLocalizedMessage());
+					}
+				}
+				catch (Exception ignore)
+				{
+				}
 			}
-			catch (final CloudException e)
-			{
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			catch (final ServerDisappearedException e)
-			{
-				log.info("Server disappeared.", e);
-				removeServer(server);
-			}
-		}
+		}).execute();
 	}
 
 	@Override
@@ -662,6 +681,11 @@ public class GUI extends JFrame implements ListSelectionListener,
 				"An unexpected error occured.", JOptionPane.ERROR_MESSAGE);
 	}
 
+	public void error(final Exception e)
+	{
+		error(e.getLocalizedMessage());
+	}
+
 	private void addServer(final Server server)
 	{
 		serverListModel.addServer(server);
@@ -672,9 +696,14 @@ public class GUI extends JFrame implements ListSelectionListener,
 	@Override
 	public void serverChanged(final Server server)
 	{
-		// Update the list on the left
-		serverListModel.refreshServer(server);
-		// fillRightPartition();
+		SwingUtilities.invokeLater(new Runnable()
+		{
+			@Override
+			public void run()
+			{
+				serverListModel.refreshServer(server);
+			}
+		});
 	}
 
 	public void pauseSelectedServers()
@@ -682,23 +711,46 @@ public class GUI extends JFrame implements ListSelectionListener,
 		final Collection<Server> selectedServers = serverList
 				.getSelectedServers();
 
-		try
+		(new SwingWorker<Exception, Object>()
 		{
-			for (final Server server : selectedServers)
+			@Override
+			protected Exception doInBackground() throws Exception
 			{
-				server.pause();
-				server.refreshUntilServerHasState(VmState.PAUSED);
+				try
+				{
+					for (final Server server : selectedServers)
+					{
+						server.pause();
+						server.refreshUntilServerHasState(VmState.PAUSED);
+					}
+				}
+				catch (final Exception e)
+				{
+					return e;
+				}
+
+				return null;
 			}
-		}
-		catch (final CloudException e)
-		{
-			error(e.getMessage());
-		}
-		catch (final InternalException e)
-		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+
+			@Override
+			public void done()
+			{
+				try
+				{
+					Exception result = get();
+
+					if (result != null)
+					{
+						log.error("Error while pauzing", result);
+						error(result);
+					}
+				}
+				catch (Exception ignore)
+				{
+				}
+			}
+		}).execute();
+
 	}
 
 	public void rebootSelectedServers()
@@ -706,22 +758,44 @@ public class GUI extends JFrame implements ListSelectionListener,
 		final Collection<Server> selectedServers = serverList
 				.getSelectedServers();
 
-		try
+		(new SwingWorker<Exception, Object>()
 		{
-			for (final Server server : selectedServers)
+			@Override
+			protected Exception doInBackground() throws Exception
 			{
-				server.reboot();
+				try
+				{
+					for (final Server server : selectedServers)
+					{
+						server.reboot();
+					}
+				}
+				catch (final Exception e)
+				{
+					return e;
+				}
+				return null;
 			}
-		}
-		catch (final CloudException e)
-		{
-			e.printStackTrace();
-		}
-		catch (final InternalException e)
-		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+
+			@Override
+			public void done()
+			{
+				try
+				{
+					Exception result = get();
+
+					if (result != null)
+					{
+						log.error("Error while rebooting", result);
+						error(result);
+					}
+				}
+				catch (Exception ignore)
+				{
+				}
+			}
+		}).execute();
+
 	}
 
 	public void unlinkSelectedServers()
@@ -747,7 +821,14 @@ public class GUI extends JFrame implements ListSelectionListener,
 	@Override
 	public void serverLinked(final CloudProvider cloudProvider, final Server srv)
 	{
-		addServer(srv);
+		SwingUtilities.invokeLater(new Runnable()
+		{
+			@Override
+			public void run()
+			{
+				addServer(srv);
+			}
+		});
 	}
 
 	@Override

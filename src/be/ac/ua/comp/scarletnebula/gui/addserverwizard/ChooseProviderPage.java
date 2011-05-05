@@ -51,6 +51,6 @@ class ChooseProviderPage extends WizardPage
 
 		rec.provider = provider;
 
-		return new InstanceInformationPage(provider);// InstanceInformationPage(provider);
+		return new ChooseImagePage(provider);// InstanceInformationPage(provider);
 	};
 };
