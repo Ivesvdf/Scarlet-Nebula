@@ -18,10 +18,10 @@ import org.jfree.data.time.RegularTimePeriod;
 import org.jfree.data.time.TimeSeries;
 import org.jfree.data.time.TimeSeriesCollection;
 
+import be.ac.ua.comp.scarletnebula.core.Datapoint;
 import be.ac.ua.comp.scarletnebula.core.Server;
 import be.ac.ua.comp.scarletnebula.core.ServerStatisticsManager;
-import be.ac.ua.comp.scarletnebula.gui.graph.Datapoint;
-import be.ac.ua.comp.scarletnebula.gui.graph.Datastream.TimedDatapoint;
+import be.ac.ua.comp.scarletnebula.core.Datastream.TimedDatapoint;
 
 /**
  * An abstract Graph that displays streaming data

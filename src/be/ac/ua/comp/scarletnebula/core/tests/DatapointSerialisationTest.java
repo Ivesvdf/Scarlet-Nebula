@@ -1,8 +1,11 @@
-package be.ac.ua.comp.scarletnebula.gui.graph;
+package be.ac.ua.comp.scarletnebula.core.tests;
 
 import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
+
+import be.ac.ua.comp.scarletnebula.core.Datapoint;
+import be.ac.ua.comp.scarletnebula.core.Datapoint.Type;
 
 import com.google.gson.Gson;
 

@@ -2,7 +2,7 @@ package be.ac.ua.comp.scarletnebula.gui;
 
 import org.jfree.data.time.RegularTimePeriod;
 
-import be.ac.ua.comp.scarletnebula.gui.graph.Datapoint;
+import be.ac.ua.comp.scarletnebula.core.Datapoint;
 
 public interface NewDatapointListener
 {

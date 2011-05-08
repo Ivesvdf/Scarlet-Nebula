@@ -1,4 +1,4 @@
-package be.ac.ua.comp.scarletnebula.gui.graph;
+package be.ac.ua.comp.scarletnebula.core;
 
 import java.util.ArrayList;
 import java.util.Calendar;

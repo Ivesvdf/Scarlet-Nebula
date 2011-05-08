@@ -16,9 +16,9 @@ import org.jfree.chart.axis.NumberAxis;
 import org.jfree.chart.axis.NumberTickUnit;
 import org.jfree.chart.plot.XYPlot;
 
-import be.ac.ua.comp.scarletnebula.gui.graph.Datapoint.Type;
-import be.ac.ua.comp.scarletnebula.gui.graph.Datastream;
-import be.ac.ua.comp.scarletnebula.gui.graph.Datastream.TimedDatapoint;
+import be.ac.ua.comp.scarletnebula.core.Datastream;
+import be.ac.ua.comp.scarletnebula.core.Datapoint.Type;
+import be.ac.ua.comp.scarletnebula.core.Datastream.TimedDatapoint;
 
 public class DecoratedGraph extends Graph
 {

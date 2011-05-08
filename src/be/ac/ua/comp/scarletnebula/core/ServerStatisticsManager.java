@@ -10,12 +10,10 @@ import java.util.Map;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import be.ac.ua.comp.scarletnebula.core.Datastream.TimedDatapoint;
 import be.ac.ua.comp.scarletnebula.core.SSHCommandConnection.ChannelInputStreamTuple;
 import be.ac.ua.comp.scarletnebula.gui.NewDatapointListener;
 import be.ac.ua.comp.scarletnebula.gui.NotPromptingJschUserInfo;
-import be.ac.ua.comp.scarletnebula.gui.graph.Datapoint;
-import be.ac.ua.comp.scarletnebula.gui.graph.Datastream;
-import be.ac.ua.comp.scarletnebula.gui.graph.Datastream.TimedDatapoint;
 
 import com.jcraft.jsch.Channel;
 

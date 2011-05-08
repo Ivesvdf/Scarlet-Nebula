@@ -14,11 +14,11 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.jfree.chart.ChartPanel;
 
+import be.ac.ua.comp.scarletnebula.core.Datapoint;
 import be.ac.ua.comp.scarletnebula.core.Server;
 import be.ac.ua.comp.scarletnebula.core.ServerStatisticsManager;
 import be.ac.ua.comp.scarletnebula.core.ServerStatisticsManager.DeleteDatastreamListener;
 import be.ac.ua.comp.scarletnebula.core.ServerStatisticsManager.NewDatastreamListener;
-import be.ac.ua.comp.scarletnebula.gui.graph.Datapoint;
 
 public class AllGraphsPanel extends JPanel implements NewDatastreamListener,
 		DeleteDatastreamListener
