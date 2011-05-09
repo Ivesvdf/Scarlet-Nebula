@@ -86,7 +86,7 @@ public class ServerStatisticsManager
 			}
 			catch (final Exception e)
 			{
-				for (NoStatisticsListener listener : noStatisticsListeners)
+				for (final NoStatisticsListener listener : noStatisticsListeners)
 				{
 					log.info("Notifying listener of server statistics failure.");
 					listener.connectionFailed(ServerStatisticsManager.this);
@@ -168,7 +168,7 @@ public class ServerStatisticsManager
 		deleteDatastreamListeners.add(listener);
 	}
 
-	public void addNoStatisticsListener(NoStatisticsListener listener)
+	public void addNoStatisticsListener(final NoStatisticsListener listener)
 	{
 		noStatisticsListeners.add(listener);
 	}

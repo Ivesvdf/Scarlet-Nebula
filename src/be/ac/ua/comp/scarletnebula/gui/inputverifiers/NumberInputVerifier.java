@@ -7,13 +7,13 @@ import javax.swing.JTextField;
 
 public class NumberInputVerifier extends LoudInputVerifier
 {
-	public NumberInputVerifier(JTextField textField, String message)
+	public NumberInputVerifier(final JTextField textField, final String message)
 	{
 		super(textField, message);
 	}
 
 	@Override
-	public boolean verify(JComponent input)
+	public boolean verify(final JComponent input)
 	{
 		return Pattern.matches("[0-9]+", ((JTextField) input).getText());
 	}

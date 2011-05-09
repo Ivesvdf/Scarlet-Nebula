@@ -503,7 +503,7 @@ public class GUI extends JFrame implements ListSelectionListener,
 						server.terminate();
 						server.refreshUntilServerHasState(VmState.TERMINATED);
 					}
-					catch (Exception e)
+					catch (final Exception e)
 					{
 						return e;
 					}
@@ -516,7 +516,7 @@ public class GUI extends JFrame implements ListSelectionListener,
 			{
 				try
 				{
-					Exception result = get();
+					final Exception result = get();
 
 					if (result != null)
 					{
@@ -524,7 +524,7 @@ public class GUI extends JFrame implements ListSelectionListener,
 						error(result);
 					}
 				}
-				catch (Exception ignore)
+				catch (final Exception ignore)
 				{
 				}
 			}
@@ -600,7 +600,7 @@ public class GUI extends JFrame implements ListSelectionListener,
 							}
 						});
 					}
-					catch (Exception e)
+					catch (final Exception e)
 					{
 						return e;
 					}
@@ -613,7 +613,7 @@ public class GUI extends JFrame implements ListSelectionListener,
 			{
 				try
 				{
-					Exception result = get();
+					final Exception result = get();
 
 					if (result != null)
 					{
@@ -621,7 +621,7 @@ public class GUI extends JFrame implements ListSelectionListener,
 						error(result.getLocalizedMessage());
 					}
 				}
-				catch (Exception ignore)
+				catch (final Exception ignore)
 				{
 				}
 			}
@@ -748,7 +748,7 @@ public class GUI extends JFrame implements ListSelectionListener,
 			{
 				try
 				{
-					Exception result = get();
+					final Exception result = get();
 
 					if (result != null)
 					{
@@ -756,7 +756,7 @@ public class GUI extends JFrame implements ListSelectionListener,
 						error(result);
 					}
 				}
-				catch (Exception ignore)
+				catch (final Exception ignore)
 				{
 				}
 			}
@@ -795,7 +795,7 @@ public class GUI extends JFrame implements ListSelectionListener,
 			{
 				try
 				{
-					Exception result = get();
+					final Exception result = get();
 
 					if (result != null)
 					{
@@ -803,7 +803,7 @@ public class GUI extends JFrame implements ListSelectionListener,
 						error(result);
 					}
 				}
-				catch (Exception ignore)
+				catch (final Exception ignore)
 				{
 				}
 			}
@@ -839,7 +839,7 @@ public class GUI extends JFrame implements ListSelectionListener,
 			{
 				try
 				{
-					Exception result = get();
+					final Exception result = get();
 
 					if (result != null)
 					{
@@ -847,7 +847,7 @@ public class GUI extends JFrame implements ListSelectionListener,
 						error(result);
 					}
 				}
-				catch (Exception ignore)
+				catch (final Exception ignore)
 				{
 				}
 			}

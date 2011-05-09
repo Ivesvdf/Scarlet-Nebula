@@ -5,8 +5,6 @@ import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 
 import be.ac.ua.comp.scarletnebula.core.Datapoint;
-import be.ac.ua.comp.scarletnebula.core.Datapoint.Type;
-
 import com.google.gson.Gson;
 
 public class DatapointSerialisationTest

@@ -138,7 +138,7 @@ public class AddServerWizard implements WizardListener
 			{
 				try
 				{
-					Exception result = get();
+					final Exception result = get();
 
 					if (result != null)
 					{
@@ -148,7 +148,7 @@ public class AddServerWizard implements WizardListener
 								JOptionPane.ERROR_MESSAGE);
 					}
 				}
-				catch (Exception ignore)
+				catch (final Exception ignore)
 				{
 				}
 

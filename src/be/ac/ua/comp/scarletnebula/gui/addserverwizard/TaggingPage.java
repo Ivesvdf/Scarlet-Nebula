@@ -5,9 +5,6 @@ import java.util.Collection;
 
 import javax.swing.BorderFactory;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import be.ac.ua.comp.scarletnebula.gui.BetterTextLabel;
 import be.ac.ua.comp.scarletnebula.gui.TaggingPanel;
 import be.ac.ua.comp.scarletnebula.wizard.DataRecorder;
@@ -15,7 +12,6 @@ import be.ac.ua.comp.scarletnebula.wizard.WizardPage;
 
 public class TaggingPage extends WizardPage
 {
-	private static Log log = LogFactory.getLog(TaggingPage.class);
 	private static final long serialVersionUID = 1L;
 	TaggingPanel taggingPanel = new TaggingPanel();
 

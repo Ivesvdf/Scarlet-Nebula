@@ -41,7 +41,7 @@ public class FirewallPage extends WizardPage
 
 		if (!firewallPanel.selectedFirewallOpensPort(22))
 		{
-			int result = JOptionPane
+			final int result = JOptionPane
 					.showOptionDialog(
 							this,
 							"The firewall(s) you selected do not appear to have port 22 (SSH) open. \n "
@@ -56,10 +56,10 @@ public class FirewallPage extends WizardPage
 			}
 		}
 
-		AddServerWizardDataRecorder rec = (AddServerWizardDataRecorder) recorder;
+		final AddServerWizardDataRecorder rec = (AddServerWizardDataRecorder) recorder;
 
-		Collection<String> ids = new ArrayList<String>(selectedFirewalls.size());
-		for (Firewall firewall : selectedFirewalls)
+		final Collection<String> ids = new ArrayList<String>(selectedFirewalls.size());
+		for (final Firewall firewall : selectedFirewalls)
 		{
 			ids.add(firewall.getProviderFirewallId());
 		}

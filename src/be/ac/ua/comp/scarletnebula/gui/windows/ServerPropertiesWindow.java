@@ -15,6 +15,7 @@ import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
@@ -196,6 +197,7 @@ public class ServerPropertiesWindow extends JDialog
 		Component servertagComponent = null;
 		Component sshLoginMethodComponent = null;
 		Component providerComponent = null;
+		Component vncComponent = null;
 
 		if (servers.size() == 1)
 		{
@@ -205,7 +207,7 @@ public class ServerPropertiesWindow extends JDialog
 			servertagComponent = getSingleServerTagComponent(server);
 			sshLoginMethodComponent = getSingleServerSshLoginMethodComponent(server);
 			providerComponent = getSingleProviderComponent(server);
-
+			vncComponent = getSingleVNCComponent(server);
 		}
 		else
 		{
@@ -213,6 +215,7 @@ public class ServerPropertiesWindow extends JDialog
 			servertagComponent = getMultipleServerTagComponent(servers);
 			sshLoginMethodComponent = new JLabel("...");
 			providerComponent = getMultipleServersProviderComponent(servers);
+			vncComponent = new JLabel("...");
 		}
 
 		builder.append("Name", servernameComponent);
@@ -225,6 +228,7 @@ public class ServerPropertiesWindow extends JDialog
 		builder.nextLine();
 
 		builder.append("Provider", providerComponent);
+		builder.append("VNC Password", vncComponent);
 		builder.nextLine();
 
 		builder.append("Architecture", architectureLabel);
@@ -247,6 +251,41 @@ public class ServerPropertiesWindow extends JDialog
 		final JScrollPane bodyScrollPane = new JScrollPane(builder.getPanel());
 		bodyScrollPane.setBorder(null);
 		overviewTab.add(bodyScrollPane);
+	}
+
+	private String getVNCRep(final Server server)
+	{
+		if (!server.getVNCPassword().isEmpty())
+		{
+			return server.getVNCPassword();
+		}
+		else
+		{
+			return "(Not set)";
+		}
+	}
+
+	private Component getSingleVNCComponent(final Server server)
+	{
+		return new ChangeableLabel(getVNCRep(server), new Executable<JLabel>()
+		{
+			@Override
+			public void run(final JLabel text)
+			{
+				final String result = JOptionPane
+						.showInputDialog(
+								ServerPropertiesWindow.this,
+								"Enter the password you'd like to use to establish VNC connections to this server.",
+								server.getVNCPassword());
+
+				if (!result.isEmpty())
+				{
+					server.setVNCPassword(result);
+					server.store();
+					text.setText(result);
+				}
+			}
+		});
 	}
 
 	private Component getMultipleServerTagComponent(

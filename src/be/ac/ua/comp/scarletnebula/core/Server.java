@@ -36,6 +36,7 @@ public class Server
 	private String keypair;
 	private String sshLogin;
 	private String sshPassword;
+	private String vncPassword;
 	private Collection<String> tags;
 	private ServerStatisticsManager serverStatisticsManager;
 	private String statisticsCommand;
@@ -47,8 +48,8 @@ public class Server
 			final CloudProvider inputProvider, final String inputKeypair,
 			final String inputFriendlyName, final Collection<String> tags,
 			final boolean useSshPassword, final String sshLogin,
-			final String sshPassword, final String statisticsCommand,
-			final String preferredDatastream)
+			final String sshPassword, final String vncPassword,
+			final String statisticsCommand, final String preferredDatastream)
 	{
 		provider = inputProvider;
 		keypair = inputKeypair;
@@ -56,6 +57,7 @@ public class Server
 		this.useSshPassword = useSshPassword;
 		this.sshLogin = (sshLogin != null ? sshLogin : "");
 		this.sshPassword = (sshPassword != null ? sshPassword : "");
+		this.vncPassword = (vncPassword != null ? vncPassword : "");
 		this.statisticsCommand = statisticsCommand;
 		this.preferredDatastream = preferredDatastream;
 		this.tags = tags;
@@ -81,7 +83,7 @@ public class Server
 					{
 						@Override
 						public void connectionFailed(
-								ServerStatisticsManager manager)
+								final ServerStatisticsManager manager)
 						{
 							log.info("Being notified of server statistics failure.");
 							noConnection = true;
@@ -177,6 +179,7 @@ public class Server
 				"useSshPassword", "false"));
 		final String sshLogin = props.getProperty("sshLogin");
 		final String sshPassword = props.getProperty("sshPassword");
+		final String vncPassword = props.getProperty("vncPassword");
 		final String statisticsCommand = props.getProperty("statisticsCommand");
 		final String tagString = props.getProperty("tags");
 		final String preferredDatastream = props
@@ -192,6 +195,7 @@ public class Server
 								// is used
 				sshLogin, // Login for SSH'ing
 				sshPassword, // Password for ssh'ing (if any)
+				vncPassword, // Password for VNC'ing
 				statisticsCommand, // Command to be executed for statistics
 				preferredDatastream); // Datastream to show in small server
 	}
@@ -250,6 +254,7 @@ public class Server
 					provider.getUnderlyingClassname());
 			properties.setProperty("sshLogin", sshLogin);
 			properties.setProperty("sshPassword", sshPassword);
+			properties.setProperty("vncPassword", vncPassword);
 			properties.setProperty("useSshPassword",
 					new Boolean(useSshPassword).toString());
 			properties.setProperty("tags",
@@ -730,6 +735,16 @@ public class Server
 	public String getSshPassword()
 	{
 		return sshPassword;
+	}
+
+	public String getVNCPassword()
+	{
+		return vncPassword;
+	}
+
+	public void setVNCPassword(final String password)
+	{
+		vncPassword = password;
 	}
 
 	public boolean isPausable()

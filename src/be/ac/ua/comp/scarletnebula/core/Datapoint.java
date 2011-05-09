@@ -10,13 +10,18 @@ public class Datapoint
 	};
 
 	final private static Gson gson = new Gson();
-	final Type datapointType;
-	final String datastream;
-	final double value;
+	Type datapointType;
+	String datastream;
+	double value;
 	Double lowWarnLevel = null;
 	Double mediumWarnLevel = null;
 	Double highWarnLevel = null;
 	Double max = null;
+
+	public Datapoint()
+	{
+
+	}
 
 	public Datapoint(final Type datapointType, final String datastream,
 			final Double value, final Double lowWarnLevel,

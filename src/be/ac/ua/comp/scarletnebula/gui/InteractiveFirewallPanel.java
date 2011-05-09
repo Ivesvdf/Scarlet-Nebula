@@ -53,8 +53,8 @@ public class InteractiveFirewallPanel extends JPanel implements
 		private final int endPort;
 		private final Firewall firewall;
 
-		private AddRuleSwingWorker(Collapsable throbber, String cidr,
-				int beginPort, Protocol protocol, int endPort, Firewall firewall)
+		private AddRuleSwingWorker(final Collapsable throbber, final String cidr,
+				final int beginPort, final Protocol protocol, final int endPort, final Firewall firewall)
 		{
 			super(throbber);
 			this.cidr = cidr;
@@ -173,7 +173,7 @@ public class InteractiveFirewallPanel extends JPanel implements
 		@Override
 		public void actionPerformed(final ActionEvent e)
 		{
-			Collection<Firewall> firewalls = getSelectedFirewalls();
+			final Collection<Firewall> firewalls = getSelectedFirewalls();
 			if (firewalls.size() != 1)
 			{
 				return;
@@ -707,14 +707,14 @@ public class InteractiveFirewallPanel extends JPanel implements
 
 	public Collection<Firewall> getSelectedFirewalls()
 	{
-		Collection<Firewall> rv = new ArrayList<Firewall>();
-		int indices[] = firewallList.getSelectedIndices();
+		final Collection<Firewall> rv = new ArrayList<Firewall>();
+		final int indices[] = firewallList.getSelectedIndices();
 
-		for (int index : indices)
+		for (final int index : indices)
 		{
-			String firewall = (String) firewallListModel.get(index);
+			final String firewall = (String) firewallListModel.get(index);
 
-			for (Firewall comp : firewalls)
+			for (final Firewall comp : firewalls)
 			{
 				if (comp.getName().equals(firewall))
 				{
@@ -726,13 +726,13 @@ public class InteractiveFirewallPanel extends JPanel implements
 		return rv;
 	}
 
-	public boolean selectedFirewallOpensPort(int port)
+	public boolean selectedFirewallOpensPort(final int port)
 	{
 		boolean found = false;
 		for (int row = 0; row < ruleList.getRowCount(); row++)
 		{
-			String portString = ruleList.getPort(row);
-			PortRange range = new PortRange(portString);
+			final String portString = ruleList.getPort(row);
+			final PortRange range = new PortRange(portString);
 
 			if (port >= range.startPort && port <= range.endPort)
 			{

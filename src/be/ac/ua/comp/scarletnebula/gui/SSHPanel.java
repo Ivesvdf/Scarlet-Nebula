@@ -111,9 +111,9 @@ public class SSHPanel extends JPanel
 					term.requestFocusInWindow();
 					term.start(connection);
 				}
-				catch (Exception e)
+				catch (final Exception e)
 				{
-					for (ExceptionListener listener : exceptionListeners)
+					for (final ExceptionListener listener : exceptionListeners)
 					{
 						listener.exceptionThrown(e);
 					}
@@ -130,7 +130,7 @@ public class SSHPanel extends JPanel
 		connectionThread.start();
 	}
 
-	public void addExceptionListener(ExceptionListener listener)
+	public void addExceptionListener(final ExceptionListener listener)
 	{
 		exceptionListeners.add(listener);
 	}

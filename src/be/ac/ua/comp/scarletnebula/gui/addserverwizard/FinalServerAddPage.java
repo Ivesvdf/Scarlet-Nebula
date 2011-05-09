@@ -73,7 +73,7 @@ public class FinalServerAddPage extends WizardPage
 				new Executable<JLabel>()
 				{
 					@Override
-					public void run(JLabel param)
+					public void run(final JLabel param)
 					{
 
 					}
@@ -87,7 +87,7 @@ public class FinalServerAddPage extends WizardPage
 					{
 
 						@Override
-						public void run(JLabel param)
+						public void run(final JLabel param)
 						{
 							new SelectKeyWindow((JDialog) Utils
 									.findWindow(FinalServerAddPage.this),
@@ -96,11 +96,12 @@ public class FinalServerAddPage extends WizardPage
 								private static final long serialVersionUID = 1L;
 
 								@Override
-								public void onOk(String keyname)
+								public void onOk(final String keyname)
 								{
 									if (!keyname.isEmpty())
 									{
 										rec.keypairOrPassword = keyname;
+										param.setText(keyname);
 										dispose();
 									}
 									else

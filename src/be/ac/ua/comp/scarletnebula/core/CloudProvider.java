@@ -431,6 +431,7 @@ public class CloudProvider
 						nullToEmpty(testServer.getRootUser()), // root user
 						nullToEmpty(testServer.getRootPassword()), // root
 																	// password
+						nullToEmpty(testServer.getRootPassword()), // VNC passwd
 						getDefaultStatisticsCommand(), // statistics command
 						"CPU"));
 			}
@@ -483,7 +484,7 @@ public class CloudProvider
 	public Server startServer(final String serverName,
 			final VirtualMachineProduct product, final MachineImage image,
 			final Collection<String> tags, final String keypairOrPassword,
-			Collection<String> firewalls) throws InternalException,
+			final Collection<String> firewalls) throws InternalException,
 			CloudException
 	{
 		final String dataCenterId = "eu-west-1b";
@@ -536,7 +537,9 @@ public class CloudProvider
 				!supportsSSHKeys(), // server uses password to SSH
 				rootUser, // SSH login
 				daseinServer.getRootPassword(), // SSH Password
-				getDefaultStatisticsCommand(), // Statistics command
+				keypairOrPassword, // VNC password
+				getDefaultStatisticsCommand(), // Statistics
+												// command
 				"CPU"); // preferred datastream
 
 		linkUnlinkedServer(server);
@@ -980,6 +983,9 @@ public class CloudProvider
 		return keys;
 	}
 
+	/**
+	 * @return True if this provider supports SSH keys, false otherwise.
+	 */
 	public boolean supportsSSHKeys()
 	{
 		return providerImpl.getIdentityServices() != null

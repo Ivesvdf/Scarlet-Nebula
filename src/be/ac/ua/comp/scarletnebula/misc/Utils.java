@@ -157,13 +157,13 @@ public class Utils
 		return highest;
 	}
 
-	public static String getRandomString(int length)
+	public static String getRandomString(final int length)
 	{
 		final String charset = "!0123456789abcdefghijklmnopqrstuvwxyz";
-		StringBuffer sb = new StringBuffer();
+		final StringBuffer sb = new StringBuffer();
 		for (int i = 0; i < length; i++)
 		{
-			int pos = rand.nextInt(charset.length());
+			final int pos = rand.nextInt(charset.length());
 			sb.append(charset.charAt(pos));
 		}
 		return sb.toString();

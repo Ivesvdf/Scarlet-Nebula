@@ -89,30 +89,30 @@ public class ChangeServerSshLoginMethodWindow extends JDialog
 		normalPassword.addMouseListener(new MouseListener()
 		{
 			@Override
-			public void mouseReleased(MouseEvent e)
+			public void mouseReleased(final MouseEvent e)
 			{
 			}
 
 			@Override
-			public void mousePressed(MouseEvent e)
+			public void mousePressed(final MouseEvent e)
 			{
 
 			}
 
 			@Override
-			public void mouseExited(MouseEvent e)
+			public void mouseExited(final MouseEvent e)
 			{
 				normalPassword.setEchoChar(standardEchoChar);
 			}
 
 			@Override
-			public void mouseEntered(MouseEvent e)
+			public void mouseEntered(final MouseEvent e)
 			{
 				normalPassword.setEchoChar('\0');
 			}
 
 			@Override
-			public void mouseClicked(MouseEvent e)
+			public void mouseClicked(final MouseEvent e)
 			{
 			}
 		});

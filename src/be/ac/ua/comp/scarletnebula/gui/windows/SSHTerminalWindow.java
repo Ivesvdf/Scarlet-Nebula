@@ -35,7 +35,7 @@ public class SSHTerminalWindow extends JDialog
 			sshPanel.addExceptionListener(new ExceptionListener()
 			{
 				@Override
-				public void exceptionThrown(Exception e)
+				public void exceptionThrown(final Exception e)
 				{
 					JOptionPane.showMessageDialog(SSHTerminalWindow.this,
 							e.getLocalizedMessage(), "Error",

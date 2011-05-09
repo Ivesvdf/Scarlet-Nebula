@@ -4,13 +4,17 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.util.Arrays;
 import java.util.Collection;
 
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.dasein.cloud.compute.VmState;
 
+import TightVNC.VncViewer;
 import be.ac.ua.comp.scarletnebula.core.Server;
 import be.ac.ua.comp.scarletnebula.gui.addserverwizard.AddServerWizard;
 import be.ac.ua.comp.scarletnebula.gui.windows.GUI;
@@ -21,6 +25,48 @@ import be.ac.ua.comp.scarletnebula.misc.Utils;
 
 public class ServerListMouseListener implements MouseListener
 {
+	private final class VNCActionListener implements ActionListener
+	{
+		private final Collection<Server> selectedServers;
+
+		private VNCActionListener(final Collection<Server> selectedServers)
+		{
+			this.selectedServers = selectedServers;
+		}
+
+		@Override
+		public void actionPerformed(final ActionEvent e)
+		{
+			final VncViewer v = new VncViewer();
+
+			final Server firstServer = selectedServers.iterator().next();
+
+			String address;
+
+			if (firstServer.getPublicDnsAddress() != null)
+			{
+				address = firstServer.getPublicDnsAddress();
+			}
+			else if (firstServer.getPublicIpAddresses().length >= 1)
+			{
+				address = firstServer.getPublicIpAddresses()[0];
+			}
+			else
+			{
+				return;
+			}
+
+			v.mainArgs = Arrays.asList("HOST", address, "PASSWORD",
+					firstServer.getVNCPassword(), "Scaling factor", "auto",
+					"Show controls", "No").toArray(new String[0]);
+			v.inAnApplet = false;
+			v.inSeparateFrame = true;
+
+			v.init(gui);
+			v.start();
+		}
+	}
+
 	private final class StartPropertiesActionListener implements ActionListener
 	{
 		private final Collection<Server> selectedServers;
@@ -129,6 +175,7 @@ public class ServerListMouseListener implements MouseListener
 	private final GUI gui;
 	private final ServerListModel serverListModel;
 	private final ServerList serverlist;
+	private static Log log = LogFactory.getLog(ServerListMouseListener.class);
 
 	public ServerListMouseListener(final GUI gui, final ServerList serverlist,
 			final ServerListModel serverListModel)
@@ -213,6 +260,10 @@ public class ServerListMouseListener implements MouseListener
 			console.addActionListener(new StartTerminalActionListener(
 					selectedServers));
 
+			final JMenuItem vnc = new JMenuItem("Start VNC",
+					Utils.icon("vnc16.png"));
+			vnc.addActionListener(new VNCActionListener(selectedServers));
+
 			final JMenuItem statistics = new JMenuItem("View statistics",
 					Utils.icon("statistics16.png"));
 			statistics.addActionListener(new StartStatisticsActionListener(
@@ -240,6 +291,11 @@ public class ServerListMouseListener implements MouseListener
 				console.setEnabled(false);
 			}
 
+			if (status != VmState.RUNNING)
+			{
+				vnc.setEnabled(false);
+			}
+
 			pause.setEnabled(clickedServer.isPausable()
 					&& clickedServer.getStatus() == VmState.RUNNING);
 
@@ -257,6 +313,7 @@ public class ServerListMouseListener implements MouseListener
 			popup.add(refresh);
 			popup.addSeparator();
 			popup.add(console);
+			popup.add(vnc);
 			popup.add(statistics);
 			popup.addSeparator();
 			popup.add(unlink);
