@@ -16,6 +16,7 @@ import be.ac.ua.comp.scarletnebula.core.CloudManager;
 import be.ac.ua.comp.scarletnebula.core.CloudProvider;
 import be.ac.ua.comp.scarletnebula.core.Server;
 import be.ac.ua.comp.scarletnebula.gui.addproviderwizard.AddProviderWizard;
+import be.ac.ua.comp.scarletnebula.misc.Utils;
 import be.ac.ua.comp.scarletnebula.wizard.DataRecorder;
 import be.ac.ua.comp.scarletnebula.wizard.SimpleWizardTemplate;
 import be.ac.ua.comp.scarletnebula.wizard.Wizard;
@@ -75,7 +76,17 @@ public class AddServerWizard implements WizardListener
 		final MachineImage image = rec.image;
 		final CloudProvider provider = rec.provider;
 		final Collection<String> tags = rec.tags;
-		final String keypairOrPassword = rec.keypairOrPassword;
+		final String keypairOrPassword;
+
+		if (provider.supportsSSHKeys())
+		{
+			keypairOrPassword = rec.keypairOrPassword != null ? rec.keypairOrPassword
+					: provider.getDefaultKeypair();
+		}
+		else
+		{
+			keypairOrPassword = Utils.getRandomString(8);
+		}
 		final Collection<String> firewallIds = rec.firewallIds;
 		final int instanceCount = rec.instanceCount;
 
@@ -111,7 +122,7 @@ public class AddServerWizard implements WizardListener
 
 						final Server server = provider.startServer(
 								localServername, instancesize, image, tags,
-								provider.getDefaultKeypair(), firewallIds);
+								keypairOrPassword, firewallIds);
 						server.refreshUntilServerHasState(VmState.RUNNING);
 					}
 					catch (final Exception e)

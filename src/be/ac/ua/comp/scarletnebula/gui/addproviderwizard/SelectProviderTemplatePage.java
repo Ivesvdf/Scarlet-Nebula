@@ -57,7 +57,14 @@ public class SelectProviderTemplatePage extends WizardPage
 
 		final AddProviderWizardDataRecorder rec = (AddProviderWizardDataRecorder) recorder;
 		rec.setTemplate(template);
-		return new SelectEndpointPage(template);
-	}
 
+		if (template.getEndPoints().isEmpty())
+		{
+			return new ProvideAccessPage();
+		}
+		else
+		{
+			return new SelectEndpointPage(template);
+		}
+	}
 }

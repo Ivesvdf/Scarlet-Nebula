@@ -46,7 +46,8 @@ public class AddProviderWizard extends Wizard implements WizardListener
 		final AddProviderWizardDataRecorder rec = (AddProviderWizardDataRecorder) recorder;
 
 		CloudManager.get().registerNewCloudProvider(rec.getName(),
-				rec.getTemplate().getClassname(), rec.getEndpoint().getURL(),
+				rec.getTemplate().getClassname(), // classname
+				rec.getEndpoint() != null ? rec.getEndpoint().getURL() : "", // endpoint
 				rec.getApiKey(), rec.getApiSecret());
 
 		for (final ProviderAddedListener p : providerAddedListeners)
@@ -54,8 +55,12 @@ public class AddProviderWizard extends Wizard implements WizardListener
 			p.providerWasAdded(rec.getName());
 		}
 
-		new KeyWizard(null, CloudManager.get().getCloudProviderByName(
-				rec.getName()));
+		if (CloudManager.get().getCloudProviderByName(rec.getName())
+				.supportsSSHKeys())
+		{
+			new KeyWizard(null, CloudManager.get().getCloudProviderByName(
+					rec.getName()));
+		}
 	}
 
 	@Override

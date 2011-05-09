@@ -533,7 +533,7 @@ public class CloudProvider
 				keypairOrPassword, // Keypair used
 				serverName, // Server's friendly name
 				tags, // Tags this server was given
-				false, // server uses password to SSH
+				supportsSSHKeys(), // server uses password to SSH
 				rootUser, // SSH login
 				daseinServer.getRootPassword(), // SSH Password
 				getDefaultStatisticsCommand(), // Statistics command
@@ -964,6 +964,12 @@ public class CloudProvider
 		final Collection<String> knownKeys = KeyManager.getKeyNames(getName());
 		keys.removeAll(knownKeys);
 		return keys;
+	}
+
+	public boolean supportsSSHKeys()
+	{
+		return providerImpl.getIdentityServices() != null
+				&& providerImpl.getIdentityServices().getShellKeySupport() != null;
 	}
 
 	public boolean unlinkedKeyExists(final String checkKeyname)

@@ -6,6 +6,9 @@ import java.awt.event.FocusListener;
 
 import javax.swing.JTextField;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import be.ac.ua.comp.scarletnebula.misc.Colors;
 
 /**
@@ -19,6 +22,7 @@ public class BetterTextField extends JTextField
 	private static final long serialVersionUID = 1L;
 	private boolean originalPlaceholderText = true;
 	private boolean placeholderDisplayed = false;
+	private static Log log = LogFactory.getLog(BetterTextField.class);
 
 	/**
 	 * @see JTextField
@@ -63,14 +67,17 @@ public class BetterTextField extends JTextField
 					setForeground(Colors.Gray.alpha(1.0f));
 					setText(placeholder);
 					placeholderDisplayed = true;
+					originalPlaceholderText = true;
 				}
 			}
 
 			@Override
 			public void focusGained(final FocusEvent e)
 			{
+				log.info("Focus gained");
 				if (originalPlaceholderText)
 				{
+					log.info("Original text");
 					originalPlaceholderText = false;
 					setForeground(originalTextColor);
 					setText("");

@@ -23,9 +23,12 @@ public class FinishPage extends WizardPage
 				+ (rec.getEndpoint() != null ? " on its "
 						+ rec.getEndpoint().getName() + " endpoint." : ".");
 
-		final CloudProvider tmpProvider = new CloudProvider(rec.getName(), rec
-				.getTemplate().getClassname(), rec.getEndpoint().getURL(),
-				rec.getApiKey(), rec.getApiSecret(), ""); // default keypair
+		final CloudProvider tmpProvider = new CloudProvider(rec.getName(), // name
+				rec.getTemplate().getClassname(), // classname
+				rec.getEndpoint() != null ? rec.getEndpoint().getURL() : "", // endpoint
+				rec.getApiKey(), // api key
+				rec.getApiSecret(), // api secret
+				""); // default keypair
 
 		final boolean credentialsOk = tmpProvider.test();
 

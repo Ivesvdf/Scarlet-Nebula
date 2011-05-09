@@ -22,9 +22,22 @@ public class ProviderPropertiesWindow extends JDialog
 		setSize(550, 400);
 
 		final JTabbedPane tabbedPane = new JTabbedPane();
-		tabbedPane.addTab("Key Management", new InteractiveKeyPanel(provider));
-		tabbedPane.addTab("Firewall Management", new InteractiveFirewallPanel(
-				provider));
+		final InteractiveKeyPanel keyPanel = new InteractiveKeyPanel(provider);
+		tabbedPane.addTab("Key Management", keyPanel);
+		final InteractiveFirewallPanel firewallPanel = new InteractiveFirewallPanel(
+				provider);
+		tabbedPane.addTab("Firewall Management", firewallPanel);
+
+		if (!provider.supportsSSHKeys())
+		{
+			keyPanel.setEnabled(false);
+		}
+
+		if (!provider.supportsFirewalls())
+		{
+			firewallPanel.setEnabled(false);
+		}
+
 		add(tabbedPane, BorderLayout.CENTER);
 		setVisible(true);
 	}

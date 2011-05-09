@@ -4,7 +4,9 @@ import java.awt.BorderLayout;
 
 import javax.swing.BorderFactory;
 import javax.swing.InputVerifier;
+import javax.swing.JDialog;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
@@ -15,7 +17,9 @@ import be.ac.ua.comp.scarletnebula.gui.LabelEditSwitcherPanel;
 import be.ac.ua.comp.scarletnebula.gui.inputverifiers.NumberInputVerifier;
 import be.ac.ua.comp.scarletnebula.gui.inputverifiers.PlainTextVerifier;
 import be.ac.ua.comp.scarletnebula.gui.inputverifiers.ServernameInputVerifier;
+import be.ac.ua.comp.scarletnebula.gui.windows.SelectKeyWindow;
 import be.ac.ua.comp.scarletnebula.misc.Executable;
+import be.ac.ua.comp.scarletnebula.misc.Utils;
 import be.ac.ua.comp.scarletnebula.wizard.DataRecorder;
 import be.ac.ua.comp.scarletnebula.wizard.WizardPage;
 
@@ -75,6 +79,44 @@ public class FinalServerAddPage extends WizardPage
 					}
 				}));
 
+		if (rec.provider.supportsSSHKeys())
+		{
+			rec.keypairOrPassword = rec.provider.getDefaultKeypair();
+			final ChangeableLabel sshKeyLabel = new ChangeableLabel(
+					rec.keypairOrPassword, new Executable<JLabel>()
+					{
+
+						@Override
+						public void run(JLabel param)
+						{
+							new SelectKeyWindow((JDialog) Utils
+									.findWindow(FinalServerAddPage.this),
+									rec.provider)
+							{
+								private static final long serialVersionUID = 1L;
+
+								@Override
+								public void onOk(String keyname)
+								{
+									if (!keyname.isEmpty())
+									{
+										rec.keypairOrPassword = keyname;
+										dispose();
+									}
+									else
+									{
+										JOptionPane.showMessageDialog(this,
+												"Please select a key",
+												"Select Key",
+												JOptionPane.ERROR_MESSAGE);
+									}
+								}
+							};
+						}
+					});
+
+			builder.append("SSH Key", sshKeyLabel);
+		}
 		final JPanel panel = builder.getPanel();
 		panel.setBorder(BorderFactory.createEmptyBorder(50, 20, 20, 80));
 		add(panel, BorderLayout.CENTER);

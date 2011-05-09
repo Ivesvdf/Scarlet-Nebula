@@ -10,12 +10,15 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.channels.FileChannel;
 import java.util.List;
+import java.util.Random;
 
 import javax.swing.ImageIcon;
 import javax.swing.SwingUtilities;
 
 public class Utils
 {
+	private static Random rand = new Random(System.currentTimeMillis());
+
 	/**
 	 * Copies the contents of a file to a different file
 	 * 
@@ -152,5 +155,17 @@ public class Utils
 		}
 
 		return highest;
+	}
+
+	public static String getRandomString(int length)
+	{
+		final String charset = "!0123456789abcdefghijklmnopqrstuvwxyz";
+		StringBuffer sb = new StringBuffer();
+		for (int i = 0; i < length; i++)
+		{
+			int pos = rand.nextInt(charset.length());
+			sb.append(charset.charAt(pos));
+		}
+		return sb.toString();
 	}
 }

@@ -30,7 +30,7 @@ public class ProvideAccessPage extends WizardPage
 
 		// And the textfields below
 		final FormLayout layout = new FormLayout(
-				"right:max(40dlu;p), 4dlu, max(50dlu;p):grow, 7dlu", "");
+				"right:max(40dlu;p), 4dlu, max(50dlu;p):grow", "");
 
 		final DefaultFormBuilder builder = new DefaultFormBuilder(layout);
 		builder.setDefaultDialogBorder();

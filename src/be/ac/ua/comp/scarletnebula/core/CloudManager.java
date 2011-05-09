@@ -84,6 +84,12 @@ public class CloudManager
 				"Radix", "be.ac.ua.comp.scarletnebula.misc.RadixCloudProvider");
 		radix.addEndPoint("default", "default", "radix.cmi.ua.ac.be");
 		providerTemplates.add(radix);
+
+		final CloudProviderTemplate cloudSigma = new CloudProviderTemplate(
+				"CloudSigma", "CloudSigma",
+				"org.dasein.cloud.jclouds.cloudsigma.CloudSigma");
+
+		providerTemplates.add(cloudSigma);
 	}
 
 	/**
