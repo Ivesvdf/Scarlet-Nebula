@@ -6,7 +6,9 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
-import java.io.IOException;
+import java.beans.ExceptionListener;
+import java.util.Collection;
+import java.util.LinkedList;
 
 import javax.swing.BorderFactory;
 import javax.swing.JPanel;
@@ -20,12 +22,12 @@ import be.ac.ua.comp.scarletnebula.core.Server;
 
 import com.jcraft.jcterm.Connection;
 import com.jcraft.jcterm.JCTermSwing;
-import com.jcraft.jsch.JSchException;
 
 public class SSHPanel extends JPanel
 {
 	private static final long serialVersionUID = 1L;
 	private static Log log = LogFactory.getLog(SSHPanel.class);
+	private final Collection<ExceptionListener> exceptionListeners = new LinkedList<ExceptionListener>();
 
 	public SSHPanel(final Server server)
 	{
@@ -109,20 +111,14 @@ public class SSHPanel extends JPanel
 					term.requestFocusInWindow();
 					term.start(connection);
 				}
-				catch (final JSchException e)
+				catch (Exception e)
 				{
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				catch (final IOException e)
-				{
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				catch (final Exception e)
-				{
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+					for (ExceptionListener listener : exceptionListeners)
+					{
+						listener.exceptionThrown(e);
+					}
+
+					log.warn("Exception thrown by SSHPanel", e);
 				}
 				finally
 				{
@@ -132,6 +128,11 @@ public class SSHPanel extends JPanel
 		};
 
 		connectionThread.start();
+	}
+
+	public void addExceptionListener(ExceptionListener listener)
+	{
+		exceptionListeners.add(listener);
 	}
 
 }

@@ -752,7 +752,7 @@ public class GUI extends JFrame implements ListSelectionListener,
 
 					if (result != null)
 					{
-						log.error("Error while pauzing", result);
+						log.error("Error while pausing", result);
 						error(result);
 					}
 				}
@@ -762,6 +762,52 @@ public class GUI extends JFrame implements ListSelectionListener,
 			}
 		}).execute();
 
+	}
+
+	public void resumeSelectedServers()
+	{
+		final Collection<Server> selectedServers = serverList
+				.getSelectedServers();
+
+		(new SwingWorker<Exception, Object>()
+		{
+			@Override
+			protected Exception doInBackground() throws Exception
+			{
+				try
+				{
+					for (final Server server : selectedServers)
+					{
+						server.resume();
+						server.refreshUntilServerHasState(VmState.RUNNING);
+					}
+				}
+				catch (final Exception e)
+				{
+					return e;
+				}
+
+				return null;
+			}
+
+			@Override
+			public void done()
+			{
+				try
+				{
+					Exception result = get();
+
+					if (result != null)
+					{
+						log.error("Error while resuming", result);
+						error(result);
+					}
+				}
+				catch (Exception ignore)
+				{
+				}
+			}
+		}).execute();
 	}
 
 	public void rebootSelectedServers()

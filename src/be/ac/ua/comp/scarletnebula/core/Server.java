@@ -434,6 +434,19 @@ public class Server
 		{
 			provider.pause(this);
 		}
+
+		return;
+	}
+
+	/**
+	 * @see CloudProvider
+	 * @throws InternalException
+	 * @throws CloudException
+	 */
+	public void resume() throws InternalException, CloudException
+	{
+		provider.resume(this);
+
 		return;
 	}
 
@@ -615,11 +628,11 @@ public class Server
 		catch (final ServerDisappearedException e)
 		{
 			getCloud().unlink(this);
+			return;
 		}
 		catch (final Exception e)
 		{
 			log.error("Something happened while refreshing server " + this, e);
-			e.printStackTrace();
 		}
 
 		if (getStatus() == state)

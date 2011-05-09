@@ -1,10 +1,12 @@
 package be.ac.ua.comp.scarletnebula.gui.windows;
 
 import java.awt.BorderLayout;
+import java.beans.ExceptionListener;
 import java.util.Collection;
 
 import javax.swing.JDialog;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 
 import be.ac.ua.comp.scarletnebula.core.Server;
 import be.ac.ua.comp.scarletnebula.gui.SSHPanel;
@@ -29,7 +31,19 @@ public class SSHTerminalWindow extends JDialog
 			setTitle(server.getFriendlyName() + " terminal");
 			setLayout(new BorderLayout());
 
-			add(new SSHPanel(server));
+			final SSHPanel sshPanel = new SSHPanel(server);
+			sshPanel.addExceptionListener(new ExceptionListener()
+			{
+				@Override
+				public void exceptionThrown(Exception e)
+				{
+					JOptionPane.showMessageDialog(SSHTerminalWindow.this,
+							e.getLocalizedMessage(), "Error",
+							JOptionPane.ERROR_MESSAGE);
+				}
+			});
+
+			add(sshPanel);
 		}
 
 		setVisible(true);

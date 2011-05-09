@@ -117,6 +117,15 @@ public class ServerListMouseListener implements MouseListener
 		}
 	}
 
+	private final class ResumeActionListener implements ActionListener
+	{
+		@Override
+		public void actionPerformed(final ActionEvent e)
+		{
+			gui.resumeSelectedServers();
+		}
+	}
+
 	private final GUI gui;
 	private final ServerListModel serverListModel;
 	private final ServerList serverlist;
@@ -175,11 +184,13 @@ public class ServerListMouseListener implements MouseListener
 			final VmState status = clickedServer.getStatus();
 
 			final JPopupMenu popup = new JPopupMenu();
-			final JMenuItem pauseResume = new JMenuItem(
-					(status == VmState.PAUSED) ? "Resume" : "Pause",
+			final JMenuItem pause = new JMenuItem("Pause",
 					Utils.icon("paused.png"));
+			pause.addActionListener(new PauseActionListener());
 
-			pauseResume.addActionListener(new PauseActionListener());
+			final JMenuItem resume = new JMenuItem("Resume",
+					Utils.icon("resume16.png"));
+			resume.addActionListener(new ResumeActionListener());
 
 			final JMenuItem reboot = new JMenuItem("Reboot",
 					Utils.icon("restarting.png"));
@@ -214,27 +225,33 @@ public class ServerListMouseListener implements MouseListener
 
 			if (status != VmState.RUNNING && status != VmState.PAUSED)
 			{
-				pauseResume.setEnabled(false);
+				pause.setEnabled(false);
 				reboot.setEnabled(false);
 				terminate.setEnabled(false);
 			}
-			if (clickedServer.sshWillFail() || status != VmState.RUNNING)
+			if (clickedServer.getServerStatistics() == null
+					|| status != VmState.RUNNING)
 			{
-				console.setEnabled(false);
 				statistics.setEnabled(false);
 			}
 
-			if (!clickedServer.isPausable())
+			if (clickedServer.sshWillFail() || status != VmState.RUNNING)
 			{
-				pauseResume.setEnabled(false);
+				console.setEnabled(false);
 			}
+
+			pause.setEnabled(clickedServer.isPausable()
+					&& clickedServer.getStatus() == VmState.RUNNING);
 
 			if (!clickedServer.isRebootable())
 			{
 				reboot.setEnabled(false);
 			}
 
-			popup.add(pauseResume);
+			resume.setEnabled(clickedServer.getStatus() == VmState.PAUSED);
+
+			popup.add(pause);
+			popup.add(resume);
 			popup.add(reboot);
 			popup.add(terminate);
 			popup.add(refresh);

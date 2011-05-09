@@ -782,6 +782,20 @@ public class CloudProvider
 	}
 
 	/**
+	 * Resumes a previously paused server.
+	 * 
+	 * @param server
+	 *            The server to resume.
+	 * @throws InternalException
+	 * @throws CloudException
+	 */
+	void resume(final Server server) throws InternalException, CloudException
+	{
+		log.info("Resuming " + server);
+		virtualMachineServices.boot(server.getUnfriendlyName());
+	}
+
+	/**
 	 * Reboots the server in parameter. This method is only supposed to be
 	 * called by Server.reboot()
 	 * 

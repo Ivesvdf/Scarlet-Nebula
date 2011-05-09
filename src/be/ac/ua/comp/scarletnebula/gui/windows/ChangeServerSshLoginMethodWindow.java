@@ -103,7 +103,6 @@ public class ChangeServerSshLoginMethodWindow extends JDialog
 			public void mouseExited(MouseEvent e)
 			{
 				normalPassword.setEchoChar(standardEchoChar);
-
 			}
 
 			@Override
