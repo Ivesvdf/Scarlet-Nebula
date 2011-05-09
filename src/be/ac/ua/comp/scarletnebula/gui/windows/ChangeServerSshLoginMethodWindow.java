@@ -4,6 +4,8 @@ import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -81,6 +83,41 @@ public class ChangeServerSshLoginMethodWindow extends JDialog
 		setLocationByPlatform(true);
 
 		this.server = server;
+
+		final char standardEchoChar = normalPassword.getEchoChar();
+
+		normalPassword.addMouseListener(new MouseListener()
+		{
+			@Override
+			public void mouseReleased(MouseEvent e)
+			{
+			}
+
+			@Override
+			public void mousePressed(MouseEvent e)
+			{
+
+			}
+
+			@Override
+			public void mouseExited(MouseEvent e)
+			{
+				normalPassword.setEchoChar(standardEchoChar);
+
+			}
+
+			@Override
+			public void mouseEntered(MouseEvent e)
+			{
+				normalPassword.setEchoChar('\0');
+			}
+
+			@Override
+			public void mouseClicked(MouseEvent e)
+			{
+			}
+		});
+
 		useLoginButton.setMnemonic(KeyEvent.VK_P);
 		useLoginButton.setBorder(BorderFactory.createEmptyBorder(0, 15, 0, 0));
 

@@ -533,7 +533,7 @@ public class CloudProvider
 				keypairOrPassword, // Keypair used
 				serverName, // Server's friendly name
 				tags, // Tags this server was given
-				supportsSSHKeys(), // server uses password to SSH
+				!supportsSSHKeys(), // server uses password to SSH
 				rootUser, // SSH login
 				daseinServer.getRootPassword(), // SSH Password
 				getDefaultStatisticsCommand(), // Statistics command

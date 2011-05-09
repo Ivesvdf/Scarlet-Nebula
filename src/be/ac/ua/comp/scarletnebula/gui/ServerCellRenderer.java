@@ -68,7 +68,7 @@ class ServerCellRenderer implements ListCellRenderer
 
 		final Component chartOrNothing;
 
-		if (server.sshWillFail())
+		if (server.getServerStatistics() == null)
 		{
 			chartOrNothing = new JLabel();
 		}

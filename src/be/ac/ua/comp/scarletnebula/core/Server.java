@@ -41,6 +41,7 @@ public class Server
 	private String statisticsCommand;
 	private final String preferredDatastream;
 	private boolean useSshPassword;
+	private boolean noConnection = false;
 
 	public Server(final VirtualMachine server,
 			final CloudProvider inputProvider, final String inputKeypair,
@@ -67,14 +68,26 @@ public class Server
 
 	public ServerStatisticsManager getServerStatistics()
 	{
-		if (sshWillFail())
+		if (sshWillFail() || noConnection)
 		{
 			// Do nothing -- return null
+			serverStatisticsManager = null;
 		}
 		else if (serverStatisticsManager == null)
 		{
 			serverStatisticsManager = new ServerStatisticsManager(this);
-
+			serverStatisticsManager
+					.addNoStatisticsListener(new ServerStatisticsManager.NoStatisticsListener()
+					{
+						@Override
+						public void connectionFailed(
+								ServerStatisticsManager manager)
+						{
+							log.info("Being notified of server statistics failure.");
+							noConnection = true;
+							serverChanged();
+						}
+					});
 		}
 		return serverStatisticsManager;
 	}
@@ -102,18 +115,30 @@ public class Server
 			throws Exception
 	{
 		SSHCommandConnection rv = null;
+		String address;
 
-		if (usesSshPassword())
+		if (serverImpl.getPublicDnsAddress() != null)
 		{
-			rv = SSHCommandConnection
-					.newConnectionWithPassword(
-							serverImpl.getPublicDnsAddress(), sshLogin,
-							sshPassword, ui);
+			address = serverImpl.getPublicDnsAddress();
+		}
+		else if (serverImpl.getPublicIpAddresses().length >= 1)
+		{
+			address = serverImpl.getPublicIpAddresses()[0];
 		}
 		else
 		{
-			rv = SSHCommandConnection.newConnectionWithKey(
-					serverImpl.getPublicDnsAddress(), sshLogin,
+			log.warn("Cannot make SSH connection -- no address to connect to.");
+			return null;
+		}
+
+		if (usesSshPassword())
+		{
+			rv = SSHCommandConnection.newConnectionWithPassword(address,
+					sshLogin, sshPassword, ui);
+		}
+		else
+		{
+			rv = SSHCommandConnection.newConnectionWithKey(address, sshLogin,
 					KeyManager.getKeyFilename(provider.getName(), keypair), ui);
 		}
 
@@ -229,6 +254,7 @@ public class Server
 					new Boolean(useSshPassword).toString());
 			properties.setProperty("tags",
 					Utils.implode(new ArrayList<String>(tags), ","));
+			properties.setProperty("preferredDatastream", preferredDatastream);
 
 			final FileOutputStream outputstream = new FileOutputStream(
 					getSaveFilename(provider, serverImpl));
@@ -657,6 +683,7 @@ public class Server
 		GraphPanelCache.get().clearBareServerCache(this);
 
 		stopConnections();
+		noConnection = false;
 	}
 
 	public void assurePasswordLogin(final String username, final String password)

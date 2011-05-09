@@ -4,6 +4,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -19,6 +20,11 @@ import com.jcraft.jsch.Channel;
 
 public class ServerStatisticsManager
 {
+	public interface NoStatisticsListener
+	{
+		public void connectionFailed(ServerStatisticsManager manager);
+	}
+
 	private final class PollingRunnable implements Runnable
 	{
 		private boolean stop = false;
@@ -80,6 +86,11 @@ public class ServerStatisticsManager
 			}
 			catch (final Exception e)
 			{
+				for (NoStatisticsListener listener : noStatisticsListeners)
+				{
+					log.info("Notifying listener of server statistics failure.");
+					listener.connectionFailed(ServerStatisticsManager.this);
+				}
 				log.error("Problem executing continuous command.", e);
 			}
 		}
@@ -99,7 +110,7 @@ public class ServerStatisticsManager
 	private final Server server;
 	private final Map<String, Datastream> availableStreams = new HashMap<String, Datastream>();
 	private final Map<String, Collection<NewDatapointListener>> futureHookups = new HashMap<String, Collection<NewDatapointListener>>();
-
+	private final Collection<NoStatisticsListener> noStatisticsListeners = new LinkedList<NoStatisticsListener>();
 	private PollingRunnable pollingRunnable;
 
 	ServerStatisticsManager(final Server server)
@@ -155,6 +166,11 @@ public class ServerStatisticsManager
 			final DeleteDatastreamListener listener)
 	{
 		deleteDatastreamListeners.add(listener);
+	}
+
+	public void addNoStatisticsListener(NoStatisticsListener listener)
+	{
+		noStatisticsListeners.add(listener);
 	}
 
 	private void updateNewDatastreamObservers(final Datapoint datapoint)

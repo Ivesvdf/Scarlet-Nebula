@@ -102,14 +102,25 @@ public class GUI extends JFrame implements ListSelectionListener,
 		// We also register ourselves as an observer for linking and unlinking
 		// servers so we can update the serverlist.
 		CloudManager.get().addServerLinkUnlinkObserver(this);
-		try
+
+		(new SwingWorker<Object, Object>()
 		{
-			CloudManager.get().loadAllLinkedServers();
-		}
-		catch (final Exception e)
-		{
-			e.printStackTrace();
-		}
+
+			@Override
+			protected Object doInBackground() throws Exception
+			{
+				try
+				{
+					CloudManager.get().loadAllLinkedServers();
+				}
+				catch (final Exception e)
+				{
+					log.error("Error while geting servers", e);
+				}
+				return null;
+			}
+
+		}).execute();
 
 		// If there are no linked cloudproviders, start the new provider wizard
 		if (CloudManager.get().getLinkedCloudProviders().size() == 0)

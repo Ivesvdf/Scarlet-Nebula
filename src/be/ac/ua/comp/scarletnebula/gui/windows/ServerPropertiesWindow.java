@@ -173,7 +173,6 @@ public class ServerPropertiesWindow extends JDialog
 			statisticsTabIsFilled = true;
 			statisticsTab.setLayout(new BorderLayout());
 			statisticsTab.add(getStatisticsPanel(servers), BorderLayout.CENTER);
-
 		}
 	}
 
