@@ -49,6 +49,6 @@
 	<classpathentry kind="lib" path="lib/jsr250-api-1.0.jar"/>
 	<classpathentry kind="lib" path="lib/oauth-20100527.jar"/>
 	<classpathentry kind="lib" path="lib/gson-1.6.jar"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/TightVNCViewer"/>
+	<classpathentry kind="lib" path="lib/tight-vnc-hacked-gpl.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

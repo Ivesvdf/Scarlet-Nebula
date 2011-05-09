@@ -53,8 +53,10 @@ public class InteractiveFirewallPanel extends JPanel implements
 		private final int endPort;
 		private final Firewall firewall;
 
-		private AddRuleSwingWorker(final Collapsable throbber, final String cidr,
-				final int beginPort, final Protocol protocol, final int endPort, final Firewall firewall)
+		private AddRuleSwingWorker(final Collapsable throbber,
+				final String cidr, final int beginPort,
+				final Protocol protocol, final int endPort,
+				final Firewall firewall)
 		{
 			super(throbber);
 			this.cidr = cidr;

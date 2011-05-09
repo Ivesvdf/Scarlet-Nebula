@@ -66,7 +66,7 @@ public class SelectEndpointPage extends WizardPage
 		final AddProviderWizardDataRecorder rec = (AddProviderWizardDataRecorder) recorder;
 		rec.setEndpoint(endpoint);
 
-		return new ProvideAccessPage();
+		return new ProvideAccessPage(rec);
 	}
 
 }

@@ -45,9 +45,15 @@ public class CloudProviderTemplate
 		}
 	}
 
+	public static enum AccessMethod
+	{
+		KEY, EMAILPASSWD
+	};
+
 	private final String name;
 	private final String classname;
 	private final String shortname;
+	private final AccessMethod accessMethod;
 
 	Collection<Endpoint> endpoints = new ArrayList<Endpoint>();
 
@@ -55,11 +61,12 @@ public class CloudProviderTemplate
 	boolean usesAccessKey = true;
 
 	public CloudProviderTemplate(final String name, final String shortname,
-			final String classname)
+			final String classname, final AccessMethod accessMethod)
 	{
 		this.name = name;
 		this.shortname = shortname;
 		this.classname = classname;
+		this.accessMethod = accessMethod;
 	}
 
 	public void addEndPoint(final String name, final String shortname,
@@ -106,5 +113,10 @@ public class CloudProviderTemplate
 	public String getShortName()
 	{
 		return shortname;
+	}
+
+	public AccessMethod getAccessMethod()
+	{
+		return accessMethod;
 	}
 }

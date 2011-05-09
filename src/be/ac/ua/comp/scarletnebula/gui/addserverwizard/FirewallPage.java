@@ -58,7 +58,8 @@ public class FirewallPage extends WizardPage
 
 		final AddServerWizardDataRecorder rec = (AddServerWizardDataRecorder) recorder;
 
-		final Collection<String> ids = new ArrayList<String>(selectedFirewalls.size());
+		final Collection<String> ids = new ArrayList<String>(
+				selectedFirewalls.size());
 		for (final Firewall firewall : selectedFirewalls)
 		{
 			ids.add(firewall.getProviderFirewallId());

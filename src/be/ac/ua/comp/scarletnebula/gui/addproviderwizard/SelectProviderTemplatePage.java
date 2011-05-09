@@ -60,7 +60,7 @@ public class SelectProviderTemplatePage extends WizardPage
 
 		if (template.getEndPoints().isEmpty())
 		{
-			return new ProvideAccessPage();
+			return new ProvideAccessPage(rec);
 		}
 		else
 		{

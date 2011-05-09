@@ -97,6 +97,7 @@ public class ChooseSizePage extends WizardPage
 		final Architecture architecture = image.getArchitecture();
 
 		sizelist = new SizeList(provider, architecture);
+		sizelist.setSelectedIndex(0);
 
 		final JScrollPane sizeScrollPane = new JScrollPane(sizelist);
 		sizeScrollPane.setBorder(BorderFactory.createCompoundBorder(

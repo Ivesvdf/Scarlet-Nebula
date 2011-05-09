@@ -10,6 +10,7 @@ import org.dasein.cloud.CloudException;
 import org.dasein.cloud.InternalException;
 
 import be.ac.ua.comp.scarletnebula.gui.CloudProviderTemplate;
+import be.ac.ua.comp.scarletnebula.gui.CloudProviderTemplate.AccessMethod;
 
 /**
  * Singleton class that can be accessed through CloudManager.get(). E.g.
@@ -61,7 +62,7 @@ public class CloudManager
 		// AWS
 		final CloudProviderTemplate aws = new CloudProviderTemplate(
 				"Amazon Elastic Compute Cloud", "Amazon EC2",
-				"org.dasein.cloud.aws.AWSCloud");
+				"org.dasein.cloud.aws.AWSCloud", AccessMethod.KEY);
 		aws.addEndPoint("EU (Ireland)", "EU",
 				"http://ec2.eu-west-1.amazonaws.com");
 		aws.addEndPoint("Asia Pacific (Singapore)", "Asia",
@@ -76,18 +77,21 @@ public class CloudManager
 		// Rackspace
 		final CloudProviderTemplate rackspace = new CloudProviderTemplate(
 				"Rackspace (not implemented)", "Rackspace",
-				"org.dasein.cloud.aws.AWSCloud");
+				"org.dasein.cloud.aws.AWSCloud", AccessMethod.KEY);
 		providerTemplates.add(rackspace);
 
 		// Radix
-		final CloudProviderTemplate radix = new CloudProviderTemplate("Radix",
-				"Radix", "be.ac.ua.comp.scarletnebula.misc.RadixCloudProvider");
+		final CloudProviderTemplate radix = new CloudProviderTemplate(
+				"Mock Cloud Provider", "Radix",
+				"be.ac.ua.comp.scarletnebula.misc.RadixCloudProvider",
+				AccessMethod.EMAILPASSWD);
 		radix.addEndPoint("default", "default", "radix.cmi.ua.ac.be");
 		providerTemplates.add(radix);
 
 		final CloudProviderTemplate cloudSigma = new CloudProviderTemplate(
 				"CloudSigma", "CloudSigma",
-				"org.dasein.cloud.jclouds.cloudsigma.CloudSigma");
+				"org.dasein.cloud.jclouds.cloudsigma.CloudSigma",
+				AccessMethod.EMAILPASSWD);
 
 		providerTemplates.add(cloudSigma);
 	}
