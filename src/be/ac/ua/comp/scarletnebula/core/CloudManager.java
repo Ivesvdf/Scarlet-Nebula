@@ -9,8 +9,7 @@ import java.util.HashMap;
 import org.dasein.cloud.CloudException;
 import org.dasein.cloud.InternalException;
 
-import be.ac.ua.comp.scarletnebula.gui.CloudProviderTemplate;
-import be.ac.ua.comp.scarletnebula.gui.CloudProviderTemplate.AccessMethod;
+import be.ac.ua.comp.scarletnebula.core.CloudProviderTemplate.AccessMethod;
 
 /**
  * Singleton class that can be accessed through CloudManager.get(). E.g.

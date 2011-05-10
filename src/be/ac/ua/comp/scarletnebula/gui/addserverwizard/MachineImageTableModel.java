@@ -93,4 +93,9 @@ public class MachineImageTableModel extends AbstractTableModel
 				prevRowCount - 1 + images.size());
 	}
 
+	public MachineImage getImage(int identifier)
+	{
+		return getRow(identifier);
+	}
+
 }

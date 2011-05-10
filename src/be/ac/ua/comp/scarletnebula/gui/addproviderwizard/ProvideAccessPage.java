@@ -5,8 +5,8 @@ import java.awt.BorderLayout;
 import javax.swing.BorderFactory;
 import javax.swing.JTextField;
 
+import be.ac.ua.comp.scarletnebula.core.CloudProviderTemplate.AccessMethod;
 import be.ac.ua.comp.scarletnebula.gui.BetterTextLabel;
-import be.ac.ua.comp.scarletnebula.gui.CloudProviderTemplate.AccessMethod;
 import be.ac.ua.comp.scarletnebula.wizard.DataRecorder;
 import be.ac.ua.comp.scarletnebula.wizard.WizardPage;
 

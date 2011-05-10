@@ -17,7 +17,6 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.RowFilter;
 import javax.swing.border.BevelBorder;
-import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 
 import org.apache.commons.logging.Log;
@@ -57,9 +56,10 @@ public class ChooseImagePage extends WizardPage
 
 		model = new MachineImageTableModel(new ArrayList<MachineImage>());
 		table = new JTable(model);
-		final TableRowSorter<TableModel> sorter = new TableRowSorter<TableModel>(
+		final TableRowSorter<MachineImageTableModel> sorter = new TableRowSorter<MachineImageTableModel>(
 				model);
 		table.setRowSorter(sorter);
+		table.setFillsViewportHeight(true);
 
 		final JPanel aboveTable = new JPanel(new BorderLayout());
 		final JPanel searchPanel = getSearchPanel(sorter);
@@ -78,7 +78,8 @@ public class ChooseImagePage extends WizardPage
 
 	}
 
-	private JPanel getSearchPanel(final TableRowSorter<TableModel> sorter)
+	private JPanel getSearchPanel(
+			final TableRowSorter<MachineImageTableModel> sorter)
 	{
 		final JPanel searchPanel = new JPanel(new GridBagLayout());
 		searchPanel.setBorder(BorderFactory.createEmptyBorder(10, 20, 5, 20));
@@ -140,14 +141,15 @@ public class ChooseImagePage extends WizardPage
 
 	private final class SearchFieldListener implements ActionListener
 	{
+
 		private final ArchitectureComboBox architectureComboBox;
-		private final TableRowSorter<TableModel> sorter;
+		private final TableRowSorter<MachineImageTableModel> sorter;
 		private final PlatformComboBox platformComboBox;
 		private final BetterTextField searchField;
 
 		private SearchFieldListener(
 				final ArchitectureComboBox architectureComboBox,
-				final TableRowSorter<TableModel> sorter,
+				final TableRowSorter<MachineImageTableModel> sorter,
 				final PlatformComboBox platformComboBox,
 				final BetterTextField searchField)
 		{
@@ -182,7 +184,7 @@ public class ChooseImagePage extends WizardPage
 
 			}
 			final String expr = searchField.getText();
-			sorter.setRowFilter(RowFilter.regexFilter(expr));
+			sorter.setRowFilter(new AllTermsRowFilter(expr));
 			sorter.setSortKeys(null);
 		}
 	}
@@ -237,4 +239,42 @@ public class ChooseImagePage extends WizardPage
 		}
 	};
 
+	private final class AllTermsRowFilter extends
+			RowFilter<MachineImageTableModel, Integer>
+	{
+		private final String expr;
+
+		private AllTermsRowFilter(String expr)
+		{
+			this.expr = expr;
+		}
+
+		@Override
+		public boolean include(
+				Entry<? extends MachineImageTableModel, ? extends Integer> entry)
+		{
+			MachineImageTableModel tableModel = entry.getModel();
+			MachineImage image = tableModel.getImage(entry.getIdentifier());
+
+			String terms[] = expr.split("\\s");
+
+			boolean allTermsFound = true;
+
+			for (String term : terms)
+			{
+				if (!image.getDescription().toLowerCase()
+						.contains(term.toLowerCase())
+						&& !image.getName().toLowerCase()
+								.contains(term.toLowerCase())
+						&& !image.getType().toString().toLowerCase()
+								.contains(term))
+				{
+					allTermsFound = false;
+					break;
+				}
+			}
+
+			return allTermsFound;
+		}
+	}
 }

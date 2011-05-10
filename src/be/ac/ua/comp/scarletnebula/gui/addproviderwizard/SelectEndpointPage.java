@@ -10,8 +10,8 @@ import javax.swing.JScrollPane;
 import javax.swing.border.BevelBorder;
 import javax.swing.border.EmptyBorder;
 
+import be.ac.ua.comp.scarletnebula.core.CloudProviderTemplate;
 import be.ac.ua.comp.scarletnebula.gui.BetterTextLabel;
-import be.ac.ua.comp.scarletnebula.gui.CloudProviderTemplate;
 import be.ac.ua.comp.scarletnebula.wizard.DataRecorder;
 import be.ac.ua.comp.scarletnebula.wizard.WizardPage;
 

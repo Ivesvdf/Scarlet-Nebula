@@ -133,6 +133,8 @@ public class Wizard
 				cancel();
 			}
 		});
+
+		window.getRootPane().setDefaultButton(wizardTemplate.nextButton);
 	}
 
 	private void renderPage(final WizardPage page)

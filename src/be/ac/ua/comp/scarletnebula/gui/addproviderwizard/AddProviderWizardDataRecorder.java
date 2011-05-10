@@ -1,6 +1,6 @@
 package be.ac.ua.comp.scarletnebula.gui.addproviderwizard;
 
-import be.ac.ua.comp.scarletnebula.gui.CloudProviderTemplate;
+import be.ac.ua.comp.scarletnebula.core.CloudProviderTemplate;
 import be.ac.ua.comp.scarletnebula.wizard.DataRecorder;
 
 public class AddProviderWizardDataRecorder implements DataRecorder
