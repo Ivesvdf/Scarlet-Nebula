@@ -931,7 +931,7 @@ public class CloudProvider
 
 	private String getSerialisedFavoriteImages()
 	{
-		ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+		final ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 		ObjectOutputStream oout = null;
 		String rv = "";
 		try
@@ -940,12 +940,12 @@ public class CloudProvider
 			log.info("size of serialised images collection = "
 					+ favoriteImages.size());
 			oout.writeObject(favoriteImages);
-			byte bytes[] = outputStream.toByteArray();
+			final byte bytes[] = outputStream.toByteArray();
 
-			byte encodedBytes[] = Base64.encodeBase64(bytes, false);
+			final byte encodedBytes[] = Base64.encodeBase64(bytes, false);
 			rv = new String(encodedBytes);
 		}
-		catch (IOException e)
+		catch (final IOException e)
 		{
 			log.error("Exception while serialising favorite images.", e);
 		}
@@ -956,7 +956,7 @@ public class CloudProvider
 				oout.close();
 				outputStream.close();
 			}
-			catch (IOException ignore)
+			catch (final IOException ignore)
 			{
 			}
 		}
@@ -975,20 +975,20 @@ public class CloudProvider
 	 * @return The collection of machine images contained in the input string.
 	 */
 	@SuppressWarnings("unchecked")
-	private Collection<MachineImage> deserialiseFavoriteImages(String input)
+	private Collection<MachineImage> deserialiseFavoriteImages(final String input)
 	{
 		if (input == null || input.isEmpty())
 		{
 			return new ArrayList<MachineImage>();
 		}
 
-		byte decodedBytes[] = Base64.decodeBase64(input.getBytes());
+		final byte decodedBytes[] = Base64.decodeBase64(input.getBytes());
 
 		if (decodedBytes != null)
 		{
 			try
 			{
-				ObjectInputStream objectIn = new ObjectInputStream(
+				final ObjectInputStream objectIn = new ObjectInputStream(
 						new ByteArrayInputStream(decodedBytes));
 
 				final Object readObject = objectIn.readObject();
@@ -996,7 +996,7 @@ public class CloudProvider
 				return (Collection<MachineImage>) readObject;
 
 			}
-			catch (Exception e)
+			catch (final Exception e)
 			{
 				log.error("Exception while deserialising favorite images.", e);
 			}
@@ -1168,10 +1168,12 @@ public class CloudProvider
 		return firewallSupport != null;
 	}
 
-	public void addToFavorites(MachineImage image)
+	public void addToFavorites(final MachineImage image)
 	{
 		if (!favoriteImages.contains(image))
+		{
 			favoriteImages.add(image);
+		}
 	}
 
 	public Collection<MachineImage> getFavoriteImages()
@@ -1179,7 +1181,7 @@ public class CloudProvider
 		return favoriteImages;
 	}
 
-	public void removeFromFavorites(MachineImage image)
+	public void removeFromFavorites(final MachineImage image)
 	{
 		favoriteImages.remove(image);
 

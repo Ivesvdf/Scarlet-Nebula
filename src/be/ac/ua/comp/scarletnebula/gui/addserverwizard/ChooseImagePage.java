@@ -81,9 +81,9 @@ public class ChooseImagePage extends WizardPage
 		add(tabs, BorderLayout.CENTER);
 	}
 
-	private JPanel getFavoriteImagesPanel(CloudProvider provider)
+	private JPanel getFavoriteImagesPanel(final CloudProvider provider)
 	{
-		JPanel panel = new JPanel(new BorderLayout());
+		final JPanel panel = new JPanel(new BorderLayout());
 		final TableRowSorter<MachineImageTableModel> sorter = new TableRowSorter<MachineImageTableModel>(
 				favoriteImagesModel);
 		favoriteImagesTable.setRowSorter(sorter);
@@ -106,7 +106,7 @@ public class ChooseImagePage extends WizardPage
 
 	private final JPanel getAllImagesPanel(final CloudProvider provider)
 	{
-		JPanel panel = new JPanel(new BorderLayout());
+		final JPanel panel = new JPanel(new BorderLayout());
 		final TableRowSorter<MachineImageTableModel> sorter = new TableRowSorter<MachineImageTableModel>(
 				allImagesModel);
 		allImagesTable.setRowSorter(sorter);
@@ -220,11 +220,11 @@ public class ChooseImagePage extends WizardPage
 			MouseListener
 	{
 		private final CloudProvider provider;
-		private MachineImageTableModel model;
-		private JTable table;
+		private final MachineImageTableModel model;
+		private final JTable table;
 
-		private SmartFavoritesContextMenuMouseListener(CloudProvider provider,
-				MachineImageTableModel model, JTable table)
+		private SmartFavoritesContextMenuMouseListener(final CloudProvider provider,
+				final MachineImageTableModel model, final JTable table)
 		{
 			this.provider = provider;
 			this.model = model;
@@ -232,13 +232,13 @@ public class ChooseImagePage extends WizardPage
 		}
 
 		@Override
-		public void mouseReleased(MouseEvent e)
+		public void mouseReleased(final MouseEvent e)
 		{
 
 		}
 
 		@Override
-		public void mousePressed(MouseEvent e)
+		public void mousePressed(final MouseEvent e)
 		{
 			if (e.isPopupTrigger())
 			{
@@ -253,12 +253,12 @@ public class ChooseImagePage extends WizardPage
 
 				if (provider.getFavoriteImages().contains(image))
 				{
-					JMenuItem removeFromFavorites = new JMenuItem(
+					final JMenuItem removeFromFavorites = new JMenuItem(
 							"Remove from favorites");
 					removeFromFavorites.addActionListener(new ActionListener()
 					{
 						@Override
-						public void actionPerformed(ActionEvent e)
+						public void actionPerformed(final ActionEvent e)
 						{
 							provider.removeFromFavorites(image);
 							favoriteImagesModel.clear();
@@ -271,11 +271,11 @@ public class ChooseImagePage extends WizardPage
 				}
 				else
 				{
-					JMenuItem addToFavorites = new JMenuItem("Add to favorites");
+					final JMenuItem addToFavorites = new JMenuItem("Add to favorites");
 					addToFavorites.addActionListener(new ActionListener()
 					{
 						@Override
-						public void actionPerformed(ActionEvent e)
+						public void actionPerformed(final ActionEvent e)
 						{
 							provider.addToFavorites(image);
 							provider.store();
@@ -288,19 +288,19 @@ public class ChooseImagePage extends WizardPage
 		}
 
 		@Override
-		public void mouseExited(MouseEvent e)
+		public void mouseExited(final MouseEvent e)
 		{
 
 		}
 
 		@Override
-		public void mouseEntered(MouseEvent e)
+		public void mouseEntered(final MouseEvent e)
 		{
 
 		}
 
 		@Override
-		public void mouseClicked(MouseEvent e)
+		public void mouseClicked(final MouseEvent e)
 		{
 
 		}
@@ -411,23 +411,23 @@ public class ChooseImagePage extends WizardPage
 	{
 		private final String expr;
 
-		private AllTermsRowFilter(String expr)
+		private AllTermsRowFilter(final String expr)
 		{
 			this.expr = expr;
 		}
 
 		@Override
 		public boolean include(
-				Entry<? extends MachineImageTableModel, ? extends Integer> entry)
+				final Entry<? extends MachineImageTableModel, ? extends Integer> entry)
 		{
-			MachineImageTableModel tableModel = entry.getModel();
-			MachineImage image = tableModel.getImage(entry.getIdentifier());
+			final MachineImageTableModel tableModel = entry.getModel();
+			final MachineImage image = tableModel.getImage(entry.getIdentifier());
 
-			String terms[] = expr.split("\\s");
+			final String terms[] = expr.split("\\s");
 
 			boolean allTermsFound = true;
 
-			for (String term : terms)
+			for (final String term : terms)
 			{
 				if (!image.getDescription().toLowerCase()
 						.contains(term.toLowerCase())
