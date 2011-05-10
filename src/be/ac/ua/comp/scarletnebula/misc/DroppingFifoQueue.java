@@ -46,17 +46,6 @@ public class DroppingFifoQueue<T>
 		}
 	}
 
-	private void print()
-	{
-		for (int i = 0; i < array.size(); i++)
-		{
-			System.out.println("Element at pos " + i + " = " + array.get(i));
-		}
-		System.out.println("nextToTake = " + nextToTake);
-		System.out.println("lastValid = " + lastValid);
-		System.out.println("");
-	}
-
 	/**
 	 * Returns a list representation of the Queue, with the oldest elements
 	 * first
@@ -97,24 +86,4 @@ public class DroppingFifoQueue<T>
 		return (oldPos + 1) % maxCapacity;
 	}
 
-	/**
-	 * Moves an index one step backwards in the cyclical structure
-	 * 
-	 * @param oldPos
-	 *            Position from where to move one step back
-	 * @return The new position after moving one position backwards
-	 */
-	private int retreat(final int oldPos)
-	{
-		int newPos = 0;
-		if (oldPos > 0)
-		{
-			newPos = oldPos - 1;
-		}
-		else
-		{
-			newPos = maxCapacity - 1;
-		}
-		return newPos;
-	}
 }

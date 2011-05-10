@@ -681,7 +681,7 @@ public class GUI extends JFrame implements ListSelectionListener,
 			@Override
 			public void run()
 			{
-				final GUI ex = new GUI();
+				new GUI();
 			}
 		});
 	}

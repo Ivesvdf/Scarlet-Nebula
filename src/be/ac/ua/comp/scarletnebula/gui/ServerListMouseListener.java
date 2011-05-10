@@ -10,8 +10,6 @@ import java.util.Collection;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.dasein.cloud.compute.VmState;
 
 import TightVNC.VncViewer;
@@ -175,7 +173,6 @@ public class ServerListMouseListener implements MouseListener
 	private final GUI gui;
 	private final ServerListModel serverListModel;
 	private final ServerList serverlist;
-	private static Log log = LogFactory.getLog(ServerListMouseListener.class);
 
 	public ServerListMouseListener(final GUI gui, final ServerList serverlist,
 			final ServerListModel serverListModel)

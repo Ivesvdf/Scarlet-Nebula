@@ -91,7 +91,17 @@ public class ServerStatisticsManager
 					log.info("Notifying listener of server statistics failure.");
 					listener.connectionFailed(ServerStatisticsManager.this);
 				}
-				log.error("Problem executing continuous command.", e);
+
+				if (e.getCause() == null)
+				{
+					log.error("Problem executing continuous command."
+							+ e.getLocalizedMessage());
+				}
+				else
+				{
+					log.error("Problem executing continuous command."
+							+ e.getCause().getLocalizedMessage());
+				}
 			}
 		}
 

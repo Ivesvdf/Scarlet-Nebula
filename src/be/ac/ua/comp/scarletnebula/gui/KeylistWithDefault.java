@@ -17,16 +17,12 @@ import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import be.ac.ua.comp.scarletnebula.core.CloudProvider;
 import be.ac.ua.comp.scarletnebula.core.KeyManager;
 
 public class KeylistWithDefault extends JTable
 {
 	private static final long serialVersionUID = 1L;
-	private static Log log = LogFactory.getLog(KeylistWithDefault.class);
 	private final ButtonGroup radioButtonGroup;
 	private final CloudProvider provider;
 	private final DefaultTableModel datamodel = new DefaultTableModel();
