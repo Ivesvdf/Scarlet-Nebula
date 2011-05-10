@@ -58,7 +58,7 @@ public class ServerListMouseListener implements MouseListener
 
 			v.mainArgs = Arrays.asList("HOST", address, "PASSWORD",
 					firstServer.getVNCPassword(), "Scaling factor", "auto",
-					"Show controls", "No").toArray(new String[0]);
+					"Show controls", "Yes").toArray(new String[0]);
 			v.inAnApplet = false;
 			v.inSeparateFrame = true;
 
