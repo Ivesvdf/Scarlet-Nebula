@@ -1,6 +1,7 @@
 package be.ac.ua.comp.scarletnebula.gui.addserverwizard;
 
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 
 import javax.swing.table.AbstractTableModel;
@@ -85,7 +86,7 @@ public class MachineImageTableModel extends AbstractTableModel
 		fireTableRowsDeleted(0, rowcount - 1);
 	}
 
-	public void addImages(final List<MachineImage> images)
+	public void addImages(final Collection<MachineImage> images)
 	{
 		final int prevRowCount = getRowCount();
 		rows.addAll(images);

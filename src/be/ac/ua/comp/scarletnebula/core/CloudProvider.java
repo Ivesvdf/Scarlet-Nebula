@@ -1,19 +1,25 @@
 package be.ac.ua.comp.scarletnebula.core;
 
 import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Properties;
 
+import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.dasein.cloud.CloudException;
@@ -57,7 +63,9 @@ public class CloudProvider
 	private String endpoint;
 	private String defaultKeypair;
 
-	private final ArrayList<Server> servers = new ArrayList<Server>();
+	private final Collection<Server> servers = new ArrayList<Server>();
+	private Collection<MachineImage> favoriteImages = new LinkedList<MachineImage>();
+
 	Collection<ServerLinkUnlinkObserver> linkUnlinkObservers = new ArrayList<ServerLinkUnlinkObserver>();
 
 	/**
@@ -173,7 +181,7 @@ public class CloudProvider
 		}
 		catch (final IOException e)
 		{
-			e.printStackTrace();
+			log.error("IOException while loading provider from file.", e);
 		}
 
 		this.name = name;
@@ -182,6 +190,9 @@ public class CloudProvider
 		this.apiSecret = properties.getProperty("apisecret");
 		this.endpoint = properties.getProperty("endpoint");
 		this.defaultKeypair = properties.getProperty("defaultKeypair", "");
+		this.favoriteImages = deserialiseFavoriteImages(properties.getProperty(
+				"favoriteImages", null));
+
 	}
 
 	/**
@@ -901,6 +912,7 @@ public class CloudProvider
 		prop.setProperty("apisecret", apiSecret);
 		prop.setProperty("endpoint", endpoint);
 		prop.setProperty("defaultKeypair", defaultKeypair);
+		prop.setProperty("favoriteImages", getSerialisedFavoriteImages());
 
 		try
 		{
@@ -915,6 +927,81 @@ public class CloudProvider
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+
+	private String getSerialisedFavoriteImages()
+	{
+		ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+		ObjectOutputStream oout = null;
+		String rv = "";
+		try
+		{
+			oout = new ObjectOutputStream(outputStream);
+			log.info("size of serialised images collection = "
+					+ favoriteImages.size());
+			oout.writeObject(favoriteImages);
+			byte bytes[] = outputStream.toByteArray();
+
+			byte encodedBytes[] = Base64.encodeBase64(bytes, false);
+			rv = new String(encodedBytes);
+		}
+		catch (IOException e)
+		{
+			log.error("Exception while serialising favorite images.", e);
+		}
+		finally
+		{
+			try
+			{
+				oout.close();
+				outputStream.close();
+			}
+			catch (IOException ignore)
+			{
+			}
+		}
+
+		return rv;
+	}
+
+	/**
+	 * Converts a string containing base64 encoded favorite image data back to a
+	 * collection of machine images. The suppress warnings needs to be here
+	 * because of type erasure -- the runtime has no clue what's inside the
+	 * collection...
+	 * 
+	 * @param input
+	 *            String to be deserialised
+	 * @return The collection of machine images contained in the input string.
+	 */
+	@SuppressWarnings("unchecked")
+	private Collection<MachineImage> deserialiseFavoriteImages(String input)
+	{
+		if (input == null || input.isEmpty())
+		{
+			return new ArrayList<MachineImage>();
+		}
+
+		byte decodedBytes[] = Base64.decodeBase64(input.getBytes());
+
+		if (decodedBytes != null)
+		{
+			try
+			{
+				ObjectInputStream objectIn = new ObjectInputStream(
+						new ByteArrayInputStream(decodedBytes));
+
+				final Object readObject = objectIn.readObject();
+
+				return (Collection<MachineImage>) readObject;
+
+			}
+			catch (Exception e)
+			{
+				log.error("Exception while deserialising favorite images.", e);
+			}
+		}
+		return new ArrayList<MachineImage>();
 	}
 
 	static String getConfigfileName(final String providername)
@@ -1079,5 +1166,22 @@ public class CloudProvider
 	public boolean supportsFirewalls()
 	{
 		return firewallSupport != null;
+	}
+
+	public void addToFavorites(MachineImage image)
+	{
+		if (!favoriteImages.contains(image))
+			favoriteImages.add(image);
+	}
+
+	public Collection<MachineImage> getFavoriteImages()
+	{
+		return favoriteImages;
+	}
+
+	public void removeFromFavorites(MachineImage image)
+	{
+		favoriteImages.remove(image);
+
 	}
 }

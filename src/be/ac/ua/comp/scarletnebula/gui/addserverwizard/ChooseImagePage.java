@@ -7,13 +7,18 @@ import java.awt.Insets;
 import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.BorderFactory;
+import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
+import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 import javax.swing.RowFilter;
 import javax.swing.border.BevelBorder;
@@ -41,25 +46,74 @@ public class ChooseImagePage extends WizardPage
 	private static final Log log = LogFactory.getLog(ChooseImagePage.class);
 	private Platform previousSelectedPlatform = null;
 	private Architecture previousSelectedArchitecture = null;
-	private final JTable table;
-	private final MachineImageTableModel model;
+	private final MachineImageTableModel allImagesModel = new MachineImageTableModel(
+			new ArrayList<MachineImage>());
+	private final JTable allImagesTable = new JTable(allImagesModel);
+	private final MachineImageTableModel favoriteImagesModel = new MachineImageTableModel(
+			new ArrayList<MachineImage>());
+	private final JTable favoriteImagesTable = new JTable(favoriteImagesModel);
+
 	private final CloudProvider provider;
 	private final CollapsablePanel throbberPanel = new CollapsablePanel(
 			new ThrobberBarWithText("Loading machine images"), false);// Not
 																		// initially
 																		// visible
 
-	ChooseImagePage(final CloudProvider provider)
+	private final JTabbedPane tabs = new JTabbedPane();
+	private final JPanel favoriteImagesPanel;
+	private final JPanel allImagesPanel;
+
+	public ChooseImagePage(final CloudProvider provider)
 	{
 		super(new BorderLayout());
 		this.provider = provider;
 
-		model = new MachineImageTableModel(new ArrayList<MachineImage>());
-		table = new JTable(model);
+		favoriteImagesPanel = getFavoriteImagesPanel(provider);
+		tabs.addTab("Favorite images", favoriteImagesPanel);
+		allImagesPanel = getAllImagesPanel(provider);
+		tabs.addTab("All images", allImagesPanel);
+
+		if (provider.getFavoriteImages().isEmpty())
+		{
+			tabs.setSelectedComponent(allImagesPanel);
+		}
+
+		add(tabs, BorderLayout.CENTER);
+	}
+
+	private JPanel getFavoriteImagesPanel(CloudProvider provider)
+	{
+		JPanel panel = new JPanel(new BorderLayout());
 		final TableRowSorter<MachineImageTableModel> sorter = new TableRowSorter<MachineImageTableModel>(
-				model);
-		table.setRowSorter(sorter);
-		table.setFillsViewportHeight(true);
+				favoriteImagesModel);
+		favoriteImagesTable.setRowSorter(sorter);
+		favoriteImagesTable.setFillsViewportHeight(true);
+		favoriteImagesTable
+				.addMouseListener(new SmartFavoritesContextMenuMouseListener(
+						provider, favoriteImagesModel, favoriteImagesTable));
+
+		final JScrollPane tableScrollPane = new JScrollPane(favoriteImagesTable);
+		tableScrollPane.setBorder(BorderFactory.createCompoundBorder(
+				BorderFactory.createEmptyBorder(5, 20, 10, 20),
+				BorderFactory.createBevelBorder(BevelBorder.LOWERED)));
+
+		panel.add(tableScrollPane, BorderLayout.CENTER);
+
+		favoriteImagesModel.addImages(provider.getFavoriteImages());
+
+		return panel;
+	}
+
+	private final JPanel getAllImagesPanel(final CloudProvider provider)
+	{
+		JPanel panel = new JPanel(new BorderLayout());
+		final TableRowSorter<MachineImageTableModel> sorter = new TableRowSorter<MachineImageTableModel>(
+				allImagesModel);
+		allImagesTable.setRowSorter(sorter);
+		allImagesTable.setFillsViewportHeight(true);
+		allImagesTable
+				.addMouseListener(new SmartFavoritesContextMenuMouseListener(
+						provider, allImagesModel, allImagesTable));
 
 		final JPanel aboveTable = new JPanel(new BorderLayout());
 		final JPanel searchPanel = getSearchPanel(sorter);
@@ -67,15 +121,16 @@ public class ChooseImagePage extends WizardPage
 		aboveTable.add(searchPanel, BorderLayout.NORTH);
 		aboveTable.add(throbberPanel, BorderLayout.SOUTH);
 
-		add(aboveTable, BorderLayout.NORTH);
+		panel.add(aboveTable, BorderLayout.NORTH);
 
-		final JScrollPane tableScrollPane = new JScrollPane(table);
+		final JScrollPane tableScrollPane = new JScrollPane(allImagesTable);
 		tableScrollPane.setBorder(BorderFactory.createCompoundBorder(
 				BorderFactory.createEmptyBorder(5, 20, 10, 20),
 				BorderFactory.createBevelBorder(BevelBorder.LOWERED)));
 
-		add(tableScrollPane, BorderLayout.CENTER);
+		panel.add(tableScrollPane, BorderLayout.CENTER);
 
+		return panel;
 	}
 
 	private JPanel getSearchPanel(
@@ -122,21 +177,132 @@ public class ChooseImagePage extends WizardPage
 	{
 		final AddServerWizardDataRecorder rec = (AddServerWizardDataRecorder) recorder;
 
-		final int selection = table.getSelectedRow();
-
-		if (selection < 0)
+		if (tabs.getSelectedComponent() == allImagesPanel)
 		{
-			JOptionPane
-					.showMessageDialog(
-							this,
-							"Select an image by choosing a platform, architecture, "
-									+ "entering search terms in the search box and subsequently pressing the ENTER button.",
-							"Select image", JOptionPane.ERROR_MESSAGE);
-			return null;
+			final int selection = allImagesTable.getSelectedRow();
+
+			if (selection < 0)
+			{
+				JOptionPane
+						.showMessageDialog(
+								this,
+								"Select an image by choosing a platform, architecture, "
+										+ "entering search terms in the search box and subsequently pressing the ENTER button.",
+								"Select image", JOptionPane.ERROR_MESSAGE);
+				return null;
+			}
+
+			rec.image = allImagesModel.getRow(allImagesTable
+					.convertRowIndexToModel(selection));
+		}
+		else
+		{
+			final int selection = favoriteImagesTable.getSelectedRow();
+
+			if (selection < 0)
+			{
+				JOptionPane
+						.showMessageDialog(
+								this,
+								"Either select one of your favorite images or go to the All Images tab and search for an image.",
+								"Select image", JOptionPane.ERROR_MESSAGE);
+				return null;
+			}
+
+			rec.image = favoriteImagesModel.getRow(favoriteImagesTable
+					.convertRowIndexToModel(selection));
 		}
 
-		rec.image = model.getRow(table.convertRowIndexToModel(selection));
 		return new ChooseSizePage(provider, rec.image);
+	}
+
+	private final class SmartFavoritesContextMenuMouseListener implements
+			MouseListener
+	{
+		private final CloudProvider provider;
+		private MachineImageTableModel model;
+		private JTable table;
+
+		private SmartFavoritesContextMenuMouseListener(CloudProvider provider,
+				MachineImageTableModel model, JTable table)
+		{
+			this.provider = provider;
+			this.model = model;
+			this.table = table;
+		}
+
+		@Override
+		public void mouseReleased(MouseEvent e)
+		{
+
+		}
+
+		@Override
+		public void mousePressed(MouseEvent e)
+		{
+			if (e.isPopupTrigger())
+			{
+				final JPopupMenu popup = new JPopupMenu();
+				final int indexOfSelectedServer = table
+						.rowAtPoint(e.getPoint());
+
+				final int modelIndex = table
+						.convertRowIndexToModel(indexOfSelectedServer);
+
+				final MachineImage image = model.getImage(modelIndex);
+
+				if (provider.getFavoriteImages().contains(image))
+				{
+					JMenuItem removeFromFavorites = new JMenuItem(
+							"Remove from favorites");
+					removeFromFavorites.addActionListener(new ActionListener()
+					{
+						@Override
+						public void actionPerformed(ActionEvent e)
+						{
+							provider.removeFromFavorites(image);
+							favoriteImagesModel.clear();
+							favoriteImagesModel.addImages(provider
+									.getFavoriteImages());
+							provider.store();
+						}
+					});
+					popup.add(removeFromFavorites);
+				}
+				else
+				{
+					JMenuItem addToFavorites = new JMenuItem("Add to favorites");
+					addToFavorites.addActionListener(new ActionListener()
+					{
+						@Override
+						public void actionPerformed(ActionEvent e)
+						{
+							provider.addToFavorites(image);
+							provider.store();
+						}
+					});
+				}
+				popup.show(e.getComponent(), e.getX(), e.getY());
+			}
+		}
+
+		@Override
+		public void mouseExited(MouseEvent e)
+		{
+
+		}
+
+		@Override
+		public void mouseEntered(MouseEvent e)
+		{
+
+		}
+
+		@Override
+		public void mouseClicked(MouseEvent e)
+		{
+
+		}
 	}
 
 	private final class SearchFieldListener implements ActionListener
@@ -171,12 +337,12 @@ public class ChooseImagePage extends WizardPage
 					|| !currentArchitecture
 							.equals(previousSelectedArchitecture))
 			{
-				model.clear();
+				allImagesModel.clear();
 
 				final ImageModelFillerTask task = new ImageModelFillerTask(
 						Utils.findWindow(ChooseImagePage.this), throbberPanel,
-						table, model, provider, currentPlatform,
-						currentArchitecture);
+						allImagesTable, allImagesModel, provider,
+						currentPlatform, currentArchitecture);
 				task.execute();
 
 				previousSelectedArchitecture = currentArchitecture;
