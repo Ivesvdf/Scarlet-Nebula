@@ -69,8 +69,8 @@ public class FinalServerAddPage extends WizardPage
 
 		vlanField.setInputVerifier(new PlainTextVerifier(vlanField,
 				"Only plain text allowed."));
-		builder.append("VLAN id", new LabelEditSwitcherPanel("(None)",
-				vlanField));
+		// builder.append("VLAN id", new LabelEditSwitcherPanel("(None)",
+		// vlanField));
 
 		builder.append("Availability zone", new ChangeableLabel("(default)",
 				new Executable<JLabel>()
@@ -127,7 +127,7 @@ public class FinalServerAddPage extends WizardPage
 
 		addToFavoritesBox.setBorder(BorderFactory.createEmptyBorder(0, 20, 10,
 				20));
-		if (rec.provider.getFavoriteImages().contains(rec.image))
+		if (rec.provider.imageInFavorites(rec.image))
 		{
 			addToFavoritesBox.setSelected(false);
 			addToFavoritesBox.setEnabled(false);

@@ -223,7 +223,8 @@ public class ChooseImagePage extends WizardPage
 		private final MachineImageTableModel model;
 		private final JTable table;
 
-		private SmartFavoritesContextMenuMouseListener(final CloudProvider provider,
+		private SmartFavoritesContextMenuMouseListener(
+				final CloudProvider provider,
 				final MachineImageTableModel model, final JTable table)
 		{
 			this.provider = provider;
@@ -251,7 +252,7 @@ public class ChooseImagePage extends WizardPage
 
 				final MachineImage image = model.getImage(modelIndex);
 
-				if (provider.getFavoriteImages().contains(image))
+				if (provider.imageInFavorites(image))
 				{
 					final JMenuItem removeFromFavorites = new JMenuItem(
 							"Remove from favorites");
@@ -271,7 +272,8 @@ public class ChooseImagePage extends WizardPage
 				}
 				else
 				{
-					final JMenuItem addToFavorites = new JMenuItem("Add to favorites");
+					final JMenuItem addToFavorites = new JMenuItem(
+							"Add to favorites");
 					addToFavorites.addActionListener(new ActionListener()
 					{
 						@Override
@@ -421,7 +423,8 @@ public class ChooseImagePage extends WizardPage
 				final Entry<? extends MachineImageTableModel, ? extends Integer> entry)
 		{
 			final MachineImageTableModel tableModel = entry.getModel();
-			final MachineImage image = tableModel.getImage(entry.getIdentifier());
+			final MachineImage image = tableModel.getImage(entry
+					.getIdentifier());
 
 			final String terms[] = expr.split("\\s");
 

@@ -975,7 +975,8 @@ public class CloudProvider
 	 * @return The collection of machine images contained in the input string.
 	 */
 	@SuppressWarnings("unchecked")
-	private Collection<MachineImage> deserialiseFavoriteImages(final String input)
+	private Collection<MachineImage> deserialiseFavoriteImages(
+			final String input)
 	{
 		if (input == null || input.isEmpty())
 		{
@@ -1170,7 +1171,7 @@ public class CloudProvider
 
 	public void addToFavorites(final MachineImage image)
 	{
-		if (!favoriteImages.contains(image))
+		if (!imageInFavorites(image))
 		{
 			favoriteImages.add(image);
 		}
@@ -1184,6 +1185,30 @@ public class CloudProvider
 	public void removeFromFavorites(final MachineImage image)
 	{
 		favoriteImages.remove(image);
+	}
 
+	/**
+	 * Method that works around a nullexception when comparing MachineImages.
+	 * 
+	 * @param testImage
+	 *            Image that is or is not in the favoriteImages
+	 * @return True if testImage is a favorite image for this cloudprovider,
+	 *         false otherwise.
+	 */
+	public boolean imageInFavorites(final MachineImage testImage)
+	{
+		boolean found = false;
+
+		for (MachineImage image : favoriteImages)
+		{
+			if (image.getProviderMachineImageId() == testImage
+					.getProviderMachineImageId())
+			{
+				found = true;
+				break;
+			}
+		}
+
+		return found;
 	}
 }
