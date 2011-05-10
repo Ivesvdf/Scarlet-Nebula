@@ -281,6 +281,7 @@ public class ChooseImagePage extends WizardPage
 							provider.store();
 						}
 					});
+					popup.add(addToFavorites);
 				}
 				popup.show(e.getComponent(), e.getX(), e.getY());
 			}

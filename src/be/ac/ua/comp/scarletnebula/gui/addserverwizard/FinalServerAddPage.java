@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 
 import javax.swing.BorderFactory;
 import javax.swing.InputVerifier;
+import javax.swing.JCheckBox;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -33,6 +34,8 @@ public class FinalServerAddPage extends WizardPage
 	private static final long serialVersionUID = 1L;
 	private final JTextField instanceCountTextField = new JTextField();
 	private final JTextField vlanField = new JTextField();
+	private final JCheckBox addToFavoritesBox = new JCheckBox(
+			"Add image to favorites");
 
 	public FinalServerAddPage(final AddServerWizardDataRecorder rec)
 	{
@@ -122,6 +125,19 @@ public class FinalServerAddPage extends WizardPage
 		panel.setBorder(BorderFactory.createEmptyBorder(50, 20, 20, 80));
 		add(panel, BorderLayout.CENTER);
 
+		addToFavoritesBox.setBorder(BorderFactory.createEmptyBorder(0, 20, 10,
+				20));
+		if (rec.provider.getFavoriteImages().contains(rec.image))
+		{
+			addToFavoritesBox.setSelected(false);
+			addToFavoritesBox.setEnabled(false);
+		}
+		else
+		{
+			addToFavoritesBox.setSelected(true);
+		}
+
+		add(addToFavoritesBox, BorderLayout.SOUTH);
 	}
 
 	@Override
@@ -163,6 +179,11 @@ public class FinalServerAddPage extends WizardPage
 			rec.instanceCount = 1;
 		}
 
+		if (addToFavoritesBox.isSelected())
+		{
+			rec.provider.addToFavorites(rec.image);
+			rec.provider.store();
+		}
 		return null;
 	}
 
