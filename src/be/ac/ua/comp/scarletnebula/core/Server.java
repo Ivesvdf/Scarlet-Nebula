@@ -268,6 +268,7 @@ public class Server {
 			properties.setProperty("providerClassName",
 					provider.getUnderlyingClassname());
 			properties.setProperty("sshLogin", sshLogin);
+			properties.setProperty("statisticsCommand", statisticsCommand);
 			properties.setProperty("sshPassword", sshPassword);
 			properties.setProperty("vncPassword", vncPassword);
 			properties.setProperty("useSshPassword",

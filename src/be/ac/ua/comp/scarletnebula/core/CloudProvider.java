@@ -132,7 +132,7 @@ public class CloudProvider {
 
 		for (final ServerLinkUnlinkObserver obs : linkUnlinkObservers) {
 			obs.serverLinked(this, srv);
-			log.warn("Cloudprovider is updating his observers");
+			log.info("Cloudprovider is updating his observers");
 		}
 	}
 

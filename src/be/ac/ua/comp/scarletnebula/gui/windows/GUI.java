@@ -107,8 +107,29 @@ public class GUI extends JFrame implements ListSelectionListener,
 			protected Object doInBackground() throws Exception {
 				try {
 					CloudManager.get().loadAllLinkedServers();
+
+					// now start refreshing all servers if necessary
+					for (CloudProvider cloudprovider : CloudManager.get()
+							.getLinkedCloudProviders()) {
+						{
+
+							for (Server server : cloudprovider
+									.listLinkedServers()) {
+								if (server.getStatus() == VmState.PENDING) {
+									server.refreshUntilServerHasState(VmState.RUNNING);
+								}
+								if (server.getStatus() == VmState.REBOOTING) {
+									server.refreshUntilServerHasState(VmState.RUNNING);
+								}
+								if (server.getStatus() == VmState.STOPPING) {
+									server.refreshUntilServerHasState(VmState.TERMINATED);
+								}
+							}
+						}
+
+					}
 				} catch (final Exception e) {
-					log.error("Error while geting servers", e);
+					log.error("Error while getting servers", e);
 				}
 				return null;
 			}
