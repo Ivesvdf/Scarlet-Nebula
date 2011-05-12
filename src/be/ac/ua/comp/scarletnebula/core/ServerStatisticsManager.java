@@ -11,7 +11,6 @@ import java.util.Map;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import be.ac.ua.comp.scarletnebula.core.Datastream.TimedDatapoint;
 import be.ac.ua.comp.scarletnebula.core.SSHCommandConnection.ChannelInputStreamTuple;
 import be.ac.ua.comp.scarletnebula.gui.NewDatapointListener;
 import be.ac.ua.comp.scarletnebula.gui.NotPromptingJschUserInfo;
@@ -119,7 +118,7 @@ public class ServerStatisticsManager {
 	private void newDatapoint(final String stringRepresentation) {
 		final Datapoint datapoint = Datapoint.fromJson(stringRepresentation);
 
-		final String datastreamName = datapoint.getDatastreamName();
+		final String datastreamName = datapoint.getDatastream();
 		if (!availableStreams.containsKey(datastreamName)) {
 			log.info("Registering new stream " + datastreamName);
 			updateNewDatastreamObservers(datapoint);

@@ -18,7 +18,7 @@ import org.jfree.chart.plot.XYPlot;
 
 import be.ac.ua.comp.scarletnebula.core.Datastream;
 import be.ac.ua.comp.scarletnebula.core.Datapoint.Type;
-import be.ac.ua.comp.scarletnebula.core.Datastream.TimedDatapoint;
+import be.ac.ua.comp.scarletnebula.core.TimedDatapoint;
 
 public class DecoratedGraph extends Graph {
 	final private static Log log = LogFactory.getLog(DecoratedGraph.class);

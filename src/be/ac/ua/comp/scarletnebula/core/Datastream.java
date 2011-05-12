@@ -1,7 +1,6 @@
 package be.ac.ua.comp.scarletnebula.core;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Collection;
 import java.util.List;
 
@@ -9,22 +8,6 @@ import be.ac.ua.comp.scarletnebula.gui.NewDatapointListener;
 import be.ac.ua.comp.scarletnebula.misc.DroppingFifoQueue;
 
 public class Datastream {
-	public class TimedDatapoint extends Datapoint {
-		final long timeMs;
-
-		public long getTimeMs() {
-			return timeMs;
-		}
-
-		public TimedDatapoint(final Datapoint dp) {
-			super(dp.datapointType, dp.datastream, dp.value, dp.lowWarnLevel,
-					dp.mediumWarnLevel, dp.highWarnLevel, dp.max);
-
-			final Calendar c = Calendar.getInstance();
-			timeMs = c.getTimeInMillis();
-		}
-	}
-
 	public enum WarnLevel {
 		NONE, LOW, MEDIUM, HIGH;
 	};
@@ -65,12 +48,12 @@ public class Datastream {
 	}
 
 	public Datastream(final Datapoint datapoint) {
-		this.max = datapoint.max;
-		this.lowWarnLevel = datapoint.lowWarnLevel;
-		this.mediumWarnLevel = datapoint.mediumWarnLevel;
-		this.highWarnLevel = datapoint.highWarnLevel;
-		this.streamname = datapoint.datastream;
-		this.type = datapoint.datapointType;
+		this.max = datapoint.getMax();
+		this.lowWarnLevel = datapoint.getLowWarnLevel();
+		this.mediumWarnLevel = datapoint.getMediumWarnLevel();
+		this.highWarnLevel = datapoint.getHighWarnLevel();
+		this.streamname = datapoint.getDatastream();
+		this.type = datapoint.getDatapointType();
 	}
 
 	public Datapoint.Type getType() {

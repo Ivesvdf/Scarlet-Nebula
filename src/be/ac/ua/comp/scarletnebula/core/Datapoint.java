@@ -2,26 +2,39 @@ package be.ac.ua.comp.scarletnebula.core;
 
 import com.google.gson.Gson;
 
+/**
+ * A datapoint in a Datastream.
+ * 
+ * @author ives
+ * 
+ */
 public class Datapoint {
+
+	/**
+	 * Type of datapoint.
+	 * 
+	 * @author ives
+	 * 
+	 */
 	public enum Type {
 		RELATIVE, ABSOLUTE
 	};
 
-	final private static Gson gson = new Gson();
-	Type datapointType;
-	String datastream;
-	double value;
-	Double lowWarnLevel = null;
-	Double mediumWarnLevel = null;
-	Double highWarnLevel = null;
-	Double max = null;
+	private static final Gson GSON = new Gson();
+	private Type datapointType;
+	private String datastream;
+	private double value;
+	private Double lowWarnLevel = null;
+	private Double mediumWarnLevel = null;
+	private Double highWarnLevel = null;
+	private Double max = null;
 
 	public Datapoint() {
 
 	}
 
 	public Datapoint(final Type datapointType, final String datastream,
-			final Double value, final Double lowWarnLevel,
+			final double value, final Double lowWarnLevel,
 			final Double mediumWarnLevel, final Double highWarnLevel,
 			final Double max) {
 		this.datapointType = datapointType;
@@ -64,37 +77,58 @@ public class Datapoint {
 	}
 
 	public String toJson() {
-		return gson.toJson(this);
+		return GSON.toJson(this);
 	}
 
 	public static Datapoint fromJson(final String input) {
-		return gson.fromJson(input, Datapoint.class);
+		return GSON.fromJson(input, Datapoint.class);
 	}
 
+	/**
+	 * @return the datapointType
+	 */
 	public Type getDatapointType() {
 		return datapointType;
 	}
 
-	public String getDatastreamName() {
+	/**
+	 * @return the datastream
+	 */
+	public String getDatastream() {
 		return datastream;
 	}
 
+	/**
+	 * @return the value
+	 */
 	public double getValue() {
 		return value;
 	}
 
+	/**
+	 * @return the lowWarnLevel
+	 */
 	public Double getLowWarnLevel() {
 		return lowWarnLevel;
 	}
 
+	/**
+	 * @return the mediumWarnLevel
+	 */
 	public Double getMediumWarnLevel() {
 		return mediumWarnLevel;
 	}
 
+	/**
+	 * @return the highWarnLevel
+	 */
 	public Double getHighWarnLevel() {
 		return highWarnLevel;
 	}
 
+	/**
+	 * @return the max
+	 */
 	public Double getMax() {
 		return max;
 	}

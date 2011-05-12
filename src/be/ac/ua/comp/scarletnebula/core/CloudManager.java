@@ -43,6 +43,13 @@ public final class CloudManager {
 		}
 	}
 
+	/**
+	 * Adds an observer that will be notified when a server is linked &
+	 * unlinked.
+	 * 
+	 * @param obs
+	 *            The observer to add
+	 */
 	public void addServerLinkUnlinkObserver(final ServerLinkUnlinkObserver obs) {
 		linkUnlinkObservers.add(obs);
 
@@ -53,6 +60,9 @@ public final class CloudManager {
 		}
 	}
 
+	/**
+	 * Fills the available cloud provider templates.
+	 */
 	private void populateCloudProviderTemplates() {
 		// AWS
 		final CloudProviderTemplate aws = new CloudProviderTemplate(
@@ -101,37 +111,38 @@ public final class CloudManager {
 	}
 
 	/**
-	 * Returns the singleton instance
+	 * Returns the singleton instance.
 	 * 
-	 * @return
+	 * @return The instance.
 	 */
 	public static CloudManager get() {
 		return CloudManagerHolder.INSTANCE;
 	}
 
 	/**
-	 * Returns the names of all linked CloudProviders
+	 * Returns the names of all linked CloudProviders.
 	 * 
-	 * @return
+	 * @return Collection of all the names of linked cloud providers.
 	 */
 	public Collection<String> getLinkedCloudProviderNames() {
 		return providers.keySet();
 	}
 
 	/**
-	 * Returns all linked CloudProviders
+	 * Returns all linked CloudProviders.
 	 * 
-	 * @return
+	 * @return The actual linked cloudproviders.
 	 */
 	public Collection<CloudProvider> getLinkedCloudProviders() {
 		return providers.values();
 	}
 
 	/**
-	 * Returns the CloudProvider with name "name"
+	 * Returns the CloudProvider with name "name".
 	 * 
 	 * @param name
-	 * @return
+	 *            The name of the cloud provider to get.
+	 * @return The cloudprovider with name "name"
 	 */
 	public CloudProvider getCloudProviderByName(final String name) {
 		return providers.get(name);
@@ -139,10 +150,11 @@ public final class CloudManager {
 
 	/**
 	 * Returns true if the server with "name" exists in one of the
-	 * CloudProviders, false otherwise
+	 * CloudProviders, false otherwise.
 	 * 
 	 * @param name
-	 * @return
+	 *            The friendly name of the server if it exists
+	 * @return True if a server by that name exists, false otherwise.
 	 */
 	public boolean serverExists(final String name) {
 		for (final CloudProvider prov : providers.values()) {
@@ -154,10 +166,27 @@ public final class CloudManager {
 		return false;
 	}
 
+	/**
+	 * @return A Collection of all available CloudProviderTemplates
+	 */
 	public Collection<CloudProviderTemplate> getTemplates() {
 		return providerTemplates;
 	}
 
+	/**
+	 * Registers a new Cloudprovider.
+	 * 
+	 * @param name
+	 *            Friendly name of the new cloudprovider
+	 * @param classname
+	 *            The dasein classname for this cloudprovider
+	 * @param endpoint
+	 *            Endpoint to connect to.
+	 * @param apiKey
+	 *            Access id or login
+	 * @param apiSecret
+	 *            Key or password
+	 */
 	public void registerNewCloudProvider(final String name,
 			final String classname, final String endpoint, final String apiKey,
 			final String apiSecret) {
@@ -172,6 +201,13 @@ public final class CloudManager {
 		providers.put(name, prov);
 	}
 
+	/**
+	 * Removes a cloudprovider, all of his servers and their respective
+	 * savefiles.
+	 * 
+	 * @param provname
+	 *            The provider's name that should be removed.
+	 */
 	public void deleteCloudProvider(final String provname) {
 		final CloudProvider provider = providers.get(provname);
 		providers.remove(provname);
@@ -184,7 +220,7 @@ public final class CloudManager {
 		}
 
 		// Remove his server directory
-		final File serverdir = removeDirContainingFiles("servers/" + provname);
+		final File serverdir = removeFilesInDir("servers/" + provname);
 
 		// Should the provider's keyfiles be removed??
 
@@ -196,7 +232,14 @@ public final class CloudManager {
 		config.delete();
 	}
 
-	private File removeDirContainingFiles(final String dirname) {
+	/**
+	 * Removes all files in a certain directory.
+	 * 
+	 * @param dirname
+	 *            The directory whose contents to remove
+	 * @return A File describing the hopefully empty directory.
+	 */
+	private File removeFilesInDir(final String dirname) {
 		final File dir = new File(dirname);
 
 		if (dir.list() != null) {
@@ -209,6 +252,13 @@ public final class CloudManager {
 		return dir;
 	}
 
+	/**
+	 * Sends a request to each CloudProvider to load all of its servers.
+	 * 
+	 * @throws InternalException
+	 * @throws CloudException
+	 * @throws IOException
+	 */
 	public void loadAllLinkedServers() throws InternalException,
 			CloudException, IOException {
 		for (final CloudProvider prov : providers.values()) {

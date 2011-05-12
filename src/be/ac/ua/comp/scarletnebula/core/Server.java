@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -25,6 +24,12 @@ import be.ac.ua.comp.scarletnebula.misc.Utils;
 
 import com.jcraft.jsch.UserInfo;
 
+/**
+ * Representation of a Server that is somehow connected to a CloudProvider.
+ * 
+ * @author ives
+ * 
+ */
 public class Server {
 	private static Log log = LogFactory.getLog(Server.class);
 
@@ -43,6 +48,33 @@ public class Server {
 	private boolean useSshPassword;
 	private boolean noConnection = false;
 
+	/**
+	 * Constructor.
+	 * 
+	 * @param server
+	 *            Dasein server implementation
+	 * @param inputProvider
+	 *            CloudProvider the server is running on.
+	 * @param inputKeypair
+	 *            Keypair the server is using.
+	 * @param inputFriendlyName
+	 *            Friendly name the server is known by.
+	 * @param tags
+	 *            Tags the server is tagged with.
+	 * @param useSshPassword
+	 *            True if server uses a password to connect to SSH
+	 * @param sshLogin
+	 *            Login the server can be ssh'ed to.
+	 * @param sshPassword
+	 *            Password the server can be reached at.
+	 * @param vncPassword
+	 *            Password the server can be vnc'ed with.
+	 * @param statisticsCommand
+	 *            Statistics command that will be executed to retrieve
+	 *            statistics.
+	 * @param preferredDatastream
+	 *            Preferred datastream to display in baregraph.
+	 */
 	public Server(final VirtualMachine server,
 			final CloudProvider inputProvider, final String inputKeypair,
 			final String inputFriendlyName, final Collection<String> tags,
@@ -62,11 +94,12 @@ public class Server {
 		setFriendlyName(inputFriendlyName);
 	}
 
-	public void sendFile(final String filename) {
-	}
-
+	/**
+	 * @return A ServerStatisticsManager or null if one cannot be created.
+	 */
 	public ServerStatisticsManager getServerStatistics() {
-		if (sshWillFail() || noConnection) {
+		if (sshWillFail() || noConnection || getStatisticsCommand() == null
+				|| getStatisticsCommand().isEmpty()) {
 			// Do nothing -- return null
 			serverStatisticsManager = null;
 		} else if (serverStatisticsManager == null) {
@@ -94,11 +127,17 @@ public class Server {
 	public boolean sshWillFail() {
 		return getStatus() != VmState.RUNNING
 				|| sshLogin.isEmpty()
-				|| ((useSshPassword && sshPassword.isEmpty() || !useSshPassword
-						&& keypair.isEmpty()));
+				|| ((useSshPassword && sshPassword.isEmpty() || (!useSshPassword && keypair
+						.isEmpty())));
 	}
 
 	/**
+	 * @param ui
+	 *            *sigh* General suckage of the SSH package I'm using. Don't
+	 *            even look. It's that bad. I tried others but although this
+	 *            one's code and architecture sucks majorly, it's the only SSH
+	 *            client I could find for java that had at least some terminal
+	 *            emulation support (and worked).
 	 * @return A new CommandConnection to this server
 	 * @throws Exception
 	 * @throws FileNotFoundException
@@ -133,20 +172,19 @@ public class Server {
 	 * server before and there's saved data for him, this saved data will be
 	 * loaded.
 	 * 
-	 * @throws IOException
-	 * @throws FileNotFoundException
+	 * @param server
+	 *            Dasein server implementation.
+	 * @param provider
+	 *            The provider this server is running with .
+	 * @return The server.
 	 */
 	static Server load(final VirtualMachine server, final CloudProvider provider) {
 		final String propertiesfilename = getSaveFilename(provider, server);
 		final Properties props = new Properties();
 		try {
 			props.load(new FileInputStream(propertiesfilename));
-		} catch (final FileNotFoundException e) {
+		} catch (final Exception e) {
 			log.error("Save file for server " + server + " not found");
-			// Just ignore if the file isn't found.
-		} catch (final IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		}
 		final String keypair = props.getProperty("keypair");
 		final String friendlyName = props.getProperty("friendlyName");
@@ -175,10 +213,17 @@ public class Server {
 				preferredDatastream); // Datastream to show in small server
 	}
 
+	/**
+	 * @return True if this server should be connected to with a password, false
+	 *         if it should be connected to with a key.
+	 */
 	public boolean usesSshPassword() {
 		return useSshPassword || keypair == null;
 	}
 
+	/**
+	 * @return A string containing the server's preferred datastream.
+	 */
 	public String getPreferredDatastream() {
 		return preferredDatastream;
 	}
@@ -188,8 +233,10 @@ public class Server {
 	 * "instanceName" for CloudProvider "provider" should get.
 	 * 
 	 * @param provider
-	 * @param instanceName
-	 * @return
+	 *            CloudProvider this server is with
+	 * @param server
+	 *            Dasein server implementation
+	 * @return Filename for this server.
 	 */
 	static String getSaveFilename(final CloudProvider provider,
 			final VirtualMachine server) {
@@ -233,12 +280,8 @@ public class Server {
 					getSaveFilename(provider, serverImpl));
 			properties.store(outputstream, null);
 			outputstream.close();
-		} catch (final FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (final IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		} catch (final Exception e) {
+			log.error("Properties for " + this + " could not be stored.", e);
 		}
 
 	}
@@ -246,16 +289,22 @@ public class Server {
 	/**
 	 * Returns the server implementation's cloud specific (unfriendly) name.
 	 * 
-	 * @return
+	 * @return The server's unfriendly (CloudProvider specific) name.
 	 */
 	public String getUnfriendlyName() {
 		return serverImpl.getProviderVirtualMachineId();
 	}
 
+	/**
+	 * @return The server's architecture.
+	 */
 	public Architecture getArchitecture() {
 		return serverImpl.getArchitecture();
 	}
 
+	/**
+	 * @return The server's platform (OS).
+	 */
 	public Platform getPlatform() {
 		return serverImpl.getPlatform();
 	}
@@ -289,6 +338,9 @@ public class Server {
 		}
 	}
 
+	/**
+	 * @return The statistics command for this server.
+	 */
 	public String getStatisticsCommand() {
 		return statisticsCommand;
 	}

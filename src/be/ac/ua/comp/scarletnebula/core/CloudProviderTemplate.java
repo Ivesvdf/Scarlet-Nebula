@@ -3,12 +3,34 @@ package be.ac.ua.comp.scarletnebula.core;
 import java.util.ArrayList;
 import java.util.Collection;
 
+/**
+ * Class that descirbes a template for a cloudprovider.
+ * 
+ * @author ives
+ * 
+ */
 public class CloudProviderTemplate {
+	/**
+	 * Class that describes and endpoint.
+	 * 
+	 * @author ives
+	 * 
+	 */
 	public class Endpoint {
 		private final String url;
 		private String name;
 		private String shortname;
 
+		/**
+		 * Ctor.
+		 * 
+		 * @param name
+		 *            Name for the endpoint
+		 * @param shortname
+		 *            Short name for the endpoint
+		 * @param url
+		 *            URL to connect to that describes this endpoint.
+		 */
 		public Endpoint(final String name, final String shortname,
 				final String url) {
 			this.name = name;
@@ -16,27 +38,34 @@ public class CloudProviderTemplate {
 			this.url = url;
 		}
 
+		/**
+		 * @return The name of this endpoint
+		 */
 		public String getName() {
 			return name;
 		}
 
+		/**
+		 * @return The short name of this endpoint
+		 */
 		public String getShortName() {
 			return shortname;
 		}
 
+		/**
+		 * @return The url for this CloudProviderTemplate.
+		 */
 		public String getURL() {
 			return url;
 		}
-
-		public void setName(final String name) {
-			this.name = name;
-		}
-
-		public void setShortName(final String shortname) {
-			this.shortname = shortname;
-		}
 	}
 
+	/**
+	 * Enumeration with possibilities for login methods.
+	 * 
+	 * @author ives
+	 * 
+	 */
 	public static enum AccessMethod {
 		KEY, EMAILPASSWD
 	};
@@ -46,11 +75,23 @@ public class CloudProviderTemplate {
 	private final String shortname;
 	private final AccessMethod accessMethod;
 
-	Collection<Endpoint> endpoints = new ArrayList<Endpoint>();
+	private final Collection<Endpoint> endpoints = new ArrayList<Endpoint>();
 
-	boolean allowCustomEndpoint = false;
-	boolean usesAccessKey = true;
+	private boolean allowCustomEndpoint = false;
+	private boolean usesAccessKey = true;
 
+	/**
+	 * Constructor.
+	 * 
+	 * @param name
+	 *            Template name
+	 * @param shortname
+	 *            Short template name
+	 * @param classname
+	 *            Dasein class name
+	 * @param accessMethod
+	 *            The acces method for this cloudprovider.
+	 */
 	public CloudProviderTemplate(final String name, final String shortname,
 			final String classname, final AccessMethod accessMethod) {
 		this.name = name;
@@ -59,43 +100,74 @@ public class CloudProviderTemplate {
 		this.accessMethod = accessMethod;
 	}
 
+	/**
+	 * Adds an endpoint for this CloudProviderTemplate.
+	 * 
+	 * @param name
+	 *            The name of the endpoint to add.
+	 * @param shortname
+	 *            The short name of the endpoint to add.
+	 * @param url
+	 *            The url of the endpoint to add.
+	 */
 	public void addEndPoint(final String name, final String shortname,
 			final String url) {
 		endpoints.add(new Endpoint(name, shortname, url));
 	}
 
+	/**
+	 * @return True if a custom endpoint is allowed.
+	 */
 	public boolean getAllowCustomEndpoint() {
 		return allowCustomEndpoint;
 	}
 
+	/**
+	 * @return The dasein classname.
+	 */
 	public String getClassname() {
 		return classname;
 	}
 
+	/**
+	 * @return The collection of endpoints for this CloudProviderTemplate.
+	 */
 	public Collection<Endpoint> getEndPoints() {
 		return endpoints;
 	}
 
+	/**
+	 * @return The name of this CloudProviderTemplate.
+	 */
 	public String getName() {
 		return name;
 	}
 
+	/**
+	 * @return True if a Key is used to access, false otherwise.
+	 */
 	public boolean getUsesAccessKey() {
 		return usesAccessKey;
 	}
 
-	public void setAllowCustomEndpoint(final boolean val) {
-		allowCustomEndpoint = val;
+	/**
+	 * @param newEndpoint
+	 *            True if a custom endpoint is allowed, false otherwise.
+	 */
+	public void setAllowCustomEndpoint(final boolean newEndpoint) {
+		allowCustomEndpoint = newEndpoint;
 	}
 
-	public void setUsesAccessKey(final boolean b) {
-		usesAccessKey = b;
-	}
-
+	/**
+	 * @return The short name for this CloudProviderTemplate.
+	 */
 	public String getShortName() {
 		return shortname;
 	}
 
+	/**
+	 * @return The access method for this CloudProviderTemplate.
+	 */
 	public AccessMethod getAccessMethod() {
 		return accessMethod;
 	}

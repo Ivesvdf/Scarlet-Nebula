@@ -5,7 +5,6 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
@@ -111,12 +110,12 @@ public class CloudProvider {
 		final NetworkServices networkServices = providerImpl
 				.getNetworkServices();
 		if (networkServices == null) {
-			log.error(providerImpl.getCloudName()
+			log.warn(providerImpl.getCloudName()
 					+ " does not support network services.");
 		} else {
 			firewallSupport = networkServices.getFirewallSupport();
 			if (firewallSupport == null) {
-				log.error(providerImpl.getCloudName()
+				log.warn(providerImpl.getCloudName()
 						+ " does not support firewalls.");
 				return;
 			}
@@ -864,11 +863,8 @@ public class CloudProvider {
 
 		try {
 			prop.store(new FileOutputStream(getConfigfileName(name)), null);
-		} catch (final FileNotFoundException e) {
+		} catch (final Exception e) {
 			log.error("Properties file describing cloud provider could not be created.");
-		} catch (final IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		}
 	}
 

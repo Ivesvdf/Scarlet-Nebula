@@ -21,7 +21,7 @@ import org.jfree.data.time.TimeSeriesCollection;
 import be.ac.ua.comp.scarletnebula.core.Datapoint;
 import be.ac.ua.comp.scarletnebula.core.Server;
 import be.ac.ua.comp.scarletnebula.core.ServerStatisticsManager;
-import be.ac.ua.comp.scarletnebula.core.Datastream.TimedDatapoint;
+import be.ac.ua.comp.scarletnebula.core.TimedDatapoint;
 
 /**
  * An abstract Graph that displays streaming data
@@ -124,11 +124,8 @@ public abstract class Graph implements NewDatapointListener {
 	 * Registers a new datapoint for the stream named streamname, which was
 	 * measured at value, at time time.
 	 * 
-	 * @param streamname
-	 *            Stream identifier name
-	 * 
-	 * @param value
-	 *            Current measurement for streamname
+	 * @param datapoint
+	 *            The datapoint to add.
 	 * @param time
 	 *            The time at which this measurement was made
 	 */
@@ -138,10 +135,8 @@ public abstract class Graph implements NewDatapointListener {
 		SwingUtilities.invokeLater(new Runnable() {
 			@Override
 			public void run() {
-				final String dataStreamName = datapoint.getDatastreamName();
-				if (!datastreams.containsKey(dataStreamName)) {
-					// Do nothing
-				} else {
+				final String dataStreamName = datapoint.getDatastream();
+				if (datastreams.containsKey(dataStreamName)) {
 					datastreams.get(dataStreamName).addOrUpdate(time,
 							datapoint.getValue());
 				}
