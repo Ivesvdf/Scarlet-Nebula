@@ -7,16 +7,12 @@ import java.awt.Insets;
 import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.BorderFactory;
-import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTable;
@@ -34,6 +30,7 @@ import be.ac.ua.comp.scarletnebula.core.CloudProvider;
 import be.ac.ua.comp.scarletnebula.gui.BetterTextField;
 import be.ac.ua.comp.scarletnebula.gui.Collapsable;
 import be.ac.ua.comp.scarletnebula.gui.CollapsablePanel;
+import be.ac.ua.comp.scarletnebula.gui.FavoriteImagesPanel;
 import be.ac.ua.comp.scarletnebula.gui.ThrobberBarWithText;
 import be.ac.ua.comp.scarletnebula.misc.SwingWorkerWithThrobber;
 import be.ac.ua.comp.scarletnebula.misc.Utils;
@@ -49,9 +46,6 @@ public class ChooseImagePage extends WizardPage
 	private final MachineImageTableModel allImagesModel = new MachineImageTableModel(
 			new ArrayList<MachineImage>());
 	private final JTable allImagesTable = new JTable(allImagesModel);
-	private final MachineImageTableModel favoriteImagesModel = new MachineImageTableModel(
-			new ArrayList<MachineImage>());
-	private final JTable favoriteImagesTable = new JTable(favoriteImagesModel);
 
 	private final CloudProvider provider;
 	private final CollapsablePanel throbberPanel = new CollapsablePanel(
@@ -60,7 +54,7 @@ public class ChooseImagePage extends WizardPage
 																		// visible
 
 	private final JTabbedPane tabs = new JTabbedPane();
-	private final JPanel favoriteImagesPanel;
+	private final FavoriteImagesPanel favoriteImagesPanel;
 	private final JPanel allImagesPanel;
 
 	public ChooseImagePage(final CloudProvider provider)
@@ -81,27 +75,10 @@ public class ChooseImagePage extends WizardPage
 		add(tabs, BorderLayout.CENTER);
 	}
 
-	private JPanel getFavoriteImagesPanel(final CloudProvider provider)
+	private FavoriteImagesPanel getFavoriteImagesPanel(
+			final CloudProvider provider)
 	{
-		final JPanel panel = new JPanel(new BorderLayout());
-		final TableRowSorter<MachineImageTableModel> sorter = new TableRowSorter<MachineImageTableModel>(
-				favoriteImagesModel);
-		favoriteImagesTable.setRowSorter(sorter);
-		favoriteImagesTable.setFillsViewportHeight(true);
-		favoriteImagesTable
-				.addMouseListener(new SmartFavoritesContextMenuMouseListener(
-						provider, favoriteImagesModel, favoriteImagesTable));
-
-		final JScrollPane tableScrollPane = new JScrollPane(favoriteImagesTable);
-		tableScrollPane.setBorder(BorderFactory.createCompoundBorder(
-				BorderFactory.createEmptyBorder(5, 20, 10, 20),
-				BorderFactory.createBevelBorder(BevelBorder.LOWERED)));
-
-		panel.add(tableScrollPane, BorderLayout.CENTER);
-
-		favoriteImagesModel.addImages(provider.getFavoriteImages());
-
-		return panel;
+		return new FavoriteImagesPanel(provider);
 	}
 
 	private final JPanel getAllImagesPanel(final CloudProvider provider)
@@ -112,8 +89,9 @@ public class ChooseImagePage extends WizardPage
 		allImagesTable.setRowSorter(sorter);
 		allImagesTable.setFillsViewportHeight(true);
 		allImagesTable
-				.addMouseListener(new SmartFavoritesContextMenuMouseListener(
-						provider, allImagesModel, allImagesTable));
+				.addMouseListener(new SmartImageModelContextMenuMouseListener(
+						provider, allImagesModel, allImagesTable,
+						favoriteImagesPanel.getModel()));
 
 		final JPanel aboveTable = new JPanel(new BorderLayout());
 		final JPanel searchPanel = getSearchPanel(sorter);
@@ -197,9 +175,9 @@ public class ChooseImagePage extends WizardPage
 		}
 		else
 		{
-			final int selection = favoriteImagesTable.getSelectedRow();
+			final MachineImage selection = favoriteImagesPanel.getSelection();
 
-			if (selection < 0)
+			if (selection == null)
 			{
 				JOptionPane
 						.showMessageDialog(
@@ -209,103 +187,10 @@ public class ChooseImagePage extends WizardPage
 				return null;
 			}
 
-			rec.image = favoriteImagesModel.getRow(favoriteImagesTable
-					.convertRowIndexToModel(selection));
+			rec.image = selection;
 		}
 
 		return new ChooseSizePage(provider, rec.image);
-	}
-
-	private final class SmartFavoritesContextMenuMouseListener implements
-			MouseListener
-	{
-		private final CloudProvider provider;
-		private final MachineImageTableModel model;
-		private final JTable table;
-
-		private SmartFavoritesContextMenuMouseListener(
-				final CloudProvider provider,
-				final MachineImageTableModel model, final JTable table)
-		{
-			this.provider = provider;
-			this.model = model;
-			this.table = table;
-		}
-
-		@Override
-		public void mouseReleased(final MouseEvent e)
-		{
-
-		}
-
-		@Override
-		public void mousePressed(final MouseEvent e)
-		{
-			if (e.isPopupTrigger())
-			{
-				final JPopupMenu popup = new JPopupMenu();
-				final int indexOfSelectedServer = table
-						.rowAtPoint(e.getPoint());
-
-				final int modelIndex = table
-						.convertRowIndexToModel(indexOfSelectedServer);
-
-				final MachineImage image = model.getImage(modelIndex);
-
-				if (provider.imageInFavorites(image))
-				{
-					final JMenuItem removeFromFavorites = new JMenuItem(
-							"Remove from favorites");
-					removeFromFavorites.addActionListener(new ActionListener()
-					{
-						@Override
-						public void actionPerformed(final ActionEvent e)
-						{
-							provider.removeFromFavorites(image);
-							favoriteImagesModel.clear();
-							favoriteImagesModel.addImages(provider
-									.getFavoriteImages());
-							provider.store();
-						}
-					});
-					popup.add(removeFromFavorites);
-				}
-				else
-				{
-					final JMenuItem addToFavorites = new JMenuItem(
-							"Add to favorites");
-					addToFavorites.addActionListener(new ActionListener()
-					{
-						@Override
-						public void actionPerformed(final ActionEvent e)
-						{
-							provider.addToFavorites(image);
-							provider.store();
-						}
-					});
-					popup.add(addToFavorites);
-				}
-				popup.show(e.getComponent(), e.getX(), e.getY());
-			}
-		}
-
-		@Override
-		public void mouseExited(final MouseEvent e)
-		{
-
-		}
-
-		@Override
-		public void mouseEntered(final MouseEvent e)
-		{
-
-		}
-
-		@Override
-		public void mouseClicked(final MouseEvent e)
-		{
-
-		}
 	}
 
 	private final class SearchFieldListener implements ActionListener

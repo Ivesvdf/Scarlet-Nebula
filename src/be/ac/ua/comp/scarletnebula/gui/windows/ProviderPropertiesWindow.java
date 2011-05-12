@@ -6,6 +6,7 @@ import javax.swing.JDialog;
 import javax.swing.JTabbedPane;
 
 import be.ac.ua.comp.scarletnebula.core.CloudProvider;
+import be.ac.ua.comp.scarletnebula.gui.FavoriteImagesPanel;
 import be.ac.ua.comp.scarletnebula.gui.InteractiveFirewallPanel;
 
 public class ProviderPropertiesWindow extends JDialog
@@ -16,26 +17,27 @@ public class ProviderPropertiesWindow extends JDialog
 			final CloudProvider provider)
 	{
 		super(parent, provider.getName() + " Properties", true);
-
+		setLayout(new BorderLayout());
 		setLocationRelativeTo(parent);
 		setLocationByPlatform(true);
 		setSize(550, 400);
 
 		final JTabbedPane tabbedPane = new JTabbedPane();
-		final InteractiveKeyPanel keyPanel = new InteractiveKeyPanel(provider);
-		tabbedPane.addTab("Key Management", keyPanel);
-		final InteractiveFirewallPanel firewallPanel = new InteractiveFirewallPanel(
-				provider);
-		tabbedPane.addTab("Firewall Management", firewallPanel);
 
-		if (!provider.supportsSSHKeys())
+		tabbedPane.addTab("Favorite Images", new FavoriteImagesPanel(provider));
+
+		if (provider.supportsSSHKeys())
 		{
-			keyPanel.setEnabled(false);
+			final InteractiveKeyPanel keyPanel = new InteractiveKeyPanel(
+					provider);
+			tabbedPane.addTab("Key Management", keyPanel);
 		}
 
-		if (!provider.supportsFirewalls())
+		if (provider.supportsFirewalls())
 		{
-			firewallPanel.setEnabled(false);
+			final InteractiveFirewallPanel firewallPanel = new InteractiveFirewallPanel(
+					provider);
+			tabbedPane.addTab("Firewall Management", firewallPanel);
 		}
 
 		add(tabbedPane, BorderLayout.CENTER);
