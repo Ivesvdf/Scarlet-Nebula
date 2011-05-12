@@ -21,22 +21,19 @@ import be.ac.ua.comp.scarletnebula.core.Server;
 import be.ac.ua.comp.scarletnebula.gui.windows.ChangeServerSshLoginMethodWindow;
 import be.ac.ua.comp.scarletnebula.misc.Utils;
 
-public class DecoratedCommunicationPanel extends JPanel
-{
+public class DecoratedCommunicationPanel extends JPanel {
 	private static final long serialVersionUID = 1L;
 	final JDialog parent;
 	private static Log log = LogFactory
 			.getLog(DecoratedCommunicationPanel.class);
 
 	public DecoratedCommunicationPanel(final JDialog parent,
-			final Collection<Server> selectedServers)
-	{
+			final Collection<Server> selectedServers) {
 		this.parent = parent;
 		clearAndFill(selectedServers);
 	}
 
-	final public void clearAndFill(final Collection<Server> selectedServers)
-	{
+	final public void clearAndFill(final Collection<Server> selectedServers) {
 
 		// Remove all components on there
 		invalidate();
@@ -47,18 +44,15 @@ public class DecoratedCommunicationPanel extends JPanel
 		// If there are no servers, or none of the servers are running, do not
 		// display the ssh console
 		final Collection<Server> connectableServers = new ArrayList<Server>();
-		for (final Server s : selectedServers)
-		{
+		for (final Server s : selectedServers) {
 			if (s.getStatus() == VmState.RUNNING
-					&& s.getPublicDnsAddress() != null)
-			{
+					&& s.getPublicDnsAddress() != null) {
 				connectableServers.add(s);
 			}
 		}
 
 		// If there are no servers to connect to, don't draw the ssh console
-		if (connectableServers.size() == 0)
-		{
+		if (connectableServers.size() == 0) {
 			log.info("Connection tab clicked and no servers selected to connect to.");
 			final BetterTextLabel txt = new BetterTextLabel(
 					"Please select at least one running server to connect to.");
@@ -66,9 +60,7 @@ public class DecoratedCommunicationPanel extends JPanel
 			add(txt, BorderLayout.CENTER);
 			validate();
 			repaint();
-		}
-		else
-		{
+		} else {
 			final Server connectServer = selectedServers.iterator().next();
 
 			final JPanel propertiesPanel = new JPanel();
@@ -77,18 +69,14 @@ public class DecoratedCommunicationPanel extends JPanel
 			propertiesPanel.add(Box.createHorizontalGlue());
 			final JButton propertiesButton = new JButton("Properties",
 					Utils.icon("modify16.png"));
-			propertiesButton.addActionListener(new ActionListener()
-			{
+			propertiesButton.addActionListener(new ActionListener() {
 				@Override
-				public void actionPerformed(final ActionEvent e)
-				{
+				public void actionPerformed(final ActionEvent e) {
 					final ChangeServerSshLoginMethodWindow win = new ChangeServerSshLoginMethodWindow(
 							parent, connectServer);
-					win.addActionListener(new ActionListener()
-					{
+					win.addActionListener(new ActionListener() {
 						@Override
-						public void actionPerformed(final ActionEvent e)
-						{
+						public void actionPerformed(final ActionEvent e) {
 							clearAndFill(selectedServers);
 						}
 					});
@@ -98,11 +86,9 @@ public class DecoratedCommunicationPanel extends JPanel
 
 			final JButton restartButton = new JButton("Restart connection",
 					Utils.icon("undo16.png"));
-			restartButton.addActionListener(new ActionListener()
-			{
+			restartButton.addActionListener(new ActionListener() {
 				@Override
-				public void actionPerformed(final ActionEvent e)
-				{
+				public void actionPerformed(final ActionEvent e) {
 					clearAndFill(selectedServers);
 				}
 			});

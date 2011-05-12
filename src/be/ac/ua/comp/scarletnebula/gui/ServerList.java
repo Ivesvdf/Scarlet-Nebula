@@ -30,42 +30,34 @@ import be.ac.ua.comp.scarletnebula.core.Server;
  * @author ives
  * 
  */
-public class ServerList extends JXList implements ComponentListener
-{
-	private final class RollOverHighlighter extends AbstractHighlighter
-	{
+public class ServerList extends JXList implements ComponentListener {
+	private final class RollOverHighlighter extends AbstractHighlighter {
 		private final ServerCellRenderer serverCellRenderer;
 
 		private RollOverHighlighter(final HighlightPredicate predicate,
-				final ServerCellRenderer serverCellRenderer)
-		{
+				final ServerCellRenderer serverCellRenderer) {
 			super(predicate);
 			this.serverCellRenderer = serverCellRenderer;
 		}
 
 		@Override
 		protected Component doHighlight(final Component arg0,
-				final ComponentAdapter arg1)
-		{
+				final ComponentAdapter arg1) {
 			final JXPanel objectToBeRendered = (JXPanel) arg0;
 			serverCellRenderer.onRollOver(objectToBeRendered);
 			return objectToBeRendered;
 		}
 	}
 
-	private final class ClearSelectionMouseAdapter extends MouseAdapter
-	{
-		private void testClearSelection(final MouseEvent e)
-		{
+	private final class ClearSelectionMouseAdapter extends MouseAdapter {
+		private void testClearSelection(final MouseEvent e) {
 			final JList list = (JList) e.getSource();
 
 			final Point currentPos = e.getPoint();
 
-			for (int i = 0; i < list.getModel().getSize(); i++)
-			{
+			for (int i = 0; i < list.getModel().getSize(); i++) {
 				final Rectangle r = list.getCellBounds(i, i);
-				if (r.contains(currentPos))
-				{
+				if (r.contains(currentPos)) {
 					return;
 				}
 			}
@@ -73,14 +65,12 @@ public class ServerList extends JXList implements ComponentListener
 		}
 
 		@Override
-		public void mousePressed(final MouseEvent e)
-		{
+		public void mousePressed(final MouseEvent e) {
 			testClearSelection(e);
 		}
 
 		@Override
-		public void mouseReleased(final MouseEvent e)
-		{
+		public void mouseReleased(final MouseEvent e) {
 			testClearSelection(e);
 		}
 	}
@@ -89,8 +79,7 @@ public class ServerList extends JXList implements ComponentListener
 
 	ServerListModel serverListModel;
 
-	public ServerList(final ServerListModel serverListModel)
-	{
+	public ServerList(final ServerListModel serverListModel) {
 		super(serverListModel);
 		this.serverListModel = serverListModel;
 		setLayoutOrientation(JList.HORIZONTAL_WRAP);
@@ -111,20 +100,17 @@ public class ServerList extends JXList implements ComponentListener
 	}
 
 	@Override
-	public void clearSelection()
-	{
+	public void clearSelection() {
 		setSelectedIndices(new int[0]);
 	}
 
-	public Collection<Server> getSelectedServers()
-	{
+	public Collection<Server> getSelectedServers() {
 		final int indices[] = getSelectedIndices();
 		return serverListModel.getVisibleServersAtIndices(indices);
 	}
 
 	@Override
-	public void componentResized(final ComponentEvent e)
-	{
+	public void componentResized(final ComponentEvent e) {
 		final JList list = (JList) e.getSource();
 		final JViewport viewport = (JViewport) list.getParent();
 
@@ -133,8 +119,7 @@ public class ServerList extends JXList implements ComponentListener
 				- list.getInsets().right - 1;
 		final int serverCount = totalWidth / 200;
 
-		if (serverCount == 0)
-		{
+		if (serverCount == 0) {
 			return;
 		}
 
@@ -148,33 +133,27 @@ public class ServerList extends JXList implements ComponentListener
 	}
 
 	@Override
-	public void componentMoved(final ComponentEvent e)
-	{
+	public void componentMoved(final ComponentEvent e) {
 		// TODO Auto-generated method stub
 
 	}
 
 	@Override
-	public void componentShown(final ComponentEvent e)
-	{
+	public void componentShown(final ComponentEvent e) {
 		// TODO Auto-generated method stub
 
 	}
 
 	@Override
-	public void componentHidden(final ComponentEvent e)
-	{
+	public void componentHidden(final ComponentEvent e) {
 		// TODO Auto-generated method stub
 
 	}
 
-	public boolean startNewServerServerSelected()
-	{
+	public boolean startNewServerServerSelected() {
 		final int indices[] = getSelectedIndices();
-		for (final int index : indices)
-		{
-			if (serverListModel.getVisibleServerAtIndex(index) == null)
-			{
+		for (final int index : indices) {
+			if (serverListModel.getVisibleServerAtIndex(index) == null) {
 				return true;
 			}
 		}

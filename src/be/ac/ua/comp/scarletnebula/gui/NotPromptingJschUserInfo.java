@@ -15,11 +15,9 @@ import com.jcraft.jsch.UIKeyboardInteractive;
 import com.jcraft.jsch.UserInfo;
 
 public class NotPromptingJschUserInfo implements UserInfo,
-		UIKeyboardInteractive
-{
+		UIKeyboardInteractive {
 	@Override
-	public boolean promptYesNo(final String str)
-	{
+	public boolean promptYesNo(final String str) {
 		return true;
 
 		/*
@@ -35,43 +33,35 @@ public class NotPromptingJschUserInfo implements UserInfo,
 	JTextField pword = new JPasswordField(20);
 
 	@Override
-	public String getPassword()
-	{
+	public String getPassword() {
 		return passwd;
 	}
 
 	@Override
-	public String getPassphrase()
-	{
+	public String getPassphrase() {
 		return passphrase;
 	}
 
 	@Override
-	public boolean promptPassword(final String message)
-	{
+	public boolean promptPassword(final String message) {
 		final Object[] ob = { pword };
 		final int result = JOptionPane.showConfirmDialog(null, ob, message,
 				JOptionPane.OK_CANCEL_OPTION);
-		if (result == JOptionPane.OK_OPTION)
-		{
+		if (result == JOptionPane.OK_OPTION) {
 			passwd = pword.getText();
 			return true;
-		}
-		else
-		{
+		} else {
 			return false;
 		}
 	}
 
 	@Override
-	public boolean promptPassphrase(final String message)
-	{
+	public boolean promptPassphrase(final String message) {
 		return true;
 	}
 
 	@Override
-	public void showMessage(final String message)
-	{
+	public void showMessage(final String message) {
 		JOptionPane.showMessageDialog(null, message);
 	}
 
@@ -83,8 +73,7 @@ public class NotPromptingJschUserInfo implements UserInfo,
 	@Override
 	public String[] promptKeyboardInteractive(final String destination,
 			final String name, final String instruction, final String[] prompt,
-			final boolean[] echo)
-	{
+			final boolean[] echo) {
 		panel = new JPanel();
 		panel.setLayout(new GridBagLayout());
 
@@ -97,8 +86,7 @@ public class NotPromptingJschUserInfo implements UserInfo,
 		gbc.gridwidth = GridBagConstraints.RELATIVE;
 
 		final JTextField[] texts = new JTextField[prompt.length];
-		for (int i = 0; i < prompt.length; i++)
-		{
+		for (int i = 0; i < prompt.length; i++) {
 			gbc.fill = GridBagConstraints.NONE;
 			gbc.gridx = 0;
 			gbc.weightx = 1;
@@ -107,12 +95,9 @@ public class NotPromptingJschUserInfo implements UserInfo,
 			gbc.gridx = 1;
 			gbc.fill = GridBagConstraints.HORIZONTAL;
 			gbc.weighty = 1;
-			if (echo[i])
-			{
+			if (echo[i]) {
 				texts[i] = new JTextField(20);
-			}
-			else
-			{
+			} else {
 				texts[i] = new JPasswordField(20);
 			}
 			panel.add(texts[i], gbc);
@@ -121,17 +106,13 @@ public class NotPromptingJschUserInfo implements UserInfo,
 
 		if (JOptionPane.showConfirmDialog(null, panel, destination + ": "
 				+ name, JOptionPane.OK_CANCEL_OPTION,
-				JOptionPane.QUESTION_MESSAGE) == JOptionPane.OK_OPTION)
-		{
+				JOptionPane.QUESTION_MESSAGE) == JOptionPane.OK_OPTION) {
 			final String[] response = new String[prompt.length];
-			for (int i = 0; i < prompt.length; i++)
-			{
+			for (int i = 0; i < prompt.length; i++) {
 				response[i] = texts[i].getText();
 			}
 			return response;
-		}
-		else
-		{
+		} else {
 			return null; // cancel
 		}
 	}

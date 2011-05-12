@@ -6,16 +6,14 @@ import java.io.File;
 import be.ac.ua.comp.scarletnebula.core.CloudProvider;
 import be.ac.ua.comp.scarletnebula.gui.BetterTextLabel;
 
-public class FinalKeyImportPage extends AbstractFinalKeyWizardPage
-{
+public class FinalKeyImportPage extends AbstractFinalKeyWizardPage {
 	private static final long serialVersionUID = 1L;
 	private final CloudProvider provider;
 	private final String keyname;
 	private final File keyFile;
 
 	public FinalKeyImportPage(final CloudProvider provider,
-			final String keyname, final File keyFile)
-	{
+			final String keyname, final File keyFile) {
 		super(provider, "Click Finish to import the key" + keyname, "");
 		this.provider = provider;
 		this.keyname = keyname;
@@ -28,8 +26,7 @@ public class FinalKeyImportPage extends AbstractFinalKeyWizardPage
 	}
 
 	@Override
-	protected void performAction(final KeyRecorder recorder)
-	{
+	protected void performAction(final KeyRecorder recorder) {
 		recorder.keyname = keyname;
 		recorder.makeDefault = makeKeyDefault();
 

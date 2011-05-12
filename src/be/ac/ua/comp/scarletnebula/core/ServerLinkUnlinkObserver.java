@@ -1,7 +1,6 @@
 package be.ac.ua.comp.scarletnebula.core;
 
-public interface ServerLinkUnlinkObserver
-{
+public interface ServerLinkUnlinkObserver {
 
 	/**
 	 * Method will be called when a server was linked with this run of Scarlet

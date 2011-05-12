@@ -29,8 +29,7 @@ import be.ac.ua.comp.scarletnebula.core.Datastream.TimedDatapoint;
  * @author ives
  * 
  */
-public abstract class Graph implements NewDatapointListener
-{
+public abstract class Graph implements NewDatapointListener {
 	protected Map<String, TimeSeries> datastreams = new HashMap<String, TimeSeries>();
 	protected final TimeSeriesCollection dataset = new TimeSeriesCollection();
 	protected final XYItemRenderer renderer = new XYLineAndShapeRenderer(true,
@@ -45,8 +44,7 @@ public abstract class Graph implements NewDatapointListener
 	 * @param maximumAge
 	 *            The age after which data is no longer displayed in the graph
 	 */
-	public Graph(final long maximumAge)
-	{
+	public Graph(final long maximumAge) {
 		this.maximumAge = maximumAge;
 
 	}
@@ -69,8 +67,7 @@ public abstract class Graph implements NewDatapointListener
 	 *            The color this stream will be displayed in
 	 */
 	public final void registerRelativeDatastream(final Server server,
-			final String streamname, final Color color)
-	{
+			final String streamname, final Color color) {
 		final ServerStatisticsManager manager = server.getServerStatistics();
 		manager.addNewDatapointListener(this, streamname);
 
@@ -102,8 +99,7 @@ public abstract class Graph implements NewDatapointListener
 	 *            Current measurement for streamname
 	 */
 	@Override
-	public void newDataPoint(final Datapoint datapoint)
-	{
+	public void newDataPoint(final Datapoint datapoint) {
 		newDataPoint(new Millisecond(), datapoint);
 	}
 
@@ -113,15 +109,12 @@ public abstract class Graph implements NewDatapointListener
 	 * 
 	 * @param server
 	 */
-	public void addServerToRefresh(final Server server)
-	{
+	public void addServerToRefresh(final Server server) {
 		serversToRefresh.add(server);
 	}
 
-	public void addListOfDatapoints(final List<TimedDatapoint> datapoints)
-	{
-		for (final TimedDatapoint datapoint : datapoints)
-		{
+	public void addListOfDatapoints(final List<TimedDatapoint> datapoints) {
+		for (final TimedDatapoint datapoint : datapoints) {
 			newDataPoint(new Millisecond(new Date(datapoint.getTimeMs())),
 					datapoint);
 		}
@@ -141,26 +134,19 @@ public abstract class Graph implements NewDatapointListener
 	 */
 	@Override
 	public void newDataPoint(final RegularTimePeriod time,
-			final Datapoint datapoint)
-	{
-		SwingUtilities.invokeLater(new Runnable()
-		{
+			final Datapoint datapoint) {
+		SwingUtilities.invokeLater(new Runnable() {
 			@Override
-			public void run()
-			{
+			public void run() {
 				final String dataStreamName = datapoint.getDatastreamName();
-				if (!datastreams.containsKey(dataStreamName))
-				{
+				if (!datastreams.containsKey(dataStreamName)) {
 					// Do nothing
-				}
-				else
-				{
+				} else {
 					datastreams.get(dataStreamName).addOrUpdate(time,
 							datapoint.getValue());
 				}
 
-				for (final Server server : serversToRefresh)
-				{
+				for (final Server server : serversToRefresh) {
 					server.serverChanged();
 				}
 			}

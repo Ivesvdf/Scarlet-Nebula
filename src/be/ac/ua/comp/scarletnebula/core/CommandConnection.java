@@ -2,8 +2,7 @@ package be.ac.ua.comp.scarletnebula.core;
 
 import com.jcraft.jsch.JSchException;
 
-abstract public class CommandConnection
-{
+abstract public class CommandConnection {
 	/**
 	 * Executes a command on a remote server.
 	 * 

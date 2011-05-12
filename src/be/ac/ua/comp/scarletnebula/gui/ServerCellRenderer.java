@@ -34,25 +34,21 @@ import be.ac.ua.comp.scarletnebula.core.ServerStatisticsManager;
 import be.ac.ua.comp.scarletnebula.misc.Colors;
 import be.ac.ua.comp.scarletnebula.misc.Utils;
 
-class ServerCellRenderer implements ListCellRenderer
-{
+class ServerCellRenderer implements ListCellRenderer {
 	private static final long serialVersionUID = 1L;
 	public static HashMap<Server, JPanel> panelMapping = new HashMap<Server, JPanel>();
 	private static Log log = LogFactory.getLog(ServerCellRenderer.class);
 
-	ServerCellRenderer()
-	{
+	ServerCellRenderer() {
 	}
 
 	@Override
 	public Component getListCellRendererComponent(final JList list,
 			final Object value, final int index, final boolean isSelected,
-			final boolean cellHasFocus)
-	{
+			final boolean cellHasFocus) {
 		// Dirty hack: the last item in the serverlist is always a fake server
 		// that when double clicked produces an "add new server" wizard.
-		if (value == null)
-		{
+		if (value == null) {
 			return getNewServerServer(list, index, isSelected);
 		}
 		final Server server = (Server) value;
@@ -68,12 +64,9 @@ class ServerCellRenderer implements ListCellRenderer
 
 		final Component chartOrNothing;
 
-		if (server.getServerStatistics() == null)
-		{
+		if (server.getServerStatistics() == null) {
 			chartOrNothing = new JLabel();
-		}
-		else
-		{
+		} else {
 			chartOrNothing = gcp.inBareServerCache(server) ? gcp
 					.getBareChartPanel(server) : createAndStoreBareChartPanel(
 					list, server);
@@ -103,8 +96,7 @@ class ServerCellRenderer implements ListCellRenderer
 	}
 
 	private ChartPanel createAndStoreBareChartPanel(final JList list,
-			final Server server)
-	{
+			final Server server) {
 		final BareGraph graph = new BareGraph((long) 30 * 60 * 1000);
 		graph.registerRelativeDatastream(server,
 				server.getPreferredDatastream(), Color.GREEN);
@@ -117,8 +109,7 @@ class ServerCellRenderer implements ListCellRenderer
 	}
 
 	private JLabel getServernameComponent(final Server server,
-			final Color foreground)
-	{
+			final Color foreground) {
 		final JLabel label = new JLabel(server.getFriendlyName(),
 				getServerIcon(server), SwingConstants.LEFT);
 		label.setOpaque(false);
@@ -127,8 +118,7 @@ class ServerCellRenderer implements ListCellRenderer
 		return label;
 	}
 
-	private JLabel getTagComponent(final Server server, final Color foreground)
-	{
+	private JLabel getTagComponent(final Server server, final Color foreground) {
 		final JLabel tags = new JLabel();
 
 		final Font tagFont = new Font(tags.getFont().getName(), Font.PLAIN, 11);
@@ -140,23 +130,17 @@ class ServerCellRenderer implements ListCellRenderer
 	}
 
 	Color getBackgroundColor(final JList list, final int index,
-			final boolean isSelected)
-	{
+			final boolean isSelected) {
 		Color background;
 
 		// check if this cell represents the current DnD drop location
 		final JList.DropLocation dropLocation = list.getDropLocation();
 		if (dropLocation != null && !dropLocation.isInsert()
-				&& dropLocation.getIndex() == index)
-		{
+				&& dropLocation.getIndex() == index) {
 			background = Color.RED;
-		}
-		else if (isSelected)
-		{
+		} else if (isSelected) {
 			background = UIManager.getColor("Tree.selectionBackground");
-		}
-		else
-		{
+		} else {
 			background = Color.WHITE;
 		}
 
@@ -164,31 +148,24 @@ class ServerCellRenderer implements ListCellRenderer
 	}
 
 	Color getForegroundColor(final JList list, final int index,
-			final boolean isSelected)
-	{
+			final boolean isSelected) {
 		Color foreground;
 
 		// check if this cell represents the current DnD drop location
 		final JList.DropLocation dropLocation = list.getDropLocation();
 		if (dropLocation != null && !dropLocation.isInsert()
-				&& dropLocation.getIndex() == index)
-		{
+				&& dropLocation.getIndex() == index) {
 			foreground = Color.WHITE;
-		}
-		else if (isSelected)
-		{
+		} else if (isSelected) {
 			foreground = UIManager.getColor("Tree.selectionForeground");
-		}
-		else
-		{
+		} else {
 			foreground = Color.BLACK;
 		}
 		return foreground;
 	}
 
 	private JPanel createServerPanel(final Server server, final JList list,
-			final int index, final boolean isSelected)
-	{
+			final int index, final boolean isSelected) {
 		final JXPanel p = new JXPanel();
 		p.setLayout(new GridBagLayout());
 		final Color background = Colors.alpha(
@@ -203,27 +180,21 @@ class ServerCellRenderer implements ListCellRenderer
 		Point2D stop = new Point2D.Float(150, 500);
 
 		if (server != null && !server.sshWillFail()
-				&& server.getServerStatistics() != null)
-		{
+				&& server.getServerStatistics() != null) {
 			final ServerStatisticsManager manager = server
 					.getServerStatistics();
 			final Datastream.WarnLevel warnlevel = manager
 					.getHighestWarnLevel();
 
-			if (warnlevel == Datastream.WarnLevel.HIGH)
-			{
+			if (warnlevel == Datastream.WarnLevel.HIGH) {
 				color1 = Colors.Red.alpha(0.2f);
 				color2 = Colors.Red.alpha(0.8f);
 				stop = new Point2D.Float(500, 2);
-			}
-			else if (warnlevel == Datastream.WarnLevel.MEDIUM)
-			{
+			} else if (warnlevel == Datastream.WarnLevel.MEDIUM) {
 				color1 = Colors.Orange.alpha(0.3f);
 				color2 = Colors.Orange.alpha(0.8f);
 				stop = new Point2D.Float(500, 2);
-			}
-			else if (warnlevel == Datastream.WarnLevel.LOW)
-			{
+			} else if (warnlevel == Datastream.WarnLevel.LOW) {
 				color1 = Colors.Orange.alpha(0.2f);
 				color2 = Colors.Orange.alpha(0.4f);
 				stop = new Point2D.Float(500, 2);
@@ -236,15 +207,12 @@ class ServerCellRenderer implements ListCellRenderer
 		final MattePainter mattePainter = new MattePainter(gradientPaint, true);
 		p.setBackgroundPainter(mattePainter);
 
-		if (isSelected)
-		{
+		if (isSelected) {
 			p.setBorder(BorderFactory.createCompoundBorder(
 					BorderFactory.createLineBorder(
 							UIManager.getColor("List.background"), 2),
 					BorderFactory.createBevelBorder(BevelBorder.LOWERED)));
-		}
-		else
-		{
+		} else {
 			p.setBorder(BorderFactory.createCompoundBorder(
 					BorderFactory.createLineBorder(
 							UIManager.getColor("List.background"), 2),
@@ -256,8 +224,7 @@ class ServerCellRenderer implements ListCellRenderer
 	}
 
 	private Component getNewServerServer(final JList list, final int index,
-			final boolean isSelected)
-	{
+			final boolean isSelected) {
 		final JPanel p = createServerPanel(null, list, index, isSelected);
 		final JLabel label = new JLabel("Start a new server", new ImageIcon(
 				getClass().getResource("/images/add.png")), SwingConstants.LEFT);
@@ -275,8 +242,7 @@ class ServerCellRenderer implements ListCellRenderer
 	 * @param server
 	 * @return The 16x16px Icon representing the server's state
 	 */
-	public ImageIcon getServerIcon(final Server server)
-	{
+	public ImageIcon getServerIcon(final Server server) {
 		String filename = null;
 
 		switch (server.getStatus())
@@ -306,8 +272,7 @@ class ServerCellRenderer implements ListCellRenderer
 		return icon;
 	}
 
-	public JXPanel onRollOver(final JXPanel input)
-	{
+	public JXPanel onRollOver(final JXPanel input) {
 		final Color color1 = Colors.White.color(0.5f);
 		final Color color2 = Colors.Black.color(0.8f);
 		// Color color2 = Colors.Red.color(0.2f);

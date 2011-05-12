@@ -10,13 +10,11 @@ import javax.swing.JTextField;
 
 import be.ac.ua.comp.scarletnebula.misc.Utils;
 
-public class SearchField extends JPanel
-{
+public class SearchField extends JPanel {
 	private static final long serialVersionUID = 1L;
 	private final JTextField textfield;
 
-	public SearchField(final JTextField inputfield)
-	{
+	public SearchField(final JTextField inputfield) {
 		super(new BorderLayout());
 		textfield = inputfield;
 		setOpaque(true);
@@ -32,8 +30,7 @@ public class SearchField extends JPanel
 				BorderFactory.createEmptyBorder(2, 2, 2, 2)));
 	}
 
-	public JTextField getTextField()
-	{
+	public JTextField getTextField() {
 		return textfield;
 	}
 }

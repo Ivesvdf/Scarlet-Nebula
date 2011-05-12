@@ -9,13 +9,11 @@ import be.ac.ua.comp.scarletnebula.core.CloudProvider;
 import be.ac.ua.comp.scarletnebula.gui.FavoriteImagesPanel;
 import be.ac.ua.comp.scarletnebula.gui.InteractiveFirewallPanel;
 
-public class ProviderPropertiesWindow extends JDialog
-{
+public class ProviderPropertiesWindow extends JDialog {
 	private static final long serialVersionUID = 1L;
 
 	public ProviderPropertiesWindow(final JDialog parent,
-			final CloudProvider provider)
-	{
+			final CloudProvider provider) {
 		super(parent, provider.getName() + " Properties", true);
 		setLayout(new BorderLayout());
 		setLocationRelativeTo(parent);
@@ -26,15 +24,13 @@ public class ProviderPropertiesWindow extends JDialog
 
 		tabbedPane.addTab("Favorite Images", new FavoriteImagesPanel(provider));
 
-		if (provider.supportsSSHKeys())
-		{
+		if (provider.supportsSSHKeys()) {
 			final InteractiveKeyPanel keyPanel = new InteractiveKeyPanel(
 					provider);
 			tabbedPane.addTab("Key Management", keyPanel);
 		}
 
-		if (provider.supportsFirewalls())
-		{
+		if (provider.supportsFirewalls()) {
 			final InteractiveFirewallPanel firewallPanel = new InteractiveFirewallPanel(
 					provider);
 			tabbedPane.addTab("Firewall Management", firewallPanel);

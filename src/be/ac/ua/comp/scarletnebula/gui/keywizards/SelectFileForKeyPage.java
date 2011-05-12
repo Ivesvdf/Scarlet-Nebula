@@ -18,8 +18,7 @@ import be.ac.ua.comp.scarletnebula.gui.BetterTextLabel;
 import be.ac.ua.comp.scarletnebula.wizard.DataRecorder;
 import be.ac.ua.comp.scarletnebula.wizard.WizardPage;
 
-public class SelectFileForKeyPage extends WizardPage
-{
+public class SelectFileForKeyPage extends WizardPage {
 	private static final long serialVersionUID = 1L;
 	private final JFileChooser fileChooser = new JFileChooser();
 	private final JLabel selectedLabel = new JLabel("No file selected");
@@ -27,8 +26,7 @@ public class SelectFileForKeyPage extends WizardPage
 	private final String keyname;
 	private CloudProvider provider;
 
-	SelectFileForKeyPage(final CloudProvider provider, final String keyname)
-	{
+	SelectFileForKeyPage(final CloudProvider provider, final String keyname) {
 		final BetterTextLabel txt = new BetterTextLabel(
 				"Please select the keyfile associated with SSH key " + keyname
 						+ ".");
@@ -39,15 +37,12 @@ public class SelectFileForKeyPage extends WizardPage
 		final JPanel mainPanel = new JPanel();
 		mainPanel.setLayout(new FlowLayout(FlowLayout.LEADING));
 		final JButton openButton = new JButton("Browse...");
-		openButton.addActionListener(new ActionListener()
-		{
+		openButton.addActionListener(new ActionListener() {
 			@Override
-			public void actionPerformed(final ActionEvent e)
-			{
+			public void actionPerformed(final ActionEvent e) {
 				final int rv = fileChooser
 						.showOpenDialog(SelectFileForKeyPage.this);
-				if (rv == JFileChooser.APPROVE_OPTION)
-				{
+				if (rv == JFileChooser.APPROVE_OPTION) {
 					final File selectedFile = fileChooser.getSelectedFile();
 					SelectFileForKeyPage.this.selectedFile = selectedFile;
 					selectedLabel.setText(selectedFile.getName());
@@ -63,10 +58,8 @@ public class SelectFileForKeyPage extends WizardPage
 	}
 
 	@Override
-	public WizardPage next(final DataRecorder recorder)
-	{
-		if (selectedFile.length() == 0)
-		{
+	public WizardPage next(final DataRecorder recorder) {
+		if (selectedFile.length() == 0) {
 			JOptionPane.showMessageDialog(this, "Please select a key-file.",
 					"Select keyfile", JOptionPane.ERROR_MESSAGE);
 			return null;

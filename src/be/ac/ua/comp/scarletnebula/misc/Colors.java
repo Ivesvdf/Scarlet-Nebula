@@ -11,8 +11,7 @@ import java.awt.Color;
  * @version 1.0
  * @since Apr 21, 2007, 12:55:24 PM
  */
-public enum Colors
-{
+public enum Colors {
 
 	// XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 	// various colors in the pallete
@@ -26,23 +25,19 @@ public enum Colors
 	// constructors
 	// XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 
-	Colors(final Color c)
-	{
+	Colors(final Color c) {
 		_myColor = c;
 	}
 
-	Colors(final int r, final int g, final int b)
-	{
+	Colors(final int r, final int g, final int b) {
 		_myColor = new Color(r, g, b);
 	}
 
-	Colors(final int r, final int g, final int b, final int alpha)
-	{
+	Colors(final int r, final int g, final int b, final int alpha) {
 		_myColor = new Color(r, g, b, alpha);
 	}
 
-	Colors(final float r, final float g, final float b, final float alpha)
-	{
+	Colors(final float r, final float g, final float b, final float alpha) {
 		_myColor = new Color(r, g, b, alpha);
 	}
 
@@ -56,31 +51,26 @@ public enum Colors
 	// methods
 	// XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 
-	public Color alpha(final float t)
-	{
+	public Color alpha(final float t) {
 		return new Color(_myColor.getRed(), _myColor.getGreen(),
 				_myColor.getBlue(), (int) (t * 255f));
 	}
 
-	public static Color alpha(final Color c, final float t)
-	{
+	public static Color alpha(final Color c, final float t) {
 		return new Color(c.getRed(), c.getGreen(), c.getBlue(),
 				(int) (t * 255f));
 	}
 
-	public Color color()
-	{
+	public Color color() {
 		return _myColor;
 	}
 
-	public Color color(final float f)
-	{
+	public Color color(final float f) {
 		return alpha(f);
 	}
 
 	@Override
-	public String toString()
-	{
+	public String toString() {
 		final StringBuilder sb = new StringBuilder();
 		sb.append("r=").append(_myColor.getRed()).append(", g=")
 				.append(_myColor.getGreen()).append(", b=")
@@ -88,8 +78,7 @@ public enum Colors
 		return sb.toString();
 	}
 
-	public String toHexString()
-	{
+	public String toHexString() {
 		final StringBuilder sb = new StringBuilder();
 		sb.append("#");
 		sb.append(Integer.toHexString(_myColor.getRed()));

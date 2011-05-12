@@ -22,8 +22,7 @@ import javax.swing.event.DocumentListener;
 import be.ac.ua.comp.scarletnebula.misc.Utils;
 
 public abstract class LoudInputVerifier extends InputVerifier implements
-		KeyListener, DocumentListener
-{
+		KeyListener, DocumentListener {
 
 	private JDialog popup;
 	private final JLabel messageLabel;
@@ -41,11 +40,9 @@ public abstract class LoudInputVerifier extends InputVerifier implements
 	 * @param message
 	 *            The message shown when textField does not pass verification
 	 */
-	public LoudInputVerifier(final JTextField textField, final String message)
-	{
+	public LoudInputVerifier(final JTextField textField, final String message) {
 		this.textField = textField;
-		if (textField != null)
-		{
+		if (textField != null) {
 			textField.addKeyListener(this);
 			textField.getDocument().addDocumentListener(this);
 		}
@@ -58,15 +55,12 @@ public abstract class LoudInputVerifier extends InputVerifier implements
 	 * @see InputVerifier
 	 */
 	@Override
-	public boolean shouldYieldFocus(final JComponent c)
-	{
+	public boolean shouldYieldFocus(final JComponent c) {
 		final JDialog parentDialog = (JDialog) SwingUtilities
 				.getAncestorOfClass(JDialog.class, c);
 
-		if (!verify(c) && parentDialog != null)
-		{
-			if (popup == null)
-			{
+		if (!verify(c) && parentDialog != null) {
+			if (popup == null) {
 				popup = new JDialog(parentDialog, "");
 				initComponents(popup);
 			}
@@ -81,8 +75,7 @@ public abstract class LoudInputVerifier extends InputVerifier implements
 			popup.setVisible(true);
 			return false;
 		}
-		if (popup != null)
-		{
+		if (popup != null) {
 			popup.setVisible(false);
 		}
 
@@ -99,8 +92,7 @@ public abstract class LoudInputVerifier extends InputVerifier implements
 	 * @param message
 	 *            The message to be displayed.
 	 */
-	protected void setMessage(final String message)
-	{
+	protected void setMessage(final String message) {
 		messageLabel.setText(message);
 	}
 
@@ -108,8 +100,7 @@ public abstract class LoudInputVerifier extends InputVerifier implements
 	 * @see KeyListener
 	 */
 	@Override
-	public void keyPressed(final KeyEvent e)
-	{
+	public void keyPressed(final KeyEvent e) {
 		// popup.setVisible(false);
 	}
 
@@ -117,16 +108,14 @@ public abstract class LoudInputVerifier extends InputVerifier implements
 	 * @see KeyListener
 	 */
 	@Override
-	public void keyTyped(final KeyEvent e)
-	{
+	public void keyTyped(final KeyEvent e) {
 	}
 
 	/**
 	 * @see KeyListener
 	 */
 	@Override
-	public void keyReleased(final KeyEvent e)
-	{
+	public void keyReleased(final KeyEvent e) {
 	}
 
 	/**
@@ -135,8 +124,7 @@ public abstract class LoudInputVerifier extends InputVerifier implements
 	 * @param popup
 	 *            The popup that will be filled.
 	 */
-	private void initComponents(final JDialog popup)
-	{
+	private void initComponents(final JDialog popup) {
 		final JPanel content = new JPanel(new FlowLayout());
 		popup.setUndecorated(true);
 		content.setBackground(color);
@@ -153,8 +141,7 @@ public abstract class LoudInputVerifier extends InputVerifier implements
 	 * @see DocumentListener
 	 */
 	@Override
-	public void changedUpdate(final DocumentEvent e)
-	{
+	public void changedUpdate(final DocumentEvent e) {
 
 	}
 
@@ -162,8 +149,7 @@ public abstract class LoudInputVerifier extends InputVerifier implements
 	 * @see DocumentListener
 	 */
 	@Override
-	public void insertUpdate(final DocumentEvent e)
-	{
+	public void insertUpdate(final DocumentEvent e) {
 		shouldYieldFocus(textField);
 	}
 
@@ -171,8 +157,7 @@ public abstract class LoudInputVerifier extends InputVerifier implements
 	 * @see DocumentListener
 	 */
 	@Override
-	public void removeUpdate(final DocumentEvent e)
-	{
+	public void removeUpdate(final DocumentEvent e) {
 		shouldYieldFocus(textField);
 	}
 

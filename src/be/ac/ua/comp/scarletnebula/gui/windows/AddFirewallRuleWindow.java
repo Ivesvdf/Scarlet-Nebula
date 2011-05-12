@@ -29,31 +29,25 @@ import be.ac.ua.comp.scarletnebula.gui.inputverifiers.PortRangeInputVerifier;
 import com.jgoodies.forms.builder.DefaultFormBuilder;
 import com.jgoodies.forms.layout.FormLayout;
 
-public class AddFirewallRuleWindow extends JDialog
-{
-	public interface AddFirewallRuleWindowClosedListener
-	{
+public class AddFirewallRuleWindow extends JDialog {
+	public interface AddFirewallRuleWindowClosedListener {
 		public void addRuleWindowClosed(Firewall firewall, int beginPort,
 				int endPort, Protocol protocol, String CIDR);
 	};
 
-	private final class OkActionListener implements ActionListener
-	{
+	private final class OkActionListener implements ActionListener {
 		@Override
-		public void actionPerformed(final ActionEvent e)
-		{
+		public void actionPerformed(final ActionEvent e) {
 			final LoudInputVerifier inputVerifier = new IpAddressVerifier(
 					ipField, "E.g. 84.5.40.160 or 0.0.0.0/0");
 			ipField.setInputVerifier(inputVerifier);
 			if (inputVerifier.shouldYieldFocus(ipField)
 					&& portRangeField.getInputVerifier().shouldYieldFocus(
-							portRangeField))
-			{
+							portRangeField)) {
 				final InteractiveFirewallPanel.PortRange range = new InteractiveFirewallPanel.PortRange(
 						portRangeField.getText());
 
-				for (final AddFirewallRuleWindowClosedListener listener : listeners)
-				{
+				for (final AddFirewallRuleWindowClosedListener listener : listeners) {
 					listener.addRuleWindowClosed(firewall, range.startPort,
 							range.endPort, Protocol
 									.valueOf((String) protocolDropdown
@@ -66,11 +60,9 @@ public class AddFirewallRuleWindow extends JDialog
 		}
 	}
 
-	private final class CancelActionListener implements ActionListener
-	{
+	private final class CancelActionListener implements ActionListener {
 		@Override
-		public void actionPerformed(final ActionEvent e)
-		{
+		public void actionPerformed(final ActionEvent e) {
 			dispose();
 		}
 	}
@@ -84,8 +76,7 @@ public class AddFirewallRuleWindow extends JDialog
 	private final Firewall firewall;
 
 	public AddFirewallRuleWindow(final JDialog parent,
-			final CloudProvider provider, final Firewall firewall)
-	{
+			final CloudProvider provider, final Firewall firewall) {
 		super(parent, "Add Rule", true);
 		this.firewall = firewall;
 		setLayout(new BorderLayout());
@@ -134,8 +125,7 @@ public class AddFirewallRuleWindow extends JDialog
 	}
 
 	public void addAddFirewallRuleWindowClosed(
-			final AddFirewallRuleWindowClosedListener listener)
-	{
+			final AddFirewallRuleWindowClosedListener listener) {
 		listeners.add(listener);
 	}
 }

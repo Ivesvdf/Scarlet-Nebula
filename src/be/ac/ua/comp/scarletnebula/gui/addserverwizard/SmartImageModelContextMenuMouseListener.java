@@ -14,8 +14,7 @@ import org.dasein.cloud.compute.MachineImage;
 import be.ac.ua.comp.scarletnebula.core.CloudProvider;
 
 final public class SmartImageModelContextMenuMouseListener implements
-		MouseListener
-{
+		MouseListener {
 	/**
 	 * 
 	 */
@@ -26,8 +25,7 @@ final public class SmartImageModelContextMenuMouseListener implements
 
 	public SmartImageModelContextMenuMouseListener(
 			final CloudProvider provider, final MachineImageTableModel model,
-			final JTable table, final MachineImageTableModel favoritesModel)
-	{
+			final JTable table, final MachineImageTableModel favoritesModel) {
 		this.provider = provider;
 		this.model = model;
 		this.table = table;
@@ -35,16 +33,13 @@ final public class SmartImageModelContextMenuMouseListener implements
 	}
 
 	@Override
-	public void mouseReleased(final MouseEvent e)
-	{
+	public void mouseReleased(final MouseEvent e) {
 
 	}
 
 	@Override
-	public void mousePressed(final MouseEvent e)
-	{
-		if (e.isPopupTrigger())
-		{
+	public void mousePressed(final MouseEvent e) {
+		if (e.isPopupTrigger()) {
 			final JPopupMenu popup = new JPopupMenu();
 			final int indexOfSelectedServer = table.rowAtPoint(e.getPoint());
 
@@ -53,19 +48,15 @@ final public class SmartImageModelContextMenuMouseListener implements
 
 			final MachineImage image = model.getImage(modelIndex);
 
-			if (provider.imageInFavorites(image))
-			{
+			if (provider.imageInFavorites(image)) {
 				final JMenuItem removeFromFavorites = new JMenuItem(
 						"Remove from favorites");
-				removeFromFavorites.addActionListener(new ActionListener()
-				{
+				removeFromFavorites.addActionListener(new ActionListener() {
 					@Override
-					public void actionPerformed(final ActionEvent e)
-					{
+					public void actionPerformed(final ActionEvent e) {
 						provider.removeFromFavorites(image);
 
-						if (favoritesModel != null)
-						{
+						if (favoritesModel != null) {
 							favoritesModel.clear();
 							favoritesModel.addImages(provider
 									.getFavoriteImages());
@@ -75,16 +66,12 @@ final public class SmartImageModelContextMenuMouseListener implements
 					}
 				});
 				popup.add(removeFromFavorites);
-			}
-			else
-			{
+			} else {
 				final JMenuItem addToFavorites = new JMenuItem(
 						"Add to favorites");
-				addToFavorites.addActionListener(new ActionListener()
-				{
+				addToFavorites.addActionListener(new ActionListener() {
 					@Override
-					public void actionPerformed(final ActionEvent e)
-					{
+					public void actionPerformed(final ActionEvent e) {
 						provider.addToFavorites(image);
 						provider.store();
 					}
@@ -96,20 +83,17 @@ final public class SmartImageModelContextMenuMouseListener implements
 	}
 
 	@Override
-	public void mouseExited(final MouseEvent e)
-	{
+	public void mouseExited(final MouseEvent e) {
 
 	}
 
 	@Override
-	public void mouseEntered(final MouseEvent e)
-	{
+	public void mouseEntered(final MouseEvent e) {
 
 	}
 
 	@Override
-	public void mouseClicked(final MouseEvent e)
-	{
+	public void mouseClicked(final MouseEvent e) {
 
 	}
 }

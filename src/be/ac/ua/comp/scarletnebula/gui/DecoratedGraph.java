@@ -20,8 +20,7 @@ import be.ac.ua.comp.scarletnebula.core.Datastream;
 import be.ac.ua.comp.scarletnebula.core.Datapoint.Type;
 import be.ac.ua.comp.scarletnebula.core.Datastream.TimedDatapoint;
 
-public class DecoratedGraph extends Graph
-{
+public class DecoratedGraph extends Graph {
 	final private static Log log = LogFactory.getLog(DecoratedGraph.class);
 	private final DateAxis domain = new DateAxis();
 	private final NumberAxis range = new NumberAxis();
@@ -33,8 +32,7 @@ public class DecoratedGraph extends Graph
 	 * @param maximumAge
 	 *            The age after which data is no longer displayed in the graph
 	 */
-	public DecoratedGraph(final long maximumAge, final Datastream stream)
-	{
+	public DecoratedGraph(final long maximumAge, final Datastream stream) {
 		super(maximumAge);
 		this.stream = stream;
 		domain.setVisible(false);
@@ -54,8 +52,7 @@ public class DecoratedGraph extends Graph
 	 * @see Graph
 	 */
 	@Override
-	public ChartPanel getChartPanel()
-	{
+	public ChartPanel getChartPanel() {
 		final XYPlot plot = new XYPlot(dataset, domain, range, renderer);
 		plot.setBackgroundPaint(Color.darkGray);
 		plot.setDomainGridlinePaint(Color.white);
@@ -64,29 +61,23 @@ public class DecoratedGraph extends Graph
 		plot.setDomainGridlinesVisible(true);
 		plot.setRangeGridlinesVisible(true);
 
-		if (stream.getMax() != null)
-		{
+		if (stream.getMax() != null) {
 			log.info("Getting chart panel for stream with maximum.");
 			range.setAutoRange(false);
 
 			range.setTickUnit(new NumberTickUnit(stream.getMax() / 10,
 					new DecimalFormat(), 1));
 			range.setRange(0, stream.getMax());
-		}
-		else if (stream.getType() == Type.RELATIVE)
-		{
+		} else if (stream.getType() == Type.RELATIVE) {
 			range.setAutoRange(false);
 
 			range.setTickUnit(new NumberTickUnit(0.1, new DecimalFormat(), 1));
 			range.setRange(0, 1);
-		}
-		else
-		{
+		} else {
 			double sum = 0;
 			final List<TimedDatapoint> datapoints = stream
 					.getRecentlyProcessedDatapoints();
-			for (final TimedDatapoint dp : datapoints)
-			{
+			for (final TimedDatapoint dp : datapoints) {
 				sum += dp.getValue();
 			}
 			range.setTickUnit(new NumberTickUnit((int) (sum / (datapoints

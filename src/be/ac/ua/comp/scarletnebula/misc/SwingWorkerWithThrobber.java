@@ -19,8 +19,7 @@ import be.ac.ua.comp.scarletnebula.gui.Collapsable;
  *            the type used for carrying out intermediate results by this
  *            SwingWorkerWithThrobber's publish and process methods
  */
-public abstract class SwingWorkerWithThrobber<T, V> extends SwingWorker<T, V>
-{
+public abstract class SwingWorkerWithThrobber<T, V> extends SwingWorker<T, V> {
 	final Collapsable throbber;
 
 	/**
@@ -31,28 +30,23 @@ public abstract class SwingWorkerWithThrobber<T, V> extends SwingWorker<T, V>
 	 *            SwingWorkerWithThrobber is working. Give it to me while
 	 *            collapsed and obviously make sure it's added to some panel.
 	 */
-	public SwingWorkerWithThrobber(final Collapsable throbber)
-	{
+	public SwingWorkerWithThrobber(final Collapsable throbber) {
 		super();
 		this.throbber = throbber;
 
-		addPropertyChangeListener(new WorkerPropertyChangeListener()
-		{
+		addPropertyChangeListener(new WorkerPropertyChangeListener() {
 			@Override
 			public void progressChanged(final Object source,
-					final int newProgress, final PropertyChangeEvent evt)
-			{
+					final int newProgress, final PropertyChangeEvent evt) {
 			}
 
 			@Override
-			public void taskIsFinished(final PropertyChangeEvent evt)
-			{
+			public void taskIsFinished(final PropertyChangeEvent evt) {
 				throbber.collapse();
 			}
 
 			@Override
-			public void taskStarted(final PropertyChangeEvent evt)
-			{
+			public void taskStarted(final PropertyChangeEvent evt) {
 				throbber.uncollapse();
 			}
 		});

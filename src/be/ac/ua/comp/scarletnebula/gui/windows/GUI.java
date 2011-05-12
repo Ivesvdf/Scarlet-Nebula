@@ -60,8 +60,7 @@ import be.ac.ua.comp.scarletnebula.gui.welcomewizard.WelcomeWizard;
 import be.ac.ua.comp.scarletnebula.misc.Utils;
 
 public class GUI extends JFrame implements ListSelectionListener,
-		ServerChangedObserver, ServerLinkUnlinkObserver
-{
+		ServerChangedObserver, ServerLinkUnlinkObserver {
 	private static Log log = LogFactory.getLog(GUI.class);
 
 	private static final long serialVersionUID = 1L;
@@ -72,8 +71,7 @@ public class GUI extends JFrame implements ListSelectionListener,
 
 	private final JTextField filterTextField = new JTextField(15);
 
-	public GUI()
-	{
+	public GUI() {
 		chooseLookAndFeel();
 
 		setTitle("Scarlet Nebula");
@@ -103,18 +101,13 @@ public class GUI extends JFrame implements ListSelectionListener,
 		// servers so we can update the serverlist.
 		CloudManager.get().addServerLinkUnlinkObserver(this);
 
-		(new SwingWorker<Object, Object>()
-		{
+		(new SwingWorker<Object, Object>() {
 
 			@Override
-			protected Object doInBackground() throws Exception
-			{
-				try
-				{
+			protected Object doInBackground() throws Exception {
+				try {
 					CloudManager.get().loadAllLinkedServers();
-				}
-				catch (final Exception e)
-				{
+				} catch (final Exception e) {
 					log.error("Error while geting servers", e);
 				}
 				return null;
@@ -123,13 +116,10 @@ public class GUI extends JFrame implements ListSelectionListener,
 		}).execute();
 
 		// If there are no linked cloudproviders, start the new provider wizard
-		if (CloudManager.get().getLinkedCloudProviders().size() == 0)
-		{
-			final SwingWorker<Object, Object> welcomeWizardWorker = new SwingWorker<Object, Object>()
-			{
+		if (CloudManager.get().getLinkedCloudProviders().size() == 0) {
+			final SwingWorker<Object, Object> welcomeWizardWorker = new SwingWorker<Object, Object>() {
 				@Override
-				protected Object doInBackground() throws Exception
-				{
+				protected Object doInBackground() throws Exception {
 					new WelcomeWizard(GUI.this);
 					return null;
 				}
@@ -139,15 +129,12 @@ public class GUI extends JFrame implements ListSelectionListener,
 		}
 	}
 
-	private JPanel getMainPanel()
-	{
-		final JPanel mainPanel = new JPanel()
-		{
+	private JPanel getMainPanel() {
+		final JPanel mainPanel = new JPanel() {
 			private static final long serialVersionUID = 1L;
 
 			@Override
-			public boolean isOptimizedDrawingEnabled()
-			{
+			public boolean isOptimizedDrawingEnabled() {
 				return false;
 			}
 		};
@@ -161,57 +148,46 @@ public class GUI extends JFrame implements ListSelectionListener,
 		return mainPanel;
 	}
 
-	private JPanel getOverlayPanel()
-	{
+	private JPanel getOverlayPanel() {
 		final JPanel overlayPanel = new JPanel();
 		overlayPanel.setOpaque(false);
 		overlayPanel.setLayout(new GridBagLayout());
-		filterTextField.addKeyListener(new KeyListener()
-		{
+		filterTextField.addKeyListener(new KeyListener() {
 			@Override
-			public void keyTyped(final KeyEvent e)
-			{
+			public void keyTyped(final KeyEvent e) {
 
 			}
 
 			@Override
-			public void keyReleased(final KeyEvent e)
-			{
+			public void keyReleased(final KeyEvent e) {
 			}
 
 			@Override
-			public void keyPressed(final KeyEvent e)
-			{
-				if (e.getKeyCode() == KeyEvent.VK_ESCAPE)
-				{
+			public void keyPressed(final KeyEvent e) {
+				if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
 					hideFilter();
 				}
 			}
 		});
 		filterTextField.getDocument().addDocumentListener(
-				new DocumentListener()
-				{
+				new DocumentListener() {
 					@Override
-					public void removeUpdate(final DocumentEvent e)
-					{
+					public void removeUpdate(final DocumentEvent e) {
 						textChanged();
 
 					}
 
 					@Override
-					public void insertUpdate(final DocumentEvent e)
-					{
+					public void insertUpdate(final DocumentEvent e) {
 						textChanged();
 					}
 
 					@Override
-					public void changedUpdate(final DocumentEvent e)
-					{
+					public void changedUpdate(final DocumentEvent e) {
 
 					}
 
-					private void textChanged()
-					{
+					private void textChanged() {
 						serverListModel.filter(filterTextField.getText());
 					}
 				});
@@ -225,11 +201,9 @@ public class GUI extends JFrame implements ListSelectionListener,
 		closeButton.setMargin(new Insets(0, 0, 0, 0));
 		closeButton.setOpaque(false);
 		closeButton.setBorder(BorderFactory.createEmptyBorder(4, 4, 4, 4));
-		closeButton.addActionListener(new ActionListener()
-		{
+		closeButton.addActionListener(new ActionListener() {
 			@Override
-			public void actionPerformed(final ActionEvent e)
-			{
+			public void actionPerformed(final ActionEvent e) {
 				hideFilter();
 			}
 		});
@@ -254,73 +228,58 @@ public class GUI extends JFrame implements ListSelectionListener,
 		return overlayPanel;
 	}
 
-	protected void hideFilter()
-	{
+	protected void hideFilter() {
 		searchPanel.setVisible(false);
 		filterTextField.setText("");
 	}
 
-	private void showFilter()
-	{
+	private void showFilter() {
 		searchPanel.setVisible(true);
 		filterTextField.requestFocusInWindow();
 	}
 
-	private void chooseLookAndFeel()
-	{
-		try
-		{
+	private void chooseLookAndFeel() {
+		try {
 			boolean found = false;
 			for (final LookAndFeelInfo info : UIManager
-					.getInstalledLookAndFeels())
-			{
-				if ("Nimbus".equals(info.getName()))
-				{
+					.getInstalledLookAndFeels()) {
+				if ("Nimbus".equals(info.getName())) {
 					UIManager.setLookAndFeel(info.getClassName());
 					found = true;
 					break;
 				}
 			}
-			if (!found)
-			{
+			if (!found) {
 				UIManager.setLookAndFeel(UIManager
 						.getSystemLookAndFeelClassName());
 			}
-		}
-		catch (final Exception e)
-		{
+		} catch (final Exception e) {
 			log.error("Cannot set look and feel", e);
 		}
 	}
 
-	private void setKeyboardAccelerators()
-	{
+	private void setKeyboardAccelerators() {
 		serverList.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
 				KeyStroke.getKeyStroke("control F"), "search");
-		serverList.getActionMap().put("search", new AbstractAction()
-		{
+		serverList.getActionMap().put("search", new AbstractAction() {
 			private static final long serialVersionUID = 1L;
 
 			@Override
-			public void actionPerformed(final ActionEvent e)
-			{
+			public void actionPerformed(final ActionEvent e) {
 				showFilter();
 			}
 		});
 	}
 
-	private void addToolbar()
-	{
+	private void addToolbar() {
 		final JToolBar toolbar = new JToolBar();
 
 		final Icon addIcon = Utils.icon("add16.png");
 
 		final JButton addButton = new JButton(addIcon);
-		addButton.addActionListener(new ActionListener()
-		{
+		addButton.addActionListener(new ActionListener() {
 			@Override
-			public void actionPerformed(final ActionEvent e)
-			{
+			public void actionPerformed(final ActionEvent e) {
 				startAddServerWizard();
 			}
 		});
@@ -329,11 +288,9 @@ public class GUI extends JFrame implements ListSelectionListener,
 
 		final Icon refreshIcon = Utils.icon("refresh16.png");
 		final JButton refreshButton = new JButton(refreshIcon);
-		refreshButton.addActionListener(new ActionListener()
-		{
+		refreshButton.addActionListener(new ActionListener() {
 			@Override
-			public void actionPerformed(final ActionEvent e)
-			{
+			public void actionPerformed(final ActionEvent e) {
 				refreshSelectedServers();
 			}
 		});
@@ -342,11 +299,9 @@ public class GUI extends JFrame implements ListSelectionListener,
 
 		final Icon searchIcon = Utils.icon("search16.png");
 		final JButton searchButton = new JButton(searchIcon);
-		searchButton.addActionListener(new ActionListener()
-		{
+		searchButton.addActionListener(new ActionListener() {
 			@Override
-			public void actionPerformed(final ActionEvent e)
-			{
+			public void actionPerformed(final ActionEvent e) {
 				showFilter();
 			}
 		});
@@ -360,8 +315,7 @@ public class GUI extends JFrame implements ListSelectionListener,
 		add(toolbar, BorderLayout.PAGE_START);
 	}
 
-	private void addMenubar()
-	{
+	private void addMenubar() {
 		final JMenuBar menuBar = new JMenuBar();
 		final JMenu providerMenu = getProviderMenu();
 		final JMenu serverMenu = getServerMenu();
@@ -375,19 +329,16 @@ public class GUI extends JFrame implements ListSelectionListener,
 		setJMenuBar(menuBar);
 	}
 
-	private JMenu getServerMenu()
-	{
+	private JMenu getServerMenu() {
 		final JMenu serverMenu = new JMenu("Servers");
 		serverMenu.setMnemonic(KeyEvent.VK_S);
 
 		final JMenuItem startServerItem = new JMenuItem("Start new server",
 				Utils.icon("add16.png"));
 		startServerItem.setMnemonic(KeyEvent.VK_S);
-		startServerItem.addActionListener(new ActionListener()
-		{
+		startServerItem.addActionListener(new ActionListener() {
 			@Override
-			public void actionPerformed(final ActionEvent e)
-			{
+			public void actionPerformed(final ActionEvent e) {
 				startAddServerWizard();
 			}
 		});
@@ -396,11 +347,9 @@ public class GUI extends JFrame implements ListSelectionListener,
 		final JMenuItem searchServerItem = new JMenuItem("Filter servers",
 				Utils.icon("search16.png"));
 		searchServerItem.setMnemonic(KeyEvent.VK_F);
-		searchServerItem.addActionListener(new ActionListener()
-		{
+		searchServerItem.addActionListener(new ActionListener() {
 			@Override
-			public void actionPerformed(final ActionEvent e)
-			{
+			public void actionPerformed(final ActionEvent e) {
 				showFilter();
 			}
 		});
@@ -408,8 +357,7 @@ public class GUI extends JFrame implements ListSelectionListener,
 		return serverMenu;
 	}
 
-	private JMenu getHelpMenu()
-	{
+	private JMenu getHelpMenu() {
 		final JMenu helpMenu = new JMenu("Help");
 		helpMenu.setMnemonic(KeyEvent.VK_H);
 
@@ -427,11 +375,9 @@ public class GUI extends JFrame implements ListSelectionListener,
 		helpMenu.add(noHelpItem);
 
 		final JMenuItem aboutItem = new JMenuItem("About...");
-		aboutItem.addActionListener(new ActionListener()
-		{
+		aboutItem.addActionListener(new ActionListener() {
 			@Override
-			public void actionPerformed(final ActionEvent e)
-			{
+			public void actionPerformed(final ActionEvent e) {
 				openAboutBox();
 			}
 		});
@@ -440,8 +386,7 @@ public class GUI extends JFrame implements ListSelectionListener,
 		return helpMenu;
 	}
 
-	private JMenu getProviderMenu()
-	{
+	private JMenu getProviderMenu() {
 		final JMenu providerMenu = new JMenu("Providers");
 		providerMenu.setMnemonic(KeyEvent.VK_P);
 		providerMenu.getAccessibleContext().setAccessibleDescription(
@@ -449,11 +394,9 @@ public class GUI extends JFrame implements ListSelectionListener,
 
 		final JMenuItem manageProvidersItem = new JMenuItem("Manage Providers");
 		manageProvidersItem.setMnemonic(KeyEvent.VK_M);
-		manageProvidersItem.addActionListener(new ActionListener()
-		{
+		manageProvidersItem.addActionListener(new ActionListener() {
 			@Override
-			public void actionPerformed(final ActionEvent e)
-			{
+			public void actionPerformed(final ActionEvent e) {
 				new ManageProvidersWindow(GUI.this);
 			}
 		});
@@ -462,11 +405,9 @@ public class GUI extends JFrame implements ListSelectionListener,
 
 		final JMenuItem detectAllUnlinkedInstances = new JMenuItem(
 				"Link/Unlink Instances");
-		detectAllUnlinkedInstances.addActionListener(new ActionListener()
-		{
+		detectAllUnlinkedInstances.addActionListener(new ActionListener() {
 			@Override
-			public void actionPerformed(final ActionEvent e)
-			{
+			public void actionPerformed(final ActionEvent e) {
 				new LinkUnlinkWindow(GUI.this);
 				// detectAllUnlinkedInstances();
 			}
@@ -475,36 +416,27 @@ public class GUI extends JFrame implements ListSelectionListener,
 		return providerMenu;
 	}
 
-	protected void clearSelection()
-	{
+	protected void clearSelection() {
 		serverList.clearSelection();
 		// fillRightPartition();
 	}
 
-	private void openAboutBox()
-	{
+	private void openAboutBox() {
 		final AboutWindow aboutWindow = new AboutWindow(this);
 		aboutWindow.setVisible(true);
 	}
 
-	public void terminateSelectedServers()
-	{
+	public void terminateSelectedServers() {
 		final Collection<Server> servers = serverList.getSelectedServers();
 
-		(new SwingWorker<Exception, Object>()
-		{
+		(new SwingWorker<Exception, Object>() {
 			@Override
-			protected Exception doInBackground() throws Exception
-			{
-				for (final Server server : servers)
-				{
-					try
-					{
+			protected Exception doInBackground() throws Exception {
+				for (final Server server : servers) {
+					try {
 						server.terminate();
 						server.refreshUntilServerHasState(VmState.TERMINATED);
-					}
-					catch (final Exception e)
-					{
+					} catch (final Exception e) {
 						return e;
 					}
 				}
@@ -512,28 +444,22 @@ public class GUI extends JFrame implements ListSelectionListener,
 			}
 
 			@Override
-			public void done()
-			{
-				try
-				{
+			public void done() {
+				try {
 					final Exception result = get();
 
-					if (result != null)
-					{
+					if (result != null) {
 						log.error(result);
 						error(result);
 					}
-				}
-				catch (final Exception ignore)
-				{
+				} catch (final Exception ignore) {
 				}
 			}
 		}).execute();
 
 	}
 
-	private JPanel getServerListPanel()
-	{
+	private JPanel getServerListPanel() {
 		// Create the list and put it in a scroll pane.
 		serverListModel = new ServerListModel(
 				CreateNewServerServer.DISPLAY_NEW_SERVER);
@@ -566,8 +492,7 @@ public class GUI extends JFrame implements ListSelectionListener,
 		return leftPanel;
 	}
 
-	public void refreshSelectedServers()
-	{
+	public void refreshSelectedServers() {
 		final int indices[] = serverList.getSelectedIndices();
 
 		final Collection<Server> servers = serverListModel
@@ -575,33 +500,24 @@ public class GUI extends JFrame implements ListSelectionListener,
 
 		// fillRightPartition();
 
-		(new SwingWorker<Exception, Object>()
-		{
+		(new SwingWorker<Exception, Object>() {
 			@Override
-			protected Exception doInBackground() throws Exception
-			{
-				for (final Server server : servers)
-				{
-					try
-					{
+			protected Exception doInBackground() throws Exception {
+				for (final Server server : servers) {
+					try {
 						server.refresh();
 					}
 
-					catch (final ServerDisappearedException e)
-					{
-						SwingUtilities.invokeLater(new Runnable()
-						{
+					catch (final ServerDisappearedException e) {
+						SwingUtilities.invokeLater(new Runnable() {
 
 							@Override
-							public void run()
-							{
+							public void run() {
 								log.info("Server disappeared.", e);
 								removeServer(server);
 							}
 						});
-					}
-					catch (final Exception e)
-					{
+					} catch (final Exception e) {
 						return e;
 					}
 				}
@@ -609,30 +525,23 @@ public class GUI extends JFrame implements ListSelectionListener,
 			}
 
 			@Override
-			public void done()
-			{
-				try
-				{
+			public void done() {
+				try {
 					final Exception result = get();
 
-					if (result != null)
-					{
+					if (result != null) {
 						log.error("Error while refreshing");
 						error(result.getLocalizedMessage());
 					}
-				}
-				catch (final Exception ignore)
-				{
+				} catch (final Exception ignore) {
 				}
 			}
 		}).execute();
 	}
 
 	@Override
-	public void valueChanged(final ListSelectionEvent e)
-	{
-		if (e.getValueIsAdjusting() == false)
-		{
+	public void valueChanged(final ListSelectionEvent e) {
+		if (e.getValueIsAdjusting() == false) {
 			// fillRightPartition();
 		}
 	}
@@ -653,10 +562,8 @@ public class GUI extends JFrame implements ListSelectionListener,
 	 * updateCommunicationTab(selectedServers); }
 	 */
 
-	void startAddServerWizard()
-	{
-		if (CloudManager.get().getLinkedCloudProviders().size() == 0)
-		{
+	void startAddServerWizard() {
+		if (CloudManager.get().getLinkedCloudProviders().size() == 0) {
 			JOptionPane
 					.showMessageDialog(
 							this,
@@ -667,76 +574,58 @@ public class GUI extends JFrame implements ListSelectionListener,
 
 			final AddProviderWizard wiz = new AddProviderWizard();
 			wiz.startModal(this);
-		}
-		else
-		{
+		} else {
 			new AddServerWizard(this);
 		}
 	}
 
-	public static void main(final String[] args)
-	{
-		SwingUtilities.invokeLater(new Runnable()
-		{
+	public static void main(final String[] args) {
+		SwingUtilities.invokeLater(new Runnable() {
 			@Override
-			public void run()
-			{
+			public void run() {
 				new GUI();
 			}
 		});
 	}
 
-	public void error(final String errorMessage)
-	{
+	public void error(final String errorMessage) {
 		JOptionPane.showMessageDialog(this, errorMessage,
 				"An unexpected error occured.", JOptionPane.ERROR_MESSAGE);
 	}
 
-	public void error(final Exception e)
-	{
+	public void error(final Exception e) {
 		error(e.getLocalizedMessage());
 	}
 
-	private void addServer(final Server server)
-	{
+	private void addServer(final Server server) {
 		serverListModel.addServer(server);
 		serverList.setSelectedIndices(new int[0]);
 		server.addServerChangedObserver(this);
 	}
 
 	@Override
-	public void serverChanged(final Server server)
-	{
-		SwingUtilities.invokeLater(new Runnable()
-		{
+	public void serverChanged(final Server server) {
+		SwingUtilities.invokeLater(new Runnable() {
 			@Override
-			public void run()
-			{
+			public void run() {
 				serverListModel.refreshServer(server);
 			}
 		});
 	}
 
-	public void pauseSelectedServers()
-	{
+	public void pauseSelectedServers() {
 		final Collection<Server> selectedServers = serverList
 				.getSelectedServers();
 
-		(new SwingWorker<Exception, Object>()
-		{
+		(new SwingWorker<Exception, Object>() {
 			@Override
-			protected Exception doInBackground() throws Exception
-			{
-				try
-				{
-					for (final Server server : selectedServers)
-					{
+			protected Exception doInBackground() throws Exception {
+				try {
+					for (final Server server : selectedServers) {
 						server.pause();
 						server.refreshUntilServerHasState(VmState.PAUSED);
 					}
-				}
-				catch (final Exception e)
-				{
+				} catch (final Exception e) {
 					return e;
 				}
 
@@ -744,46 +633,34 @@ public class GUI extends JFrame implements ListSelectionListener,
 			}
 
 			@Override
-			public void done()
-			{
-				try
-				{
+			public void done() {
+				try {
 					final Exception result = get();
 
-					if (result != null)
-					{
+					if (result != null) {
 						log.error("Error while pausing", result);
 						error(result);
 					}
-				}
-				catch (final Exception ignore)
-				{
+				} catch (final Exception ignore) {
 				}
 			}
 		}).execute();
 
 	}
 
-	public void resumeSelectedServers()
-	{
+	public void resumeSelectedServers() {
 		final Collection<Server> selectedServers = serverList
 				.getSelectedServers();
 
-		(new SwingWorker<Exception, Object>()
-		{
+		(new SwingWorker<Exception, Object>() {
 			@Override
-			protected Exception doInBackground() throws Exception
-			{
-				try
-				{
-					for (final Server server : selectedServers)
-					{
+			protected Exception doInBackground() throws Exception {
+				try {
+					for (final Server server : selectedServers) {
 						server.resume();
 						server.refreshUntilServerHasState(VmState.RUNNING);
 					}
-				}
-				catch (final Exception e)
-				{
+				} catch (final Exception e) {
 					return e;
 				}
 
@@ -791,77 +668,58 @@ public class GUI extends JFrame implements ListSelectionListener,
 			}
 
 			@Override
-			public void done()
-			{
-				try
-				{
+			public void done() {
+				try {
 					final Exception result = get();
 
-					if (result != null)
-					{
+					if (result != null) {
 						log.error("Error while resuming", result);
 						error(result);
 					}
-				}
-				catch (final Exception ignore)
-				{
+				} catch (final Exception ignore) {
 				}
 			}
 		}).execute();
 	}
 
-	public void rebootSelectedServers()
-	{
+	public void rebootSelectedServers() {
 		final Collection<Server> selectedServers = serverList
 				.getSelectedServers();
 
-		(new SwingWorker<Exception, Object>()
-		{
+		(new SwingWorker<Exception, Object>() {
 			@Override
-			protected Exception doInBackground() throws Exception
-			{
-				try
-				{
-					for (final Server server : selectedServers)
-					{
+			protected Exception doInBackground() throws Exception {
+				try {
+					for (final Server server : selectedServers) {
 						server.reboot();
 					}
-				}
-				catch (final Exception e)
-				{
+				} catch (final Exception e) {
 					return e;
 				}
 				return null;
 			}
 
 			@Override
-			public void done()
-			{
-				try
-				{
+			public void done() {
+				try {
 					final Exception result = get();
 
-					if (result != null)
-					{
+					if (result != null) {
 						log.error("Error while rebooting", result);
 						error(result);
 					}
-				}
-				catch (final Exception ignore)
-				{
+				} catch (final Exception ignore) {
 				}
 			}
 		}).execute();
 
 	}
 
-	public void unlinkSelectedServers()
-	{
+	public void unlinkSelectedServers() {
 		final Collection<Server> selectedServers = serverList
 				.getSelectedServers();
 
-		for (final Server server : selectedServers)
-		{
+		for (final Server server : selectedServers) {
 			// Server will be automatically removed from the view on the left
 			// because of the hooked observers
 			server.unlink();
@@ -870,19 +728,15 @@ public class GUI extends JFrame implements ListSelectionListener,
 		// fillRightPartition();
 	}
 
-	private void removeServer(final Server server)
-	{
+	private void removeServer(final Server server) {
 		serverListModel.removeServer(server);
 	}
 
 	@Override
-	public void serverLinked(final CloudProvider cloudProvider, final Server srv)
-	{
-		SwingUtilities.invokeLater(new Runnable()
-		{
+	public void serverLinked(final CloudProvider cloudProvider, final Server srv) {
+		SwingUtilities.invokeLater(new Runnable() {
 			@Override
-			public void run()
-			{
+			public void run() {
 				addServer(srv);
 			}
 		});
@@ -890,8 +744,7 @@ public class GUI extends JFrame implements ListSelectionListener,
 
 	@Override
 	public void serverUnlinked(final CloudProvider cloudProvider,
-			final Server srv)
-	{
+			final Server srv) {
 		removeServer(srv);
 		GraphPanelCache.get().clearBareServerCache(srv);
 	}

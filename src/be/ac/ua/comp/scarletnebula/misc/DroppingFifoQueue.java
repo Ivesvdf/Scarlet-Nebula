@@ -10,29 +10,24 @@ import java.util.List;
  * @author ives
  * 
  */
-public class DroppingFifoQueue<T>
-{
+public class DroppingFifoQueue<T> {
 	final private ArrayList<T> array = new ArrayList<T>();
 	private int nextToTake = 0;
 	private int lastValid;
 	private final int maxCapacity;
 
-	public DroppingFifoQueue(final int maxCapacity)
-	{
+	public DroppingFifoQueue(final int maxCapacity) {
 		this.maxCapacity = maxCapacity;
 		this.lastValid = -1;
 		array.ensureCapacity(maxCapacity);
-		for (int i = 0; i < maxCapacity; i++)
-		{
+		for (int i = 0; i < maxCapacity; i++) {
 			array.add(null);
 		}
 	}
 
-	public void add(final T newElement)
-	{
+	public void add(final T newElement) {
 
-		if (nextToTake == lastValid)
-		{
+		if (nextToTake == lastValid) {
 			lastValid = advance(lastValid);
 		}
 
@@ -40,8 +35,7 @@ public class DroppingFifoQueue<T>
 
 		nextToTake = advance(nextToTake);
 
-		if (lastValid == -1)
-		{
+		if (lastValid == -1) {
 			lastValid = 0;
 		}
 	}
@@ -52,19 +46,14 @@ public class DroppingFifoQueue<T>
 	 * 
 	 * @return List of the dropping queue, oldest first
 	 */
-	public List<T> asList()
-	{
+	public List<T> asList() {
 		final List<T> rv = new ArrayList<T>();
 
-		if (lastValid == -1)
-		{
+		if (lastValid == -1) {
 			// Return an empty list
-		}
-		else
-		{
+		} else {
 			boolean goForward = true;
-			for (int i = lastValid; goForward; i = advance(i))
-			{
+			for (int i = lastValid; goForward; i = advance(i)) {
 				rv.add(array.get(i));
 
 				goForward = (advance(i) != nextToTake);
@@ -81,8 +70,7 @@ public class DroppingFifoQueue<T>
 	 *            Position from where to advance
 	 * @return The new position after advancing
 	 */
-	private int advance(final int oldPos)
-	{
+	private int advance(final int oldPos) {
 		return (oldPos + 1) % maxCapacity;
 	}
 

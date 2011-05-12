@@ -8,57 +8,48 @@ import javax.swing.table.AbstractTableModel;
 
 import org.dasein.cloud.compute.MachineImage;
 
-public class MachineImageTableModel extends AbstractTableModel
-{
+public class MachineImageTableModel extends AbstractTableModel {
 	private static final long serialVersionUID = 1L;
 	private List<String> columnNames = null;
 	private List<MachineImage> rows = null;
 
-	public MachineImageTableModel(final List<MachineImage> rows)
-	{
+	public MachineImageTableModel(final List<MachineImage> rows) {
 		final String[] columns = { "Name", "Description", "Type" };
 		this.columnNames = Arrays.asList(columns);
 		this.rows = rows;
 	}
 
 	@Override
-	public String getColumnName(final int col)
-	{
+	public String getColumnName(final int col) {
 		return columnNames.get(col);
 	}
 
 	@Override
-	public boolean isCellEditable(final int rowIndex, final int columnIndex)
-	{
+	public boolean isCellEditable(final int rowIndex, final int columnIndex) {
 		return false;
 	}
 
 	@Override
-	public int getRowCount()
-	{
+	public int getRowCount() {
 		return rows.size();
 	}
 
 	@Override
-	public int getColumnCount()
-	{
+	public int getColumnCount() {
 		return columnNames.size();
 	}
 
 	@Override
-	public Class<?> getColumnClass(final int c)
-	{
+	public Class<?> getColumnClass(final int c) {
 		return String.class;
 	}
 
-	public MachineImage getRow(final int rowIndex)
-	{
+	public MachineImage getRow(final int rowIndex) {
 		return rows.get(rowIndex);
 	}
 
 	@Override
-	public Object getValueAt(final int rowIndex, final int columnIndex)
-	{
+	public Object getValueAt(final int rowIndex, final int columnIndex) {
 		final MachineImage img = rows.get(rowIndex);
 
 		switch (columnIndex)
@@ -74,10 +65,8 @@ public class MachineImageTableModel extends AbstractTableModel
 		return null;
 	}
 
-	public void clear()
-	{
-		if (getRowCount() == 0)
-		{
+	public void clear() {
+		if (getRowCount() == 0) {
 			return;
 		}
 
@@ -86,16 +75,14 @@ public class MachineImageTableModel extends AbstractTableModel
 		fireTableRowsDeleted(0, rowcount - 1);
 	}
 
-	public void addImages(final Collection<MachineImage> images)
-	{
+	public void addImages(final Collection<MachineImage> images) {
 		final int prevRowCount = getRowCount();
 		rows.addAll(images);
 		fireTableRowsInserted(prevRowCount - 1,
 				prevRowCount - 1 + images.size());
 	}
 
-	public MachineImage getImage(final int identifier)
-	{
+	public MachineImage getImage(final int identifier) {
 		return getRow(identifier);
 	}
 

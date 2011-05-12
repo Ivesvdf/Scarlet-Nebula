@@ -12,8 +12,7 @@ import javax.swing.JPanel;
  * @author ives
  * 
  */
-public class CollapsablePanel extends JPanel implements Collapsable
-{
+public class CollapsablePanel extends JPanel implements Collapsable {
 	private static final long serialVersionUID = 1L;
 	private Component storedComponent;
 
@@ -27,13 +26,11 @@ public class CollapsablePanel extends JPanel implements Collapsable
 	 *            otherwise
 	 */
 	public CollapsablePanel(final Component containedComponent,
-			final boolean originallyVisible)
-	{
+			final boolean originallyVisible) {
 		super(new BorderLayout());
 		this.storedComponent = containedComponent;
 
-		if (originallyVisible)
-		{
+		if (originallyVisible) {
 			uncollapse();
 		}
 	}
@@ -42,10 +39,8 @@ public class CollapsablePanel extends JPanel implements Collapsable
 	 * @see be.ac.ua.comp.scarletnebula.gui.Collapsable#uncollapse()
 	 */
 	@Override
-	public void uncollapse()
-	{
-		if (getComponentCount() == 0)
-		{
+	public void uncollapse() {
+		if (getComponentCount() == 0) {
 			add(storedComponent, BorderLayout.CENTER);
 			revalidate();
 		}
@@ -55,10 +50,8 @@ public class CollapsablePanel extends JPanel implements Collapsable
 	 * @see be.ac.ua.comp.scarletnebula.gui.Collapsable#collapse()
 	 */
 	@Override
-	public void collapse()
-	{
-		if (getComponentCount() > 0)
-		{
+	public void collapse() {
+		if (getComponentCount() > 0) {
 			storedComponent = getComponent(0);
 			removeAll();
 			revalidate();

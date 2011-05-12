@@ -11,10 +11,8 @@ import org.apache.commons.logging.LogFactory;
 
 import be.ac.ua.comp.scarletnebula.core.Server;
 
-public class ServerListModel extends AbstractListModel
-{
-	public static enum CreateNewServerServer
-	{
+public class ServerListModel extends AbstractListModel {
+	public static enum CreateNewServerServer {
 		DISPLAY_NEW_SERVER, NO_NEW_SERVER
 	};
 
@@ -25,14 +23,12 @@ public class ServerListModel extends AbstractListModel
 	LinkedList<Server> visibleServers = new LinkedList<Server>();
 	LinkedList<Server> invisibleServers = new LinkedList<Server>();
 
-	public ServerListModel(final CreateNewServerServer displayNewServer)
-	{
+	public ServerListModel(final CreateNewServerServer displayNewServer) {
 		this.displayNewServer = (displayNewServer == CreateNewServerServer.DISPLAY_NEW_SERVER);
 	}
 
 	@Override
-	public int getSize()
-	{
+	public int getSize() {
 		// One extra element for the "create server" server
 		return visibleServers.size() + (displayNewServer ? 1 : 0);
 	}
@@ -42,12 +38,10 @@ public class ServerListModel extends AbstractListModel
 	 * "Create server" server.
 	 */
 	@Override
-	public Object getElementAt(final int index)
-	{
+	public Object getElementAt(final int index) {
 		// Returns null when returning the fake "create server" server, like it
 		// should
-		if (index >= visibleServers.size() || visibleServers.get(index) == null)
-		{
+		if (index >= visibleServers.size() || visibleServers.get(index) == null) {
 			return null;
 		}
 
@@ -59,8 +53,7 @@ public class ServerListModel extends AbstractListModel
 	 * 
 	 * @param index
 	 */
-	public void refreshIndex(final int index)
-	{
+	public void refreshIndex(final int index) {
 		fireContentsChanged(this, index, index);
 	}
 
@@ -70,12 +63,9 @@ public class ServerListModel extends AbstractListModel
 	 * 
 	 * @param server
 	 */
-	public void refreshServer(final Server server)
-	{
-		for (int i = 0; i < visibleServers.size(); i++)
-		{
-			if (visibleServers.get(i) == server)
-			{
+	public void refreshServer(final Server server) {
+		for (int i = 0; i < visibleServers.size(); i++) {
+			if (visibleServers.get(i) == server) {
 				refreshIndex(i);
 				return;
 			}
@@ -87,8 +77,7 @@ public class ServerListModel extends AbstractListModel
 	 * 
 	 * @param server
 	 */
-	public void addServer(final Server server)
-	{
+	public void addServer(final Server server) {
 		visibleServers.add(server);
 
 		fireIntervalAdded(this, visibleServers.size() - 1,
@@ -100,8 +89,7 @@ public class ServerListModel extends AbstractListModel
 	 * 
 	 * @param index
 	 */
-	public void makeInvisible(final int index)
-	{
+	public void makeInvisible(final int index) {
 		final Server tmp = visibleServers.get(index);
 		visibleServers.remove(index);
 		invisibleServers.add(tmp);
@@ -113,8 +101,7 @@ public class ServerListModel extends AbstractListModel
 	 * 
 	 * @param filterString
 	 */
-	public void filter(final String filterString)
-	{
+	public void filter(final String filterString) {
 		final LinkedList<Server> allServers = new LinkedList<Server>();
 
 		allServers.addAll(visibleServers);
@@ -131,14 +118,10 @@ public class ServerListModel extends AbstractListModel
 		// server and ask it if matches.
 		final Collection<String> filterTerms = SearchHelper
 				.tokenize(filterString);
-		for (final Server server : allServers)
-		{
-			if (server.match(filterTerms))
-			{
+		for (final Server server : allServers) {
+			if (server.match(filterTerms)) {
 				visibleServers.add(server);
-			}
-			else
-			{
+			} else {
 				invisibleServers.add(server);
 			}
 		}
@@ -152,8 +135,7 @@ public class ServerListModel extends AbstractListModel
 	 * @param index
 	 * @return
 	 */
-	public Server elementAt(final int index)
-	{
+	public Server elementAt(final int index) {
 		return (Server) getElementAt(index);
 	}
 
@@ -163,10 +145,8 @@ public class ServerListModel extends AbstractListModel
 	 * @param index
 	 * @return
 	 */
-	public Server getVisibleServerAtIndex(final int index)
-	{
-		if (index >= visibleServers.size())
-		{
+	public Server getVisibleServerAtIndex(final int index) {
+		if (index >= visibleServers.size()) {
 			return null;
 		}
 
@@ -176,8 +156,7 @@ public class ServerListModel extends AbstractListModel
 	/**
 	 * Makes all servers invisible
 	 */
-	public void clear()
-	{
+	public void clear() {
 		invisibleServers.addAll(visibleServers);
 		final int visibleServerCount = getSize();
 		visibleServers.clear();
@@ -190,15 +169,12 @@ public class ServerListModel extends AbstractListModel
 	 * @param indices
 	 * @return
 	 */
-	public Collection<Server> getVisibleServersAtIndices(final int[] indices)
-	{
+	public Collection<Server> getVisibleServersAtIndices(final int[] indices) {
 		final Collection<Server> servers = new ArrayList<Server>();
 
-		for (final int i : indices)
-		{
+		for (final int i : indices) {
 			final Server server = getVisibleServerAtIndex(i);
-			if (server != null)
-			{
+			if (server != null) {
 				servers.add(server);
 			}
 		}
@@ -213,12 +189,9 @@ public class ServerListModel extends AbstractListModel
 	 * @param server
 	 * @return
 	 */
-	private int visibleServerToIndex(final Server server)
-	{
-		for (int i = 0; i < visibleServers.size(); i++)
-		{
-			if (visibleServers.get(i) == server)
-			{
+	private int visibleServerToIndex(final Server server) {
+		for (int i = 0; i < visibleServers.size(); i++) {
+			if (visibleServers.get(i) == server) {
 				return i;
 			}
 		}
@@ -231,20 +204,17 @@ public class ServerListModel extends AbstractListModel
 	 * 
 	 * @param server
 	 */
-	public void removeServer(final Server server)
-	{
+	public void removeServer(final Server server) {
 		final int index = visibleServerToIndex(server);
 		log.debug("Server we're removing is at index" + index);
 		visibleServers.remove(server);
 
-		if (index >= 0)
-		{
+		if (index >= 0) {
 			fireIntervalRemoved(this, index, index);
 		}
 	}
 
-	public Collection<Server> getVisibleServers()
-	{
+	public Collection<Server> getVisibleServers() {
 		return visibleServers;
 	}
 }

@@ -14,14 +14,12 @@ import javax.swing.JScrollPane;
 import be.ac.ua.comp.scarletnebula.core.CloudProvider;
 import be.ac.ua.comp.scarletnebula.gui.SelectKeyList;
 
-public class ManageKeysDialog extends JDialog
-{
+public class ManageKeysDialog extends JDialog {
 	private static final long serialVersionUID = 1L;
 	CloudProvider provider;
 	GUI gui;
 
-	ManageKeysDialog(final GUI gui, final CloudProvider provider)
-	{
+	ManageKeysDialog(final GUI gui, final CloudProvider provider) {
 		super(gui, "Manage Keys", true);
 		this.provider = provider;
 		this.gui = gui;
@@ -39,11 +37,9 @@ public class ManageKeysDialog extends JDialog
 
 		final JButton addButton = new JButton(new ImageIcon(getClass()
 				.getResource("/images/add22.png")));
-		addButton.addActionListener(new ActionListener()
-		{
+		addButton.addActionListener(new ActionListener() {
 			@Override
-			public void actionPerformed(final ActionEvent e)
-			{
+			public void actionPerformed(final ActionEvent e) {
 
 			}
 		});
@@ -52,16 +48,13 @@ public class ManageKeysDialog extends JDialog
 
 		final JButton removeButton = new JButton(new ImageIcon(getClass()
 				.getResource("/images/remove22.png")));
-		removeButton.addActionListener(new ActionListener()
-		{
+		removeButton.addActionListener(new ActionListener() {
 			@Override
-			public void actionPerformed(final ActionEvent e)
-			{
+			public void actionPerformed(final ActionEvent e) {
 				final int index = keyList.getSelectedIndex();
 
 				// No selection
-				if (index < 0)
-				{
+				if (index < 0) {
 					return;
 				}
 

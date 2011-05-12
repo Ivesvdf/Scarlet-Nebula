@@ -13,8 +13,7 @@ import org.apache.commons.logging.LogFactory;
 
 import be.ac.ua.comp.scarletnebula.misc.Utils;
 
-public class KeyManager
-{
+public class KeyManager {
 	private static Log log = LogFactory.getLog(KeyManager.class);
 
 	/**
@@ -26,24 +25,19 @@ public class KeyManager
 	 * @param keystring
 	 */
 	static void addKey(final String providerName, final String keyname,
-			final String keystring)
-	{
-		if (assureDirectory(providerName) == null)
-		{
+			final String keystring) {
+		if (assureDirectory(providerName) == null) {
 			return;
 		}
 
 		// Now store the key to file
 		BufferedWriter out;
-		try
-		{
+		try {
 			out = new BufferedWriter(new FileWriter(getKeyFilename(
 					providerName, keyname)));
 			out.write(keystring);
 			out.close();
-		}
-		catch (final IOException e)
-		{
+		} catch (final IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -60,52 +54,40 @@ public class KeyManager
 	 *            Contents of the key
 	 */
 	public static void addKey(final String providerName, final String keyname,
-			final File key)
-	{
+			final File key) {
 
-		if (assureDirectory(providerName) == null)
-		{
+		if (assureDirectory(providerName) == null) {
 			return;
 		}
 
-		try
-		{
+		try {
 			Utils.copyFile(key, new File(getKeyFilename(providerName, keyname)));
-		}
-		catch (final FileNotFoundException e)
-		{
+		} catch (final FileNotFoundException e) {
 			e.printStackTrace();
-		}
-		catch (final IOException e)
-		{
+		} catch (final IOException e) {
 			e.printStackTrace();
 		}
 	}
 
-	static public Collection<String> getKeyNames(final String providerName)
-	{
+	static public Collection<String> getKeyNames(final String providerName) {
 		final File dirFile = assureDirectory(providerName);
 
 		final Collection<String> keynames = new ArrayList<String>();
 
-		for (final String keyfile : dirFile.list())
-		{
+		for (final String keyfile : dirFile.list()) {
 			keynames.add(keyfile.replaceAll("\\.key$", ""));
 		}
 		return keynames;
 	}
 
-	static private File assureDirectory(final String providerName)
-	{
+	static private File assureDirectory(final String providerName) {
 		final String dir = getKeyPath(providerName);
 		final File dirFile = new File(dir);
 
 		// Check if the key dir already exists
-		if (!dirFile.exists())
-		{
+		if (!dirFile.exists()) {
 			// If it does not exist, create the directory
-			if (!dirFile.mkdirs())
-			{
+			if (!dirFile.mkdirs()) {
 				log.error("Cannot make key directory!");
 			}
 		}
@@ -113,24 +95,20 @@ public class KeyManager
 		return dirFile;
 	}
 
-	static String getKeyPath(final String providerName)
-	{
+	static String getKeyPath(final String providerName) {
 		return "keys/" + providerName + "/";
 	}
 
-	static String getKeyFilename(final String providerName, final String keyname)
-	{
+	static String getKeyFilename(final String providerName, final String keyname) {
 		final String filename = getKeyPath(providerName) + keyname + ".key";
 
 		return filename;
 	}
 
-	public static void deleteKey(final String providerName, final String keyname)
-	{
+	public static void deleteKey(final String providerName, final String keyname) {
 		final File keyFile = new File(getKeyFilename(providerName, keyname));
 
-		if (keyFile.exists())
-		{
+		if (keyFile.exists()) {
 			keyFile.delete();
 		}
 	}

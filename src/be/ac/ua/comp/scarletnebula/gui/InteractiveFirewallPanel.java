@@ -42,11 +42,9 @@ import be.ac.ua.comp.scarletnebula.misc.SwingWorkerWithThrobber;
 import be.ac.ua.comp.scarletnebula.misc.Utils;
 
 public class InteractiveFirewallPanel extends JPanel implements
-		AddFirewallRuleWindowClosedListener
-{
+		AddFirewallRuleWindowClosedListener {
 	private final class AddRuleSwingWorker extends
-			SwingWorkerWithThrobber<Exception, Object>
-	{
+			SwingWorkerWithThrobber<Exception, Object> {
 		private final String cidr;
 		private final int beginPort;
 		private final Protocol protocol;
@@ -56,8 +54,7 @@ public class InteractiveFirewallPanel extends JPanel implements
 		private AddRuleSwingWorker(final Collapsable throbber,
 				final String cidr, final int beginPort,
 				final Protocol protocol, final int endPort,
-				final Firewall firewall)
-		{
+				final Firewall firewall) {
 			super(throbber);
 			this.cidr = cidr;
 			this.beginPort = beginPort;
@@ -67,36 +64,27 @@ public class InteractiveFirewallPanel extends JPanel implements
 		}
 
 		@Override
-		protected Exception doInBackground() throws Exception
-		{
-			try
-			{
+		protected Exception doInBackground() throws Exception {
+			try {
 				provider.addFirewallRule(firewall, beginPort, endPort,
 						protocol, cidr);
-			}
-			catch (final Exception e)
-			{
+			} catch (final Exception e) {
 				return e;
 			}
 			return null;
 		}
 
 		@Override
-		public void done()
-		{
-			try
-			{
+		public void done() {
+			try {
 				final Exception result = get();
 
-				if (result == null)
-				{
+				if (result == null) {
 					// Succeeded
 					ruleList.addRule(new FirewallRule(firewall
 							.getProviderFirewallId(), cidr, protocol,
 							beginPort, endPort));
-				}
-				else
-				{
+				} else {
 					log.error("Exception was thrown while creating new Rule",
 							result);
 					JOptionPane.showMessageDialog(
@@ -104,28 +92,23 @@ public class InteractiveFirewallPanel extends JPanel implements
 							result.getLocalizedMessage(), "Error",
 							JOptionPane.ERROR_MESSAGE);
 				}
-			}
-			catch (final Exception ignore)
-			{
+			} catch (final Exception ignore) {
 
 			}
 		}
 	}
 
-	public static class PortRange
-	{
+	public static class PortRange {
 		final public int startPort;
 		final public int endPort;
 
-		public PortRange(final String range)
-		{
+		public PortRange(final String range) {
 			final String portString = range;
 			final String portParts[] = portString.split("-");
 			final Collection<Integer> ports = new ArrayList<Integer>(
 					portParts.length);
 
-			for (final String portPart : portParts)
-			{
+			for (final String portPart : portParts) {
 				ports.add(Integer.decode(portPart));
 			}
 
@@ -134,18 +117,13 @@ public class InteractiveFirewallPanel extends JPanel implements
 		}
 	}
 
-	private final class DeleteRuleActionListener implements ActionListener
-	{
+	private final class DeleteRuleActionListener implements ActionListener {
 		@Override
-		public void actionPerformed(final ActionEvent e)
-		{
-			for (final Firewall firewall : getSelectedFirewalls())
-			{
-				(new SwingWorker<Object, Object>()
-				{
+		public void actionPerformed(final ActionEvent e) {
+			for (final Firewall firewall : getSelectedFirewalls()) {
+				(new SwingWorker<Object, Object>() {
 					@Override
-					protected Object doInBackground() throws Exception
-					{
+					protected Object doInBackground() throws Exception {
 						final int selectedRow = ruleList.getSelectedRow();
 						final PortRange range = new PortRange(
 								ruleList.getPort(selectedRow));
@@ -163,21 +141,17 @@ public class InteractiveFirewallPanel extends JPanel implements
 		}
 	}
 
-	private final class AddRuleActionListener implements ActionListener
-	{
+	private final class AddRuleActionListener implements ActionListener {
 		private final CloudProvider provider;
 
-		private AddRuleActionListener(final CloudProvider provider)
-		{
+		private AddRuleActionListener(final CloudProvider provider) {
 			this.provider = provider;
 		}
 
 		@Override
-		public void actionPerformed(final ActionEvent e)
-		{
+		public void actionPerformed(final ActionEvent e) {
 			final Collection<Firewall> firewalls = getSelectedFirewalls();
-			if (firewalls.size() != 1)
-			{
+			if (firewalls.size() != 1) {
 				return;
 			}
 
@@ -189,40 +163,30 @@ public class InteractiveFirewallPanel extends JPanel implements
 		}
 	}
 
-	private final class AddFirewallActionListener implements ActionListener
-	{
+	private final class AddFirewallActionListener implements ActionListener {
 		private final CloudProvider provider;
 
-		private AddFirewallActionListener(final CloudProvider provider)
-		{
+		private AddFirewallActionListener(final CloudProvider provider) {
 			this.provider = provider;
 		}
 
 		@Override
-		public void actionPerformed(final ActionEvent e)
-		{
+		public void actionPerformed(final ActionEvent e) {
 			boolean invalid = true;
 
 			String name = "";
-			while (invalid)
-			{
+			while (invalid) {
 				name = JOptionPane.showInputDialog(
 						InteractiveFirewallPanel.this,
 						"Enter a name for the new Firewall:", "New firewall",
 						JOptionPane.QUESTION_MESSAGE);
 
-				if (name == null)
-				{
+				if (name == null) {
 					return;
-				}
-				else
-				{
-					if (Pattern.matches("[a-zA-Z0-9 ]+", name))
-					{
+				} else {
+					if (Pattern.matches("[a-zA-Z0-9 ]+", name)) {
 						invalid = false;
-					}
-					else
-					{
+					} else {
 						JOptionPane
 								.showMessageDialog(
 										InteractiveFirewallPanel.this,
@@ -242,18 +206,15 @@ public class InteractiveFirewallPanel extends JPanel implements
 		}
 	}
 
-	private final class DeleteFirewallActionListener implements ActionListener
-	{
+	private final class DeleteFirewallActionListener implements ActionListener {
 		private final CloudProvider provider;
 
-		private DeleteFirewallActionListener(final CloudProvider provider)
-		{
+		private DeleteFirewallActionListener(final CloudProvider provider) {
 			this.provider = provider;
 		}
 
 		@Override
-		public void actionPerformed(final ActionEvent e)
-		{
+		public void actionPerformed(final ActionEvent e) {
 			final String selectedFirewall = (String) firewallList
 					.getSelectedValue();
 
@@ -265,8 +226,7 @@ public class InteractiveFirewallPanel extends JPanel implements
 					null, new Object[] { "Delete Firewall", "Cancel" },
 					"Cancel");
 
-			if (result != JOptionPane.OK_OPTION)
-			{
+			if (result != JOptionPane.OK_OPTION) {
 				return;
 			}
 
@@ -279,96 +239,74 @@ public class InteractiveFirewallPanel extends JPanel implements
 	}
 
 	private final class LoadFirewallsWorkerWithThrobber extends
-			SwingWorkerWithThrobber<Exception, Firewall>
-	{
-		private LoadFirewallsWorkerWithThrobber(final Collapsable throbber)
-		{
+			SwingWorkerWithThrobber<Exception, Firewall> {
+		private LoadFirewallsWorkerWithThrobber(final Collapsable throbber) {
 			super(throbber);
 		}
 
 		@Override
-		protected Exception doInBackground() throws Exception
-		{
-			try
-			{
-				for (final Firewall firewall : provider.getFirewalls())
-				{
+		protected Exception doInBackground() throws Exception {
+			try {
+				for (final Firewall firewall : provider.getFirewalls()) {
 					publish(firewall);
 				}
-			}
-			catch (final Exception e)
-			{
+			} catch (final Exception e) {
 				return e;
 			}
 			return null;
 		}
 
 		@Override
-		public void process(final List<Firewall> input)
-		{
-			for (final Firewall firewall : input)
-			{
+		public void process(final List<Firewall> input) {
+			for (final Firewall firewall : input) {
 				addFirewall(firewall);
 			}
 		}
 
 		@Override
-		public void done()
-		{
-			try
-			{
+		public void done() {
+			try {
 				final Exception result = get();
 
-				if (result != null)
-				{
+				if (result != null) {
 					log.error("Something went wrong while querying firewalls",
 							result);
 					JOptionPane.showInternalMessageDialog(
 							InteractiveFirewallPanel.this,
 							result.getLocalizedMessage());
 				}
-			}
-			catch (final Exception ignore)
-			{
+			} catch (final Exception ignore) {
 			}
 		}
 	}
 
 	private final class NewFirewallSwingWorkerWithThrobber extends
-			SwingWorkerWithThrobber<Exception, Firewall>
-	{
+			SwingWorkerWithThrobber<Exception, Firewall> {
 		private final String firewallName;
 		private final CloudProvider provider;
 
 		private NewFirewallSwingWorkerWithThrobber(final Collapsable throbber,
-				final String firewallName, final CloudProvider provider)
-		{
+				final String firewallName, final CloudProvider provider) {
 			super(throbber);
 			this.firewallName = firewallName;
 			this.provider = provider;
 		}
 
 		@Override
-		protected Exception doInBackground() throws Exception
-		{
-			try
-			{
+		protected Exception doInBackground() throws Exception {
+			try {
 				final Firewall fw = provider.createFirewall(firewallName);
 				publish(fw);
-			}
-			catch (final Exception e)
-			{
+			} catch (final Exception e) {
 				return e;
 			}
 			return null;
 		}
 
 		@Override
-		public void process(final List<Firewall> theFirewall)
-		{
+		public void process(final List<Firewall> theFirewall) {
 			// There will only be 1 firewall in theFirewall...
-			for (final Firewall fw : theFirewall)
-			{
+			for (final Firewall fw : theFirewall) {
 				addFirewall(fw);
 				addRule(fw, 22, 22, Protocol.TCP, "0.0.0.0/0");
 			}
@@ -378,46 +316,36 @@ public class InteractiveFirewallPanel extends JPanel implements
 	}
 
 	private final class DeleteFirewallSwingWorker extends
-			SwingWorker<Object, Object>
-	{
+			SwingWorker<Object, Object> {
 		private final String selectedFirewall;
 		private final CloudProvider provider;
 
 		private DeleteFirewallSwingWorker(final String selectedFirewall,
-				final CloudProvider provider)
-		{
+				final CloudProvider provider) {
 			this.selectedFirewall = selectedFirewall;
 			this.provider = provider;
 		}
 
 		@Override
-		protected Exception doInBackground() throws Exception
-		{
-			try
-			{
-				for (final Firewall firewall : firewalls)
-				{
-					if (firewall.getName().equals(selectedFirewall))
-					{
+		protected Exception doInBackground() throws Exception {
+			try {
+				for (final Firewall firewall : firewalls) {
+					if (firewall.getName().equals(selectedFirewall)) {
 						provider.deleteFirewall(firewall);
 						break;
 					}
 				}
-			}
-			catch (final Exception e)
-			{
+			} catch (final Exception e) {
 				return e;
 			}
 			return null;
 		}
 	}
 
-	public class FirewallList extends JList
-	{
+	public class FirewallList extends JList {
 		private static final long serialVersionUID = 1L;
 
-		public FirewallList(final ListModel firewallListModel)
-		{
+		public FirewallList(final ListModel firewallListModel) {
 			super(firewallListModel);
 			setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
 		}
@@ -425,8 +353,7 @@ public class InteractiveFirewallPanel extends JPanel implements
 	}
 
 	private final class FirewallListSelectionListener implements
-			ListSelectionListener
-	{
+			ListSelectionListener {
 
 		private final RuleList ruleList;
 		private final JButton deleteRuleButton;
@@ -434,34 +361,28 @@ public class InteractiveFirewallPanel extends JPanel implements
 
 		public FirewallListSelectionListener(final RuleList ruleList,
 				final JButton addRuleButton, final JButton deleteRuleButton,
-				final JButton deleteFirewallButton)
-		{
+				final JButton deleteFirewallButton) {
 			this.ruleList = ruleList;
 			this.deleteRuleButton = deleteRuleButton;
 			this.deleteFirewallButton = deleteFirewallButton;
 		}
 
 		@Override
-		public void valueChanged(final ListSelectionEvent e)
-		{
+		public void valueChanged(final ListSelectionEvent e) {
 			final ListSelectionModel lsm = (ListSelectionModel) e.getSource();
 			final int minIndex = lsm.getMinSelectionIndex();
 
-			if (e.getValueIsAdjusting())
-			{
+			if (e.getValueIsAdjusting()) {
 				return;
 			}
 
-			if (minIndex == -1)
-			{
+			if (minIndex == -1) {
 				ruleList.clear();
 				ruleList.setEnabled(false);
 				addRulebutton.setEnabled(false);
 				deleteRuleButton.setEnabled(false);
 				deleteFirewallButton.setEnabled(false);
-			}
-			else
-			{
+			} else {
 				ruleList.setEnabled(true);
 				addRulebutton.setEnabled(true);
 				deleteRuleButton.setEnabled(true);
@@ -470,10 +391,8 @@ public class InteractiveFirewallPanel extends JPanel implements
 				final String firewallName = (String) firewallListModel
 						.getElementAt(minIndex);
 
-				for (final Firewall firewall : firewalls)
-				{
-					if (firewall.getName().equals(firewallName))
-					{
+				for (final Firewall firewall : firewalls) {
+					if (firewall.getName().equals(firewallName)) {
 						ruleList.displayFirewall(firewall);
 						break;
 					}
@@ -482,24 +401,20 @@ public class InteractiveFirewallPanel extends JPanel implements
 		}
 	}
 
-	public class RuleList extends JTable
-	{
+	public class RuleList extends JTable {
 		private final class LoadRulesSwingWorkerWithThrobber extends
-				SwingWorkerWithThrobber<Collection<FirewallRule>, Object>
-		{
+				SwingWorkerWithThrobber<Collection<FirewallRule>, Object> {
 			private final Firewall firewall;
 
 			private LoadRulesSwingWorkerWithThrobber(
-					final Collapsable throbber, final Firewall firewall)
-			{
+					final Collapsable throbber, final Firewall firewall) {
 				super(throbber);
 				this.firewall = firewall;
 			}
 
 			@Override
 			protected Collection<FirewallRule> doInBackground()
-					throws Exception
-			{
+					throws Exception {
 				final Collection<FirewallRule> rules = provider
 						.getFirewallRules(firewall.getProviderFirewallId());
 
@@ -507,19 +422,14 @@ public class InteractiveFirewallPanel extends JPanel implements
 			}
 
 			@Override
-			public void done()
-			{
-				try
-				{
+			public void done() {
+				try {
 					final Collection<FirewallRule> rules = get();
 
-					for (final FirewallRule rule : rules)
-					{
+					for (final FirewallRule rule : rules) {
 						addRule(rule);
 					}
-				}
-				catch (final Exception ignore)
-				{
+				} catch (final Exception ignore) {
 				}
 			}
 		}
@@ -528,8 +438,7 @@ public class InteractiveFirewallPanel extends JPanel implements
 		private final DefaultTableModel datamodel = new DefaultTableModel();
 		private final CloudProvider provider;
 
-		public RuleList(final CloudProvider provider)
-		{
+		public RuleList(final CloudProvider provider) {
 			this.provider = provider;
 			setCellSelectionEnabled(false);
 			setRowSelectionAllowed(true);
@@ -543,23 +452,19 @@ public class InteractiveFirewallPanel extends JPanel implements
 			getColumn("Protocol").setMaxWidth(100);
 		}
 
-		public String getPort(final int row)
-		{
+		public String getPort(final int row) {
 			return (String) getValueAt(row, 0);
 		}
 
-		public Protocol getProtocol(final int row)
-		{
+		public Protocol getProtocol(final int row) {
 			return Protocol.valueOf((String) getValueAt(row, 1));
 		}
 
-		public String getSource(final int row)
-		{
+		public String getSource(final int row) {
 			return (String) getValueAt(row, 2);
 		}
 
-		public void addRule(final FirewallRule rule)
-		{
+		public void addRule(final FirewallRule rule) {
 			final String portString = (rule.getStartPort() == rule.getEndPort()) ? Integer
 					.toString(rule.getStartPort()) : rule.getStartPort() + "-"
 					+ rule.getEndPort();
@@ -567,15 +472,12 @@ public class InteractiveFirewallPanel extends JPanel implements
 					rule.getCidr() });
 		}
 
-		public void clear()
-		{
+		public void clear() {
 			datamodel.setNumRows(0);
 		}
 
-		public void displayFirewall(final Firewall firewall)
-		{
-			synchronized (this)
-			{
+		public void displayFirewall(final Firewall firewall) {
+			synchronized (this) {
 				clear();
 
 				(new LoadRulesSwingWorkerWithThrobber(
@@ -610,8 +512,7 @@ public class InteractiveFirewallPanel extends JPanel implements
 			Utils.icon("remove16.png"));
 	private final RuleList ruleList;
 
-	public InteractiveFirewallPanel(final CloudProvider provider)
-	{
+	public InteractiveFirewallPanel(final CloudProvider provider) {
 		super(new BorderLayout());
 		this.provider = provider;
 		ruleList = new RuleList(provider);
@@ -684,8 +585,7 @@ public class InteractiveFirewallPanel extends JPanel implements
 		loadInitialFirewalls();
 	}
 
-	private JPanel getThrobbersPanel()
-	{
+	private JPanel getThrobbersPanel() {
 		final JPanel allThrobbersPanel = new JPanel(new GridBagLayout());
 		final GridBagConstraints c = new GridBagConstraints();
 		c.weightx = 1.0;
@@ -707,19 +607,15 @@ public class InteractiveFirewallPanel extends JPanel implements
 		return allThrobbersPanel;
 	}
 
-	public Collection<Firewall> getSelectedFirewalls()
-	{
+	public Collection<Firewall> getSelectedFirewalls() {
 		final Collection<Firewall> rv = new ArrayList<Firewall>();
 		final int indices[] = firewallList.getSelectedIndices();
 
-		for (final int index : indices)
-		{
+		for (final int index : indices) {
 			final String firewall = (String) firewallListModel.get(index);
 
-			for (final Firewall comp : firewalls)
-			{
-				if (comp.getName().equals(firewall))
-				{
+			for (final Firewall comp : firewalls) {
+				if (comp.getName().equals(firewall)) {
 					rv.add(comp);
 				}
 			}
@@ -728,16 +624,13 @@ public class InteractiveFirewallPanel extends JPanel implements
 		return rv;
 	}
 
-	public boolean selectedFirewallOpensPort(final int port)
-	{
+	public boolean selectedFirewallOpensPort(final int port) {
 		boolean found = false;
-		for (int row = 0; row < ruleList.getRowCount(); row++)
-		{
+		for (int row = 0; row < ruleList.getRowCount(); row++) {
 			final String portString = ruleList.getPort(row);
 			final PortRange range = new PortRange(portString);
 
-			if (port >= range.startPort && port <= range.endPort)
-			{
+			if (port >= range.startPort && port <= range.endPort) {
 				found = true;
 				break;
 			}
@@ -746,14 +639,12 @@ public class InteractiveFirewallPanel extends JPanel implements
 		return found;
 	}
 
-	private void addFirewall(final Firewall firewall)
-	{
+	private void addFirewall(final Firewall firewall) {
 		firewallListModel.addElement(firewall.getName());
 		firewalls.add(firewall);
 	}
 
-	private void loadInitialFirewalls()
-	{
+	private void loadInitialFirewalls() {
 		(new LoadFirewallsWorkerWithThrobber(loadingFirewallsThrobberPanel))
 				.execute();
 	}
@@ -761,14 +652,12 @@ public class InteractiveFirewallPanel extends JPanel implements
 	@Override
 	public void addRuleWindowClosed(final Firewall firewall,
 			final int beginPort, final int endPort, final Protocol protocol,
-			final String cidr)
-	{
+			final String cidr) {
 		addRule(firewall, beginPort, endPort, protocol, cidr);
 	}
 
 	private void addRule(final Firewall firewall, final int beginPort,
-			final int endPort, final Protocol protocol, final String cidr)
-	{
+			final int endPort, final Protocol protocol, final String cidr) {
 		(new AddRuleSwingWorker(creatingRuleThrobberPanel, cidr, beginPort,
 				protocol, endPort, firewall)).execute();
 	}

@@ -13,11 +13,9 @@ import org.junit.Test;
 
 import be.ac.ua.comp.scarletnebula.gui.SearchHelper;
 
-public class SearchHelperTest
-{
+public class SearchHelperTest {
 	@Test
-	public void testTokenize()
-	{
+	public void testTokenize() {
 		testTokenizerString("foo", "foo");
 		testTokenizerString("foo bar", "foo", "bar");
 		testTokenizerString("tag:dns bar", "tag:dns", "bar");
@@ -33,8 +31,7 @@ public class SearchHelperTest
 				"tag:the \" way it is");
 	}
 
-	public void testTokenizerString(final String input, final String... result)
-	{
+	public void testTokenizerString(final String input, final String... result) {
 		final Collection<String> resultCollection = Arrays.asList(result);
 		final Collection<String> tokenizedCollection = SearchHelper
 				.tokenize(input);
@@ -43,22 +40,19 @@ public class SearchHelperTest
 	}
 
 	@Test
-	public void testMatchPrefix()
-	{
+	public void testMatchPrefix() {
 		testMatcherString("tag", "foo:something", null);
 		testMatcherString("tag", "tag:something", "something");
 		testMatcherString("name", "name:a long name", "a long name");
 	}
 
 	private void testMatcherString(final String prefix, final String token,
-			final String supposedResult)
-	{
+			final String supposedResult) {
 		assertEquals(supposedResult, SearchHelper.matchPrefix(prefix, token));
 	}
 
 	@Test
-	public void testMatchName()
-	{
+	public void testMatchName() {
 		assertTrue(SearchHelper.matchName("bla", "bla", false));
 		assertTrue(SearchHelper.matchName("bla", "sblab", false));
 		assertFalse(SearchHelper.matchName("bla", "sblab", true));
@@ -66,16 +60,14 @@ public class SearchHelperTest
 	}
 
 	@Test
-	public void testMatchStatus()
-	{
+	public void testMatchStatus() {
 		assertTrue(SearchHelper.matchStatus("running", VmState.RUNNING, false));
 		assertTrue(SearchHelper.matchStatus("PAUSED", VmState.PAUSED, false));
 		assertTrue(SearchHelper.matchStatus("PAUSED", VmState.RUNNING, true));
 	}
 
 	@Test
-	public void testMatchTags()
-	{
+	public void testMatchTags() {
 		final Collection<String> testTags = new ArrayList<String>();
 		testTags.add("dns");
 		testTags.add("ftp");
@@ -86,8 +78,7 @@ public class SearchHelperTest
 	}
 
 	@Test
-	public void testMathCloudProvider()
-	{
+	public void testMathCloudProvider() {
 		assertTrue(SearchHelper.matchCloudProvider("amazon", "Amazon EC2 (EU)",
 				false));
 		assertFalse(SearchHelper.matchCloudProvider("rackspace",

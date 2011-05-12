@@ -20,17 +20,13 @@ import be.ac.ua.comp.scarletnebula.core.CloudProvider;
 import be.ac.ua.comp.scarletnebula.wizard.DataRecorder;
 import be.ac.ua.comp.scarletnebula.wizard.WizardPage;
 
-public class ChooseSizePage extends WizardPage
-{
-	class SizeList extends JList
-	{
-		private final class SizeListCellRenderer implements ListCellRenderer
-		{
+public class ChooseSizePage extends WizardPage {
+	class SizeList extends JList {
+		private final class SizeListCellRenderer implements ListCellRenderer {
 			@Override
 			public Component getListCellRendererComponent(final JList list,
 					final Object value, final int index,
-					final boolean isSelected, final boolean cellHasFocus)
-			{
+					final boolean isSelected, final boolean cellHasFocus) {
 				final VirtualMachineProduct product = (VirtualMachineProduct) value;
 
 				final String specColor = isSelected ? "#FFFFFF" : "#646060";
@@ -46,13 +42,10 @@ public class ChooseSizePage extends WizardPage
 								+ "</font></html>");
 
 				productLabel.setOpaque(true);
-				if (isSelected)
-				{
+				if (isSelected) {
 					productLabel.setBackground(getSelectionBackground());
 					productLabel.setForeground(getSelectionForeground());
-				}
-				else
-				{
+				} else {
 					productLabel.setBackground(Color.white);
 					productLabel.setForeground(getForeground());
 				}
@@ -66,8 +59,7 @@ public class ChooseSizePage extends WizardPage
 		private static final long serialVersionUID = 1L;
 
 		public SizeList(final CloudProvider provider,
-				final Architecture architecture)
-		{
+				final Architecture architecture) {
 			setCellRenderer(new SizeListCellRenderer());
 
 			final DefaultListModel listModel = new DefaultListModel();
@@ -77,11 +69,9 @@ public class ChooseSizePage extends WizardPage
 
 		private void fillWithSizes(final CloudProvider provider,
 				final Architecture architecture,
-				final DefaultListModel listModel)
-		{
+				final DefaultListModel listModel) {
 			for (final VirtualMachineProduct product : provider
-					.getPossibleInstanceSizes(architecture))
-			{
+					.getPossibleInstanceSizes(architecture)) {
 				listModel.addElement(product);
 			}
 		}
@@ -91,8 +81,7 @@ public class ChooseSizePage extends WizardPage
 	private final SizeList sizelist;
 	private final CloudProvider provider;
 
-	public ChooseSizePage(final CloudProvider provider, final MachineImage image)
-	{
+	public ChooseSizePage(final CloudProvider provider, final MachineImage image) {
 		this.provider = provider;
 		final Architecture architecture = image.getArchitecture();
 
@@ -108,17 +97,13 @@ public class ChooseSizePage extends WizardPage
 	}
 
 	@Override
-	public WizardPage next(final DataRecorder recorder)
-	{
+	public WizardPage next(final DataRecorder recorder) {
 		((AddServerWizardDataRecorder) recorder).instanceSize = (VirtualMachineProduct) sizelist
 				.getSelectedValue();
 
-		if (provider.supportsFirewalls())
-		{
+		if (provider.supportsFirewalls()) {
 			return new FirewallPage(provider);
-		}
-		else
-		{
+		} else {
 			return new TaggingPage();
 		}
 	}

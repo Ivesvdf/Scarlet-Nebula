@@ -13,17 +13,14 @@ import be.ac.ua.comp.scarletnebula.gui.addproviderwizard.AddProviderWizard;
 import be.ac.ua.comp.scarletnebula.wizard.DataRecorder;
 import be.ac.ua.comp.scarletnebula.wizard.WizardPage;
 
-public class CreateCloudProviderPage extends WizardPage
-{
+public class CreateCloudProviderPage extends WizardPage {
 	private static final long serialVersionUID = 1L;
 
-	CreateCloudProviderPage()
-	{
+	CreateCloudProviderPage() {
 		final AddProviderWizard w = new AddProviderWizard();
 		w.startModal((JDialog) getParent());
 
-		if (CloudManager.get().getLinkedCloudProviders().size() > 0)
-		{
+		if (CloudManager.get().getLinkedCloudProviders().size() > 0) {
 			// Get the newly created CloudProvider
 			final CloudProvider p = CloudManager.get()
 					.getLinkedCloudProviders().iterator().next();
@@ -43,9 +40,7 @@ public class CreateCloudProviderPage extends WizardPage
 			txt.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
 
 			add(txt);
-		}
-		else
-		{
+		} else {
 			setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
 			final JLabel txt = new JLabel(
 					"<html>You chose not to create a new CloudProvider account. If you change your mind, you can always "
@@ -58,20 +53,17 @@ public class CreateCloudProviderPage extends WizardPage
 	}
 
 	@Override
-	public boolean nextIsEnabled()
-	{
+	public boolean nextIsEnabled() {
 		return false;
 	}
 
 	@Override
-	public boolean finishIsEnabled()
-	{
+	public boolean finishIsEnabled() {
 		return true;
 	}
 
 	@Override
-	public WizardPage next(final DataRecorder recorder)
-	{
+	public WizardPage next(final DataRecorder recorder) {
 		return null;
 	}
 

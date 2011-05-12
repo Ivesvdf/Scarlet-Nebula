@@ -14,13 +14,11 @@ import be.ac.ua.comp.scarletnebula.wizard.WizardPage;
 import com.jgoodies.forms.builder.DefaultFormBuilder;
 import com.jgoodies.forms.layout.FormLayout;
 
-public class ChooseNamePage extends WizardPage
-{
+public class ChooseNamePage extends WizardPage {
 	private static final long serialVersionUID = 1L;
 	JTextField name = new JTextField();
 
-	ChooseNamePage(final AddProviderWizardDataRecorder recorder)
-	{
+	ChooseNamePage(final AddProviderWizardDataRecorder recorder) {
 		setLayout(new BorderLayout());
 		final BetterTextLabel text = new BetterTextLabel(
 				"What name would you like to use to describe this account with "
@@ -48,13 +46,11 @@ public class ChooseNamePage extends WizardPage
 	}
 
 	@Override
-	public WizardPage next(final DataRecorder recorder)
-	{
+	public WizardPage next(final DataRecorder recorder) {
 		final AddProviderWizardDataRecorder rec = (AddProviderWizardDataRecorder) recorder;
 		final String providerName = name.getText();
 
-		if (providerName.length() == 0)
-		{
+		if (providerName.length() == 0) {
 			JOptionPane.showMessageDialog(this,
 					"Please enter a name for this provider.", "Enter name",
 					JOptionPane.ERROR_MESSAGE);
@@ -63,10 +59,8 @@ public class ChooseNamePage extends WizardPage
 
 		// Check to see if this name hasn't been taken
 		for (final String aProviderName : CloudManager.get()
-				.getLinkedCloudProviderNames())
-		{
-			if (aProviderName.equals(providerName))
-			{
+				.getLinkedCloudProviderNames()) {
+			if (aProviderName.equals(providerName)) {
 				JOptionPane
 						.showMessageDialog(
 								this,

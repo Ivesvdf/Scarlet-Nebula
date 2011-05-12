@@ -21,36 +21,27 @@ import be.ac.ua.comp.scarletnebula.gui.windows.ServerPropertiesWindow;
 import be.ac.ua.comp.scarletnebula.gui.windows.StatisticsWindow;
 import be.ac.ua.comp.scarletnebula.misc.Utils;
 
-public class ServerListMouseListener implements MouseListener
-{
-	private final class VNCActionListener implements ActionListener
-	{
+public class ServerListMouseListener implements MouseListener {
+	private final class VNCActionListener implements ActionListener {
 		private final Collection<Server> selectedServers;
 
-		private VNCActionListener(final Collection<Server> selectedServers)
-		{
+		private VNCActionListener(final Collection<Server> selectedServers) {
 			this.selectedServers = selectedServers;
 		}
 
 		@Override
-		public void actionPerformed(final ActionEvent e)
-		{
+		public void actionPerformed(final ActionEvent e) {
 			final VncViewer v = new VncViewer();
 
 			final Server firstServer = selectedServers.iterator().next();
 
 			String address;
 
-			if (firstServer.getPublicDnsAddress() != null)
-			{
+			if (firstServer.getPublicDnsAddress() != null) {
 				address = firstServer.getPublicDnsAddress();
-			}
-			else if (firstServer.getPublicIpAddresses().length >= 1)
-			{
+			} else if (firstServer.getPublicIpAddresses().length >= 1) {
 				address = firstServer.getPublicIpAddresses()[0];
-			}
-			else
-			{
+			} else {
 				return;
 			}
 
@@ -65,107 +56,86 @@ public class ServerListMouseListener implements MouseListener
 		}
 	}
 
-	private final class StartPropertiesActionListener implements ActionListener
-	{
+	private final class StartPropertiesActionListener implements ActionListener {
 		private final Collection<Server> selectedServers;
 
 		private StartPropertiesActionListener(
-				final Collection<Server> selectedServers)
-		{
+				final Collection<Server> selectedServers) {
 			this.selectedServers = selectedServers;
 		}
 
 		@Override
-		public void actionPerformed(final ActionEvent e)
-		{
+		public void actionPerformed(final ActionEvent e) {
 			new ServerPropertiesWindow(gui, selectedServers);
 		}
 	}
 
-	private final class StartStatisticsActionListener implements ActionListener
-	{
+	private final class StartStatisticsActionListener implements ActionListener {
 		private final Collection<Server> selectedServers;
 
 		private StartStatisticsActionListener(
-				final Collection<Server> selectedServers)
-		{
+				final Collection<Server> selectedServers) {
 			this.selectedServers = selectedServers;
 		}
 
 		@Override
-		public void actionPerformed(final ActionEvent e)
-		{
+		public void actionPerformed(final ActionEvent e) {
 			new StatisticsWindow(gui, selectedServers);
 		}
 	}
 
-	private final class StartTerminalActionListener implements ActionListener
-	{
+	private final class StartTerminalActionListener implements ActionListener {
 		private final Collection<Server> selectedServers;
 
 		private StartTerminalActionListener(
-				final Collection<Server> selectedServers)
-		{
+				final Collection<Server> selectedServers) {
 			this.selectedServers = selectedServers;
 		}
 
 		@Override
-		public void actionPerformed(final ActionEvent e)
-		{
+		public void actionPerformed(final ActionEvent e) {
 			new SSHTerminalWindow(gui, selectedServers);
 		}
 	}
 
-	private final class UnlinkActionListener implements ActionListener
-	{
+	private final class UnlinkActionListener implements ActionListener {
 		@Override
-		public void actionPerformed(final ActionEvent e)
-		{
+		public void actionPerformed(final ActionEvent e) {
 			gui.unlinkSelectedServers();
 		}
 	}
 
-	private final class RefreshActionListener implements ActionListener
-	{
+	private final class RefreshActionListener implements ActionListener {
 		@Override
-		public void actionPerformed(final ActionEvent e)
-		{
+		public void actionPerformed(final ActionEvent e) {
 			gui.refreshSelectedServers();
 		}
 	}
 
-	private final class TerminateActionListener implements ActionListener
-	{
+	private final class TerminateActionListener implements ActionListener {
 		@Override
-		public void actionPerformed(final ActionEvent e)
-		{
+		public void actionPerformed(final ActionEvent e) {
 			gui.terminateSelectedServers();
 		}
 	}
 
-	private final class RebootActionListener implements ActionListener
-	{
+	private final class RebootActionListener implements ActionListener {
 		@Override
-		public void actionPerformed(final ActionEvent e)
-		{
+		public void actionPerformed(final ActionEvent e) {
 			gui.rebootSelectedServers();
 		}
 	}
 
-	private final class PauseActionListener implements ActionListener
-	{
+	private final class PauseActionListener implements ActionListener {
 		@Override
-		public void actionPerformed(final ActionEvent e)
-		{
+		public void actionPerformed(final ActionEvent e) {
 			gui.pauseSelectedServers();
 		}
 	}
 
-	private final class ResumeActionListener implements ActionListener
-	{
+	private final class ResumeActionListener implements ActionListener {
 		@Override
-		public void actionPerformed(final ActionEvent e)
-		{
+		public void actionPerformed(final ActionEvent e) {
 			gui.resumeSelectedServers();
 		}
 	}
@@ -175,8 +145,7 @@ public class ServerListMouseListener implements MouseListener
 	private final ServerList serverlist;
 
 	public ServerListMouseListener(final GUI gui, final ServerList serverlist,
-			final ServerListModel serverListModel)
-	{
+			final ServerListModel serverListModel) {
 		super();
 		this.gui = gui;
 		this.serverlist = serverlist;
@@ -184,17 +153,14 @@ public class ServerListMouseListener implements MouseListener
 	}
 
 	@Override
-	public void mouseClicked(final MouseEvent e)
-	{
+	public void mouseClicked(final MouseEvent e) {
 		// TODO Auto-generated method stub
 
 	}
 
 	@Override
-	public void mousePressed(final MouseEvent e)
-	{
-		if (e.isPopupTrigger())
-		{
+	public void mousePressed(final MouseEvent e) {
+		if (e.isPopupTrigger()) {
 			final ServerList list = (ServerList) e.getSource();
 			final int indexOfSelectedServer = list
 					.locationToIndex(e.getPoint());
@@ -204,8 +170,7 @@ public class ServerListMouseListener implements MouseListener
 			// server this will take effect on based on the current mouse
 			// position. If more servers are selected, apply action to all
 			// selected servers!
-			if (list.getSelectedIndices().length <= 1)
-			{
+			if (list.getSelectedIndices().length <= 1) {
 				list.setSelectedIndex(indexOfSelectedServer);
 			}
 			final Server clickedServer = serverListModel
@@ -213,12 +178,10 @@ public class ServerListMouseListener implements MouseListener
 
 			final Collection<Server> allSelectedServers = list
 					.getSelectedServers();
-			if (!allSelectedServers.contains(clickedServer))
-			{
+			if (!allSelectedServers.contains(clickedServer)) {
 				list.setSelectedIndices(new int[0]);
 			}
-			if (clickedServer == null)
-			{
+			if (clickedServer == null) {
 				return;
 			}
 
@@ -271,33 +234,28 @@ public class ServerListMouseListener implements MouseListener
 			properties.addActionListener(new StartPropertiesActionListener(
 					selectedServers));
 
-			if (status != VmState.RUNNING && status != VmState.PAUSED)
-			{
+			if (status != VmState.RUNNING && status != VmState.PAUSED) {
 				pause.setEnabled(false);
 				reboot.setEnabled(false);
 				terminate.setEnabled(false);
 			}
 			if (clickedServer.getServerStatistics() == null
-					|| status != VmState.RUNNING)
-			{
+					|| status != VmState.RUNNING) {
 				statistics.setEnabled(false);
 			}
 
-			if (clickedServer.sshWillFail() || status != VmState.RUNNING)
-			{
+			if (clickedServer.sshWillFail() || status != VmState.RUNNING) {
 				console.setEnabled(false);
 			}
 
-			if (status != VmState.RUNNING)
-			{
+			if (status != VmState.RUNNING) {
 				vnc.setEnabled(false);
 			}
 
 			pause.setEnabled(clickedServer.isPausable()
 					&& clickedServer.getStatus() == VmState.RUNNING);
 
-			if (!clickedServer.isRebootable())
-			{
+			if (!clickedServer.isRebootable()) {
 				reboot.setEnabled(false);
 			}
 
@@ -318,15 +276,12 @@ public class ServerListMouseListener implements MouseListener
 			popup.add(properties);
 
 			popup.show(e.getComponent(), e.getX(), e.getY());
-		}
-		else if (e.getClickCount() >= 1
-				&& serverlist.startNewServerServerSelected())
-		{
+		} else if (e.getClickCount() >= 1
+				&& serverlist.startNewServerServerSelected()) {
 			// If the user clicked a null server, this is taken as a hint
 			// to create a new server!
 			new AddServerWizard(gui);
-		}
-		else if (e.getClickCount() == 2
+		} else if (e.getClickCount() == 2
 				&& serverlist.getSelectedServers().size() > 0)
 		// Normal double click on a server
 		{
@@ -336,18 +291,15 @@ public class ServerListMouseListener implements MouseListener
 	}
 
 	@Override
-	public void mouseReleased(final MouseEvent e)
-	{
+	public void mouseReleased(final MouseEvent e) {
 	}
 
 	@Override
-	public void mouseEntered(final MouseEvent e)
-	{
+	public void mouseEntered(final MouseEvent e) {
 	}
 
 	@Override
-	public void mouseExited(final MouseEvent e)
-	{
+	public void mouseExited(final MouseEvent e) {
 	}
 
 }

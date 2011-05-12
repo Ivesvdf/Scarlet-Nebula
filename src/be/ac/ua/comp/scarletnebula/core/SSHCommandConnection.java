@@ -18,23 +18,19 @@ import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.Session;
 import com.jcraft.jsch.UserInfo;
 
-public class SSHCommandConnection extends CommandConnection
-{
+public class SSHCommandConnection extends CommandConnection {
 	Session session = null;
 
-	private enum LoginMethod
-	{
+	private enum LoginMethod {
 		PASSWORD, KEY
 	};
 
 	private SSHCommandConnection(final String address, final String username,
 			final String keypairfilenameOrPassword, final UserInfo ui,
-			final LoginMethod loginMethod) throws Exception
-	{
+			final LoginMethod loginMethod) throws Exception {
 		final JSch jsch = new JSch();
 
-		if (loginMethod == LoginMethod.KEY)
-		{
+		if (loginMethod == LoginMethod.KEY) {
 			jsch.addIdentity(keypairfilenameOrPassword);
 		}
 		session = jsch.getSession(username, address, 22);
@@ -47,8 +43,7 @@ public class SSHCommandConnection extends CommandConnection
 		session.setUserInfo(ui);
 		session.setConfig(config);
 
-		if (loginMethod == LoginMethod.PASSWORD)
-		{
+		if (loginMethod == LoginMethod.PASSWORD) {
 			session.setPassword(keypairfilenameOrPassword);
 		}
 		session.connect();
@@ -57,24 +52,21 @@ public class SSHCommandConnection extends CommandConnection
 
 	static public SSHCommandConnection newConnectionWithPassword(
 			final String address, final String username, final String password,
-			final UserInfo ui) throws Exception
-	{
+			final UserInfo ui) throws Exception {
 		return new SSHCommandConnection(address, username, password, ui,
 				LoginMethod.PASSWORD);
 	}
 
 	static public SSHCommandConnection newConnectionWithKey(
 			final String address, final String username, final String key,
-			final UserInfo ui) throws Exception
-	{
+			final UserInfo ui) throws Exception {
 		return new SSHCommandConnection(address, username, key, ui,
 				LoginMethod.KEY);
 	}
 
 	@Override
 	public String executeCommand(final String command) throws JSchException,
-			IOException
-	{
+			IOException {
 		final ChannelExec channel = (ChannelExec) session.openChannel("exec");
 		channel.setCommand(command);
 
@@ -87,28 +79,21 @@ public class SSHCommandConnection extends CommandConnection
 
 		final StringBuilder result = new StringBuilder();
 		final byte[] tmp = new byte[1024];
-		while (true)
-		{
-			while (in.available() > 0)
-			{
+		while (true) {
+			while (in.available() > 0) {
 				final int i = in.read(tmp, 0, 1024);
-				if (i < 0)
-				{
+				if (i < 0) {
 					break;
 				}
 				result.append(new String(tmp, 0, i));
 			}
-			if (channel.isClosed())
-			{
+			if (channel.isClosed()) {
 				Log.info("exit-status: " + channel.getExitStatus());
 				break;
 			}
-			try
-			{
+			try {
 				Thread.sleep(1000);
-			}
-			catch (final Exception ee)
-			{
+			} catch (final Exception ee) {
 			}
 		}
 
@@ -118,8 +103,7 @@ public class SSHCommandConnection extends CommandConnection
 	}
 
 	public ChannelInputStreamTuple executeContinuousCommand(final String command)
-			throws JSchException, IOException
-	{
+			throws JSchException, IOException {
 		final ChannelExec channel = (ChannelExec) session.openChannel("exec");
 		channel.setCommand(command);
 
@@ -134,14 +118,12 @@ public class SSHCommandConnection extends CommandConnection
 	}
 
 	@Override
-	public void close()
-	{
+	public void close() {
 		session.disconnect();
 	}
 
 	public Connection getJSchTerminalConnection() throws JSchException,
-			IOException
-	{
+			IOException {
 		final Channel channel = session.openChannel("shell");
 
 		final OutputStream out = channel.getOutputStream();
@@ -152,25 +134,20 @@ public class SSHCommandConnection extends CommandConnection
 		final InputStream fin = in;
 		final Channel fchannel = channel;
 
-		final Connection connection = new Connection()
-		{
+		final Connection connection = new Connection() {
 			@Override
-			public InputStream getInputStream()
-			{
+			public InputStream getInputStream() {
 				return fin;
 			}
 
 			@Override
-			public OutputStream getOutputStream()
-			{
+			public OutputStream getOutputStream() {
 				return fout;
 			}
 
 			@Override
-			public void requestResize(final Term term)
-			{
-				if (fchannel instanceof ChannelShell)
-				{
+			public void requestResize(final Term term) {
+				if (fchannel instanceof ChannelShell) {
 					final int c = term.getColumnCount();
 					final int r = term.getRowCount();
 					((ChannelShell) fchannel).setPtySize(c, r,
@@ -179,18 +156,15 @@ public class SSHCommandConnection extends CommandConnection
 			}
 
 			@Override
-			public void close()
-			{
+			public void close() {
 				fchannel.disconnect();
 			}
 		};
 		return connection;
 	}
 
-	public static void main(final String[] args)
-	{
-		try
-		{
+	public static void main(final String[] args) {
+		try {
 			final SSHCommandConnection connection = SSHCommandConnection
 					.newConnectionWithPassword("radix.cmi.ua.ac.be", "p080558",
 							"somepassword", new NotPromptingJschUserInfo());
@@ -207,21 +181,17 @@ public class SSHCommandConnection extends CommandConnection
 			StringBuilder result = new StringBuilder();
 			final int buffersize = 1024;
 			final byte[] tmp = new byte[buffersize];
-			while (true)
-			{
+			while (true) {
 
-				while (in.available() > 0)
-				{
+				while (in.available() > 0) {
 					final int i = in.read(tmp, 0, buffersize);
-					if (i < 0)
-					{
+					if (i < 0) {
 						break;
 					}
 					result.append(new String(tmp, 0, i));
 
 					// Start of weird shit
-					while (result.indexOf("\n") >= 0)
-					{
+					while (result.indexOf("\n") >= 0) {
 						final int nlPos = result.indexOf("\n");
 						final String before = result.substring(0, nlPos);
 						System.out.println("Newline detected: came before it:"
@@ -231,39 +201,31 @@ public class SSHCommandConnection extends CommandConnection
 						result = new StringBuilder(after);
 					}
 				}
-				if (channel.isClosed())
-				{
+				if (channel.isClosed()) {
 					System.out.println("ow ...");
 					break;
 
 				}
-				try
-				{
+				try {
 					System.out.println("sleeping");
 					Thread.sleep(1000);
-				}
-				catch (final Exception ee)
-				{
+				} catch (final Exception ee) {
 				}
 			}
 			channel.disconnect();
 
-		}
-		catch (final Exception e)
-		{
+		} catch (final Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
 
-	public class ChannelInputStreamTuple
-	{
+	public class ChannelInputStreamTuple {
 		public Channel channel;
 		public InputStream inputStream;
 
 		ChannelInputStreamTuple(final Channel channel,
-				final InputStream inputStream)
-		{
+				final InputStream inputStream) {
 			this.channel = channel;
 			this.inputStream = inputStream;
 		}

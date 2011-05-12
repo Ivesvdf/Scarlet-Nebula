@@ -6,13 +6,11 @@ import javax.swing.JDialog;
 
 import be.ac.ua.comp.scarletnebula.core.CloudProvider;
 
-public class KeyManagementWindow extends JDialog
-{
+public class KeyManagementWindow extends JDialog {
 	private static final long serialVersionUID = 1L;
 
 	public KeyManagementWindow(final JDialog parent,
-			final CloudProvider provider)
-	{
+			final CloudProvider provider) {
 		super(parent, "Manage keys for " + provider.getName(), true);
 
 		setSize(400, 300);

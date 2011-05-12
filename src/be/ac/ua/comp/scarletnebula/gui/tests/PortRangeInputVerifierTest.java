@@ -9,11 +9,9 @@ import org.junit.Test;
 
 import be.ac.ua.comp.scarletnebula.gui.inputverifiers.PortRangeInputVerifier;
 
-public class PortRangeInputVerifierTest
-{
+public class PortRangeInputVerifierTest {
 	@Test
-	public void test()
-	{
+	public void test() {
 		good("22");
 		good("110");
 		good("65535");
@@ -25,16 +23,14 @@ public class PortRangeInputVerifierTest
 		bad("10a");
 	}
 
-	private void good(final String input)
-	{
+	private void good(final String input) {
 		final PortRangeInputVerifier v = new PortRangeInputVerifier(null);
 		final JTextField field = new JTextField(input);
 
 		assertTrue(v.verify(field));
 	}
 
-	private void bad(final String input)
-	{
+	private void bad(final String input) {
 		final PortRangeInputVerifier v = new PortRangeInputVerifier(null);
 		final JTextField field = new JTextField(input);
 

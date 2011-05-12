@@ -4,8 +4,7 @@ import org.jfree.data.time.RegularTimePeriod;
 
 import be.ac.ua.comp.scarletnebula.core.Datapoint;
 
-public interface NewDatapointListener
-{
+public interface NewDatapointListener {
 	/**
 	 * Notifies when a new datapoint is added to stream streamname at the
 	 * current time with value currentValue

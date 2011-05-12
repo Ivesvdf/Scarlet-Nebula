@@ -18,14 +18,12 @@ import be.ac.ua.comp.scarletnebula.misc.SwingWorkerWithThrobber;
 import be.ac.ua.comp.scarletnebula.wizard.DataRecorder;
 import be.ac.ua.comp.scarletnebula.wizard.WizardPage;
 
-public class UseExistingKeyPage extends WizardPage
-{
+public class UseExistingKeyPage extends WizardPage {
 	private static final long serialVersionUID = 1L;
 	SelectKeyList keylist;
 	private final CloudProvider provider;
 
-	UseExistingKeyPage(final CloudProvider provider)
-	{
+	UseExistingKeyPage(final CloudProvider provider) {
 		this.provider = provider;
 		final BetterTextLabel lbl = new BetterTextLabel(
 				"Select the key you want to use from the following list. "
@@ -51,13 +49,10 @@ public class UseExistingKeyPage extends WizardPage
 		aboveKeylist.add(collapsableThrobber, BorderLayout.PAGE_END);
 		add(aboveKeylist, BorderLayout.NORTH);
 
-		(new SwingWorkerWithThrobber<Object, String>(collapsableThrobber)
-		{
+		(new SwingWorkerWithThrobber<Object, String>(collapsableThrobber) {
 			@Override
-			protected Object doInBackground() throws Exception
-			{
-				for (final String keyname : provider.getUnknownKeys())
-				{
+			protected Object doInBackground() throws Exception {
+				for (final String keyname : provider.getUnknownKeys()) {
 					publish(keyname);
 				}
 
@@ -65,10 +60,8 @@ public class UseExistingKeyPage extends WizardPage
 			}
 
 			@Override
-			protected void process(final List<String> keynames)
-			{
-				for (final String keyname : keynames)
-				{
+			protected void process(final List<String> keynames) {
+				for (final String keyname : keynames) {
 					keylist.add(keyname);
 				}
 			}
@@ -83,12 +76,10 @@ public class UseExistingKeyPage extends WizardPage
 	}
 
 	@Override
-	public WizardPage next(final DataRecorder recorder)
-	{
+	public WizardPage next(final DataRecorder recorder) {
 		final String selectedKey = keylist.getSelectedKey();
 
-		if (selectedKey == null)
-		{
+		if (selectedKey == null) {
 			JOptionPane.showMessageDialog(this, "Please select a key.");
 			return null;
 		}

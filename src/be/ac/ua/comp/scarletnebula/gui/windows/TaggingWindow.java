@@ -23,8 +23,7 @@ import be.ac.ua.comp.scarletnebula.gui.TaggingPanel;
  * 
  * @author ives
  */
-public class TaggingWindow extends JDialog
-{
+public class TaggingWindow extends JDialog {
 	private static final long serialVersionUID = 1L;
 	private final TaggingPanel taggingPanel;
 	private final Collection<WindowClosedListener> windowClosedListeners = new ArrayList<WindowClosedListener>();
@@ -37,8 +36,7 @@ public class TaggingWindow extends JDialog
 	 * @param tags
 	 *            The initial tags to be displayed in this windows
 	 */
-	TaggingWindow(final JDialog parent, final Collection<String> tags)
-	{
+	TaggingWindow(final JDialog parent, final Collection<String> tags) {
 		super(parent, "Edit tags", true);
 		setLayout(new BorderLayout());
 		setSize(300, 300);
@@ -60,16 +58,13 @@ public class TaggingWindow extends JDialog
 	 * 
 	 * @return The button panel containing the OK button.
 	 */
-	private JPanel getButtonPanel()
-	{
+	private JPanel getButtonPanel() {
 		final JPanel buttonPanel = new JPanel();
 		buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.LINE_AXIS));
 		final JButton okButton = ButtonFactory.createOkButton();
-		okButton.addActionListener(new ActionListener()
-		{
+		okButton.addActionListener(new ActionListener() {
 			@Override
-			public void actionPerformed(final ActionEvent e)
-			{
+			public void actionPerformed(final ActionEvent e) {
 				close();
 			}
 		});
@@ -91,8 +86,7 @@ public class TaggingWindow extends JDialog
 	 * @author ives
 	 * 
 	 */
-	interface WindowClosedListener
-	{
+	interface WindowClosedListener {
 		/**
 		 * Called when the TaggingWindow is closed
 		 * 
@@ -106,10 +100,8 @@ public class TaggingWindow extends JDialog
 	 * Method to notify all subscribed implementors of WindowClosedListener.
 	 * These will be called with the new set of tags.
 	 */
-	private void notifyClosedListeners()
-	{
-		for (final WindowClosedListener listener : windowClosedListeners)
-		{
+	private void notifyClosedListeners() {
+		for (final WindowClosedListener listener : windowClosedListeners) {
 			listener.windowClosed(taggingPanel.getTags());
 		}
 	}
@@ -118,8 +110,7 @@ public class TaggingWindow extends JDialog
 	 * This method will notify all observers and dispose of the window. This
 	 * method will be called by closing the window or clicking the OK button.
 	 */
-	public void close()
-	{
+	public void close() {
 		notifyClosedListeners();
 		dispose();
 	}
@@ -130,8 +121,7 @@ public class TaggingWindow extends JDialog
 	 * @param listener
 	 *            The class subscribing
 	 */
-	public void addWindowClosedListener(final WindowClosedListener listener)
-	{
+	public void addWindowClosedListener(final WindowClosedListener listener) {
 		windowClosedListeners.add(listener);
 	}
 
@@ -142,38 +132,33 @@ public class TaggingWindow extends JDialog
 	 * @author ives
 	 * 
 	 */
-	public class TagginWindowClosingWindowListener implements WindowListener
-	{
+	public class TagginWindowClosingWindowListener implements WindowListener {
 		/**
 		 * @see WindowListener
 		 */
 		@Override
-		public void windowOpened(final WindowEvent e)
-		{
+		public void windowOpened(final WindowEvent e) {
 		}
 
 		/**
 		 * @see WindowListener
 		 */
 		@Override
-		public void windowIconified(final WindowEvent e)
-		{
+		public void windowIconified(final WindowEvent e) {
 		}
 
 		/**
 		 * @see WindowListener
 		 */
 		@Override
-		public void windowDeiconified(final WindowEvent e)
-		{
+		public void windowDeiconified(final WindowEvent e) {
 		}
 
 		/**
 		 * @see WindowListener
 		 */
 		@Override
-		public void windowDeactivated(final WindowEvent e)
-		{
+		public void windowDeactivated(final WindowEvent e) {
 		}
 
 		/**
@@ -182,8 +167,7 @@ public class TaggingWindow extends JDialog
 		 * Window
 		 */
 		@Override
-		public void windowClosing(final WindowEvent e)
-		{
+		public void windowClosing(final WindowEvent e) {
 			final TaggingWindow window = (TaggingWindow) e.getSource();
 			window.close();
 		}
@@ -192,16 +176,14 @@ public class TaggingWindow extends JDialog
 		 * @see WindowListener
 		 */
 		@Override
-		public void windowClosed(final WindowEvent e)
-		{
+		public void windowClosed(final WindowEvent e) {
 		}
 
 		/**
 		 * @see WindowListener
 		 */
 		@Override
-		public void windowActivated(final WindowEvent e)
-		{
+		public void windowActivated(final WindowEvent e) {
 			// TODO Auto-generated method stub
 
 		}

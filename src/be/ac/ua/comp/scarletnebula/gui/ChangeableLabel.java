@@ -20,8 +20,7 @@ import be.ac.ua.comp.scarletnebula.misc.Utils;
  * @author ives
  * 
  */
-public class ChangeableLabel extends JPanel
-{
+public class ChangeableLabel extends JPanel {
 	private static final long serialVersionUID = 1L;
 
 	final private JLabel contentLabel;
@@ -37,8 +36,7 @@ public class ChangeableLabel extends JPanel
 	 *            ChangeableLabel is executed.
 	 */
 	public ChangeableLabel(final String originalText,
-			final Executable<JLabel> executable)
-	{
+			final Executable<JLabel> executable) {
 		setLayout(new GridBagLayout());
 		contentLabel = new JLabel(originalText);
 
@@ -68,8 +66,7 @@ public class ChangeableLabel extends JPanel
 	 * @author ives
 	 * 
 	 */
-	private final class ExecuteActionListener<T> implements ActionListener
-	{
+	private final class ExecuteActionListener<T> implements ActionListener {
 		private final Executable<T> executable;
 		private final T argument;
 
@@ -84,8 +81,7 @@ public class ChangeableLabel extends JPanel
 		 *            Executable when the ActionListener fires
 		 */
 		private ExecuteActionListener(final Executable<T> executable,
-				final T argument)
-		{
+				final T argument) {
 			this.executable = executable;
 			this.argument = argument;
 		}
@@ -94,8 +90,7 @@ public class ChangeableLabel extends JPanel
 		 * @see ActionListener
 		 */
 		@Override
-		public void actionPerformed(final ActionEvent e)
-		{
+		public void actionPerformed(final ActionEvent e) {
 			executable.run(argument);
 		}
 	}
@@ -106,8 +101,7 @@ public class ChangeableLabel extends JPanel
 	 * @author ives
 	 * 
 	 */
-	private final class ExecuteMouseListener<T> implements MouseListener
-	{
+	private final class ExecuteMouseListener<T> implements MouseListener {
 		private final Executable<T> executable;
 		private final T argument;
 
@@ -120,8 +114,7 @@ public class ChangeableLabel extends JPanel
 		 *            The parameter given to the Executable's run method
 		 */
 		private ExecuteMouseListener(final Executable<T> executable,
-				final T argument)
-		{
+				final T argument) {
 			this.executable = executable;
 			this.argument = argument;
 		}
@@ -130,18 +123,15 @@ public class ChangeableLabel extends JPanel
 		 * @see MouseListener
 		 */
 		@Override
-		public void mouseClicked(final MouseEvent e)
-		{
+		public void mouseClicked(final MouseEvent e) {
 		}
 
 		/**
 		 * @see MouseListener
 		 */
 		@Override
-		public void mousePressed(final MouseEvent e)
-		{
-			if (e.getClickCount() == 2)
-			{
+		public void mousePressed(final MouseEvent e) {
+			if (e.getClickCount() == 2) {
 				executable.run(argument);
 			}
 		}
@@ -150,24 +140,21 @@ public class ChangeableLabel extends JPanel
 		 * @see MouseListener
 		 */
 		@Override
-		public void mouseReleased(final MouseEvent e)
-		{
+		public void mouseReleased(final MouseEvent e) {
 		}
 
 		/**
 		 * @see MouseListener
 		 */
 		@Override
-		public void mouseEntered(final MouseEvent e)
-		{
+		public void mouseEntered(final MouseEvent e) {
 		}
 
 		/**
 		 * @see MouseListener
 		 */
 		@Override
-		public void mouseExited(final MouseEvent e)
-		{
+		public void mouseExited(final MouseEvent e) {
 		}
 	}
 

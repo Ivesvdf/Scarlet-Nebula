@@ -8,12 +8,10 @@ import javax.swing.SwingConstants;
 
 import be.ac.ua.comp.scarletnebula.misc.Utils;
 
-public class ThrobberBarWithText extends JLabel
-{
+public class ThrobberBarWithText extends JLabel {
 	private static final long serialVersionUID = 1L;
 
-	public ThrobberBarWithText(final String text)
-	{
+	public ThrobberBarWithText(final String text) {
 		super(text, Utils.icon("throbber.gif"), SwingConstants.CENTER);
 		setOpaque(true);
 		setBackground(new Color(255, 255, 255));

@@ -6,11 +6,9 @@ import java.util.Arrays;
 
 import org.junit.Test;
 
-public class DroppingFifoQueueTest
-{
+public class DroppingFifoQueueTest {
 	@Test
-	public void basicTest()
-	{
+	public void basicTest() {
 		final DroppingFifoQueue<Integer> queue = new DroppingFifoQueue<Integer>(
 				6);
 
@@ -34,8 +32,7 @@ public class DroppingFifoQueueTest
 		queue.add(93);
 		assertEquals(Arrays.asList(98, 97, 96, 95, 94, 93), queue.asList());
 
-		for (int i = 0; i < 100; i++)
-		{
+		for (int i = 0; i < 100; i++) {
 			queue.add(35);
 		}
 

@@ -18,22 +18,17 @@ import be.ac.ua.comp.scarletnebula.gui.NotPromptingJschUserInfo;
 
 import com.jcraft.jsch.Channel;
 
-public class ServerStatisticsManager
-{
-	public interface NoStatisticsListener
-	{
+public class ServerStatisticsManager {
+	public interface NoStatisticsListener {
 		public void connectionFailed(ServerStatisticsManager manager);
 	}
 
-	private final class PollingRunnable implements Runnable
-	{
+	private final class PollingRunnable implements Runnable {
 		private boolean stop = false;
 
 		@Override
-		public void run()
-		{
-			try
-			{
+		public void run() {
+			try {
 				final SSHCommandConnection connection = (SSHCommandConnection) server
 						.newCommandConnection(new NotPromptingJschUserInfo());
 				final ChannelInputStreamTuple tup = connection
@@ -46,20 +41,16 @@ public class ServerStatisticsManager
 				final int buffersize = 1024;
 				final byte[] tmp = new byte[buffersize];
 
-				while (!stop)
-				{
-					while (pollingInputStream.available() > 0)
-					{
+				while (!stop) {
+					while (pollingInputStream.available() > 0) {
 						final int i = pollingInputStream.read(tmp, 0,
 								buffersize);
-						if (i < 0)
-						{
+						if (i < 0) {
 							break;
 						}
 						result.append(new String(tmp, 0, i));
 						// Split on newlines
-						while (result.indexOf("\n") >= 0)
-						{
+						while (result.indexOf("\n") >= 0) {
 							final int nlPos = result.indexOf("\n");
 							final String before = result.substring(0, nlPos);
 							newDatapoint(before);
@@ -68,45 +59,34 @@ public class ServerStatisticsManager
 							result = new StringBuilder(after);
 						}
 					}
-					if (sshChannel.isClosed())
-					{
+					if (sshChannel.isClosed()) {
 						log.warn("SSH Channel was closed.");
 						break;
 					}
-					try
-					{
+					try {
 						Thread.sleep(1000);
-					}
-					catch (final Exception ee)
-					{
+					} catch (final Exception ee) {
 					}
 				}
 				sshChannel.disconnect();
 
-			}
-			catch (final Exception e)
-			{
-				for (final NoStatisticsListener listener : noStatisticsListeners)
-				{
+			} catch (final Exception e) {
+				for (final NoStatisticsListener listener : noStatisticsListeners) {
 					log.info("Notifying listener of server statistics failure.");
 					listener.connectionFailed(ServerStatisticsManager.this);
 				}
 
-				if (e.getCause() == null)
-				{
+				if (e.getCause() == null) {
 					log.error("Problem executing continuous command."
 							+ e.getLocalizedMessage());
-				}
-				else
-				{
+				} else {
 					log.error("Problem executing continuous command."
 							+ e.getCause().getLocalizedMessage());
 				}
 			}
 		}
 
-		public void pleaseStop()
-		{
+		public void pleaseStop() {
 			stop = true;
 		}
 	}
@@ -123,28 +103,24 @@ public class ServerStatisticsManager
 	private final Collection<NoStatisticsListener> noStatisticsListeners = new LinkedList<NoStatisticsListener>();
 	private PollingRunnable pollingRunnable;
 
-	ServerStatisticsManager(final Server server)
-	{
+	ServerStatisticsManager(final Server server) {
 		this.server = server;
 
 		startPolling();
 	}
 
-	private void startPolling()
-	{
+	private void startPolling() {
 		pollingRunnable = new PollingRunnable();
 		final Thread readerThread = new Thread(pollingRunnable);
 		readerThread.start();
 		log.info("Starting polling thread");
 	}
 
-	private void newDatapoint(final String stringRepresentation)
-	{
+	private void newDatapoint(final String stringRepresentation) {
 		final Datapoint datapoint = Datapoint.fromJson(stringRepresentation);
 
 		final String datastreamName = datapoint.getDatastreamName();
-		if (!availableStreams.containsKey(datastreamName))
-		{
+		if (!availableStreams.containsKey(datastreamName)) {
 			log.info("Registering new stream " + datastreamName);
 			updateNewDatastreamObservers(datapoint);
 			final Datastream newDatastream = new Datastream(datapoint);
@@ -152,11 +128,9 @@ public class ServerStatisticsManager
 
 			// If the streamname appears in the futureHookups, add the listeners
 			// for that streamname
-			if (futureHookups.containsKey(datastreamName))
-			{
+			if (futureHookups.containsKey(datastreamName)) {
 				for (final NewDatapointListener listener : futureHookups
-						.get(datastreamName))
-				{
+						.get(datastreamName)) {
 					log.info("Adding future hookup listener to newly created stream.");
 					newDatastream.addNewDatapointListener(listener);
 				}
@@ -167,26 +141,21 @@ public class ServerStatisticsManager
 		availableStreams.get(datastreamName).newDatapoint(datapoint);
 	}
 
-	public void addNewDatastreamListener(final NewDatastreamListener listener)
-	{
+	public void addNewDatastreamListener(final NewDatastreamListener listener) {
 		newDatastreamListeners.add(listener);
 	}
 
 	public void addDeleteDatastreamListener(
-			final DeleteDatastreamListener listener)
-	{
+			final DeleteDatastreamListener listener) {
 		deleteDatastreamListeners.add(listener);
 	}
 
-	public void addNoStatisticsListener(final NoStatisticsListener listener)
-	{
+	public void addNoStatisticsListener(final NoStatisticsListener listener) {
 		noStatisticsListeners.add(listener);
 	}
 
-	private void updateNewDatastreamObservers(final Datapoint datapoint)
-	{
-		for (final NewDatastreamListener listener : newDatastreamListeners)
-		{
+	private void updateNewDatastreamObservers(final Datapoint datapoint) {
+		for (final NewDatastreamListener listener : newDatastreamListeners) {
 			listener.newDataStream(datapoint);
 		}
 	}
@@ -194,14 +163,12 @@ public class ServerStatisticsManager
 	/**
 	 * Stops the polling thead and closes the SSH connection.
 	 */
-	public void stop()
-	{
+	public void stop() {
 		log.info("Stopping polling thread");
 		pollingRunnable.pleaseStop();
 	}
 
-	public Collection<String> getAvailableDatastreams()
-	{
+	public Collection<String> getAvailableDatastreams() {
 		return availableStreams.keySet();
 	}
 
@@ -212,8 +179,7 @@ public class ServerStatisticsManager
 	 * @author ives
 	 * 
 	 */
-	public interface NewDatastreamListener
-	{
+	public interface NewDatastreamListener {
 		/**
 		 * Called when a new datastream is registered, together with the first
 		 * point in that datastream. Do *not* use the value in this point as an
@@ -227,8 +193,7 @@ public class ServerStatisticsManager
 		public void newDataStream(Datapoint datapoint);
 	}
 
-	public interface DeleteDatastreamListener
-	{
+	public interface DeleteDatastreamListener {
 		/**
 		 * Called when a datastream is removed (when the corresponding graphs
 		 * should no longer be displayed)
@@ -249,19 +214,14 @@ public class ServerStatisticsManager
 	 * @param datastream
 	 */
 	public void addNewDatapointListener(final NewDatapointListener listener,
-			final String datastream)
-	{
-		if (availableStreams.containsKey(datastream))
-		{
+			final String datastream) {
+		if (availableStreams.containsKey(datastream)) {
 			availableStreams.get(datastream).addNewDatapointListener(listener);
-		}
-		else
-		{
+		} else {
 			log.info("Adding stream " + datastream
 					+ " to be hooked when it arrives.");
 
-			if (!futureHookups.containsKey(datastream))
-			{
+			if (!futureHookups.containsKey(datastream)) {
 				futureHookups.put(datastream,
 						new ArrayList<NewDatapointListener>());
 			}
@@ -269,34 +229,26 @@ public class ServerStatisticsManager
 		}
 	}
 
-	public Datastream getDatastream(final String streamname)
-	{
+	public Datastream getDatastream(final String streamname) {
 		return availableStreams.get(streamname);
 	}
 
-	public List<TimedDatapoint> getHistoricalDatapoints(final String streamname)
-	{
+	public List<TimedDatapoint> getHistoricalDatapoints(final String streamname) {
 		List<TimedDatapoint> datapoints;
 
-		if (availableStreams.containsKey(streamname))
-		{
+		if (availableStreams.containsKey(streamname)) {
 			datapoints = availableStreams.get(streamname)
 					.getRecentlyProcessedDatapoints();
-		}
-		else
-		{
+		} else {
 			datapoints = new ArrayList<TimedDatapoint>();
 		}
 
 		return datapoints;
 	}
 
-	public void reset()
-	{
-		for (final String streamname : availableStreams.keySet())
-		{
-			for (final DeleteDatastreamListener listener : deleteDatastreamListeners)
-			{
+	public void reset() {
+		for (final String streamname : availableStreams.keySet()) {
+			for (final DeleteDatastreamListener listener : deleteDatastreamListeners) {
 				listener.deleteDataStream(streamname);
 			}
 		}
@@ -305,14 +257,11 @@ public class ServerStatisticsManager
 		startPolling();
 	}
 
-	public Datastream.WarnLevel getHighestWarnLevel()
-	{
+	public Datastream.WarnLevel getHighestWarnLevel() {
 		Datastream.WarnLevel highestWarnLevel = Datastream.WarnLevel.NONE;
 
-		for (final Datastream datastream : availableStreams.values())
-		{
-			if (datastream.getCurrentWarnLevel().compareTo(highestWarnLevel) > 0)
-			{
+		for (final Datastream datastream : availableStreams.values()) {
+			if (datastream.getCurrentWarnLevel().compareTo(highestWarnLevel) > 0) {
 				highestWarnLevel = datastream.getCurrentWarnLevel();
 			}
 		}

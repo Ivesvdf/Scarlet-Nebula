@@ -13,14 +13,12 @@ import be.ac.ua.comp.scarletnebula.gui.BetterTextLabel;
 import be.ac.ua.comp.scarletnebula.wizard.DataRecorder;
 import be.ac.ua.comp.scarletnebula.wizard.WizardPage;
 
-class ChooseProviderPage extends WizardPage
-{
+class ChooseProviderPage extends WizardPage {
 	private static final long serialVersionUID = 1L;
 	final JList providerList = new JList(CloudManager.get()
 			.getLinkedCloudProviderNames().toArray());
 
-	ChooseProviderPage()
-	{
+	ChooseProviderPage() {
 		// Create the combo box, select item at index 4.
 		// Indices start at 0, so 4 specifies the pig.
 		providerList.setName("provider");
@@ -41,8 +39,7 @@ class ChooseProviderPage extends WizardPage
 	}
 
 	@Override
-	public WizardPage next(final DataRecorder recorder)
-	{
+	public WizardPage next(final DataRecorder recorder) {
 		final AddServerWizardDataRecorder rec = (AddServerWizardDataRecorder) recorder;
 
 		final String providername = (String) providerList.getSelectedValue();

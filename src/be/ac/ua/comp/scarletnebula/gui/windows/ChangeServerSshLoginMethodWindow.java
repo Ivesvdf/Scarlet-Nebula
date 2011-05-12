@@ -29,14 +29,11 @@ import be.ac.ua.comp.scarletnebula.gui.ButtonFactory;
 import com.jgoodies.forms.builder.DefaultFormBuilder;
 import com.jgoodies.forms.layout.FormLayout;
 
-public class ChangeServerSshLoginMethodWindow extends JDialog
-{
+public class ChangeServerSshLoginMethodWindow extends JDialog {
 	private final class UsePasswordButtonActionListener implements
-			ActionListener
-	{
+			ActionListener {
 		@Override
-		public void actionPerformed(final ActionEvent e)
-		{
+		public void actionPerformed(final ActionEvent e) {
 			keyUsername.setEnabled(false);
 			keypairCombo.setEnabled(false);
 			normalUsername.setEnabled(true);
@@ -44,11 +41,9 @@ public class ChangeServerSshLoginMethodWindow extends JDialog
 		}
 	}
 
-	private final class UseKeyButtonActionListener implements ActionListener
-	{
+	private final class UseKeyButtonActionListener implements ActionListener {
 		@Override
-		public void actionPerformed(final ActionEvent e)
-		{
+		public void actionPerformed(final ActionEvent e) {
 			keyUsername.setEnabled(true);
 			keypairCombo.setEnabled(true);
 			normalUsername.setEnabled(false);
@@ -73,8 +68,7 @@ public class ChangeServerSshLoginMethodWindow extends JDialog
 	private int actionId = 1;
 
 	public ChangeServerSshLoginMethodWindow(final JDialog parent,
-			final Server server)
-	{
+			final Server server) {
 		super(parent, "Change login method", true);
 		setSize(400, 350);
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
@@ -86,34 +80,28 @@ public class ChangeServerSshLoginMethodWindow extends JDialog
 
 		final char standardEchoChar = normalPassword.getEchoChar();
 
-		normalPassword.addMouseListener(new MouseListener()
-		{
+		normalPassword.addMouseListener(new MouseListener() {
 			@Override
-			public void mouseReleased(final MouseEvent e)
-			{
+			public void mouseReleased(final MouseEvent e) {
 			}
 
 			@Override
-			public void mousePressed(final MouseEvent e)
-			{
+			public void mousePressed(final MouseEvent e) {
 
 			}
 
 			@Override
-			public void mouseExited(final MouseEvent e)
-			{
+			public void mouseExited(final MouseEvent e) {
 				normalPassword.setEchoChar(standardEchoChar);
 			}
 
 			@Override
-			public void mouseEntered(final MouseEvent e)
-			{
+			public void mouseEntered(final MouseEvent e) {
 				normalPassword.setEchoChar('\0');
 			}
 
 			@Override
-			public void mouseClicked(final MouseEvent e)
-			{
+			public void mouseClicked(final MouseEvent e) {
 			}
 		});
 
@@ -170,13 +158,10 @@ public class ChangeServerSshLoginMethodWindow extends JDialog
 		final UseKeyButtonActionListener useKeyButtonActionListener = new UseKeyButtonActionListener();
 		useKeyButton.addActionListener(useKeyButtonActionListener);
 
-		if (server.usesSshPassword())
-		{
+		if (server.usesSshPassword()) {
 			useLoginButton.setSelected(true);
 			usePasswordButtonActionListener.actionPerformed(null);
-		}
-		else
-		{
+		} else {
 			useKeyButton.setSelected(true);
 			useKeyButtonActionListener.actionPerformed(null);
 		}
@@ -199,26 +184,21 @@ public class ChangeServerSshLoginMethodWindow extends JDialog
 		prefillTextfields(server);
 	}
 
-	private void prefillTextfields(final Server server)
-	{
+	private void prefillTextfields(final Server server) {
 		normalUsername.setText(server.getSshUsername());
 		normalPassword.setText(server.getSshPassword());
 		keyUsername.setText(server.getSshUsername());
 		keypairCombo.setSelectedItem(server.getKeypair());
 	}
 
-	public void saveAndClose()
-	{
-		if (radioButtonGroup.getSelection() == useKeyButton.getModel())
-		{
+	public void saveAndClose() {
+		if (radioButtonGroup.getSelection() == useKeyButton.getModel()) {
 			// Use key
 			final String keyname = (String) keypairCombo.getSelectedItem();
 			final String username = keyUsername.getText();
 			server.assureKeypairLogin(username, keyname);
 			server.store();
-		}
-		else
-		{
+		} else {
 			// Use login & password
 			final String username = normalUsername.getText();
 			final String password = new String(normalPassword.getPassword());
@@ -229,30 +209,25 @@ public class ChangeServerSshLoginMethodWindow extends JDialog
 		dispose();
 	}
 
-	private JPanel getButtonPanel()
-	{
+	private JPanel getButtonPanel() {
 		final JPanel buttonPanel = new JPanel();
 		buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.LINE_AXIS));
 		buttonPanel.add(Box.createHorizontalGlue());
 
 		final JButton cancelButton = ButtonFactory.createCancelButton();
 		cancelButton.setAlignmentY(Component.BOTTOM_ALIGNMENT);
-		cancelButton.addActionListener(new ActionListener()
-		{
+		cancelButton.addActionListener(new ActionListener() {
 			@Override
-			public void actionPerformed(final ActionEvent e)
-			{
+			public void actionPerformed(final ActionEvent e) {
 				dispose();
 			}
 		});
 
 		final JButton okButton = ButtonFactory.createOkButton();
 		okButton.setAlignmentY(Component.BOTTOM_ALIGNMENT);
-		okButton.addActionListener(new ActionListener()
-		{
+		okButton.addActionListener(new ActionListener() {
 			@Override
-			public void actionPerformed(final ActionEvent e)
-			{
+			public void actionPerformed(final ActionEvent e) {
 				saveAndClose();
 			}
 		});
@@ -267,15 +242,12 @@ public class ChangeServerSshLoginMethodWindow extends JDialog
 		return buttonPanel;
 	}
 
-	public void addActionListener(final ActionListener actionListener)
-	{
+	public void addActionListener(final ActionListener actionListener) {
 		actionListeners.add(actionListener);
 	}
 
-	private void fireActionListeners()
-	{
-		for (final ActionListener actionListener : actionListeners)
-		{
+	private void fireActionListeners() {
+		for (final ActionListener actionListener : actionListeners) {
 			actionListener.actionPerformed(new ActionEvent(this, actionId++,
 					"Window closed"));
 		}

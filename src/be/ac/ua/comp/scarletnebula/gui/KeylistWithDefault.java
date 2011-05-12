@@ -20,44 +20,34 @@ import javax.swing.table.TableCellRenderer;
 import be.ac.ua.comp.scarletnebula.core.CloudProvider;
 import be.ac.ua.comp.scarletnebula.core.KeyManager;
 
-public class KeylistWithDefault extends JTable
-{
+public class KeylistWithDefault extends JTable {
 	private static final long serialVersionUID = 1L;
 	private final ButtonGroup radioButtonGroup;
 	private final CloudProvider provider;
 	private final DefaultTableModel datamodel = new DefaultTableModel();
 
-	class RadioButtonRenderer implements TableCellRenderer
-	{
+	class RadioButtonRenderer implements TableCellRenderer {
 		@Override
 		public Component getTableCellRendererComponent(final JTable table,
 				final Object value, final boolean isSelected,
-				final boolean hasFocus, final int row, final int column)
-		{
-			if (value == null)
-			{
+				final boolean hasFocus, final int row, final int column) {
+			if (value == null) {
 				return null;
 			}
 
 			final JRadioButton radioButton = (JRadioButton) value;
 			radioButton.setOpaque(true);
 
-			if (isSelected)
-			{
+			if (isSelected) {
 				radioButton.setBackground(selectionBackground);
 				radioButton.setForeground(selectionForeground);
-			}
-			else
-			{
+			} else {
 				radioButton.setForeground(Color.black);
 
 				// Fix for the row background colors.
-				if (row % 2 == 1)
-				{
+				if (row % 2 == 1) {
 					radioButton.setBackground(Color.WHITE);
-				}
-				else
-				{
+				} else {
 					radioButton.setBackground(table.getBackground());
 				}
 			}
@@ -65,23 +55,19 @@ public class KeylistWithDefault extends JTable
 		}
 	}
 
-	class RadioButtonEditor extends DefaultCellEditor implements ItemListener
-	{
+	class RadioButtonEditor extends DefaultCellEditor implements ItemListener {
 		private static final long serialVersionUID = 1L;
 		private JRadioButton button;
 
-		public RadioButtonEditor(final JCheckBox checkBox)
-		{
+		public RadioButtonEditor(final JCheckBox checkBox) {
 			super(checkBox);
 		}
 
 		@Override
 		public Component getTableCellEditorComponent(final JTable table,
 				final Object value, final boolean isSelected, final int row,
-				final int column)
-		{
-			if (value == null)
-			{
+				final int column) {
+			if (value == null) {
 				return null;
 			}
 			button = (JRadioButton) value;
@@ -90,21 +76,18 @@ public class KeylistWithDefault extends JTable
 		}
 
 		@Override
-		public Object getCellEditorValue()
-		{
+		public Object getCellEditorValue() {
 			button.removeItemListener(this);
 			return button;
 		}
 
 		@Override
-		public void itemStateChanged(final ItemEvent e)
-		{
+		public void itemStateChanged(final ItemEvent e) {
 			super.fireEditingStopped();
 		}
 	}
 
-	public KeylistWithDefault(final CloudProvider provider)
-	{
+	public KeylistWithDefault(final CloudProvider provider) {
 		this.provider = provider;
 
 		datamodel.addColumn("Default");
@@ -115,8 +98,7 @@ public class KeylistWithDefault extends JTable
 		final String defaultKey = provider.getDefaultKeypair();
 		final Collection<String> keys = KeyManager.getKeyNames(provider
 				.getName());
-		for (final String keyname : keys)
-		{
+		for (final String keyname : keys) {
 			add(keyname, keyname.equals(defaultKey));
 		}
 
@@ -130,31 +112,26 @@ public class KeylistWithDefault extends JTable
 		setCellSelectionEnabled(false);
 		setRowSelectionAllowed(true);
 
-		if (!keys.isEmpty())
-		{
+		if (!keys.isEmpty()) {
 			setRowSelectionInterval(0, 0);
 		}
 	}
 
-	public void add(final String keyname, final boolean defaultKey)
-	{
+	public void add(final String keyname, final boolean defaultKey) {
 		final JRadioButton radioButton = new JRadioButton();
 
 		radioButtonGroup.add(radioButton);
 
 		// The default should obviously be checked...
-		if (defaultKey)
-		{
+		if (defaultKey) {
 			radioButton.setSelected(true);
 		}
 
 		// As soon as the user changes the default, it immediately changes
 		// on the provider's side.
-		radioButton.addActionListener(new ActionListener()
-		{
+		radioButton.addActionListener(new ActionListener() {
 			@Override
-			public void actionPerformed(final ActionEvent e)
-			{
+			public void actionPerformed(final ActionEvent e) {
 				provider.setDefaultKeypair(keyname);
 				provider.store();
 				repaint(); // Slight hack, acts really weirdly otherwise...
@@ -166,13 +143,11 @@ public class KeylistWithDefault extends JTable
 	/**
 	 * @return A collection containing all selected keynames.
 	 */
-	public Collection<String> getSelection()
-	{
+	public Collection<String> getSelection() {
 		final int[] selectedRows = getSelectedRows();
 
 		final Collection<String> keynames = new ArrayList<String>();
-		for (final int rowIndex : selectedRows)
-		{
+		for (final int rowIndex : selectedRows) {
 			keynames.add((String) datamodel.getValueAt(rowIndex, 1));
 		}
 		return keynames;
@@ -184,12 +159,9 @@ public class KeylistWithDefault extends JTable
 	 * @param key
 	 *            The key to remove
 	 */
-	public void removeKey(final String key)
-	{
-		for (int row = 0; row < datamodel.getRowCount(); row++)
-		{
-			if (datamodel.getValueAt(row, 1).equals(key))
-			{
+	public void removeKey(final String key) {
+		for (int row = 0; row < datamodel.getRowCount(); row++) {
+			if (datamodel.getValueAt(row, 1).equals(key)) {
 				datamodel.removeRow(row);
 			}
 		}
@@ -199,21 +171,17 @@ public class KeylistWithDefault extends JTable
 	 * Checks to see if there is a default key present. If no such key is
 	 * present, the first one in the list is made default.
 	 */
-	public void assureDefaultKey()
-	{
+	public void assureDefaultKey() {
 		boolean noneSelected = true;
 
-		for (int row = 0; row < datamodel.getRowCount(); row++)
-		{
-			if (((JRadioButton) datamodel.getValueAt(row, 0)).isSelected())
-			{
+		for (int row = 0; row < datamodel.getRowCount(); row++) {
+			if (((JRadioButton) datamodel.getValueAt(row, 0)).isSelected()) {
 				noneSelected = false;
 			}
 		}
 
 		// If no keys are default, make the first one in the list default...
-		if (noneSelected && datamodel.getRowCount() > 0)
-		{
+		if (noneSelected && datamodel.getRowCount() > 0) {
 			((JRadioButton) datamodel.getValueAt(0, 0)).setSelected(true);
 		}
 	}

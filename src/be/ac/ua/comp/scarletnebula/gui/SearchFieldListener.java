@@ -7,22 +7,19 @@ import javax.swing.JTextField;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
-class SearchFieldListener implements ActionListener, DocumentListener
-{
+class SearchFieldListener implements ActionListener, DocumentListener {
 	private final JTextField searchField;
 	ServerListModel serverListModel;
 
 	public SearchFieldListener(final JTextField inputSearchField,
-			final ServerListModel serverListModel)
-	{
+			final ServerListModel serverListModel) {
 		this.searchField = inputSearchField;
 		this.serverListModel = serverListModel;
 	}
 
 	// Search on ENTER press
 	@Override
-	public void actionPerformed(final ActionEvent e)
-	{
+	public void actionPerformed(final ActionEvent e) {
 		final String servername = searchField.getText();
 
 		// listModel.insertElementAt(searchField.getText(), index);
@@ -37,20 +34,17 @@ class SearchFieldListener implements ActionListener, DocumentListener
 
 	// Required by DocumentListener.
 	@Override
-	public void removeUpdate(final DocumentEvent e)
-	{
+	public void removeUpdate(final DocumentEvent e) {
 	}
 
 	@Override
-	public void insertUpdate(final DocumentEvent e)
-	{
+	public void insertUpdate(final DocumentEvent e) {
 		// TODO Auto-generated method stub
 
 	}
 
 	@Override
-	public void changedUpdate(final DocumentEvent e)
-	{
+	public void changedUpdate(final DocumentEvent e) {
 		// TODO Auto-generated method stub
 
 	}

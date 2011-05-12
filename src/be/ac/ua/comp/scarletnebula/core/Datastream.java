@@ -8,19 +8,15 @@ import java.util.List;
 import be.ac.ua.comp.scarletnebula.gui.NewDatapointListener;
 import be.ac.ua.comp.scarletnebula.misc.DroppingFifoQueue;
 
-public class Datastream
-{
-	public class TimedDatapoint extends Datapoint
-	{
+public class Datastream {
+	public class TimedDatapoint extends Datapoint {
 		final long timeMs;
 
-		public long getTimeMs()
-		{
+		public long getTimeMs() {
 			return timeMs;
 		}
 
-		public TimedDatapoint(final Datapoint dp)
-		{
+		public TimedDatapoint(final Datapoint dp) {
 			super(dp.datapointType, dp.datastream, dp.value, dp.lowWarnLevel,
 					dp.mediumWarnLevel, dp.highWarnLevel, dp.max);
 
@@ -29,8 +25,7 @@ public class Datastream
 		}
 	}
 
-	public enum WarnLevel
-	{
+	public enum WarnLevel {
 		NONE, LOW, MEDIUM, HIGH;
 	};
 
@@ -45,38 +40,31 @@ public class Datastream
 			120);
 	private WarnLevel currentWarnLevel = WarnLevel.NONE;
 
-	public WarnLevel getCurrentWarnLevel()
-	{
+	public WarnLevel getCurrentWarnLevel() {
 		return currentWarnLevel;
 	}
 
-	public String getStreamname()
-	{
+	public String getStreamname() {
 		return streamname;
 	}
 
-	public Double getMax()
-	{
+	public Double getMax() {
 		return max;
 	}
 
-	public Double getLowWarnLevel()
-	{
+	public Double getLowWarnLevel() {
 		return lowWarnLevel;
 	}
 
-	public Double getMediumWarnLevel()
-	{
+	public Double getMediumWarnLevel() {
 		return mediumWarnLevel;
 	}
 
-	public Double getHighWarnLevel()
-	{
+	public Double getHighWarnLevel() {
 		return highWarnLevel;
 	}
 
-	public Datastream(final Datapoint datapoint)
-	{
+	public Datastream(final Datapoint datapoint) {
 		this.max = datapoint.max;
 		this.lowWarnLevel = datapoint.lowWarnLevel;
 		this.mediumWarnLevel = datapoint.mediumWarnLevel;
@@ -85,43 +73,31 @@ public class Datastream
 		this.type = datapoint.datapointType;
 	}
 
-	public Datapoint.Type getType()
-	{
+	public Datapoint.Type getType() {
 		return type;
 	}
 
-	public void addNewDatapointListener(final NewDatapointListener listener)
-	{
+	public void addNewDatapointListener(final NewDatapointListener listener) {
 		newDatapointListeners.add(listener);
 	}
 
-	protected void updateNewDatapointObservers(final Datapoint datapoint)
-	{
-		for (final NewDatapointListener listener : newDatapointListeners)
-		{
+	protected void updateNewDatapointObservers(final Datapoint datapoint) {
+		for (final NewDatapointListener listener : newDatapointListeners) {
 			listener.newDataPoint(datapoint);
 		}
 	}
 
-	public void newDatapoint(final Datapoint datapoint)
-	{
+	public void newDatapoint(final Datapoint datapoint) {
 		if (datapoint.getHighWarnLevel() != null
-				&& datapoint.getValue() > datapoint.getHighWarnLevel())
-		{
+				&& datapoint.getValue() > datapoint.getHighWarnLevel()) {
 			currentWarnLevel = WarnLevel.HIGH;
-		}
-		else if (datapoint.getMediumWarnLevel() != null
-				&& datapoint.getValue() > datapoint.getMediumWarnLevel())
-		{
+		} else if (datapoint.getMediumWarnLevel() != null
+				&& datapoint.getValue() > datapoint.getMediumWarnLevel()) {
 			currentWarnLevel = WarnLevel.MEDIUM;
-		}
-		else if (datapoint.getLowWarnLevel() != null
-				&& datapoint.getValue() > datapoint.getLowWarnLevel())
-		{
+		} else if (datapoint.getLowWarnLevel() != null
+				&& datapoint.getValue() > datapoint.getLowWarnLevel()) {
 			currentWarnLevel = WarnLevel.LOW;
-		}
-		else
-		{
+		} else {
 			currentWarnLevel = WarnLevel.NONE;
 		}
 
@@ -129,8 +105,7 @@ public class Datastream
 		updateNewDatapointObservers(datapoint);
 	}
 
-	public List<TimedDatapoint> getRecentlyProcessedDatapoints()
-	{
+	public List<TimedDatapoint> getRecentlyProcessedDatapoints() {
 		return processedDatapoints.asList();
 	}
 }

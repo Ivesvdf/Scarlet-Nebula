@@ -23,8 +23,7 @@ import org.jfree.ui.RectangleInsets;
  * @author ives
  * 
  */
-public class BareGraph extends Graph
-{
+public class BareGraph extends Graph {
 	private final DateAxis domain = new DateAxis();
 	private final NumberAxis range = new NumberAxis();
 
@@ -34,8 +33,7 @@ public class BareGraph extends Graph
 	 * @param maximumAge
 	 *            The age after which data is no longer displayed in the graph
 	 */
-	public BareGraph(final long maximumAge)
-	{
+	public BareGraph(final long maximumAge) {
 		super(maximumAge);
 		domain.setVisible(false);
 		domain.setAutoRange(true);
@@ -53,8 +51,7 @@ public class BareGraph extends Graph
 	 * @see Graph
 	 */
 	@Override
-	public ChartPanel getChartPanel()
-	{
+	public ChartPanel getChartPanel() {
 		final XYPlot plot = new XYPlot(dataset, domain, range, renderer);
 		plot.setBackgroundPaint(Color.darkGray);
 		plot.setDomainGridlinePaint(Color.white);

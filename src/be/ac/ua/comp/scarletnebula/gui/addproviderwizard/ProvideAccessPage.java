@@ -13,23 +13,18 @@ import be.ac.ua.comp.scarletnebula.wizard.WizardPage;
 import com.jgoodies.forms.builder.DefaultFormBuilder;
 import com.jgoodies.forms.layout.FormLayout;
 
-public class ProvideAccessPage extends WizardPage
-{
+public class ProvideAccessPage extends WizardPage {
 	private static final long serialVersionUID = 1255938294405602870L;
 	JTextField apiKey = new JTextField();
 	JTextField apiSecret = new JTextField();
 
-	public ProvideAccessPage(final AddProviderWizardDataRecorder rec)
-	{
+	public ProvideAccessPage(final AddProviderWizardDataRecorder rec) {
 		setLayout(new BorderLayout());
 
 		final String toptext;
-		if (rec.getTemplate().getAccessMethod() == AccessMethod.KEY)
-		{
+		if (rec.getTemplate().getAccessMethod() == AccessMethod.KEY) {
 			toptext = "Please enter the API Access Key that identifies your account and the API Secret that represents your password.";
-		}
-		else
-		{
+		} else {
 			toptext = "Enter the email address and password you used to register with "
 					+ rec.getTemplate().getName() + ".";
 		}
@@ -48,13 +43,10 @@ public class ProvideAccessPage extends WizardPage
 
 		final String loginLabel;
 		final String passwordLabel;
-		if (rec.getTemplate().getAccessMethod() == AccessMethod.KEY)
-		{
+		if (rec.getTemplate().getAccessMethod() == AccessMethod.KEY) {
 			loginLabel = "API Key";
 			passwordLabel = "API Secret";
-		}
-		else
-		{
+		} else {
 			loginLabel = "Email address";
 			passwordLabel = "Password";
 		}
@@ -67,8 +59,7 @@ public class ProvideAccessPage extends WizardPage
 	}
 
 	@Override
-	public WizardPage next(final DataRecorder recorder)
-	{
+	public WizardPage next(final DataRecorder recorder) {
 		final AddProviderWizardDataRecorder rec = (AddProviderWizardDataRecorder) recorder;
 		rec.setApiKey(apiKey.getText().trim());
 		rec.setApiSecret(apiSecret.getText().trim());

@@ -25,8 +25,7 @@ import be.ac.ua.comp.scarletnebula.misc.Utils;
 
 import com.jcraft.jsch.UserInfo;
 
-public class Server
-{
+public class Server {
 	private static Log log = LogFactory.getLog(Server.class);
 
 	private VirtualMachine serverImpl;
@@ -49,8 +48,7 @@ public class Server
 			final String inputFriendlyName, final Collection<String> tags,
 			final boolean useSshPassword, final String sshLogin,
 			final String sshPassword, final String vncPassword,
-			final String statisticsCommand, final String preferredDatastream)
-	{
+			final String statisticsCommand, final String preferredDatastream) {
 		provider = inputProvider;
 		keypair = inputKeypair;
 		serverImpl = server;
@@ -64,27 +62,20 @@ public class Server
 		setFriendlyName(inputFriendlyName);
 	}
 
-	public void sendFile(final String filename)
-	{
+	public void sendFile(final String filename) {
 	}
 
-	public ServerStatisticsManager getServerStatistics()
-	{
-		if (sshWillFail() || noConnection)
-		{
+	public ServerStatisticsManager getServerStatistics() {
+		if (sshWillFail() || noConnection) {
 			// Do nothing -- return null
 			serverStatisticsManager = null;
-		}
-		else if (serverStatisticsManager == null)
-		{
+		} else if (serverStatisticsManager == null) {
 			serverStatisticsManager = new ServerStatisticsManager(this);
 			serverStatisticsManager
-					.addNoStatisticsListener(new ServerStatisticsManager.NoStatisticsListener()
-					{
+					.addNoStatisticsListener(new ServerStatisticsManager.NoStatisticsListener() {
 						@Override
 						public void connectionFailed(
-								final ServerStatisticsManager manager)
-						{
+								final ServerStatisticsManager manager) {
 							log.info("Being notified of server statistics failure.");
 							noConnection = true;
 							serverChanged();
@@ -100,8 +91,7 @@ public class Server
 	 * 
 	 * @return True if the SSH connection will fail, false if it might succeed.
 	 */
-	public boolean sshWillFail()
-	{
+	public boolean sshWillFail() {
 		return getStatus() != VmState.RUNNING
 				|| sshLogin.isEmpty()
 				|| ((useSshPassword && sshPassword.isEmpty() || !useSshPassword
@@ -114,32 +104,23 @@ public class Server
 	 * @throws FileNotFoundException
 	 */
 	public CommandConnection newCommandConnection(final UserInfo ui)
-			throws Exception
-	{
+			throws Exception {
 		SSHCommandConnection rv = null;
 		String address;
 
-		if (serverImpl.getPublicDnsAddress() != null)
-		{
+		if (serverImpl.getPublicDnsAddress() != null) {
 			address = serverImpl.getPublicDnsAddress();
-		}
-		else if (serverImpl.getPublicIpAddresses().length >= 1)
-		{
+		} else if (serverImpl.getPublicIpAddresses().length >= 1) {
 			address = serverImpl.getPublicIpAddresses()[0];
-		}
-		else
-		{
+		} else {
 			log.warn("Cannot make SSH connection -- no address to connect to.");
 			return null;
 		}
 
-		if (usesSshPassword())
-		{
+		if (usesSshPassword()) {
 			rv = SSHCommandConnection.newConnectionWithPassword(address,
 					sshLogin, sshPassword, ui);
-		}
-		else
-		{
+		} else {
 			rv = SSHCommandConnection.newConnectionWithKey(address, sshLogin,
 					KeyManager.getKeyFilename(provider.getName(), keypair), ui);
 		}
@@ -155,21 +136,15 @@ public class Server
 	 * @throws IOException
 	 * @throws FileNotFoundException
 	 */
-	static Server load(final VirtualMachine server, final CloudProvider provider)
-	{
+	static Server load(final VirtualMachine server, final CloudProvider provider) {
 		final String propertiesfilename = getSaveFilename(provider, server);
 		final Properties props = new Properties();
-		try
-		{
+		try {
 			props.load(new FileInputStream(propertiesfilename));
-		}
-		catch (final FileNotFoundException e)
-		{
+		} catch (final FileNotFoundException e) {
 			log.error("Save file for server " + server + " not found");
 			// Just ignore if the file isn't found.
-		}
-		catch (final IOException e)
-		{
+		} catch (final IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -200,13 +175,11 @@ public class Server
 				preferredDatastream); // Datastream to show in small server
 	}
 
-	public boolean usesSshPassword()
-	{
+	public boolean usesSshPassword() {
 		return useSshPassword || keypair == null;
 	}
 
-	public String getPreferredDatastream()
-	{
+	public String getPreferredDatastream() {
 		return preferredDatastream;
 	}
 
@@ -219,34 +192,29 @@ public class Server
 	 * @return
 	 */
 	static String getSaveFilename(final CloudProvider provider,
-			final VirtualMachine server)
-	{
+			final VirtualMachine server) {
 		return provider.getSaveFileDir() + server.getProviderVirtualMachineId();
 	}
 
 	/**
 	 * Saves this server to its savefile.
 	 */
-	public void store()
-	{
+	public void store() {
 		// Write key to file
 		final String dir = provider.getSaveFileDir();
 		final File dirFile = new File(dir);
 
 		// Check if the key dir already exists
-		if (!dirFile.exists())
-		{
+		if (!dirFile.exists()) {
 			// If it does not exist, create the directory
-			if (!dirFile.mkdirs())
-			{
+			if (!dirFile.mkdirs()) {
 				log.fatal("Cannot make server directory!");
 				return;
 			}
 		}
 
 		// Write properties file.
-		try
-		{
+		try {
 			final Properties properties = new Properties();
 			properties.setProperty("friendlyName", getFriendlyName());
 			properties.setProperty("keypair", keypair);
@@ -265,14 +233,10 @@ public class Server
 					getSaveFilename(provider, serverImpl));
 			properties.store(outputstream, null);
 			outputstream.close();
-		}
-		catch (final FileNotFoundException e)
-		{
+		} catch (final FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}
-		catch (final IOException e)
-		{
+		} catch (final IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -284,24 +248,20 @@ public class Server
 	 * 
 	 * @return
 	 */
-	public String getUnfriendlyName()
-	{
+	public String getUnfriendlyName() {
 		return serverImpl.getProviderVirtualMachineId();
 	}
 
-	public Architecture getArchitecture()
-	{
+	public Architecture getArchitecture() {
 		return serverImpl.getArchitecture();
 	}
 
-	public Platform getPlatform()
-	{
+	public Platform getPlatform() {
 		return serverImpl.getPlatform();
 	}
 
 	@Override
-	public String toString()
-	{
+	public String toString() {
 		final String rv = serverImpl.getProviderVirtualMachineId() + " ("
 				+ serverImpl.getCurrentState() + ") @ "
 				+ serverImpl.getPublicDnsAddress();
@@ -311,8 +271,7 @@ public class Server
 	/**
 	 * @return A public DNS address for this server, null if none is available.
 	 */
-	public String getPublicDnsAddress()
-	{
+	public String getPublicDnsAddress() {
 		return serverImpl.getPublicDnsAddress();
 	}
 
@@ -320,22 +279,17 @@ public class Server
 	 * @return A list of public IP address for this server, empty array if none
 	 *         is available.
 	 */
-	public String[] getPublicIpAddresses()
-	{
+	public String[] getPublicIpAddresses() {
 		final String[] addresses = serverImpl.getPublicIpAddresses();
 
-		if (addresses == null)
-		{
+		if (addresses == null) {
 			return new String[0];
-		}
-		else
-		{
+		} else {
 			return addresses;
 		}
 	}
 
-	public String getStatisticsCommand()
-	{
+	public String getStatisticsCommand() {
 		return statisticsCommand;
 	}
 
@@ -344,16 +298,14 @@ public class Server
 	 * 
 	 * @param friendlyName
 	 */
-	final public void setFriendlyName(final String friendlyName)
-	{
+	final public void setFriendlyName(final String friendlyName) {
 		this.friendlyName = friendlyName;
 	}
 
 	/**
 	 * @return This server's friendly name
 	 */
-	final public String getFriendlyName()
-	{
+	final public String getFriendlyName() {
 		return friendlyName;
 	}
 
@@ -363,16 +315,14 @@ public class Server
 	 * @throws InternalException
 	 * @throws CloudException
 	 */
-	public void terminate() throws InternalException, CloudException
-	{
+	public void terminate() throws InternalException, CloudException {
 		provider.terminateServer(getUnfriendlyName());
 	}
 
 	/**
 	 * @return This server's status
 	 */
-	public VmState getStatus()
-	{
+	public VmState getStatus() {
 		return serverImpl.getCurrentState();
 	}
 
@@ -386,14 +336,12 @@ public class Server
 	 * @throws ServerDisappearedException
 	 */
 	public void refresh() throws InternalException, CloudException,
-			ServerDisappearedException
-	{
+			ServerDisappearedException {
 		final VirtualMachine refreshedServer = provider
 				.getServerImpl(getUnfriendlyName());
 
 		// If the sever disappeared in the mean while, throw an Exception
-		if (refreshedServer == null)
-		{
+		if (refreshedServer == null) {
 			throw new ServerDisappearedException(this);
 		}
 
@@ -406,24 +354,21 @@ public class Server
 	/**
 	 * @return The CloudProvider this server was started on
 	 */
-	public CloudProvider getCloud()
-	{
+	public CloudProvider getCloud() {
 		return provider;
 	}
 
 	/**
 	 * @return This server's size string
 	 */
-	public String getSize()
-	{
+	public String getSize() {
 		return serverImpl.getProduct().getName();
 	}
 
 	/**
 	 * @return This server's image id
 	 */
-	public String getImage()
-	{
+	public String getImage() {
 		return serverImpl.getProviderMachineImageId();
 	}
 
@@ -433,10 +378,8 @@ public class Server
 	 * @throws InternalException
 	 * @throws CloudException
 	 */
-	public void pause() throws InternalException, CloudException
-	{
-		if (serverImpl.isPausable())
-		{
+	public void pause() throws InternalException, CloudException {
+		if (serverImpl.isPausable()) {
 			provider.pause(this);
 		}
 
@@ -448,8 +391,7 @@ public class Server
 	 * @throws InternalException
 	 * @throws CloudException
 	 */
-	public void resume() throws InternalException, CloudException
-	{
+	public void resume() throws InternalException, CloudException {
 		provider.resume(this);
 
 		return;
@@ -461,8 +403,7 @@ public class Server
 	 * @throws CloudException
 	 * @throws InternalException
 	 */
-	public void reboot() throws CloudException, InternalException
-	{
+	public void reboot() throws CloudException, InternalException {
 		provider.reboot(this);
 	}
 
@@ -473,8 +414,7 @@ public class Server
 	 * @param sco
 	 *            The observer that will be notified when the server changes.
 	 */
-	public void addServerChangedObserver(final ServerChangedObserver sco)
-	{
+	public void addServerChangedObserver(final ServerChangedObserver sco) {
 		serverChangedObservers.add(sco);
 	}
 
@@ -484,18 +424,15 @@ public class Server
 	 * @param sco
 	 *            The observer that will be deleted.
 	 */
-	public void removeServerChangedObserver(final ServerChangedObserver sco)
-	{
+	public void removeServerChangedObserver(final ServerChangedObserver sco) {
 		serverChangedObservers.remove(sco);
 	}
 
 	/**
 	 * Notify all observers the server has changed.
 	 */
-	public void serverChanged()
-	{
-		for (final ServerChangedObserver obs : serverChangedObservers)
-		{
+	public void serverChanged() {
+		for (final ServerChangedObserver obs : serverChangedObservers) {
 			obs.serverChanged(this);
 		}
 	}
@@ -506,8 +443,7 @@ public class Server
 	 * maintains. This obviously does not affect the server's running state in
 	 * any way.
 	 */
-	public void unlink()
-	{
+	public void unlink() {
 		getCloud().unlink(this);
 		stopConnections();
 	}
@@ -519,70 +455,50 @@ public class Server
 	 * @param name
 	 * @return
 	 */
-	public static boolean exists(final String name)
-	{
+	public static boolean exists(final String name) {
 		return CloudManager.get().serverExists(name);
 	}
 
-	public Collection<String> getTags()
-	{
+	public Collection<String> getTags() {
 		return tags;
 	}
 
-	public boolean match(final Collection<String> filterTerms)
-	{
-		for (String token : filterTerms)
-		{
+	public boolean match(final Collection<String> filterTerms) {
+		for (String token : filterTerms) {
 			final boolean negated = token.startsWith("-");
 
-			if (negated)
-			{
+			if (negated) {
 				token = token.substring(1);
 			}
 
-			if (token.length() == 0)
-			{
+			if (token.length() == 0) {
 				continue;
 			}
 
 			final int colonPosition = token.indexOf(':');
 
 			// Prefix-based search term
-			if (colonPosition > 0)
-			{
+			if (colonPosition > 0) {
 				final String prefix = token.substring(0, colonPosition);
 				final String term = token.substring(colonPosition + 1);
 
-				if ("tag".equals(prefix))
-				{
+				if ("tag".equals(prefix)) {
 					return SearchHelper.matchTags(term, getTags(), negated);
-				}
-				else if ("name".equals(prefix) || "inname".equals(prefix))
-				{
+				} else if ("name".equals(prefix) || "inname".equals(prefix)) {
 					return SearchHelper.matchName(term, getFriendlyName(),
 							negated);
-				}
-				else if ("size".equals(prefix))
-				{
+				} else if ("size".equals(prefix)) {
 					return SearchHelper.matchSize(term, getSize(), negated);
-				}
-				else if ("status".equals(prefix) || "state".equals(prefix))
-				{
+				} else if ("status".equals(prefix) || "state".equals(prefix)) {
 					return SearchHelper.matchStatus(term, getStatus(), negated);
-				}
-				else if ("provider".equals(prefix)
-						|| "inprovider".equals(prefix))
-				{
+				} else if ("provider".equals(prefix)
+						|| "inprovider".equals(prefix)) {
 					return SearchHelper.matchCloudProvider(term, getCloud()
 							.getName(), negated);
-				}
-				else
-				{
+				} else {
 					return false;
 				}
-			}
-			else
-			{
+			} else {
 				return SearchHelper
 						.matchName(token, getFriendlyName(), negated)
 						|| SearchHelper.matchTags(token, getTags(), negated)
@@ -613,35 +529,26 @@ public class Server
 	 * @param server
 	 * @param state
 	 */
-	public void refreshUntilServerHasState(final VmState state)
-	{
+	public void refreshUntilServerHasState(final VmState state) {
 		refreshUntilServerHasState(state, 1);
 	}
 
 	private void refreshUntilServerHasState(final VmState state,
-			final int attempt)
-	{
-		if (getStatus() == state || attempt > 20)
-		{
+			final int attempt) {
+		if (getStatus() == state || attempt > 20) {
 			return;
 		}
 
-		try
-		{
+		try {
 			refresh();
-		}
-		catch (final ServerDisappearedException e)
-		{
+		} catch (final ServerDisappearedException e) {
 			getCloud().unlink(this);
 			return;
-		}
-		catch (final Exception e)
-		{
+		} catch (final Exception e) {
 			log.error("Something happened while refreshing server " + this, e);
 		}
 
-		if (getStatus() == state)
-		{
+		if (getStatus() == state) {
 			return;
 		}
 
@@ -651,11 +558,9 @@ public class Server
 		final double wait = 15.0 * (Math.log10(attempt) + 1.0);
 
 		final java.util.Timer timer = new java.util.Timer();
-		timer.schedule(new java.util.TimerTask()
-		{
+		timer.schedule(new java.util.TimerTask() {
 			@Override
-			public void run()
-			{
+			public void run() {
 				refreshUntilServerHasState(state, attempt + 1);
 				log.debug("Refreshing state for server " + getFriendlyName()
 						+ " because timer fired, waiting for state "
@@ -666,19 +571,16 @@ public class Server
 
 	}
 
-	public void setTags(final Collection<String> newTags)
-	{
+	public void setTags(final Collection<String> newTags) {
 		tags = newTags;
 		serverChanged();
 	}
 
-	public String getKeypair()
-	{
+	public String getKeypair() {
 		return keypair;
 	}
 
-	public void assureKeypairLogin(final String username, final String keyname)
-	{
+	public void assureKeypairLogin(final String username, final String keyname) {
 		sshLogin = username;
 		keypair = (keyname != null ? keyname : "");
 		useSshPassword = false;
@@ -687,25 +589,21 @@ public class Server
 		serverChanged();
 	}
 
-	private void stopConnections()
-	{
-		if (serverStatisticsManager != null)
-		{
+	private void stopConnections() {
+		if (serverStatisticsManager != null) {
 			serverStatisticsManager.stop();
 		}
 		serverStatisticsManager = null;
 	}
 
-	private void resetConnections()
-	{
+	private void resetConnections() {
 		GraphPanelCache.get().clearBareServerCache(this);
 
 		stopConnections();
 		noConnection = false;
 	}
 
-	public void assurePasswordLogin(final String username, final String password)
-	{
+	public void assurePasswordLogin(final String username, final String password) {
 		sshLogin = username;
 		sshPassword = password;
 		useSshPassword = true;
@@ -714,46 +612,38 @@ public class Server
 		serverChanged();
 	}
 
-	public void setStatisticsCommand(final String command)
-	{
+	public void setStatisticsCommand(final String command) {
 		statisticsCommand = command;
 
 		final ServerStatisticsManager manager = getServerStatistics();
-		if (manager != null)
-		{
+		if (manager != null) {
 			manager.reset();
 		}
 
 		serverChanged();
 	}
 
-	public String getSshUsername()
-	{
+	public String getSshUsername() {
 		return sshLogin;
 	}
 
-	public String getSshPassword()
-	{
+	public String getSshPassword() {
 		return sshPassword;
 	}
 
-	public String getVNCPassword()
-	{
+	public String getVNCPassword() {
 		return vncPassword;
 	}
 
-	public void setVNCPassword(final String password)
-	{
+	public void setVNCPassword(final String password) {
 		vncPassword = password;
 	}
 
-	public boolean isPausable()
-	{
+	public boolean isPausable() {
 		return serverImpl.isPausable();
 	}
 
-	public boolean isRebootable()
-	{
+	public boolean isRebootable() {
 		return serverImpl.isRebootable();
 	}
 }

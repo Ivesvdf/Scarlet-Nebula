@@ -17,14 +17,12 @@ import javax.swing.border.BevelBorder;
 import be.ac.ua.comp.scarletnebula.core.CloudProvider;
 import be.ac.ua.comp.scarletnebula.core.KeyManager;
 
-public class SelectKeyList extends JList
-{
+public class SelectKeyList extends JList {
 	private static final long serialVersionUID = 1L;
 	DefaultListModel model;
 	CloudProvider provider;
 
-	public SelectKeyList(final CloudProvider provider)
-	{
+	public SelectKeyList(final CloudProvider provider) {
 		super(new DefaultListModel());
 		model = (DefaultListModel) getModel();
 		this.provider = provider;
@@ -35,18 +33,15 @@ public class SelectKeyList extends JList
 
 	}
 
-	public void add(final String keyname)
-	{
+	public void add(final String keyname) {
 		model.addElement(new JLabel(keyname, new ImageIcon(getClass()
 				.getResource("/images/key16.png")), SwingConstants.LEFT));
 	}
 
-	public String getSelectedKey()
-	{
+	public String getSelectedKey() {
 		final int selection = getSelectedIndex();
 
-		if (selection < 0)
-		{
+		if (selection < 0) {
 			return null;
 		}
 
@@ -54,13 +49,11 @@ public class SelectKeyList extends JList
 		return label.getText();
 	}
 
-	class LabelCellRenderer implements ListCellRenderer
-	{
+	class LabelCellRenderer implements ListCellRenderer {
 		@Override
 		public Component getListCellRendererComponent(final JList list,
 				final Object value, final int index, final boolean isSelected,
-				final boolean cellHasFocus)
-		{
+				final boolean cellHasFocus) {
 
 			final JLabel renderer = (JLabel) value;
 			renderer.setOpaque(true);
@@ -68,13 +61,10 @@ public class SelectKeyList extends JList
 			Color foreground;
 			Color background;
 
-			if (isSelected)
-			{
+			if (isSelected) {
 				background = UIManager.getColor("Tree.selectionBackground");
 				foreground = UIManager.getColor("Tree.selectionForeground");
-			}
-			else
-			{
+			} else {
 				foreground = Color.BLACK;
 				background = Color.WHITE;
 			}
@@ -84,10 +74,8 @@ public class SelectKeyList extends JList
 		}
 	}
 
-	public void fillWithKnownKeys()
-	{
-		for (final String keyname : KeyManager.getKeyNames(provider.getName()))
-		{
+	public void fillWithKnownKeys() {
+		for (final String keyname : KeyManager.getKeyNames(provider.getName())) {
 			add(keyname);
 		}
 	}

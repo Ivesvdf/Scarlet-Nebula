@@ -1,7 +1,6 @@
 package be.ac.ua.comp.scarletnebula.gui;
 
-public interface Collapsable
-{
+public interface Collapsable {
 
 	/**
 	 * Adjusts this component to make it display the contained component

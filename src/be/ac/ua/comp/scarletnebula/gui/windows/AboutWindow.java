@@ -11,12 +11,10 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
-public class AboutWindow extends JDialog
-{
+public class AboutWindow extends JDialog {
 	private static final long serialVersionUID = 1L;
 
-	AboutWindow(final JFrame parent)
-	{
+	AboutWindow(final JFrame parent) {
 		super(parent, "About...", true);
 		setMaximumSize(new Dimension(400, 400));
 		setMinimumSize(new Dimension(400, 400));

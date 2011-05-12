@@ -23,14 +23,12 @@ import be.ac.ua.comp.scarletnebula.wizard.Wizard;
 import be.ac.ua.comp.scarletnebula.wizard.WizardListener;
 import be.ac.ua.comp.scarletnebula.wizard.WizardPage;
 
-public class AddServerWizard implements WizardListener
-{
+public class AddServerWizard implements WizardListener {
 	private static Log log = LogFactory.getLog(Server.class);
 	private static final long serialVersionUID = 1L;
 	private JFrame parent;
 
-	public AddServerWizard(final JFrame parent)
-	{
+	public AddServerWizard(final JFrame parent) {
 		this.parent = parent;
 
 		// Only show the choose provider page if more than one provider is
@@ -68,8 +66,7 @@ public class AddServerWizard implements WizardListener
 	}
 
 	@Override
-	public void onFinish(final DataRecorder recorder)
-	{
+	public void onFinish(final DataRecorder recorder) {
 		final AddServerWizardDataRecorder rec = (AddServerWizardDataRecorder) recorder;
 		final String instancename = rec.instanceName;
 		final VirtualMachineProduct instancesize = rec.instanceSize;
@@ -78,44 +75,33 @@ public class AddServerWizard implements WizardListener
 		final Collection<String> tags = rec.tags;
 		final String keypairOrPassword;
 
-		if (provider.supportsSSHKeys())
-		{
+		if (provider.supportsSSHKeys()) {
 			keypairOrPassword = rec.keypairOrPassword != null ? rec.keypairOrPassword
 					: provider.getDefaultKeypair();
-		}
-		else
-		{
+		} else {
 			keypairOrPassword = Utils.getRandomString(8);
 		}
 		final Collection<String> firewallIds = rec.firewallIds;
 		final int instanceCount = rec.instanceCount;
 
-		if (Server.exists(instancename))
-		{
+		if (Server.exists(instancename)) {
 			JOptionPane.showMessageDialog(parent,
 					"A server with this name already exists.",
 					"Server already exists", JOptionPane.ERROR_MESSAGE);
 			return;
 		}
 
-		(new SwingWorker<Exception, Server>()
-		{
+		(new SwingWorker<Exception, Server>() {
 
 			@Override
-			protected Exception doInBackground() throws Exception
-			{
-				for (int serverStarted = 0; serverStarted < instanceCount; serverStarted++)
-				{
-					try
-					{
+			protected Exception doInBackground() throws Exception {
+				for (int serverStarted = 0; serverStarted < instanceCount; serverStarted++) {
+					try {
 						final String localServername;
 
-						if (instanceCount == 1)
-						{
+						if (instanceCount == 1) {
 							localServername = instancename;
-						}
-						else
-						{
+						} else {
 							localServername = instancename + " "
 									+ serverStarted;
 						}
@@ -124,9 +110,7 @@ public class AddServerWizard implements WizardListener
 								localServername, instancesize, image, tags,
 								keypairOrPassword, firewallIds);
 						server.refreshUntilServerHasState(VmState.RUNNING);
-					}
-					catch (final Exception e)
-					{
+					} catch (final Exception e) {
 						return e;
 					}
 				}
@@ -134,22 +118,17 @@ public class AddServerWizard implements WizardListener
 			}
 
 			@Override
-			public void done()
-			{
-				try
-				{
+			public void done() {
+				try {
 					final Exception result = get();
 
-					if (result != null)
-					{
+					if (result != null) {
 						log.error("Could not start server", result);
 						JOptionPane.showMessageDialog(null,
 								result.getLocalizedMessage(), "Error",
 								JOptionPane.ERROR_MESSAGE);
 					}
-				}
-				catch (final Exception ignore)
-				{
+				} catch (final Exception ignore) {
 				}
 
 			}
@@ -158,7 +137,6 @@ public class AddServerWizard implements WizardListener
 	}
 
 	@Override
-	public void onCancel(final DataRecorder recorder)
-	{
+	public void onCancel(final DataRecorder recorder) {
 	}
 }

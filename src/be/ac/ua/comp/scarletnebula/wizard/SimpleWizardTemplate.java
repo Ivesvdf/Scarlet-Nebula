@@ -8,11 +8,9 @@ import javax.swing.BoxLayout;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
 
-public class SimpleWizardTemplate extends WizardTemplate
-{
+public class SimpleWizardTemplate extends WizardTemplate {
 	@Override
-	void setupWindow(final JDialog window)
-	{
+	void setupWindow(final JDialog window) {
 		final JPanel buttonPanel = new JPanel();
 		buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.LINE_AXIS));
 		buttonPanel.add(Box.createHorizontalGlue());

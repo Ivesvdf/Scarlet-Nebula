@@ -4,12 +4,10 @@ import javax.swing.BorderFactory;
 import javax.swing.JLabel;
 import javax.swing.border.BevelBorder;
 
-public class Statusbar extends JLabel
-{
+public class Statusbar extends JLabel {
 	private static final long serialVersionUID = 1L;
 
-	Statusbar()
-	{
+	Statusbar() {
 		super(" "); // Call JLabel ctor with a single space as text so the
 					// preferred height for this element will be correct
 

@@ -14,26 +14,21 @@ import javax.swing.SwingWorker;
  * 
  */
 public abstract class WorkerPropertyChangeListener implements
-		PropertyChangeListener
-{
+		PropertyChangeListener {
 
 	@Override
-	public void propertyChange(final PropertyChangeEvent evt)
-	{
-		if ("progress".equals(evt.getPropertyName()))
-		{
+	public void propertyChange(final PropertyChangeEvent evt) {
+		if ("progress".equals(evt.getPropertyName())) {
 			progressChanged(evt.getSource(), (Integer) evt.getNewValue(), evt);
 		}
 
 		if ("state".equals(evt.getPropertyName())
-				&& SwingWorker.StateValue.DONE == evt.getNewValue())
-		{
+				&& SwingWorker.StateValue.DONE == evt.getNewValue()) {
 			taskIsFinished(evt);
 		}
 
 		if ("state".equals(evt.getPropertyName())
-				&& SwingWorker.StateValue.STARTED == evt.getNewValue())
-		{
+				&& SwingWorker.StateValue.STARTED == evt.getNewValue()) {
 			taskStarted(evt);
 		}
 	}

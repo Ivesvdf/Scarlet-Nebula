@@ -16,15 +16,13 @@ import be.ac.ua.comp.scarletnebula.core.CloudProvider;
 import be.ac.ua.comp.scarletnebula.gui.addserverwizard.MachineImageTableModel;
 import be.ac.ua.comp.scarletnebula.gui.addserverwizard.SmartImageModelContextMenuMouseListener;
 
-public class FavoriteImagesPanel extends JPanel
-{
+public class FavoriteImagesPanel extends JPanel {
 	private static final long serialVersionUID = 1L;
 	final MachineImageTableModel favoriteImagesModel = new MachineImageTableModel(
 			new ArrayList<MachineImage>());
 	private final JTable favoriteImagesTable = new JTable(favoriteImagesModel);
 
-	public FavoriteImagesPanel(CloudProvider provider)
-	{
+	public FavoriteImagesPanel(CloudProvider provider) {
 		super(new BorderLayout());
 		final TableRowSorter<MachineImageTableModel> sorter = new TableRowSorter<MachineImageTableModel>(
 				favoriteImagesModel);
@@ -45,12 +43,10 @@ public class FavoriteImagesPanel extends JPanel
 		favoriteImagesModel.addImages(provider.getFavoriteImages());
 	}
 
-	public MachineImage getSelection()
-	{
+	public MachineImage getSelection() {
 		final int selection = favoriteImagesTable.getSelectedRow();
 
-		if (selection < 0)
-		{
+		if (selection < 0) {
 			return null;
 		}
 
@@ -58,8 +54,7 @@ public class FavoriteImagesPanel extends JPanel
 				.convertRowIndexToModel(selection));
 	}
 
-	public MachineImageTableModel getModel()
-	{
+	public MachineImageTableModel getModel() {
 		return favoriteImagesModel;
 	}
 }

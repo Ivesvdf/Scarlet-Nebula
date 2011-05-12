@@ -21,12 +21,10 @@ import be.ac.ua.comp.scarletnebula.gui.addproviderwizard.AddProviderWizard;
 import be.ac.ua.comp.scarletnebula.gui.addproviderwizard.ProviderAddedListener;
 import be.ac.ua.comp.scarletnebula.misc.Utils;
 
-public class ManageProvidersWindow extends JDialog
-{
+public class ManageProvidersWindow extends JDialog {
 	private static final long serialVersionUID = 1L;
 
-	ManageProvidersWindow(final JFrame parent)
-	{
+	ManageProvidersWindow(final JFrame parent) {
 		super(parent, "Manage Providers", true);
 
 		setSize(400, 400);
@@ -48,18 +46,14 @@ public class ManageProvidersWindow extends JDialog
 		setLayout(new BorderLayout());
 
 		final JButton addButton = new JButton(Utils.icon("add22.png"));
-		addButton.addActionListener(new ActionListener()
-		{
+		addButton.addActionListener(new ActionListener() {
 			@Override
-			public void actionPerformed(final ActionEvent e)
-			{
+			public void actionPerformed(final ActionEvent e) {
 				final AddProviderWizard wiz = new AddProviderWizard();
 
-				wiz.addProviderAddedListener(new ProviderAddedListener()
-				{
+				wiz.addProviderAddedListener(new ProviderAddedListener() {
 					@Override
-					public void providerWasAdded(final String name)
-					{
+					public void providerWasAdded(final String name) {
 						providerListModel.addElement(name);
 					}
 				});
@@ -69,15 +63,12 @@ public class ManageProvidersWindow extends JDialog
 		});
 
 		final JButton modifyButton = new JButton(Utils.icon("modify22.png"));
-		modifyButton.addActionListener(new ActionListener()
-		{
+		modifyButton.addActionListener(new ActionListener() {
 			@Override
-			public void actionPerformed(final ActionEvent e)
-			{
+			public void actionPerformed(final ActionEvent e) {
 				final int index = providerList.getSelectedIndex();
 
-				if (index < 0)
-				{
+				if (index < 0) {
 					return;
 				}
 
@@ -91,16 +82,13 @@ public class ManageProvidersWindow extends JDialog
 		});
 
 		final JButton removeButton = new JButton(Utils.icon("remove22.png"));
-		removeButton.addActionListener(new ActionListener()
-		{
+		removeButton.addActionListener(new ActionListener() {
 			@Override
-			public void actionPerformed(final ActionEvent e)
-			{
+			public void actionPerformed(final ActionEvent e) {
 				final int index = providerList.getSelectedIndex();
 
 				// No selection
-				if (index < 0)
-				{
+				if (index < 0) {
 					return;
 				}
 
@@ -114,8 +102,7 @@ public class ManageProvidersWindow extends JDialog
 										+ "\nDo you wish to proceed?");
 
 				// Only proceed if the user clicked yes
-				if (answer != JOptionPane.YES_OPTION)
-				{
+				if (answer != JOptionPane.YES_OPTION) {
 					return;
 				}
 
@@ -136,11 +123,9 @@ public class ManageProvidersWindow extends JDialog
 		setVisible(true);
 	}
 
-	private void fillProviderList(final DefaultListModel providerListModel)
-	{
+	private void fillProviderList(final DefaultListModel providerListModel) {
 		for (final String name : CloudManager.get()
-				.getLinkedCloudProviderNames())
-		{
+				.getLinkedCloudProviderNames()) {
 			providerListModel.addElement(name);
 		}
 	}

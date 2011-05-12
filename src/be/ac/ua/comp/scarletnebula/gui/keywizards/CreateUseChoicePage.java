@@ -14,8 +14,7 @@ import be.ac.ua.comp.scarletnebula.gui.BetterTextLabel;
 import be.ac.ua.comp.scarletnebula.wizard.DataRecorder;
 import be.ac.ua.comp.scarletnebula.wizard.WizardPage;
 
-public class CreateUseChoicePage extends WizardPage
-{
+public class CreateUseChoicePage extends WizardPage {
 	private static final long serialVersionUID = 1L;
 
 	final JRadioButton createButton = new JRadioButton("Create a new key");
@@ -23,8 +22,7 @@ public class CreateUseChoicePage extends WizardPage
 	ButtonGroup group = new ButtonGroup();
 	CloudProvider provider;
 
-	CreateUseChoicePage(final CloudProvider provider)
-	{
+	CreateUseChoicePage(final CloudProvider provider) {
 		setLayout(new BorderLayout());
 		this.provider = provider;
 		// The text on top
@@ -51,14 +49,10 @@ public class CreateUseChoicePage extends WizardPage
 	}
 
 	@Override
-	public WizardPage next(final DataRecorder recorder)
-	{
-		if (group.getSelection() == createButton.getModel())
-		{
+	public WizardPage next(final DataRecorder recorder) {
+		if (group.getSelection() == createButton.getModel()) {
 			return new SelectNewKeynamePage(provider);
-		}
-		else
-		{
+		} else {
 			return new UseExistingKeyPage(provider);
 		}
 

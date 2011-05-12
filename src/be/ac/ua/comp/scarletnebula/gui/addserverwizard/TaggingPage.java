@@ -10,13 +10,11 @@ import be.ac.ua.comp.scarletnebula.gui.TaggingPanel;
 import be.ac.ua.comp.scarletnebula.wizard.DataRecorder;
 import be.ac.ua.comp.scarletnebula.wizard.WizardPage;
 
-public class TaggingPage extends WizardPage
-{
+public class TaggingPage extends WizardPage {
 	private static final long serialVersionUID = 1L;
 	TaggingPanel taggingPanel = new TaggingPanel();
 
-	TaggingPage()
-	{
+	TaggingPage() {
 		setLayout(new BorderLayout());
 
 		final BetterTextLabel lbl = new BetterTextLabel(
@@ -29,8 +27,7 @@ public class TaggingPage extends WizardPage
 	}
 
 	@Override
-	public WizardPage next(final DataRecorder recorder)
-	{
+	public WizardPage next(final DataRecorder recorder) {
 		// Extract tags
 		taggingPanel.simulateEnter();
 		final Collection<String> tags = taggingPanel.getTags();

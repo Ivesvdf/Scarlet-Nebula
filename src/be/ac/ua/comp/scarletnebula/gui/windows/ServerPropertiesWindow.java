@@ -42,8 +42,7 @@ import be.ac.ua.comp.scarletnebula.misc.Utils;
 import com.jgoodies.forms.builder.DefaultFormBuilder;
 import com.jgoodies.forms.layout.FormLayout;
 
-public class ServerPropertiesWindow extends JDialog
-{
+public class ServerPropertiesWindow extends JDialog {
 
 	private static final long serialVersionUID = 1L;
 
@@ -70,8 +69,7 @@ public class ServerPropertiesWindow extends JDialog
 	private DecoratedCommunicationPanel decoratedCommunicationPanel = null;
 
 	public ServerPropertiesWindow(final GUI gui,
-			final Collection<Server> selectedServers)
-	{
+			final Collection<Server> selectedServers) {
 		super(gui, true);
 
 		setLayout(new BorderLayout());
@@ -79,12 +77,9 @@ public class ServerPropertiesWindow extends JDialog
 		// This really needs to be here...
 		enableEvents(AWTEvent.KEY_EVENT_MASK);
 
-		if (selectedServers.size() > 1)
-		{
+		if (selectedServers.size() > 1) {
 			setTitle("Server Properties - Scarlet Nebula");
-		}
-		else
-		{
+		} else {
 			setTitle(selectedServers.iterator().next().getFriendlyName()
 					+ " Properties - Scarlet Nebula");
 		}
@@ -100,15 +95,12 @@ public class ServerPropertiesWindow extends JDialog
 		setVisible(true);
 	}
 
-	private JPanel getBottomPanel()
-	{
+	private JPanel getBottomPanel() {
 		final JPanel bottomPanel = new JPanel();
 		final JButton okButton = ButtonFactory.createOkButton();
-		okButton.addActionListener(new ActionListener()
-		{
+		okButton.addActionListener(new ActionListener() {
 			@Override
-			public void actionPerformed(final ActionEvent e)
-			{
+			public void actionPerformed(final ActionEvent e) {
 				ServerPropertiesWindow.this.dispose();
 			}
 		});
@@ -122,8 +114,7 @@ public class ServerPropertiesWindow extends JDialog
 		return bottomPanel;
 	}
 
-	private JPanel createTopPartition(final Collection<Server> servers)
-	{
+	private JPanel createTopPartition(final Collection<Server> servers) {
 		final JPanel total = new JPanel();
 		total.setLayout(new BorderLayout());
 
@@ -136,23 +127,19 @@ public class ServerPropertiesWindow extends JDialog
 		tabbedPane.addTab("Communication", communicationTab);
 		tabbedPane.addTab("Statistics", statisticsTab);
 
-		tabbedPane.addChangeListener(new ChangeListener()
-		{
+		tabbedPane.addChangeListener(new ChangeListener() {
 
 			@Override
-			public void stateChanged(final ChangeEvent e)
-			{
+			public void stateChanged(final ChangeEvent e) {
 				final JTabbedPane tabSource = (JTabbedPane) e.getSource();
 				final JPanel selectedPanel = (JPanel) tabSource
 						.getSelectedComponent();
 
-				if (selectedPanel == communicationTab)
-				{
+				if (selectedPanel == communicationTab) {
 					ServerPropertiesWindow.this
 							.communicationTabGotFocus(servers);
 				}
-				if (selectedPanel == statisticsTab)
-				{
+				if (selectedPanel == statisticsTab) {
 					ServerPropertiesWindow.this.statisticsTabGotFocus(servers);
 				}
 			}
@@ -163,26 +150,20 @@ public class ServerPropertiesWindow extends JDialog
 		return total;
 	}
 
-	protected void statisticsTabGotFocus(final Collection<Server> servers)
-	{
-		if (statisticsTabIsFilled)
-		{
+	protected void statisticsTabGotFocus(final Collection<Server> servers) {
+		if (statisticsTabIsFilled) {
 			return;
-		}
-		else
-		{
+		} else {
 			statisticsTabIsFilled = true;
 			statisticsTab.setLayout(new BorderLayout());
 			statisticsTab.add(getStatisticsPanel(servers), BorderLayout.CENTER);
 		}
 	}
 
-	private void createCommunicationPanel()
-	{
+	private void createCommunicationPanel() {
 	}
 
-	private void createOverviewPanel(final Collection<Server> servers)
-	{
+	private void createOverviewPanel(final Collection<Server> servers) {
 		overviewTab.setLayout(new BorderLayout());
 
 		final FormLayout layout = new FormLayout(
@@ -199,8 +180,7 @@ public class ServerPropertiesWindow extends JDialog
 		Component providerComponent = null;
 		Component vncComponent = null;
 
-		if (servers.size() == 1)
-		{
+		if (servers.size() == 1) {
 			final Server server = servers.iterator().next();
 
 			servernameComponent = getSingleServerServerNameComponent(server);
@@ -208,9 +188,7 @@ public class ServerPropertiesWindow extends JDialog
 			sshLoginMethodComponent = getSingleServerSshLoginMethodComponent(server);
 			providerComponent = getSingleProviderComponent(server);
 			vncComponent = getSingleVNCComponent(server);
-		}
-		else
-		{
+		} else {
 			servernameComponent = getMultipleServerServerNameComponent(servers);
 			servertagComponent = getMultipleServerTagComponent(servers);
 			sshLoginMethodComponent = new JLabel("...");
@@ -253,33 +231,25 @@ public class ServerPropertiesWindow extends JDialog
 		overviewTab.add(bodyScrollPane);
 	}
 
-	private String getVNCRep(final Server server)
-	{
-		if (!server.getVNCPassword().isEmpty())
-		{
+	private String getVNCRep(final Server server) {
+		if (!server.getVNCPassword().isEmpty()) {
 			return server.getVNCPassword();
-		}
-		else
-		{
+		} else {
 			return "(Not set)";
 		}
 	}
 
-	private Component getSingleVNCComponent(final Server server)
-	{
-		return new ChangeableLabel(getVNCRep(server), new Executable<JLabel>()
-		{
+	private Component getSingleVNCComponent(final Server server) {
+		return new ChangeableLabel(getVNCRep(server), new Executable<JLabel>() {
 			@Override
-			public void run(final JLabel text)
-			{
+			public void run(final JLabel text) {
 				final String result = JOptionPane
 						.showInputDialog(
 								ServerPropertiesWindow.this,
 								"Enter the password you'd like to use to establish VNC connections to this server.",
 								server.getVNCPassword());
 
-				if (!result.isEmpty())
-				{
+				if (!result.isEmpty()) {
 					server.setVNCPassword(result);
 					server.store();
 					text.setText(result);
@@ -289,16 +259,12 @@ public class ServerPropertiesWindow extends JDialog
 	}
 
 	private Component getMultipleServerTagComponent(
-			final Collection<Server> servers)
-	{
+			final Collection<Server> servers) {
 		final ArrayList<String> tags = new ArrayList<String>();
 
-		for (final Server server : servers)
-		{
-			for (final String tag : server.getTags())
-			{
-				if (!tags.contains(tag))
-				{
+		for (final Server server : servers) {
+			for (final String tag : server.getTags()) {
+				if (!tags.contains(tag)) {
 					tags.add(tag);
 				}
 			}
@@ -307,36 +273,29 @@ public class ServerPropertiesWindow extends JDialog
 	}
 
 	private Component getMultipleServersProviderComponent(
-			final Collection<Server> servers)
-	{
+			final Collection<Server> servers) {
 		final List<String> names = new ArrayList<String>(servers.size());
-		for (final Server server : servers)
-		{
+		for (final Server server : servers) {
 			final String provname = server.getCloud().getName();
-			if (!names.contains(provname))
-			{
+			if (!names.contains(provname)) {
 				names.add(provname);
 			}
 		}
 		return new JLabel(Utils.implode(names, ", "));
 	}
 
-	private Component getSingleProviderComponent(final Server server)
-	{
+	private Component getSingleProviderComponent(final Server server) {
 		return new ChangeableLabel(server.getCloud().getName(),
-				new Executable<JLabel>()
-				{
+				new Executable<JLabel>() {
 					@Override
-					public void run(final JLabel text)
-					{
+					public void run(final JLabel text) {
 						new ProviderPropertiesWindow(
 								ServerPropertiesWindow.this, server.getCloud());
 					}
 				});
 	}
 
-	private JScrollPane getStatisticsPanel(final Collection<Server> servers)
-	{
+	private JScrollPane getStatisticsPanel(final Collection<Server> servers) {
 		final JPanel statisticsPanel = new JPanel(new BorderLayout());
 		final JPanel propertiesPart = new JPanel();
 		propertiesPart.setLayout(new BoxLayout(propertiesPart,
@@ -344,18 +303,14 @@ public class ServerPropertiesWindow extends JDialog
 		propertiesPart.add(Box.createHorizontalGlue());
 		final JButton statisticsPropertiesButton = new JButton("Properties",
 				Utils.icon("modify16.png"));
-		statisticsPropertiesButton.addActionListener(new ActionListener()
-		{
+		statisticsPropertiesButton.addActionListener(new ActionListener() {
 			@Override
-			public void actionPerformed(final ActionEvent e)
-			{
+			public void actionPerformed(final ActionEvent e) {
 				final StatisticsPropertiesWindow win = new StatisticsPropertiesWindow(
 						ServerPropertiesWindow.this, servers);
-				win.addActionListener(new ActionListener()
-				{
+				win.addActionListener(new ActionListener() {
 					@Override
-					public void actionPerformed(final ActionEvent e)
-					{
+					public void actionPerformed(final ActionEvent e) {
 
 					}
 				});
@@ -366,15 +321,13 @@ public class ServerPropertiesWindow extends JDialog
 		propertiesPart.add(Box.createHorizontalStrut(10));
 		propertiesPart.setBorder(BorderFactory.createEmptyBorder(10, 0, 0, 0));
 
-		if (servers.size() > 1)
-		{
+		if (servers.size() > 1) {
 			log.fatal("more than one server in statisticspanel");
 		}
 
 		final Server server = servers.iterator().next();
 
-		if (server.sshWillFail())
-		{
+		if (server.sshWillFail()) {
 			final AllGraphsPanel allGraphsPanel = new AllGraphsPanel(server);
 
 			final JPanel graphCollectionWrapper = new JPanel(new BorderLayout());
@@ -391,22 +344,17 @@ public class ServerPropertiesWindow extends JDialog
 		return scrollPanel;
 	}
 
-	private Component getSingleServerSshLoginMethodComponent(final Server server)
-	{
+	private Component getSingleServerSshLoginMethodComponent(final Server server) {
 		sshLabel = new ChangeableLabel(
 				getTextRepresentationOfSshSituation(server),
-				new Executable<JLabel>()
-				{
+				new Executable<JLabel>() {
 					@Override
-					public void run(final JLabel text)
-					{
+					public void run(final JLabel text) {
 						final ChangeServerSshLoginMethodWindow window = new ChangeServerSshLoginMethodWindow(
 								ServerPropertiesWindow.this, server);
-						window.addActionListener(new ActionListener()
-						{
+						window.addActionListener(new ActionListener() {
 							@Override
-							public void actionPerformed(final ActionEvent e)
-							{
+							public void actionPerformed(final ActionEvent e) {
 								text.setText(getTextRepresentationOfSshSituation(server));
 							}
 
@@ -418,40 +366,30 @@ public class ServerPropertiesWindow extends JDialog
 		return sshLabel;
 	}
 
-	private String getTextRepresentationOfSshSituation(final Server server)
-	{
+	private String getTextRepresentationOfSshSituation(final Server server) {
 		String rv = "";
 
-		if (server.usesSshPassword())
-		{
+		if (server.usesSshPassword()) {
 			rv = "Username & Password";
-		}
-		else
-		{
+		} else {
 			rv = "Keypair: " + server.getKeypair();
 		}
 		return rv;
 	}
 
-	private Component getSingleServerTagComponent(final Server server)
-	{
+	private Component getSingleServerTagComponent(final Server server) {
 		final ChangeableLabel tagLabel = new ChangeableLabel(Utils.implode(
 				new ArrayList<String>(server.getTags()), ", "),
-				new Executable<JLabel>()
-				{
+				new Executable<JLabel>() {
 					@Override
-					public void run(final JLabel label)
-					{
+					public void run(final JLabel label) {
 						final TaggingWindow win = new TaggingWindow(
 								ServerPropertiesWindow.this, server.getTags());
-						win.addWindowClosedListener(new TaggingWindow.WindowClosedListener()
-						{
+						win.addWindowClosedListener(new TaggingWindow.WindowClosedListener() {
 							@Override
 							public void windowClosed(
-									final Collection<String> newTags)
-							{
-								for (final String t : newTags)
-								{
+									final Collection<String> newTags) {
+								for (final String t : newTags) {
 									log.warn(t);
 								}
 
@@ -468,31 +406,26 @@ public class ServerPropertiesWindow extends JDialog
 	}
 
 	private Component getMultipleServerServerNameComponent(
-			final Collection<Server> servers)
-	{
+			final Collection<Server> servers) {
 		Component servernameComponent;
 		final List<String> names = new ArrayList<String>(servers.size());
-		for (final Server server : servers)
-		{
+		for (final Server server : servers) {
 			names.add(server.getFriendlyName());
 		}
 		servernameComponent = new JLabel(Utils.implode(names, ", "));
 		return servernameComponent;
 	}
 
-	private Component getSingleServerServerNameComponent(final Server server)
-	{
+	private Component getSingleServerServerNameComponent(final Server server) {
 		final JTextField servernameTextField = new JTextField();
 		servernameTextField.setInputVerifier(new ServernameInputVerifier(
 				servernameTextField, server));
 		final LabelEditSwitcherPanel servername = new LabelEditSwitcherPanel(
 				server.getFriendlyName(), servernameTextField);
 		servername
-				.addContentChangedListener(new LabelEditSwitcherPanel.ContentChangedListener()
-				{
+				.addContentChangedListener(new LabelEditSwitcherPanel.ContentChangedListener() {
 					@Override
-					public void changed(final String newContents)
-					{
+					public void changed(final String newContents) {
 						server.setFriendlyName(newContents);
 						server.store();
 					}
@@ -501,10 +434,8 @@ public class ServerPropertiesWindow extends JDialog
 	}
 
 	protected void communicationTabGotFocus(
-			final Collection<Server> selectedServers)
-	{
-		if (decoratedCommunicationPanel == null)
-		{
+			final Collection<Server> selectedServers) {
+		if (decoratedCommunicationPanel == null) {
 			decoratedCommunicationPanel = new DecoratedCommunicationPanel(this,
 					selectedServers);
 
@@ -514,10 +445,8 @@ public class ServerPropertiesWindow extends JDialog
 		}
 	}
 
-	private void updateOverviewTab(final Collection<Server> selectedServers)
-	{
-		if (selectedServers.size() == 0)
-		{
+	private void updateOverviewTab(final Collection<Server> selectedServers) {
+		if (selectedServers.size() == 0) {
 			log.info("No selected servers. Not filling overview tab.");
 			statusLabel.setText("");
 			dnsLabel.setText("");
@@ -532,8 +461,7 @@ public class ServerPropertiesWindow extends JDialog
 		// Until multiple selected servers are supported, pick the last server
 		Server selectedServer = null;
 
-		for (final Server s : selectedServers)
-		{
+		for (final Server s : selectedServers) {
 			selectedServer = s;
 		}
 
@@ -542,8 +470,7 @@ public class ServerPropertiesWindow extends JDialog
 
 		String ipString = "";
 
-		for (final String ip : selectedServer.getPublicIpAddresses())
-		{
+		for (final String ip : selectedServer.getPublicIpAddresses()) {
 			ipString += ip + "\n";
 		}
 
@@ -553,8 +480,7 @@ public class ServerPropertiesWindow extends JDialog
 		unfriendlyNameLabel.setText(selectedServer.getUnfriendlyName());
 		imageLabel.setText(selectedServer.getImage());
 		architectureLabel.setText(selectedServer.getArchitecture().toString());
-		if (selectedServer.getPlatform() != Platform.UNKNOWN)
-		{
+		if (selectedServer.getPlatform() != Platform.UNKNOWN) {
 			platformLabel.setText(selectedServer.getPlatform().toString());
 		}
 

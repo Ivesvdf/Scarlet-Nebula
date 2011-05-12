@@ -4,18 +4,15 @@ import java.awt.Font;
 
 import javax.swing.JLabel;
 
-public class BetterTextLabel extends JLabel
-{
+public class BetterTextLabel extends JLabel {
 	private static final long serialVersionUID = 1L;
 
-	public BetterTextLabel(String label)
-	{
+	public BetterTextLabel(String label) {
 		super("");
 
 		final boolean isAlreayHTML = (label.indexOf("<html>") == 0);
 
-		if (!isAlreayHTML)
-		{
+		if (!isAlreayHTML) {
 			label = "<html>" + label.replace("\n", "<br />") + "</html>";
 		}
 

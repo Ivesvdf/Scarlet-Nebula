@@ -15,8 +15,7 @@ import java.util.Random;
 import javax.swing.ImageIcon;
 import javax.swing.SwingUtilities;
 
-public class Utils
-{
+public class Utils {
 	private static Random rand = new Random(System.currentTimeMillis());
 
 	/**
@@ -29,29 +28,22 @@ public class Utils
 	 * @throws IOException
 	 */
 	public static void copyFile(final File sourceFile, final File destFile)
-			throws IOException
-	{
-		if (!destFile.exists())
-		{
+			throws IOException {
+		if (!destFile.exists()) {
 			destFile.createNewFile();
 		}
 
 		FileChannel source = null;
 		FileChannel destination = null;
-		try
-		{
+		try {
 			source = new FileInputStream(sourceFile).getChannel();
 			destination = new FileOutputStream(destFile).getChannel();
 			destination.transferFrom(source, 0, source.size());
-		}
-		finally
-		{
-			if (source != null)
-			{
+		} finally {
+			if (source != null) {
 				source.close();
 			}
-			if (destination != null)
-			{
+			if (destination != null) {
 				destination.close();
 			}
 		}
@@ -68,13 +60,10 @@ public class Utils
 	 *         pieces in their respective orders, with a glue string between
 	 *         each of them (but not before the first or after the last one).
 	 */
-	public static String implode(final List<String> pieces, final String glue)
-	{
+	public static String implode(final List<String> pieces, final String glue) {
 		String out = "";
-		for (int i = 0; i < pieces.size(); i++)
-		{
-			if (i != 0)
-			{
+		for (int i = 0; i < pieces.size(); i++) {
+			if (i != 0) {
 				out += glue;
 			}
 			out += pieces.get(i);
@@ -90,8 +79,7 @@ public class Utils
 	 *            returned
 	 * @return The parent window if one is found, null otherwise
 	 */
-	public static Window findWindow(final Component c)
-	{
+	public static Window findWindow(final Component c) {
 		return (Window) SwingUtilities.getAncestorOfClass(Window.class, c);
 	}
 
@@ -104,36 +92,28 @@ public class Utils
 	 *            Filename including extension excluding path
 	 * @return The icon described by name
 	 */
-	public static ImageIcon icon(final String name)
-	{
+	public static ImageIcon icon(final String name) {
 		return new ImageIcon(Utils.class.getResource("/images/" + name));
 	}
 
-	public static File internalFile(final String name)
-	{
+	public static File internalFile(final String name) {
 		final URL url = Utils.class.getResource("/" + name);
 
 		File f;
-		try
-		{
+		try {
 			f = new File(url.toURI());
-		}
-		catch (final URISyntaxException e)
-		{
+		} catch (final URISyntaxException e) {
 			f = new File(url.getPath());
 		}
 		return f;
 	}
 
 	public static <T extends Comparable<? super T>> T min(
-			final Iterable<T> inputs)
-	{
+			final Iterable<T> inputs) {
 		T lowest = inputs.iterator().next();
 
-		for (final T n : inputs)
-		{
-			if (lowest.compareTo(n) > 1)
-			{
+		for (final T n : inputs) {
+			if (lowest.compareTo(n) > 1) {
 				lowest = n;
 			}
 		}
@@ -142,14 +122,11 @@ public class Utils
 	}
 
 	public static <T extends Comparable<? super T>> T max(
-			final Iterable<T> inputs)
-	{
+			final Iterable<T> inputs) {
 		T highest = inputs.iterator().next();
 
-		for (final T n : inputs)
-		{
-			if (highest.compareTo(n) < 1)
-			{
+		for (final T n : inputs) {
+			if (highest.compareTo(n) < 1) {
 				highest = n;
 			}
 		}
@@ -157,12 +134,10 @@ public class Utils
 		return highest;
 	}
 
-	public static String getRandomString(final int length)
-	{
+	public static String getRandomString(final int length) {
 		final String charset = "!0123456789abcdefghijklmnopqrstuvwxyz";
 		final StringBuffer sb = new StringBuffer();
-		for (int i = 0; i < length; i++)
-		{
+		for (int i = 0; i < length; i++) {
 			final int pos = rand.nextInt(charset.length());
 			sb.append(charset.charAt(pos));
 		}

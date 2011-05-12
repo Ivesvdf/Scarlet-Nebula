@@ -23,14 +23,12 @@ import be.ac.ua.comp.scarletnebula.core.Server;
 import com.jcraft.jcterm.Connection;
 import com.jcraft.jcterm.JCTermSwing;
 
-public class SSHPanel extends JPanel
-{
+public class SSHPanel extends JPanel {
 	private static final long serialVersionUID = 1L;
 	private static Log log = LogFactory.getLog(SSHPanel.class);
 	private final Collection<ExceptionListener> exceptionListeners = new LinkedList<ExceptionListener>();
 
-	public SSHPanel(final Server server)
-	{
+	public SSHPanel(final Server server) {
 		super();
 
 		final JCTermSwing term = new JCTermSwing();
@@ -39,17 +37,14 @@ public class SSHPanel extends JPanel
 
 		setLayout(new BorderLayout());
 
-		addComponentListener(new ComponentListener()
-		{
+		addComponentListener(new ComponentListener() {
 
 			@Override
-			public void componentShown(final ComponentEvent e)
-			{
+			public void componentShown(final ComponentEvent e) {
 			}
 
 			@Override
-			public void componentResized(final ComponentEvent e)
-			{
+			public void componentResized(final ComponentEvent e) {
 				final Component c = e.getComponent();
 				int cw = c.getWidth();
 				int ch = c.getHeight();
@@ -76,14 +71,18 @@ public class SSHPanel extends JPanel
 			}
 
 			@Override
-			public void componentMoved(final ComponentEvent e)
-			{ // TODO Auto-generated method stub
+			public void componentMoved(final ComponentEvent e) { // TODO
+																	// Auto-generated
+																	// method
+																	// stub
 
 			}
 
 			@Override
-			public void componentHidden(final ComponentEvent e)
-			{ // TODO Auto-generated method stub
+			public void componentHidden(final ComponentEvent e) { // TODO
+																	// Auto-generated
+																	// method
+																	// stub
 
 			}
 		});
@@ -94,15 +93,12 @@ public class SSHPanel extends JPanel
 				BorderFactory.createEmptyBorder(20, 20, 20, 20),
 				BorderFactory.createBevelBorder(BevelBorder.LOWERED)));
 
-		final Thread connectionThread = new Thread()
-		{
+		final Thread connectionThread = new Thread() {
 			@Override
-			public void run()
-			{
+			public void run() {
 
 				Connection connection = null;
-				try
-				{
+				try {
 					final SSHCommandConnection commandConnection = (SSHCommandConnection) server
 							.newCommandConnection(new NotPromptingJschUserInfo());
 
@@ -110,18 +106,13 @@ public class SSHPanel extends JPanel
 
 					term.requestFocusInWindow();
 					term.start(connection);
-				}
-				catch (final Exception e)
-				{
-					for (final ExceptionListener listener : exceptionListeners)
-					{
+				} catch (final Exception e) {
+					for (final ExceptionListener listener : exceptionListeners) {
 						listener.exceptionThrown(e);
 					}
 
 					log.warn("Exception thrown by SSHPanel", e);
-				}
-				finally
-				{
+				} finally {
 				}
 
 			}
@@ -130,8 +121,7 @@ public class SSHPanel extends JPanel
 		connectionThread.start();
 	}
 
-	public void addExceptionListener(final ExceptionListener listener)
-	{
+	public void addExceptionListener(final ExceptionListener listener) {
 		exceptionListeners.add(listener);
 	}
 

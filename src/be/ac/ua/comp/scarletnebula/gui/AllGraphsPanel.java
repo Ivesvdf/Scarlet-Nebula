@@ -21,16 +21,14 @@ import be.ac.ua.comp.scarletnebula.core.ServerStatisticsManager.DeleteDatastream
 import be.ac.ua.comp.scarletnebula.core.ServerStatisticsManager.NewDatastreamListener;
 
 public class AllGraphsPanel extends JPanel implements NewDatastreamListener,
-		DeleteDatastreamListener
-{
+		DeleteDatastreamListener {
 	private static final long serialVersionUID = 1L;
 	final private static Log log = LogFactory.getLog(AllGraphsPanel.class);
 
 	final private Server server;
 	private final ServerStatisticsManager statisticsManager;
 
-	public AllGraphsPanel(final Server server)
-	{
+	public AllGraphsPanel(final Server server) {
 		super(new GridBagLayout());
 		this.server = server;
 		statisticsManager = server.getServerStatistics();
@@ -45,8 +43,7 @@ public class AllGraphsPanel extends JPanel implements NewDatastreamListener,
 
 	}
 
-	private void placeComponents()
-	{
+	private void placeComponents() {
 		final GridBagConstraints constraints = new GridBagConstraints();
 
 		int numberOfComponentsPlaced = 0;
@@ -56,8 +53,7 @@ public class AllGraphsPanel extends JPanel implements NewDatastreamListener,
 
 		final Collection<String> datastreams = statisticsManager
 				.getAvailableDatastreams();
-		for (final String streamname : datastreams)
-		{
+		for (final String streamname : datastreams) {
 			log.info("drawing stream");
 			constraints.fill = GridBagConstraints.HORIZONTAL;
 			constraints.weightx = 0.5;
@@ -74,12 +70,9 @@ public class AllGraphsPanel extends JPanel implements NewDatastreamListener,
 			chartPanel.setPreferredSize(new Dimension(graphWidth, graphHeight));
 			add(chartPanel, constraints);
 
-			if (currXPos == 0)
-			{
+			if (currXPos == 0) {
 				currXPos = 1;
-			}
-			else
-			{
+			} else {
 				currXPos = 0;
 			}
 			numberOfComponentsPlaced++;
@@ -87,21 +80,18 @@ public class AllGraphsPanel extends JPanel implements NewDatastreamListener,
 	}
 
 	@Override
-	public void newDataStream(final Datapoint datapoint)
-	{
+	public void newDataStream(final Datapoint datapoint) {
 		resetPanel();
 	}
 
-	private void resetPanel()
-	{
+	private void resetPanel() {
 		removeAll();
 		placeComponents();
 		revalidate();
 	}
 
 	@Override
-	public void deleteDataStream(final String streamname)
-	{
+	public void deleteDataStream(final String streamname) {
 		resetPanel();
 	}
 

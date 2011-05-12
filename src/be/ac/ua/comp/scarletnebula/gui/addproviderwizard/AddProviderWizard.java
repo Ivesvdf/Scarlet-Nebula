@@ -13,36 +13,30 @@ import be.ac.ua.comp.scarletnebula.wizard.SimpleWizardTemplate;
 import be.ac.ua.comp.scarletnebula.wizard.Wizard;
 import be.ac.ua.comp.scarletnebula.wizard.WizardListener;
 
-public class AddProviderWizard extends Wizard implements WizardListener
-{
+public class AddProviderWizard extends Wizard implements WizardListener {
 	Collection<ProviderAddedListener> providerAddedListeners = new ArrayList<ProviderAddedListener>();
 
-	public AddProviderWizard()
-	{
+	public AddProviderWizard() {
 		super(new SelectProviderTemplatePage(),
 				new AddProviderWizardDataRecorder(), new SimpleWizardTemplate());
 
 		addWizardListener(this);
 	}
 
-	public void startModal(final JDialog parent)
-	{
+	public void startModal(final JDialog parent) {
 		startModal("Add a new Cloud Provider", 400, 300, parent);
 	}
 
-	public void startModal(final JFrame parent)
-	{
+	public void startModal(final JFrame parent) {
 		startModal("Add a new Cloud Provider", 400, 300, parent);
 	}
 
-	public void addProviderAddedListener(final ProviderAddedListener pal)
-	{
+	public void addProviderAddedListener(final ProviderAddedListener pal) {
 		providerAddedListeners.add(pal);
 	}
 
 	@Override
-	public void onFinish(final DataRecorder recorder)
-	{
+	public void onFinish(final DataRecorder recorder) {
 		final AddProviderWizardDataRecorder rec = (AddProviderWizardDataRecorder) recorder;
 
 		CloudManager.get().registerNewCloudProvider(rec.getName(),
@@ -50,22 +44,19 @@ public class AddProviderWizard extends Wizard implements WizardListener
 				rec.getEndpoint() != null ? rec.getEndpoint().getURL() : "", // endpoint
 				rec.getApiKey(), rec.getApiSecret());
 
-		for (final ProviderAddedListener p : providerAddedListeners)
-		{
+		for (final ProviderAddedListener p : providerAddedListeners) {
 			p.providerWasAdded(rec.getName());
 		}
 
 		if (CloudManager.get().getCloudProviderByName(rec.getName())
-				.supportsSSHKeys())
-		{
+				.supportsSSHKeys()) {
 			new KeyWizard(null, CloudManager.get().getCloudProviderByName(
 					rec.getName()));
 		}
 	}
 
 	@Override
-	public void onCancel(final DataRecorder recorder)
-	{
+	public void onCancel(final DataRecorder recorder) {
 		// Do nothing...
 	}
 }

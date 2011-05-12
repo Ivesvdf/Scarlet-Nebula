@@ -10,8 +10,7 @@ package be.ac.ua.comp.scarletnebula.misc;
  * @param <Paramtype>
  *            The parameter that will be given to the run() method.
  */
-public interface Executable<Paramtype>
-{
+public interface Executable<Paramtype> {
 	/**
 	 * Method to be executed.
 	 * 

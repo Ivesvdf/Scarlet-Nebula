@@ -37,8 +37,7 @@ import be.ac.ua.comp.scarletnebula.misc.Utils;
 import be.ac.ua.comp.scarletnebula.wizard.DataRecorder;
 import be.ac.ua.comp.scarletnebula.wizard.WizardPage;
 
-public class ChooseImagePage extends WizardPage
-{
+public class ChooseImagePage extends WizardPage {
 	private static final long serialVersionUID = 1L;
 	private static final Log log = LogFactory.getLog(ChooseImagePage.class);
 	private Platform previousSelectedPlatform = null;
@@ -57,8 +56,7 @@ public class ChooseImagePage extends WizardPage
 	private final FavoriteImagesPanel favoriteImagesPanel;
 	private final JPanel allImagesPanel;
 
-	public ChooseImagePage(final CloudProvider provider)
-	{
+	public ChooseImagePage(final CloudProvider provider) {
 		super(new BorderLayout());
 		this.provider = provider;
 
@@ -67,8 +65,7 @@ public class ChooseImagePage extends WizardPage
 		allImagesPanel = getAllImagesPanel(provider);
 		tabs.addTab("All images", allImagesPanel);
 
-		if (provider.getFavoriteImages().isEmpty())
-		{
+		if (provider.getFavoriteImages().isEmpty()) {
 			tabs.setSelectedComponent(allImagesPanel);
 		}
 
@@ -76,13 +73,11 @@ public class ChooseImagePage extends WizardPage
 	}
 
 	private FavoriteImagesPanel getFavoriteImagesPanel(
-			final CloudProvider provider)
-	{
+			final CloudProvider provider) {
 		return new FavoriteImagesPanel(provider);
 	}
 
-	private final JPanel getAllImagesPanel(final CloudProvider provider)
-	{
+	private final JPanel getAllImagesPanel(final CloudProvider provider) {
 		final JPanel panel = new JPanel(new BorderLayout());
 		final TableRowSorter<MachineImageTableModel> sorter = new TableRowSorter<MachineImageTableModel>(
 				allImagesModel);
@@ -112,8 +107,7 @@ public class ChooseImagePage extends WizardPage
 	}
 
 	private JPanel getSearchPanel(
-			final TableRowSorter<MachineImageTableModel> sorter)
-	{
+			final TableRowSorter<MachineImageTableModel> sorter) {
 		final JPanel searchPanel = new JPanel(new GridBagLayout());
 		searchPanel.setBorder(BorderFactory.createEmptyBorder(10, 20, 5, 20));
 
@@ -151,16 +145,13 @@ public class ChooseImagePage extends WizardPage
 	}
 
 	@Override
-	public WizardPage next(final DataRecorder recorder)
-	{
+	public WizardPage next(final DataRecorder recorder) {
 		final AddServerWizardDataRecorder rec = (AddServerWizardDataRecorder) recorder;
 
-		if (tabs.getSelectedComponent() == allImagesPanel)
-		{
+		if (tabs.getSelectedComponent() == allImagesPanel) {
 			final int selection = allImagesTable.getSelectedRow();
 
-			if (selection < 0)
-			{
+			if (selection < 0) {
 				JOptionPane
 						.showMessageDialog(
 								this,
@@ -172,13 +163,10 @@ public class ChooseImagePage extends WizardPage
 
 			rec.image = allImagesModel.getRow(allImagesTable
 					.convertRowIndexToModel(selection));
-		}
-		else
-		{
+		} else {
 			final MachineImage selection = favoriteImagesPanel.getSelection();
 
-			if (selection == null)
-			{
+			if (selection == null) {
 				JOptionPane
 						.showMessageDialog(
 								this,
@@ -193,8 +181,7 @@ public class ChooseImagePage extends WizardPage
 		return new ChooseSizePage(provider, rec.image);
 	}
 
-	private final class SearchFieldListener implements ActionListener
-	{
+	private final class SearchFieldListener implements ActionListener {
 
 		private final ArchitectureComboBox architectureComboBox;
 		private final TableRowSorter<MachineImageTableModel> sorter;
@@ -205,8 +192,7 @@ public class ChooseImagePage extends WizardPage
 				final ArchitectureComboBox architectureComboBox,
 				final TableRowSorter<MachineImageTableModel> sorter,
 				final PlatformComboBox platformComboBox,
-				final BetterTextField searchField)
-		{
+				final BetterTextField searchField) {
 			this.architectureComboBox = architectureComboBox;
 			this.sorter = sorter;
 			this.platformComboBox = platformComboBox;
@@ -214,8 +200,7 @@ public class ChooseImagePage extends WizardPage
 		}
 
 		@Override
-		public void actionPerformed(final ActionEvent e)
-		{
+		public void actionPerformed(final ActionEvent e) {
 			log.debug("Filtering table");
 			final Platform currentPlatform = platformComboBox.getSelection();
 			final Architecture currentArchitecture = architectureComboBox
@@ -223,8 +208,7 @@ public class ChooseImagePage extends WizardPage
 
 			if (!currentPlatform.equals(previousSelectedPlatform)
 					|| !currentArchitecture
-							.equals(previousSelectedArchitecture))
-			{
+							.equals(previousSelectedArchitecture)) {
 				allImagesModel.clear();
 
 				final ImageModelFillerTask task = new ImageModelFillerTask(
@@ -244,8 +228,7 @@ public class ChooseImagePage extends WizardPage
 	}
 
 	class ImageModelFillerTask extends
-			SwingWorkerWithThrobber<MachineImageTableModel, MachineImage>
-	{
+			SwingWorkerWithThrobber<MachineImageTableModel, MachineImage> {
 		MachineImageTableModel model;
 		CloudProvider provider;
 		Platform platform;
@@ -255,8 +238,7 @@ public class ChooseImagePage extends WizardPage
 		ImageModelFillerTask(final Window win, final Collapsable throbber,
 				final JTable jtable, final MachineImageTableModel model,
 				final CloudProvider provider, final Platform platform,
-				final Architecture architecture)
-		{
+				final Architecture architecture) {
 			super(throbber);
 			this.model = model;
 			this.provider = provider;
@@ -266,19 +248,15 @@ public class ChooseImagePage extends WizardPage
 		}
 
 		@Override
-		public MachineImageTableModel doInBackground()
-		{
+		public MachineImageTableModel doInBackground() {
 			final Iterable<MachineImage> images = provider
 					.getAvailableMachineImages(platform, architecture);
-			if (images == null)
-			{
+			if (images == null) {
 				log.error("No images available");
 			}
 
-			for (final MachineImage image : images)
-			{
-				if (isCancelled())
-				{
+			for (final MachineImage image : images) {
+				if (isCancelled()) {
 					return model;
 				}
 				publish(image);
@@ -287,26 +265,22 @@ public class ChooseImagePage extends WizardPage
 		}
 
 		@Override
-		protected void process(final List<MachineImage> toAdd)
-		{
+		protected void process(final List<MachineImage> toAdd) {
 			model.addImages(toAdd);
 		}
 	};
 
 	private final class AllTermsRowFilter extends
-			RowFilter<MachineImageTableModel, Integer>
-	{
+			RowFilter<MachineImageTableModel, Integer> {
 		private final String expr;
 
-		private AllTermsRowFilter(final String expr)
-		{
+		private AllTermsRowFilter(final String expr) {
 			this.expr = expr;
 		}
 
 		@Override
 		public boolean include(
-				final Entry<? extends MachineImageTableModel, ? extends Integer> entry)
-		{
+				final Entry<? extends MachineImageTableModel, ? extends Integer> entry) {
 			final MachineImageTableModel tableModel = entry.getModel();
 			final MachineImage image = tableModel.getImage(entry
 					.getIdentifier());
@@ -315,15 +289,13 @@ public class ChooseImagePage extends WizardPage
 
 			boolean allTermsFound = true;
 
-			for (final String term : terms)
-			{
+			for (final String term : terms) {
 				if (!image.getDescription().toLowerCase()
 						.contains(term.toLowerCase())
 						&& !image.getName().toLowerCase()
 								.contains(term.toLowerCase())
 						&& !image.getType().toString().toLowerCase()
-								.contains(term))
-				{
+								.contains(term)) {
 					allTermsFound = false;
 					break;
 				}

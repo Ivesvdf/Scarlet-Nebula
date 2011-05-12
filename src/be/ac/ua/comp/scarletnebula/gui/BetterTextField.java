@@ -17,8 +17,7 @@ import be.ac.ua.comp.scarletnebula.misc.Colors;
  * 
  * @author ives
  */
-public class BetterTextField extends JTextField
-{
+public class BetterTextField extends JTextField {
 	private static final long serialVersionUID = 1L;
 	private boolean originalPlaceholderText = true;
 	private boolean placeholderDisplayed = false;
@@ -27,16 +26,14 @@ public class BetterTextField extends JTextField
 	/**
 	 * @see JTextField
 	 */
-	public BetterTextField(final int columns)
-	{
+	public BetterTextField(final int columns) {
 		super(columns);
 	}
 
 	/**
 	 * @see JTextField
 	 */
-	public BetterTextField()
-	{
+	public BetterTextField() {
 		super();
 	}
 
@@ -50,20 +47,16 @@ public class BetterTextField extends JTextField
 	 * 
 	 * @param placeholder
 	 */
-	public void setPlaceHolder(final String placeholder)
-	{
+	public void setPlaceHolder(final String placeholder) {
 		setText(placeholder);
 		final Color originalTextColor = getForeground();
 		setForeground(Colors.Gray.color());
 		placeholderDisplayed = true;
 
-		addFocusListener(new FocusListener()
-		{
+		addFocusListener(new FocusListener() {
 			@Override
-			public void focusLost(final FocusEvent e)
-			{
-				if (getText().length() == 0)
-				{
+			public void focusLost(final FocusEvent e) {
+				if (getText().length() == 0) {
 					setForeground(Colors.Gray.alpha(1.0f));
 					setText(placeholder);
 					placeholderDisplayed = true;
@@ -72,11 +65,9 @@ public class BetterTextField extends JTextField
 			}
 
 			@Override
-			public void focusGained(final FocusEvent e)
-			{
+			public void focusGained(final FocusEvent e) {
 				log.info("Focus gained");
-				if (originalPlaceholderText)
-				{
+				if (originalPlaceholderText) {
 					log.info("Original text");
 					originalPlaceholderText = false;
 					setForeground(originalTextColor);
@@ -92,16 +83,12 @@ public class BetterTextField extends JTextField
 	 *         BetterTextField has a placeholder displayed.
 	 */
 	@Override
-	public String getText()
-	{
+	public String getText() {
 		String result = null;
 
-		if (placeholderDisplayed)
-		{
+		if (placeholderDisplayed) {
 			result = "";
-		}
-		else
-		{
+		} else {
 			result = super.getText();
 		}
 

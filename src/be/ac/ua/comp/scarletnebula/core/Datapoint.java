@@ -2,10 +2,8 @@ package be.ac.ua.comp.scarletnebula.core;
 
 import com.google.gson.Gson;
 
-public class Datapoint
-{
-	public enum Type
-	{
+public class Datapoint {
+	public enum Type {
 		RELATIVE, ABSOLUTE
 	};
 
@@ -18,16 +16,14 @@ public class Datapoint
 	Double highWarnLevel = null;
 	Double max = null;
 
-	public Datapoint()
-	{
+	public Datapoint() {
 
 	}
 
 	public Datapoint(final Type datapointType, final String datastream,
 			final Double value, final Double lowWarnLevel,
 			final Double mediumWarnLevel, final Double highWarnLevel,
-			final Double max)
-	{
+			final Double max) {
 		this.datapointType = datapointType;
 		this.datastream = datastream;
 		this.value = value;
@@ -36,17 +32,14 @@ public class Datapoint
 		this.highWarnLevel = highWarnLevel;
 		this.max = max;
 
-		if (datapointType == Type.RELATIVE)
-		{
+		if (datapointType == Type.RELATIVE) {
 			this.max = 1.0;
 		}
 	}
 
 	@Override
-	public boolean equals(final Object obj)
-	{
-		if (!(obj instanceof Datapoint))
-		{
+	public boolean equals(final Object obj) {
+		if (!(obj instanceof Datapoint)) {
 			return false;
 		}
 		final Datapoint o = (Datapoint) obj;
@@ -59,61 +52,50 @@ public class Datapoint
 				&& equalOrBothNull(this.max, o.max);
 	}
 
-	private boolean equalOrBothNull(final Object o1, final Object o2)
-	{
+	private boolean equalOrBothNull(final Object o1, final Object o2) {
 		return (o1 == null && o2 == null) || o1.equals(o2);
 	}
 
 	@Override
-	public String toString()
-	{
+	public String toString() {
 		return "[" + datapointType + " in " + datastream + "] " + value
 				+ " (WL=" + lowWarnLevel + ", WM=" + mediumWarnLevel + ", WH="
 				+ highWarnLevel + ", Max=" + max + ")";
 	}
 
-	public String toJson()
-	{
+	public String toJson() {
 		return gson.toJson(this);
 	}
 
-	public static Datapoint fromJson(final String input)
-	{
+	public static Datapoint fromJson(final String input) {
 		return gson.fromJson(input, Datapoint.class);
 	}
 
-	public Type getDatapointType()
-	{
+	public Type getDatapointType() {
 		return datapointType;
 	}
 
-	public String getDatastreamName()
-	{
+	public String getDatastreamName() {
 		return datastream;
 	}
 
-	public double getValue()
-	{
+	public double getValue() {
 		return value;
 	}
 
-	public Double getLowWarnLevel()
-	{
+	public Double getLowWarnLevel() {
 		return lowWarnLevel;
 	}
 
-	public Double getMediumWarnLevel()
-	{
+	public Double getMediumWarnLevel() {
 		return mediumWarnLevel;
 	}
 
-	public Double getHighWarnLevel()
-	{
+	public Double getHighWarnLevel() {
 		return highWarnLevel;
 	}
 
-	public Double getMax()
-	{
+	public Double getMax() {
 		return max;
 	}
 }

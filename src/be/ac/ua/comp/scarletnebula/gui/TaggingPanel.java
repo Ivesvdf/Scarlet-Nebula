@@ -24,24 +24,20 @@ import javax.swing.border.BevelBorder;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-public class TaggingPanel extends JPanel
-{
+public class TaggingPanel extends JPanel {
 	private static final long serialVersionUID = 1L;
 	private final TagList taglist = new TagList();
 	private static Log log = LogFactory.getLog(TaggingPanel.class);
 	private final ActionListener addTagActionListener;
 
-	public TaggingPanel()
-	{
+	public TaggingPanel() {
 		this(new ArrayList<String>());
 	}
 
-	public TaggingPanel(final Collection<String> initialTags)
-	{
+	public TaggingPanel(final Collection<String> initialTags) {
 		super(new BorderLayout());
 
-		for (final String tag : initialTags)
-		{
+		for (final String tag : initialTags) {
 			taglist.addTag(new TagItem(tag));
 		}
 		final BetterTextField inputField = new BetterTextField();
@@ -73,67 +69,55 @@ public class TaggingPanel extends JPanel
 
 	}
 
-	public Collection<String> getTags()
-	{
+	public Collection<String> getTags() {
 		return taglist.getTags();
 	}
 
-	private final class AddTagActionListener implements ActionListener
-	{
+	private final class AddTagActionListener implements ActionListener {
 		private final BetterTextField inputField;
 
-		private AddTagActionListener(final BetterTextField inputField)
-		{
+		private AddTagActionListener(final BetterTextField inputField) {
 			this.inputField = inputField;
 		}
 
 		@Override
-		public void actionPerformed(final ActionEvent e)
-		{
+		public void actionPerformed(final ActionEvent e) {
 			final String tagTxt = inputField.getText();
 			inputField.setText("");
-			if (!Pattern.matches("^\\s*$", tagTxt))
-			{
+			if (!Pattern.matches("^\\s*$", tagTxt)) {
 				taglist.add(tagTxt);
 			}
 		}
 	}
 
-	public class TagList extends JPanel
-	{
+	public class TagList extends JPanel {
 		private static final long serialVersionUID = 1L;
 
-		TagList()
-		{
+		TagList() {
 			super();
 			setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
 			setBackground(Color.WHITE);
 
 		}
 
-		void add(final String tag)
-		{
+		void add(final String tag) {
 			addTag(new TagItem(tag));
 		}
 
-		void addTag(final TagItem tag)
-		{
+		void addTag(final TagItem tag) {
 			tag.setAlignmentX(LEFT_ALIGNMENT);
 
 			// Only add if it's not yet in the list
-			if (!getTags().contains(tag.getTag()))
-			{
+			if (!getTags().contains(tag.getTag())) {
 				add(tag);
 			}
 			revalidate();
 			repaint();
 		}
 
-		public Collection<String> getTags()
-		{
+		public Collection<String> getTags() {
 			final Collection<String> tags = new ArrayList<String>();
-			for (final Component c : getComponents())
-			{
+			for (final Component c : getComponents()) {
 				final TagItem tag = (TagItem) c;
 				tags.add(tag.getTagString());
 				log.debug("Tag:" + tag.getTagString());
@@ -142,18 +126,15 @@ public class TaggingPanel extends JPanel
 		}
 	}
 
-	private class TagItem extends JPanel
-	{
+	private class TagItem extends JPanel {
 		private static final long serialVersionUID = 1L;
 		private final String tag;
 
-		public String getTag()
-		{
+		public String getTag() {
 			return tag;
 		}
 
-		TagItem(final String tag)
-		{
+		TagItem(final String tag) {
 			this.tag = tag;
 			setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
 			setBackground(Color.WHITE);
@@ -164,11 +145,9 @@ public class TaggingPanel extends JPanel
 
 			final JButton deleteButton = new JButton(new ImageIcon(getClass()
 					.getResource("/images/remove16.png")));
-			deleteButton.addActionListener(new ActionListener()
-			{
+			deleteButton.addActionListener(new ActionListener() {
 				@Override
-				public void actionPerformed(final ActionEvent e)
-				{
+				public void actionPerformed(final ActionEvent e) {
 					final JPanel taglist = (JPanel) TagItem.this.getParent();
 					taglist.remove(TagItem.this);
 					taglist.revalidate();
@@ -178,15 +157,13 @@ public class TaggingPanel extends JPanel
 			add(deleteButton);
 		}
 
-		public String getTagString()
-		{
+		public String getTagString() {
 			return tag;
 		}
 
 	}
 
-	public void simulateEnter()
-	{
+	public void simulateEnter() {
 		log.debug("Simulating return");
 		addTagActionListener.actionPerformed(null);
 	}

@@ -25,20 +25,16 @@ import be.ac.ua.comp.scarletnebula.misc.Utils;
 import be.ac.ua.comp.scarletnebula.wizard.DataRecorder;
 import be.ac.ua.comp.scarletnebula.wizard.WizardListener;
 
-public class InteractiveKeyPanel extends JPanel
-{
-	private final class AddKeyActionListener implements ActionListener
-	{
+public class InteractiveKeyPanel extends JPanel {
+	private final class AddKeyActionListener implements ActionListener {
 		private final CloudProvider provider;
 
-		private AddKeyActionListener(final CloudProvider provider)
-		{
+		private AddKeyActionListener(final CloudProvider provider) {
 			this.provider = provider;
 		}
 
 		@Override
-		public void actionPerformed(final ActionEvent e)
-		{
+		public void actionPerformed(final ActionEvent e) {
 			final NewKeyWizard wiz = new NewKeyWizard(
 					(JDialog) Utils.findWindow(InteractiveKeyPanel.this),
 					provider);
@@ -48,18 +44,15 @@ public class InteractiveKeyPanel extends JPanel
 		}
 	}
 
-	private final class ModifySelectedActionListener implements ActionListener
-	{
+	private final class ModifySelectedActionListener implements ActionListener {
 		private final CloudProvider provider;
 
-		private ModifySelectedActionListener(final CloudProvider provider)
-		{
+		private ModifySelectedActionListener(final CloudProvider provider) {
 			this.provider = provider;
 		}
 
 		@Override
-		public void actionPerformed(final ActionEvent e)
-		{
+		public void actionPerformed(final ActionEvent e) {
 			final ImportKeyWizard wiz = new ImportKeyWizard(
 					(JDialog) Utils.findWindow(InteractiveKeyPanel.this),
 					provider);
@@ -71,24 +64,20 @@ public class InteractiveKeyPanel extends JPanel
 		}
 	}
 
-	private final class RemoveSelectedActionListener implements ActionListener
-	{
+	private final class RemoveSelectedActionListener implements ActionListener {
 		private final CloudProvider provider;
 
-		private RemoveSelectedActionListener(final CloudProvider provider)
-		{
+		private RemoveSelectedActionListener(final CloudProvider provider) {
 			this.provider = provider;
 		}
 
 		@Override
-		public void actionPerformed(final ActionEvent e)
-		{
+		public void actionPerformed(final ActionEvent e) {
 			final Collection<String> keynames = keylist.getSelection();
 			final String options[] = {
 					"Delete key" + (keynames.size() > 1 ? "s" : ""), "Cancel" };
 
-			if (!keynames.isEmpty())
-			{
+			if (!keynames.isEmpty()) {
 				final int result = JOptionPane
 						.showOptionDialog(
 								InteractiveKeyPanel.this,
@@ -100,28 +89,20 @@ public class InteractiveKeyPanel extends JPanel
 								JOptionPane.WARNING_MESSAGE, null, options,
 								options[0]);
 
-				if (result == JOptionPane.OK_OPTION)
-				{
-					for (final String key : keynames)
-					{
+				if (result == JOptionPane.OK_OPTION) {
+					for (final String key : keynames) {
 						keylist.removeKey(key);
 					}
 					keylist.assureDefaultKey();
 
-					(new SwingWorker<Object, Object>()
-					{
+					(new SwingWorker<Object, Object>() {
 						@Override
-						protected Exception doInBackground() throws Exception
-						{
-							try
-							{
-								for (final String key : keynames)
-								{
+						protected Exception doInBackground() throws Exception {
+							try {
+								for (final String key : keynames) {
 									provider.deleteKey(key);
 								}
-							}
-							catch (final Exception ignore)
-							{
+							} catch (final Exception ignore) {
 								// If the key can't be deleted, just leave it...
 							}
 							return null;
@@ -132,22 +113,18 @@ public class InteractiveKeyPanel extends JPanel
 		}
 	}
 
-	private final class AddToListWizardListener implements WizardListener
-	{
-		private AddToListWizardListener()
-		{
+	private final class AddToListWizardListener implements WizardListener {
+		private AddToListWizardListener() {
 		}
 
 		@Override
-		public void onFinish(final DataRecorder recorder)
-		{
+		public void onFinish(final DataRecorder recorder) {
 			final KeyRecorder rec = (KeyRecorder) recorder;
 			keylist.add(rec.keyname, rec.makeDefault);
 		}
 
 		@Override
-		public void onCancel(final DataRecorder recorder)
-		{
+		public void onCancel(final DataRecorder recorder) {
 
 		}
 	}
@@ -155,15 +132,13 @@ public class InteractiveKeyPanel extends JPanel
 	private static final long serialVersionUID = 1L;
 	private KeylistWithDefault keylist;
 
-	public InteractiveKeyPanel(final CloudProvider provider)
-	{
+	public InteractiveKeyPanel(final CloudProvider provider) {
 		super(new BorderLayout());
 
 		placeComponents(provider);
 	}
 
-	private final void placeComponents(final CloudProvider provider)
-	{
+	private final void placeComponents(final CloudProvider provider) {
 		final JButton addButton = new JButton(Utils.icon("add22.png"));
 		addButton.addActionListener(new AddKeyActionListener(provider));
 

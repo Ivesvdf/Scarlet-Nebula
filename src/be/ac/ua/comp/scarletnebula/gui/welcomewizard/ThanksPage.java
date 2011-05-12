@@ -11,12 +11,10 @@ import javax.swing.JLabel;
 import be.ac.ua.comp.scarletnebula.wizard.DataRecorder;
 import be.ac.ua.comp.scarletnebula.wizard.WizardPage;
 
-public class ThanksPage extends WizardPage
-{
+public class ThanksPage extends WizardPage {
 	private static final long serialVersionUID = 1L;
 
-	ThanksPage()
-	{
+	ThanksPage() {
 		setLayout(new GridBagLayout());
 		final GridBagConstraints c = new GridBagConstraints();
 		c.fill = GridBagConstraints.HORIZONTAL;
@@ -54,8 +52,7 @@ public class ThanksPage extends WizardPage
 	}
 
 	@Override
-	public WizardPage next(final DataRecorder recorder)
-	{
+	public WizardPage next(final DataRecorder recorder) {
 		return new CreateCloudProviderPage();
 	}
 

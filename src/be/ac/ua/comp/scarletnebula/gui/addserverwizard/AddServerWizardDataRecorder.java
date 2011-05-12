@@ -9,8 +9,7 @@ import org.dasein.cloud.compute.VirtualMachineProduct;
 import be.ac.ua.comp.scarletnebula.core.CloudProvider;
 import be.ac.ua.comp.scarletnebula.wizard.DataRecorder;
 
-public class AddServerWizardDataRecorder implements DataRecorder
-{
+public class AddServerWizardDataRecorder implements DataRecorder {
 	public CloudProvider provider = null;
 	public String instanceName = "";
 	public VirtualMachineProduct instanceSize = null;

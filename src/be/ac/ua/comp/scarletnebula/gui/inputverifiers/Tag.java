@@ -8,12 +8,10 @@ import javax.swing.BorderFactory;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 
-public class Tag extends JLabel
-{
+public class Tag extends JLabel {
 	private static final long serialVersionUID = 1L;
 
-	public Tag(final String s)
-	{
+	public Tag(final String s) {
 		super(s);
 
 		// We must be non-opaque since we won't fill all pixels.
@@ -26,8 +24,7 @@ public class Tag extends JLabel
 	}
 
 	@Override
-	protected void paintComponent(final Graphics g)
-	{
+	protected void paintComponent(final Graphics g) {
 		final int width = getWidth();
 		final int height = getHeight();
 
@@ -39,8 +36,7 @@ public class Tag extends JLabel
 		super.paintComponent(g);
 	}
 
-	static public void main(final String[] args)
-	{
+	static public void main(final String[] args) {
 		final JFrame f = new JFrame();
 		f.setLayout(new FlowLayout());
 		f.getContentPane().add(new Tag("Webserver"));

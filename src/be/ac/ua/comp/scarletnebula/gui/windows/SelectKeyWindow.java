@@ -17,16 +17,14 @@ import be.ac.ua.comp.scarletnebula.core.CloudProvider;
 import be.ac.ua.comp.scarletnebula.gui.ButtonFactory;
 import be.ac.ua.comp.scarletnebula.gui.SelectKeyList;
 
-public abstract class SelectKeyWindow extends JDialog
-{
+public abstract class SelectKeyWindow extends JDialog {
 
 	private static final long serialVersionUID = 1L;
 	private final SelectKeyList selectKeylist;
 
 	public abstract void onOk(String keyname);
 
-	public SelectKeyWindow(final JDialog parent, final CloudProvider provider)
-	{
+	public SelectKeyWindow(final JDialog parent, final CloudProvider provider) {
 		super(parent, "Select key", true);
 		setLayout(new BorderLayout());
 		setSize(400, 300);
@@ -45,11 +43,9 @@ public abstract class SelectKeyWindow extends JDialog
 		buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.LINE_AXIS));
 		buttonPanel.add(Box.createHorizontalGlue());
 		final JButton okButton = ButtonFactory.createOkButton();
-		okButton.addActionListener(new ActionListener()
-		{
+		okButton.addActionListener(new ActionListener() {
 			@Override
-			public void actionPerformed(final ActionEvent e)
-			{
+			public void actionPerformed(final ActionEvent e) {
 				onOk(selectKeylist.getSelectedKey());
 			}
 		});

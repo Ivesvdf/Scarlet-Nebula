@@ -8,12 +8,10 @@ package be.ac.ua.comp.scarletnebula.core;
  * @author ives
  * 
  */
-public class ServerDisappearedException extends Exception
-{
+public class ServerDisappearedException extends Exception {
 	private static final long serialVersionUID = 1L;
 
-	ServerDisappearedException(final Server server)
-	{
+	ServerDisappearedException(final Server server) {
 		super("Server " + server.getFriendlyName()
 				+ " disappeared when refreshing.");
 	}

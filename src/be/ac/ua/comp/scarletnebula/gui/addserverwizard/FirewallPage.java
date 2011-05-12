@@ -13,25 +13,21 @@ import be.ac.ua.comp.scarletnebula.gui.InteractiveFirewallPanel;
 import be.ac.ua.comp.scarletnebula.wizard.DataRecorder;
 import be.ac.ua.comp.scarletnebula.wizard.WizardPage;
 
-public class FirewallPage extends WizardPage
-{
+public class FirewallPage extends WizardPage {
 	private static final long serialVersionUID = 1L;
 	private final InteractiveFirewallPanel firewallPanel;
 
-	public FirewallPage(final CloudProvider provider)
-	{
+	public FirewallPage(final CloudProvider provider) {
 		super(new BorderLayout());
 		firewallPanel = new InteractiveFirewallPanel(provider);
 		add(firewallPanel, BorderLayout.CENTER);
 	}
 
 	@Override
-	public WizardPage next(final DataRecorder recorder)
-	{
+	public WizardPage next(final DataRecorder recorder) {
 		final Collection<Firewall> selectedFirewalls = firewallPanel
 				.getSelectedFirewalls();
-		if (selectedFirewalls.size() < 1)
-		{
+		if (selectedFirewalls.size() < 1) {
 			JOptionPane.showMessageDialog(this,
 					"Please select one or more firewall rules.",
 					"Select firewall", JOptionPane.ERROR_MESSAGE);
@@ -39,8 +35,7 @@ public class FirewallPage extends WizardPage
 			return null;
 		}
 
-		if (!firewallPanel.selectedFirewallOpensPort(22))
-		{
+		if (!firewallPanel.selectedFirewallOpensPort(22)) {
 			final int result = JOptionPane
 					.showOptionDialog(
 							this,
@@ -50,8 +45,7 @@ public class FirewallPage extends WizardPage
 							JOptionPane.WARNING_MESSAGE, null, new Object[] {
 									"Proceed", "Cancel" }, "Cancel");
 
-			if (result != JOptionPane.OK_OPTION)
-			{
+			if (result != JOptionPane.OK_OPTION) {
 				return null;
 			}
 		}
@@ -60,8 +54,7 @@ public class FirewallPage extends WizardPage
 
 		final Collection<String> ids = new ArrayList<String>(
 				selectedFirewalls.size());
-		for (final Firewall firewall : selectedFirewalls)
-		{
+		for (final Firewall firewall : selectedFirewalls) {
 			ids.add(firewall.getProviderFirewallId());
 		}
 		rec.firewallIds = ids;

@@ -8,16 +8,13 @@ import javax.swing.JDialog;
 import be.ac.ua.comp.scarletnebula.core.Server;
 import be.ac.ua.comp.scarletnebula.gui.DecoratedCommunicationPanel;
 
-public class SSHSessionWindow extends JDialog
-{
+public class SSHSessionWindow extends JDialog {
 	private static final long serialVersionUID = 1L;
 
-	SSHSessionWindow(final JDialog parent, final Collection<Server> servers)
-	{
+	SSHSessionWindow(final JDialog parent, final Collection<Server> servers) {
 		super(parent, "SSH", false);
 
-		if (servers.size() == 1)
-		{
+		if (servers.size() == 1) {
 			setTitle("SSH to " + servers.iterator().next().getFriendlyName());
 		}
 

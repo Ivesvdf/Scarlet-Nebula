@@ -27,8 +27,7 @@ import be.ac.ua.comp.scarletnebula.wizard.WizardPage;
 import com.jgoodies.forms.builder.DefaultFormBuilder;
 import com.jgoodies.forms.layout.FormLayout;
 
-public class FinalServerAddPage extends WizardPage
-{
+public class FinalServerAddPage extends WizardPage {
 
 	final JTextField instanceNameField = new JTextField();
 	private static final long serialVersionUID = 1L;
@@ -37,8 +36,7 @@ public class FinalServerAddPage extends WizardPage
 	private final JCheckBox addToFavoritesBox = new JCheckBox(
 			"Add image to favorites");
 
-	public FinalServerAddPage(final AddServerWizardDataRecorder rec)
-	{
+	public FinalServerAddPage(final AddServerWizardDataRecorder rec) {
 		super(new BorderLayout());
 		final BetterTextLabel lbl = new BetterTextLabel(
 				"<html><font size=\"4\">Press <b><font color=\"green\">Finish</font></b> to start the server.</font>");
@@ -73,42 +71,32 @@ public class FinalServerAddPage extends WizardPage
 		// vlanField));
 
 		builder.append("Availability zone", new ChangeableLabel("(default)",
-				new Executable<JLabel>()
-				{
+				new Executable<JLabel>() {
 					@Override
-					public void run(final JLabel param)
-					{
+					public void run(final JLabel param) {
 
 					}
 				}));
 
-		if (rec.provider.supportsSSHKeys())
-		{
+		if (rec.provider.supportsSSHKeys()) {
 			rec.keypairOrPassword = rec.provider.getDefaultKeypair();
 			final ChangeableLabel sshKeyLabel = new ChangeableLabel(
-					rec.keypairOrPassword, new Executable<JLabel>()
-					{
+					rec.keypairOrPassword, new Executable<JLabel>() {
 
 						@Override
-						public void run(final JLabel param)
-						{
+						public void run(final JLabel param) {
 							new SelectKeyWindow((JDialog) Utils
 									.findWindow(FinalServerAddPage.this),
-									rec.provider)
-							{
+									rec.provider) {
 								private static final long serialVersionUID = 1L;
 
 								@Override
-								public void onOk(final String keyname)
-								{
-									if (!keyname.isEmpty())
-									{
+								public void onOk(final String keyname) {
+									if (!keyname.isEmpty()) {
 										rec.keypairOrPassword = keyname;
 										param.setText(keyname);
 										dispose();
-									}
-									else
-									{
+									} else {
 										JOptionPane.showMessageDialog(this,
 												"Please select a key",
 												"Select Key",
@@ -127,13 +115,10 @@ public class FinalServerAddPage extends WizardPage
 
 		addToFavoritesBox.setBorder(BorderFactory.createEmptyBorder(0, 20, 10,
 				20));
-		if (rec.provider.imageInFavorites(rec.image))
-		{
+		if (rec.provider.imageInFavorites(rec.image)) {
 			addToFavoritesBox.setSelected(false);
 			addToFavoritesBox.setEnabled(false);
-		}
-		else
-		{
+		} else {
 			addToFavoritesBox.setSelected(true);
 		}
 
@@ -141,23 +126,18 @@ public class FinalServerAddPage extends WizardPage
 	}
 
 	@Override
-	public WizardPage next(final DataRecorder recorder)
-	{
+	public WizardPage next(final DataRecorder recorder) {
 		final AddServerWizardDataRecorder rec = (AddServerWizardDataRecorder) recorder;
 
 		final InputVerifier nameInputVerifier = instanceNameField
 				.getInputVerifier();
 		if (nameInputVerifier == null
-				|| nameInputVerifier.verify(instanceNameField))
-		{
+				|| nameInputVerifier.verify(instanceNameField)) {
 			rec.instanceName = instanceNameField.getText();
-		}
-		else
-		{
+		} else {
 			int i = 1;
 			String name;
-			do
-			{
+			do {
 				name = "Nameless - " + i++;
 			}
 			while (CloudManager.get().serverExists(name));
@@ -169,18 +149,14 @@ public class FinalServerAddPage extends WizardPage
 				.getInputVerifier();
 
 		if ((countInputVerifier == null)
-				|| countInputVerifier.verify(instanceCountTextField))
-		{
+				|| countInputVerifier.verify(instanceCountTextField)) {
 			rec.instanceCount = Integer
 					.decode(instanceCountTextField.getText());
-		}
-		else
-		{
+		} else {
 			rec.instanceCount = 1;
 		}
 
-		if (addToFavoritesBox.isSelected())
-		{
+		if (addToFavoritesBox.isSelected()) {
 			rec.provider.addToFavorites(rec.image);
 			rec.provider.store();
 		}
@@ -188,14 +164,12 @@ public class FinalServerAddPage extends WizardPage
 	}
 
 	@Override
-	public boolean nextIsEnabled()
-	{
+	public boolean nextIsEnabled() {
 		return false;
 	}
 
 	@Override
-	public boolean finishIsEnabled()
-	{
+	public boolean finishIsEnabled() {
 		return true;
 	}
 }

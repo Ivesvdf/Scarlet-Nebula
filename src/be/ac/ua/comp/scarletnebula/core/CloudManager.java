@@ -20,23 +20,22 @@ import be.ac.ua.comp.scarletnebula.core.CloudProviderTemplate.AccessMethod;
  * @author ives
  * 
  */
-public class CloudManager
-{
-	HashMap<String, CloudProvider> providers = new HashMap<String, CloudProvider>();
-	Collection<CloudProviderTemplate> providerTemplates = new ArrayList<CloudProviderTemplate>();
-	Collection<ServerLinkUnlinkObserver> linkUnlinkObservers = new ArrayList<ServerLinkUnlinkObserver>();
+public final class CloudManager {
+	private final HashMap<String, CloudProvider> providers = new HashMap<String, CloudProvider>();
+	private final Collection<CloudProviderTemplate> providerTemplates = new ArrayList<CloudProviderTemplate>();
+	private final Collection<ServerLinkUnlinkObserver> linkUnlinkObservers = new ArrayList<ServerLinkUnlinkObserver>();
 
-	private CloudManager()
-	{
+	/**
+	 * Private constructor.
+	 */
+	private CloudManager() {
 		populateCloudProviderTemplates();
 
 		// Load all providers and put them in the list
-		for (final String provname : CloudProvider.getProviderNames())
-		{
+		for (final String provname : CloudProvider.getProviderNames()) {
 			final CloudProvider cloudProvider = new CloudProvider(provname);
 
-			for (final ServerLinkUnlinkObserver obs : linkUnlinkObservers)
-			{
+			for (final ServerLinkUnlinkObserver obs : linkUnlinkObservers) {
 				cloudProvider.addServerLinkUnlinkObserver(obs);
 			}
 
@@ -44,20 +43,17 @@ public class CloudManager
 		}
 	}
 
-	public void addServerLinkUnlinkObserver(final ServerLinkUnlinkObserver obs)
-	{
+	public void addServerLinkUnlinkObserver(final ServerLinkUnlinkObserver obs) {
 		linkUnlinkObservers.add(obs);
 
 		// Also add this observer to the cloudproviders that are already in the
 		// system.
-		for (final CloudProvider prov : providers.values())
-		{
+		for (final CloudProvider prov : providers.values()) {
 			prov.addServerLinkUnlinkObserver(obs);
 		}
 	}
 
-	private void populateCloudProviderTemplates()
-	{
+	private void populateCloudProviderTemplates() {
 		// AWS
 		final CloudProviderTemplate aws = new CloudProviderTemplate(
 				"Amazon Elastic Compute Cloud", "Amazon EC2",
@@ -100,8 +96,7 @@ public class CloudManager
 	 * referenced before the first call to get, the instance will be lazily
 	 * created. This is also perfectly threadsafe.
 	 */
-	private static class CloudManagerHolder
-	{
+	private static class CloudManagerHolder {
 		public static final CloudManager INSTANCE = new CloudManager();
 	}
 
@@ -110,8 +105,7 @@ public class CloudManager
 	 * 
 	 * @return
 	 */
-	public static CloudManager get()
-	{
+	public static CloudManager get() {
 		return CloudManagerHolder.INSTANCE;
 	}
 
@@ -120,8 +114,7 @@ public class CloudManager
 	 * 
 	 * @return
 	 */
-	public Collection<String> getLinkedCloudProviderNames()
-	{
+	public Collection<String> getLinkedCloudProviderNames() {
 		return providers.keySet();
 	}
 
@@ -130,8 +123,7 @@ public class CloudManager
 	 * 
 	 * @return
 	 */
-	public Collection<CloudProvider> getLinkedCloudProviders()
-	{
+	public Collection<CloudProvider> getLinkedCloudProviders() {
 		return providers.values();
 	}
 
@@ -141,8 +133,7 @@ public class CloudManager
 	 * @param name
 	 * @return
 	 */
-	public CloudProvider getCloudProviderByName(final String name)
-	{
+	public CloudProvider getCloudProviderByName(final String name) {
 		return providers.get(name);
 	}
 
@@ -153,12 +144,9 @@ public class CloudManager
 	 * @param name
 	 * @return
 	 */
-	public boolean serverExists(final String name)
-	{
-		for (final CloudProvider prov : providers.values())
-		{
-			if (prov.hasServer(name))
-			{
+	public boolean serverExists(final String name) {
+		for (final CloudProvider prov : providers.values()) {
+			if (prov.hasServer(name)) {
 				return true;
 			}
 		}
@@ -166,37 +154,32 @@ public class CloudManager
 		return false;
 	}
 
-	public Collection<CloudProviderTemplate> getTemplates()
-	{
+	public Collection<CloudProviderTemplate> getTemplates() {
 		return providerTemplates;
 	}
 
 	public void registerNewCloudProvider(final String name,
 			final String classname, final String endpoint, final String apiKey,
-			final String apiSecret)
-	{
+			final String apiSecret) {
 		final CloudProvider prov = new CloudProvider(name, classname, endpoint,
 				apiKey, apiSecret, "");
 		prov.store();
 
-		for (final ServerLinkUnlinkObserver obs : linkUnlinkObservers)
-		{
+		for (final ServerLinkUnlinkObserver obs : linkUnlinkObservers) {
 			prov.addServerLinkUnlinkObserver(obs);
 		}
 
 		providers.put(name, prov);
 	}
 
-	public void deleteCloudProvider(final String provname)
-	{
+	public void deleteCloudProvider(final String provname) {
 		final CloudProvider provider = providers.get(provname);
 		providers.remove(provname);
 		System.out.println(getLinkedCloudProviders().size());
 
 		// Remove all of his servers
 		final Collection<Server> linkedServers = provider.listLinkedServers();
-		for (final Server server : linkedServers)
-		{
+		for (final Server server : linkedServers) {
 			server.unlink();
 		}
 
@@ -213,15 +196,12 @@ public class CloudManager
 		config.delete();
 	}
 
-	private File removeDirContainingFiles(final String dirname)
-	{
+	private File removeDirContainingFiles(final String dirname) {
 		final File dir = new File(dirname);
 
-		if (dir.list() != null)
-		{
+		if (dir.list() != null) {
 			// If there are still files in the directory, delete them
-			for (final String file : dir.list())
-			{
+			for (final String file : dir.list()) {
 				final File f = new File(file);
 				f.delete();
 			}
@@ -230,10 +210,8 @@ public class CloudManager
 	}
 
 	public void loadAllLinkedServers() throws InternalException,
-			CloudException, IOException
-	{
-		for (final CloudProvider prov : providers.values())
-		{
+			CloudException, IOException {
+		for (final CloudProvider prov : providers.values()) {
 			prov.loadLinkedServers();
 		}
 	}

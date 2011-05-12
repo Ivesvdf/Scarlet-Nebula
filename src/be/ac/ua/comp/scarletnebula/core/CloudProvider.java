@@ -47,8 +47,7 @@ import be.ac.ua.comp.scarletnebula.misc.Utils;
  * 
  * @author ives
  */
-public class CloudProvider
-{
+public class CloudProvider {
 	private static Log log = LogFactory.getLog(CloudProvider.class);
 
 	private org.dasein.cloud.CloudProvider providerImpl;
@@ -65,8 +64,7 @@ public class CloudProvider
 
 	private final Collection<Server> servers = new ArrayList<Server>();
 	private Collection<MachineImage> favoriteImages = new LinkedList<MachineImage>();
-
-	Collection<ServerLinkUnlinkObserver> linkUnlinkObservers = new ArrayList<ServerLinkUnlinkObserver>();
+	private final Collection<ServerLinkUnlinkObserver> linkUnlinkObservers = new ArrayList<ServerLinkUnlinkObserver>();
 
 	/**
 	 * Constructor for constructing a cloudprovider from file.
@@ -76,53 +74,35 @@ public class CloudProvider
 	 * @param name
 	 *            Name of the provider. Used to search for a savefile.
 	 */
-	public CloudProvider(final String name)
-	{
+	public CloudProvider(final String name) {
 		load(name);
 
 		connect();
 
-		// TODO: place these somewhere? maybe a menu option
-		// assureSSHOnlyFirewall();
-		// assureSSHKey();
-
 	}
 
-	private void connect()
-	{
-		try
-		{
+	/**
+	 * Sets up the provider implementation.
+	 */
+	private void connect() {
+		try {
 			providerImpl = (org.dasein.cloud.CloudProvider) Class.forName(
 					providerClassName).newInstance();
-		}
-		catch (final InstantiationException e)
-		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		catch (final IllegalAccessException e)
-		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		catch (final ClassNotFoundException e)
-		{
-			log.fatal("Underlying cloud provider class " + providerClassName
-					+ " failed creation.");
+		} catch (final Exception e) {
+			log.error("Underlying cloud provider class " + providerClassName
+					+ " failed creation.", e);
 		}
 
 		providerImpl.connect(getCurrentContext());
 
 		computeServices = providerImpl.getComputeServices();
-		if (computeServices == null)
-		{
+		if (computeServices == null) {
 			log.error(providerImpl.getCloudName()
 					+ " does not support compute instances.");
 			return;
 		}
 		virtualMachineServices = computeServices.getVirtualMachineSupport();
-		if (computeServices == null)
-		{
+		if (computeServices == null) {
 			log.error(providerImpl.getCloudName()
 					+ " does not support Virtual Machines.");
 			return;
@@ -130,16 +110,12 @@ public class CloudProvider
 
 		final NetworkServices networkServices = providerImpl
 				.getNetworkServices();
-		if (networkServices == null)
-		{
+		if (networkServices == null) {
 			log.error(providerImpl.getCloudName()
 					+ " does not support network services.");
-		}
-		else
-		{
+		} else {
 			firewallSupport = networkServices.getFirewallSupport();
-			if (firewallSupport == null)
-			{
+			if (firewallSupport == null) {
 				log.error(providerImpl.getCloudName()
 						+ " does not support firewalls.");
 				return;
@@ -147,40 +123,45 @@ public class CloudProvider
 		}
 	}
 
-	private void notifyObserversBecauseServerLinked(final Server srv)
-	{
+	/**
+	 * Call when a new server is linked and observers need to be notified.
+	 * 
+	 * @param srv
+	 *            The server that's linked.
+	 */
+	private void notifyObserversBecauseServerLinked(final Server srv) {
 
-		for (final ServerLinkUnlinkObserver obs : linkUnlinkObservers)
-		{
+		for (final ServerLinkUnlinkObserver obs : linkUnlinkObservers) {
 			obs.serverLinked(this, srv);
 			log.warn("Cloudprovider is updating his observers");
 		}
 	}
 
-	private void notifyObserversBecauseServerUnlinked(final Server srv)
-	{
-		for (final ServerLinkUnlinkObserver obs : linkUnlinkObservers)
-		{
+	/**
+	 * Call when a new server is unlinked and observers need to be notified.
+	 * 
+	 * @param srv
+	 *            The server that is unlinked.
+	 */
+	private void notifyObserversBecauseServerUnlinked(final Server srv) {
+		for (final ServerLinkUnlinkObserver obs : linkUnlinkObservers) {
 			obs.serverUnlinked(this, srv);
 		}
 	}
 
 	/**
-	 * Loads a CloudProvider from file based on his name
+	 * Loads a CloudProvider from file based on his name.
 	 * 
 	 * @param name
+	 *            Name of the provider to load.
 	 */
-	private void load(final String name)
-	{
+	private void load(final String name) {
 		Properties properties = null;
 
-		try
-		{
+		try {
 			properties = new Properties();
 			properties.load(new FileInputStream(getConfigfileName(name)));
-		}
-		catch (final IOException e)
-		{
+		} catch (final IOException e) {
 			log.error("IOException while loading provider from file.", e);
 		}
 
@@ -202,16 +183,21 @@ public class CloudProvider
 	 * Don't forget to update the other constructor!
 	 * 
 	 * @param name
+	 *            CloudProvider's name
 	 * @param classname
+	 *            Name of the dasein class this provider is based on
 	 * @param endpoint
+	 *            Endpoint to use
 	 * @param apikey
+	 *            ID or username to login
 	 * @param apisecret
+	 *            Key or password to login
 	 * @param defaultKeypair
+	 *            Default keypair to use
 	 */
 	public CloudProvider(final String name, final String classname,
 			final String endpoint, final String apikey, final String apisecret,
-			final String defaultKeypair)
-	{
+			final String defaultKeypair) {
 		this.name = name;
 		this.providerClassName = classname;
 		this.apiKey = apikey;
@@ -222,22 +208,21 @@ public class CloudProvider
 	}
 
 	/**
-	 * Loads a server (from file!) and returns it
+	 * Loads a server (from file!) and returns it.
 	 * 
 	 * @param unfriendlyName
-	 * @return
+	 *            Provider implementation's name for the server to load.
+	 * @return The server that was just started.
 	 * @throws InternalException
 	 * @throws CloudException
 	 * @throws IOException
 	 */
 	public Server loadServer(final String unfriendlyName)
-			throws InternalException, CloudException, IOException
-	{
+			throws InternalException, CloudException, IOException {
 		log.warn("Getting for name " + unfriendlyName);
 		final VirtualMachine server = getServerImpl(unfriendlyName);
 
-		if (server == null)
-		{
+		if (server == null) {
 			return null;
 		}
 
@@ -247,65 +232,64 @@ public class CloudProvider
 	}
 
 	/**
-	 * Loads all servers that have a saved representation
+	 * Loads all servers that have a saved representation.
 	 * 
-	 * @return
+	 * @return Collection of all the servers that were loaded.
 	 * @throws InternalException
 	 * @throws CloudException
 	 * @throws IOException
 	 */
 	public Collection<Server> loadLinkedServers() throws InternalException,
-			CloudException, IOException
-	{
+			CloudException, IOException {
 		final File dir = new File(getSaveFileDir());
 
 		final String[] files = dir.list();
 
-		if (files == null)
-		{
+		if (files == null) {
 			return servers;
 		}
 
-		for (final String file : files)
-		{
+		for (final String file : files) {
 			final Server server = loadServer(file);
 
 			// If the server cannot be made it was deleted and the file
 			// referencing it
 			// should also be removed.
-			if (server == null)
-			{
+			if (server == null) {
 				log.warn("Server from file " + file
 						+ " cannot be loaded. Discarting save file.");
 				deleteServerSaveFile(file);
-			}
-			else
-			{
-				addServer(server);
+			} else {
+				linkServer(server);
 			}
 		}
 
 		return servers;
 	}
 
-	private void addServer(final Server server)
-	{
+	/**
+	 * Links a server to this cloudprovider.
+	 * 
+	 * @param server
+	 *            The server to link.
+	 */
+	public void linkServer(final Server server) {
 		notifyObserversBecauseServerLinked(server);
 		servers.add(server);
 	}
 
 	/**
-	 * Delete's the server whose CloudProvider specific name is "unfriendlyName"
+	 * Delete's the server whose CloudProvider specific name is
+	 * "unfriendlyName".
 	 * 
 	 * @param unfriendlyName
+	 *            Unfriendly name of the server whose savefile to remove.
 	 */
-	private void deleteServerSaveFile(final String unfriendlyName)
-	{
+	private void deleteServerSaveFile(final String unfriendlyName) {
 		final File toBeRemoved = new File(getSaveFileDir() + unfriendlyName);
 		final boolean result = toBeRemoved.delete();
 
-		if (!result)
-		{
+		if (!result) {
 			log.error("Could not remove savefile for server " + unfriendlyName);
 		}
 	}
@@ -314,22 +298,20 @@ public class CloudProvider
 	 * Creates a new key with name "keyname", changes the default key if it has
 	 * to and stores the server to file.
 	 * 
-	 * @param acs
 	 * @param keyname
+	 *            Name of the key to create
 	 * @throws InternalException
 	 * @throws CloudException
 	 */
 	public void createKey(final String keyname, final boolean makeDefault)
-			throws InternalException, CloudException
-	{
+			throws InternalException, CloudException {
 		final ShellKeySupport shellKeySupport = providerImpl
 				.getIdentityServices().getShellKeySupport();
 
 		KeyManager.addKey(getName(), keyname,
 				shellKeySupport.createKeypair(keyname));
 
-		if (makeDefault)
-		{
+		if (makeDefault) {
 			setDefaultKeypair(keyname);
 			store();
 		}
@@ -347,49 +329,69 @@ public class CloudProvider
 	 *            The upper edge of the port range that should be allowed
 	 * @param protocol
 	 *            The protocol, UDP or TCP which should be allowed
-	 * @param CIDR
+	 * @param cidr
 	 *            The IP CIDR that should be allowed.
 	 * @throws CloudException
 	 * @throws InternalException
 	 */
 	public void addFirewallRule(final Firewall firewall, final int beginPort,
-			final int endPort, final Protocol protocol, final String CIDR)
-			throws CloudException, InternalException
-	{
-		firewallSupport.authorize(firewall.getProviderFirewallId(), CIDR,
-				protocol, beginPort, endPort);
-	}
-
-	public void deleteFirewallRule(final Firewall firewall,
-			final int beginPort, final int endPort, final Protocol protocol,
-			final String CIDR) throws CloudException, InternalException
-	{
-		firewallSupport.revoke(firewall.getProviderFirewallId(), CIDR,
+			final int endPort, final Protocol protocol, final String cidr)
+			throws CloudException, InternalException {
+		firewallSupport.authorize(firewall.getProviderFirewallId(), cidr,
 				protocol, beginPort, endPort);
 	}
 
 	/**
-	 * @return All firewalls for this CloudProvider
+	 * Deletes a firewall rule on the cloudprovider's side.
+	 * 
+	 * @param firewall
+	 *            The firewall whose rule to revoke.
+	 * @param beginPort
+	 *            The lower end of the port range.
+	 * @param endPort
+	 *            The higher end of the port range.
+	 * @param protocol
+	 *            The protocol.
+	 * @param cidr
+	 *            Ip address descriptor
+	 * @throws CloudException
+	 * @throws InternalException
+	 */
+	public void deleteFirewallRule(final Firewall firewall,
+			final int beginPort, final int endPort, final Protocol protocol,
+			final String cidr) throws CloudException, InternalException {
+		firewallSupport.revoke(firewall.getProviderFirewallId(), cidr,
+				protocol, beginPort, endPort);
+	}
+
+	/**
+	 * @return All firewalls for this CloudProvider.
 	 * @throws InternalException
 	 * @throws CloudException
 	 */
 	public Collection<Firewall> getFirewalls() throws InternalException,
-			CloudException
-	{
+			CloudException {
 		final FirewallSupport fws = providerImpl.getNetworkServices()
 				.getFirewallSupport();
 
-		if (fws == null)
-		{
+		if (fws == null) {
 			return new ArrayList<Firewall>();
 		}
 
 		return fws.list();
 	}
 
+	/**
+	 * Returns a collection of all rules for a certain firewall.
+	 * 
+	 * @param firewall
+	 *            The firewall whose rules to return.
+	 * @return A collection of all rules for a certain firewall.
+	 * @throws InternalException
+	 * @throws CloudException
+	 */
 	public Collection<FirewallRule> getFirewallRules(final String firewall)
-			throws InternalException, CloudException
-	{
+			throws InternalException, CloudException {
 		return firewallSupport.getRules(firewall);
 	}
 
@@ -398,44 +400,38 @@ public class CloudProvider
 	 * *not* by listLinkedServers() i.e. the ones that aren't managed by Scarlet
 	 * Nebula at this moment.
 	 * 
-	 * @return
+	 * @return The servers that exist in the cloud but are not linked with this
+	 *         provider.
 	 * @throws CloudException
 	 * @throws InternalException
-	 * @throws Exception
 	 */
 	public ArrayList<Server> listUnlinkedServers() throws InternalException,
-			CloudException
-	{
+			CloudException {
 		final ArrayList<Server> rv = new ArrayList<Server>();
 		// List all servers
 		for (final VirtualMachine testServer : virtualMachineServices
-				.listVirtualMachines())
-		{
+				.listVirtualMachines()) {
 			// For each server, check if this server is already linked. Do
 			// this based on his unfriendly id
 			boolean found = false;
 			for (final Iterator<Server> linkedServerIterator = servers
-					.iterator(); linkedServerIterator.hasNext() && !found;)
-			{
+					.iterator(); linkedServerIterator.hasNext() && !found;) {
 				if (linkedServerIterator.next().getUnfriendlyName()
-						.equals(testServer.getName()))
-				{
+						.equals(testServer.getName())) {
 					found = true;
 				}
 			}
 
-			if (!found)
-			{
+			if (!found) {
 				final List<String> daseinTags = new ArrayList<String>();
-				for (final String key : testServer.getTags().keySet())
-				{
+				for (final String key : testServer.getTags().keySet()) {
 					daseinTags.add(key + ":" + testServer.getTags().get(key));
 				}
 
 				rv.add(new Server(testServer, // dasein server
 						this, // cloud provider
 						"", // keypair
-						testServer.getName() + " (" + getName() + ")",// friendly
+						testServer.getName() + " (" + getName() + ")", // friendly
 																		// name
 						daseinTags, // tags
 						true, // use password
@@ -451,19 +447,27 @@ public class CloudProvider
 		return rv;
 	}
 
-	private String nullToEmpty(final String input)
-	{
+	/**
+	 * Utility method that returns the string if it is not null, or the empty
+	 * string if the string is null.
+	 * 
+	 * @param input
+	 *            The input string.
+	 * @return the input string if it is not null, or the empty string if the
+	 *         string is null.
+	 */
+	private String nullToEmpty(final String input) {
 		return (input == null) ? "" : input;
 	}
 
 	/**
 	 * Returns all servers that are currently being managed by this
-	 * CloudProvider
+	 * CloudProvider.
 	 * 
-	 * @return
+	 * @return A collection of all servers that are linked with this
+	 *         cloudprovider.
 	 */
-	public Collection<Server> listLinkedServers()
-	{
+	public Collection<Server> listLinkedServers() {
 		return servers;
 	}
 
@@ -472,12 +476,12 @@ public class CloudProvider
 	 * will and should only be called by Server.terminate().
 	 * 
 	 * @param unfriendlyName
+	 *            Unfriendly name of the server to terminate.
 	 * @throws InternalException
 	 * @throws CloudException
 	 */
 	public void terminateServer(final String unfriendlyName)
-			throws InternalException, CloudException
-	{
+			throws InternalException, CloudException {
 		virtualMachineServices.terminate(unfriendlyName);
 	}
 
@@ -485,10 +489,18 @@ public class CloudProvider
 	 * Starts a new server.
 	 * 
 	 * @param serverName
+	 *            Friendly name of the server to start
+	 * @param product
+	 *            Product (size ed) for the new server
+	 * @param image
+	 *            Image to use for the new server
+	 * @param tags
+	 *            Tags this server will have
+	 * @param keypairOrPassword
+	 *            Keypair or password to use for the server
 	 * @param firewalls
-	 *            TODO
-	 * @param size
-	 * @return
+	 *            The firewalls that will protect this server
+	 * @return The server that's either started or starting.
 	 * @throws InternalException
 	 * @throws CloudException
 	 */
@@ -496,16 +508,14 @@ public class CloudProvider
 			final VirtualMachineProduct product, final MachineImage image,
 			final Collection<String> tags, final String keypairOrPassword,
 			final Collection<String> firewalls) throws InternalException,
-			CloudException
-	{
+			CloudException {
 		final String dataCenterId = "eu-west-1b";
 		final String vlan = null;
 
 		final Collection<org.dasein.cloud.Tag> daseinTags = new ArrayList<org.dasein.cloud.Tag>();
 		int i = 0;
 
-		for (final String tag : tags)
-		{
+		for (final String tag : tags) {
 			daseinTags.add(new org.dasein.cloud.Tag("tag" + (++i), tag));
 		}
 
@@ -522,19 +532,13 @@ public class CloudProvider
 				daseinTags.toArray(new org.dasein.cloud.Tag[0])); // tags
 
 		String rootUser = daseinServer.getRootUser();
-		if (rootUser == null || rootUser.isEmpty())
-		{
+		if (rootUser == null || rootUser.isEmpty()) {
 			if (image.getName().toLowerCase().contains("ubuntu")
-					|| image.getDescription().toLowerCase().contains("ubuntu"))
-			{
+					|| image.getDescription().toLowerCase().contains("ubuntu")) {
 				rootUser = "ubuntu";
-			}
-			else if (image.getPlatform() != Platform.WINDOWS)
-			{
+			} else if (image.getPlatform() != Platform.WINDOWS) {
 				rootUser = "root";
-			}
-			else
-			{
+			} else {
 				rootUser = "";
 			}
 		}
@@ -553,17 +557,17 @@ public class CloudProvider
 												// command
 				"CPU"); // preferred datastream
 
-		linkUnlinkedServer(server);
+		server.store();
+		linkServer(server);
 		return server;
 	}
 
 	/**
 	 * @return The name of the default keypair for this provider. If no default
 	 *         keypair is set (or the default keypair is invalid) but there are
-	 *         keys available, one of these will be chosen
+	 *         keys available, one of these will be chosen.
 	 */
-	public String getDefaultKeypair()
-	{
+	public String getDefaultKeypair() {
 		// If no default keypair is entered in the cloudprovider, but there is a
 		// key for this provider, make that the default.
 
@@ -571,10 +575,8 @@ public class CloudProvider
 		// keys.
 		final Collection<String> keys = KeyManager.getKeyNames(getName());
 
-		if (defaultKeypair.isEmpty() || !keys.contains(defaultKeypair))
-		{
-			if (!keys.isEmpty())
-			{
+		if (defaultKeypair.isEmpty() || !keys.contains(defaultKeypair)) {
+			if (!keys.isEmpty()) {
 				final String newDefaultKey = keys.iterator().next();
 				setDefaultKeypair(newDefaultKey);
 				store();
@@ -591,34 +593,30 @@ public class CloudProvider
 	 * @param newDefaultKeypair
 	 *            The name of the new keypair that will become default.
 	 */
-	public void setDefaultKeypair(final String newDefaultKeypair)
-	{
-		if (KeyManager.getKeyNames(getName()).contains(newDefaultKeypair))
-		{
+	public void setDefaultKeypair(final String newDefaultKeypair) {
+		if (KeyManager.getKeyNames(getName()).contains(newDefaultKeypair)) {
 			defaultKeypair = newDefaultKeypair;
 		}
 	}
 
-	private String getDefaultStatisticsCommand()
-	{
+	/**
+	 * @return The default statistics command for this cloudprovider.
+	 */
+	private String getDefaultStatisticsCommand() {
 		final StringBuffer sb = new StringBuffer();
 
-		try
-		{
+		try {
 			BufferedReader br;
 
 			br = new BufferedReader(new FileReader(
 					Utils.internalFile("statistics.sh")));
 
 			String nextLine = "";
-			while ((nextLine = br.readLine()) != null)
-			{
+			while ((nextLine = br.readLine()) != null) {
 				sb.append(nextLine);
 				sb.append("\n");
 			}
-		}
-		catch (final Exception e)
-		{
+		} catch (final Exception e) {
 			log.error(
 					"Could not read default statistics command, continuing with empty string",
 					e);
@@ -626,76 +624,51 @@ public class CloudProvider
 		return sb.toString();
 	}
 
-	public VirtualMachineProduct getVMProductWithName(final String name)
-	{
-		try
-		{
+	/**
+	 * Returns a VirtualMachineProduct representation of a certain unfriendly
+	 * name for that product.
+	 * 
+	 * @param name
+	 *            Unfriendly name for the vm product.
+	 * @return The product with name name or null if no such product exists.
+	 */
+	public VirtualMachineProduct getVMProductWithName(final String name) {
+		try {
 			final Iterable<VirtualMachineProduct> products = virtualMachineServices
 					.listProducts(Architecture.I32);
 
-			for (final VirtualMachineProduct product : products)
-			{
-				if (name == product.getName())
-				{
+			for (final VirtualMachineProduct product : products) {
+				if (name == product.getName()) {
 					return product;
 				}
 			}
 			return null;
-		}
-		catch (final InternalException e)
-		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		catch (final CloudException e)
-		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		} catch (final Exception e) {
+			log.error("Error while getting VM Product with name", e);
 		}
 		return null;
 	}
 
 	/**
-	 * Returns the ServerServices for this CloudProvider
-	 * 
-	 * @return
-	 */
-	VirtualMachineSupport getVirtualMachineServices()
-	{
-		return virtualMachineServices;
-	}
-
-	/**
 	 * Returns the endpoint this CloudProvider uses.
 	 * 
-	 * @return
+	 * @return The endpoint this CloudProvider uses.
 	 */
-	String getEndpoint()
-	{
+	private String getEndpoint() {
 		return endpoint;
 	}
 
 	/**
-	 * Returns this CloudProvider's userdefined name (the one uniquely
-	 * identifying the (Provider, Endpoint, Access) pair.
-	 * 
-	 * @return
+	 * Closes this CloudProvider (call it before the program ends).
 	 */
-	String getCloudName()
-	{
-		return providerImpl.getCloudName();
-	}
-
-	/**
-	 * Closes this CloudProvider (call it before the program ends)
-	 */
-	void close()
-	{
+	void close() {
 		providerImpl.close();
 	}
 
-	private org.dasein.cloud.ProviderContext getCurrentContext()
-	{
+	/**
+	 * @return A dasein provider context for this cloudprovider.
+	 */
+	private org.dasein.cloud.ProviderContext getCurrentContext() {
 		final org.dasein.cloud.ProviderContext context = new org.dasein.cloud.ProviderContext();
 
 		context.setAccountNumber("000000000000");
@@ -709,25 +682,21 @@ public class CloudProvider
 	/**
 	 * Returns a collection of instance sizes that are possible.
 	 * 
-	 * @return
+	 * @param architecture
+	 *            The architecture for which all instance sizes should be
+	 *            listed.
+	 * @return An iterator over all possible instance sizes for that
+	 *         architecture.
 	 */
 	public Iterable<VirtualMachineProduct> getPossibleInstanceSizes(
-			final Architecture architecture)
-	{
+			final Architecture architecture) {
 		Iterable<VirtualMachineProduct> products = null;
-		try
-		{
+		try {
 			products = virtualMachineServices.listProducts(architecture);
-		}
-		catch (final InternalException e)
-		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		catch (final CloudException e)
-		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		} catch (final Exception e) {
+			log.error(
+					"Error while querying the list of VM products for architecture "
+							+ architecture, e);
 		}
 
 		return products;
@@ -736,50 +705,45 @@ public class CloudProvider
 	/**
 	 * Returns the underlying class' name...
 	 * 
-	 * @return
+	 * @return The name of the underlying dasein class.
 	 */
-	public String getUnderlyingClassname()
-	{
+	public String getUnderlyingClassname() {
 		return providerClassName;
 	}
 
+	/**
+	 * 
+	 * @param unfriendlyName
+	 *            The unfriendly name for which a dasein server is needed.
+	 * @return The dasein server implementation from an unfriendly name.
+	 * @throws InternalException
+	 * @throws CloudException
+	 */
 	public VirtualMachine getServerImpl(final String unfriendlyName)
-			throws InternalException, CloudException
-	{
+			throws InternalException, CloudException {
 		return virtualMachineServices.getVirtualMachine(unfriendlyName);
 	}
 
+	/**
+	 * 
+	 * @param platform
+	 *            Platform to filter on
+	 * @param architecture
+	 *            Architecture to filter on.
+	 * @return An iterator over all possible machine images for a certain
+	 *         architecture & platform.
+	 */
 	public Iterable<MachineImage> getAvailableMachineImages(
-			final Platform platform, final Architecture architecture)
-	{
+			final Platform platform, final Architecture architecture) {
 		Iterable<MachineImage> images = null;
-		try
-		{
+		try {
 			images = computeServices.getImageSupport().searchMachineImages("",
 					platform, architecture);
-		}
-		catch (final CloudException e)
-		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		catch (final InternalException e)
-		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		} catch (final Exception e) {
+			log.error("Error while searching for a machine image with platform "
+					+ platform + " and architecture " + architecture);
 		}
 		return images;
-	}
-
-	/**
-	 * Makes the unlinked Server "server" linked.
-	 * 
-	 * @param server
-	 */
-	public void linkUnlinkedServer(final Server server)
-	{
-		server.store();
-		addServer(server);
 	}
 
 	/**
@@ -787,11 +751,12 @@ public class CloudProvider
 	 * by Server.pause()
 	 * 
 	 * @param server
+	 *            The server to pause.
 	 * @throws InternalException
 	 * @throws CloudException
 	 */
-	void pause(final Server server) throws InternalException, CloudException
-	{
+	public void pause(final Server server) throws InternalException,
+			CloudException {
 		virtualMachineServices.pause(server.getUnfriendlyName());
 	}
 
@@ -803,8 +768,8 @@ public class CloudProvider
 	 * @throws InternalException
 	 * @throws CloudException
 	 */
-	void resume(final Server server) throws InternalException, CloudException
-	{
+	public void resume(final Server server) throws InternalException,
+			CloudException {
 		log.info("Resuming " + server);
 		virtualMachineServices.boot(server.getUnfriendlyName());
 	}
@@ -814,11 +779,12 @@ public class CloudProvider
 	 * called by Server.reboot()
 	 * 
 	 * @param server
+	 *            The server to reboot.
 	 * @throws CloudException
 	 * @throws InternalException
 	 */
-	void reboot(final Server server) throws CloudException, InternalException
-	{
+	public void reboot(final Server server) throws CloudException,
+			InternalException {
 		virtualMachineServices.reboot(server.getUnfriendlyName());
 	}
 
@@ -827,9 +793,9 @@ public class CloudProvider
 	 * longer be linked to this CloudProvider
 	 * 
 	 * @param selectedServer
+	 *            The server to unlink.
 	 */
-	public void unlink(final Server selectedServer)
-	{
+	public void unlink(final Server selectedServer) {
 		servers.remove(selectedServer);
 		deleteServerSaveFile(selectedServer.getUnfriendlyName());
 		notifyObserversBecauseServerUnlinked(selectedServer);
@@ -843,12 +809,9 @@ public class CloudProvider
 	 * @return True if a linked server with name "friendlyName" exists,
 	 *         otherwise false
 	 */
-	public boolean hasServer(final String friendlyName)
-	{
-		for (final Server s : servers)
-		{
-			if (s.getFriendlyName().equals(friendlyName))
-			{
+	public boolean hasServer(final String friendlyName) {
+		for (final Server s : servers) {
+			if (s.getFriendlyName().equals(friendlyName)) {
 				return true;
 			}
 		}
@@ -860,10 +823,9 @@ public class CloudProvider
 	 * Returns the identifier that uniquely identifies this CloudProvider
 	 * instance.
 	 * 
-	 * @return
+	 * @return Friendly name for this cloudprovider.
 	 */
-	public String getName()
-	{
+	public String getName() {
 		return name;
 	}
 
@@ -871,8 +833,7 @@ public class CloudProvider
 	 * @return The directory (ending in "/") all servers with this CloudProvider
 	 *         should be saved in.
 	 */
-	String getSaveFileDir()
-	{
+	String getSaveFileDir() {
 		return "servers/" + getName() + "/";
 	}
 
@@ -880,26 +841,13 @@ public class CloudProvider
 	 * Saves the file describing this CloudProvider. If a cloudprovider by the
 	 * name "providername" already exists, the savefile will be overwritten.
 	 * 
-	 * @param providername
-	 *            The provider's name
-	 * @param providerclass
-	 *            The provider's class (e.g. org.dasein.cloud.aws.AWSCloud)
-	 * @param endpoint
-	 *            The endpoint the connection is based on
-	 * @param apikey
-	 *            Access id
-	 * @param apisecret
-	 *            Access key
 	 */
-	public void store()
-	{
+	public void store() {
 		// First assure the providers/ directory exists
 		final File dir = new File("providers");
 
-		if (!dir.exists() || !dir.isDirectory())
-		{
-			if (!dir.mkdir())
-			{
+		if (!dir.exists() || !dir.isDirectory()) {
+			if (!dir.mkdir()) {
 				log.error("Could not create providers/ directory.");
 			}
 		}
@@ -914,50 +862,40 @@ public class CloudProvider
 		prop.setProperty("defaultKeypair", defaultKeypair);
 		prop.setProperty("favoriteImages", getSerialisedFavoriteImages());
 
-		try
-		{
+		try {
 			prop.store(new FileOutputStream(getConfigfileName(name)), null);
-		}
-		catch (final FileNotFoundException e)
-		{
+		} catch (final FileNotFoundException e) {
 			log.error("Properties file describing cloud provider could not be created.");
-		}
-		catch (final IOException e)
-		{
+		} catch (final IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
 
-	private String getSerialisedFavoriteImages()
-	{
+	/**
+	 * @return A serialised base64-drepresentation of the favorite images. Ready
+	 *         to be debase64d and deserialised.
+	 */
+	private String getSerialisedFavoriteImages() {
 		final ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 		ObjectOutputStream oout = null;
 		String rv = "";
-		try
-		{
+		try {
 			oout = new ObjectOutputStream(outputStream);
 			log.info("size of serialised images collection = "
 					+ favoriteImages.size());
 			oout.writeObject(favoriteImages);
-			final byte bytes[] = outputStream.toByteArray();
+			final byte[] bytes = outputStream.toByteArray();
 
-			final byte encodedBytes[] = Base64.encodeBase64(bytes, false);
+			final byte[] encodedBytes = Base64.encodeBase64(bytes, false);
 			rv = new String(encodedBytes);
-		}
-		catch (final IOException e)
-		{
+		} catch (final IOException e) {
 			log.error("Exception while serialising favorite images.", e);
-		}
-		finally
-		{
-			try
-			{
+		} finally {
+			try {
 				oout.close();
 				outputStream.close();
-			}
-			catch (final IOException ignore)
-			{
+			} catch (final IOException ignore) {
 			}
 		}
 
@@ -976,19 +914,15 @@ public class CloudProvider
 	 */
 	@SuppressWarnings("unchecked")
 	private Collection<MachineImage> deserialiseFavoriteImages(
-			final String input)
-	{
-		if (input == null || input.isEmpty())
-		{
+			final String input) {
+		if (input == null || input.isEmpty()) {
 			return new ArrayList<MachineImage>();
 		}
 
-		final byte decodedBytes[] = Base64.decodeBase64(input.getBytes());
+		final byte[] decodedBytes = Base64.decodeBase64(input.getBytes());
 
-		if (decodedBytes != null)
-		{
-			try
-			{
+		if (decodedBytes != null) {
+			try {
 				final ObjectInputStream objectIn = new ObjectInputStream(
 						new ByteArrayInputStream(decodedBytes));
 
@@ -996,47 +930,53 @@ public class CloudProvider
 
 				return (Collection<MachineImage>) readObject;
 
-			}
-			catch (final Exception e)
-			{
+			} catch (final Exception e) {
 				log.error("Exception while deserialising favorite images.", e);
 			}
 		}
 		return new ArrayList<MachineImage>();
 	}
 
-	static String getConfigfileName(final String providername)
-	{
+	/**
+	 * @param providername
+	 *            The friendly name for the provider whose file we're asking
+	 *            for.
+	 * @return The filename of this provider's savefile (or at least where it
+	 *         would be if one existed).
+	 */
+	public static String getConfigfileName(final String providername) {
 		return "providers/" + providername + ".properties";
 	}
 
-	static Collection<String> getProviderNames()
-	{
+	/**
+	 * @return Returns a collection of all providernames that exist on disk.
+	 */
+	static Collection<String> getProviderNames() {
 		final File dir = new File("providers");
 
-		if (!dir.exists() || !dir.isDirectory())
-		{
+		if (!dir.exists() || !dir.isDirectory()) {
 			return new ArrayList<String>();
 		}
 
 		final Collection<String> files = Arrays.asList(dir.list());
 		final Collection<String> rv = new ArrayList<String>(files.size());
 
-		for (final String file : files)
-		{
+		for (final String file : files) {
 			rv.add(file.replaceFirst(".properties$", ""));
 		}
 		return rv;
 	}
 
-	public boolean isLinked(final Server server)
-	{
+	/**
+	 * @param server
+	 *            The server to check.
+	 * @return True if this server is linked, false otherwise.
+	 */
+	public boolean isLinked(final Server server) {
 		// Not using servers.contains because this seems to use Server.equals
 		// which isn't implemented...
-		for (final Server linkedServer : servers)
-		{
-			if (server == linkedServer)
-			{
+		for (final Server linkedServer : servers) {
+			if (server == linkedServer) {
 				return true;
 			}
 		}
@@ -1044,8 +984,14 @@ public class CloudProvider
 		return false;
 	}
 
-	public void addServerLinkUnlinkObserver(final ServerLinkUnlinkObserver obs)
-	{
+	/**
+	 * Adds an observer that will be notified when a new server is linked or
+	 * unlinked.
+	 * 
+	 * @param obs
+	 *            The observer that will be notified.
+	 */
+	public void addServerLinkUnlinkObserver(final ServerLinkUnlinkObserver obs) {
 		linkUnlinkObservers.add(obs);
 	}
 
@@ -1054,14 +1000,18 @@ public class CloudProvider
 	 * 
 	 * @return True if a connection can be made, false otherwise.
 	 */
-	public boolean test()
-	{
+	public boolean test() {
 		return providerImpl.testContext() != null;
 	}
 
+	/**
+	 * @return A collection of all keys that exist on the provider side but not
+	 *         locally for this provider.
+	 * @throws InternalException
+	 * @throws CloudException
+	 */
 	public Collection<String> getUnknownKeys() throws InternalException,
-			CloudException
-	{
+			CloudException {
 		final ShellKeySupport shellKeySupport = providerImpl
 				.getIdentityServices().getShellKeySupport();
 
@@ -1074,24 +1024,26 @@ public class CloudProvider
 	/**
 	 * @return True if this provider supports SSH keys, false otherwise.
 	 */
-	public boolean supportsSSHKeys()
-	{
+	public boolean supportsSSHKeys() {
 		return providerImpl.getIdentityServices() != null
 				&& providerImpl.getIdentityServices().getShellKeySupport() != null;
 	}
 
-	public boolean unlinkedKeyExists(final String checkKeyname)
-	{
+	/**
+	 * 
+	 * @param checkKeyname
+	 *            The name of the key to check.
+	 * @return Returns true if a key by the name given exists on the
+	 *         cloudprovider's side.
+	 */
+	public boolean linkedUnlinkedKeyExists(final String checkKeyname) {
 		final ShellKeySupport shellKeySupport = providerImpl
 				.getIdentityServices().getShellKeySupport();
 
 		boolean exists = false;
-		try
-		{
+		try {
 			exists = shellKeySupport.list().contains(checkKeyname);
-		}
-		catch (final Exception e)
-		{
+		} catch (final Exception e) {
 			log.error("Could not list keys.", e);
 		}
 		return exists;
@@ -1109,12 +1061,10 @@ public class CloudProvider
 	 *            True if it should become default, false otherwise.
 	 */
 	public void importKey(final String keyname, final File keyFile,
-			final boolean makeDefault)
-	{
+			final boolean makeDefault) {
 		KeyManager.addKey(getName(), keyname, keyFile);
 
-		if (makeDefault)
-		{
+		if (makeDefault) {
 			setDefaultKeypair(keyname);
 			store();
 		}
@@ -1124,12 +1074,12 @@ public class CloudProvider
 	 * Deletes and SSH key, both locally and, if it exists, remotely.
 	 * 
 	 * @param key
+	 *            The key to delete remotely & locally.
 	 * @throws CloudException
 	 * @throws InternalException
 	 */
 	public void deleteKey(final String key) throws InternalException,
-			CloudException
-	{
+			CloudException {
 		KeyManager.deleteKey(getName(), key);
 
 		final ShellKeySupport shellKeySupport = providerImpl
@@ -1149,8 +1099,7 @@ public class CloudProvider
 	 * @throws CloudException
 	 */
 	public Firewall createFirewall(final String firewallName)
-			throws InternalException, CloudException
-	{
+			throws InternalException, CloudException {
 		final String id = firewallSupport.create(firewallName, firewallName);
 		final Firewall firewall = new Firewall();
 		firewall.setName(firewallName);
@@ -1158,32 +1107,53 @@ public class CloudProvider
 		return firewall;
 	}
 
+	/**
+	 * Deletes a firewall remotely.
+	 * 
+	 * @param firewall
+	 *            The firewall to delete (if possible)
+	 * @throws InternalException
+	 * @throws CloudException
+	 */
 	public void deleteFirewall(final Firewall firewall)
-			throws InternalException, CloudException
-	{
+			throws InternalException, CloudException {
 		firewallSupport.delete(firewall.getProviderFirewallId());
 	}
 
-	public boolean supportsFirewalls()
-	{
+	/**
+	 * @return True if this cloudprivder supports firewalls, false otherwise.
+	 */
+	public boolean supportsFirewalls() {
 		return firewallSupport != null;
 	}
 
-	public void addToFavorites(final MachineImage image)
-	{
-		if (!imageInFavorites(image))
-		{
+	/**
+	 * Adds an image to the list of images that are favorite for this provider
+	 * (without saving).
+	 * 
+	 * @param image
+	 *            The image to add.
+	 */
+	public void addToFavorites(final MachineImage image) {
+		if (!imageInFavorites(image)) {
 			favoriteImages.add(image);
 		}
 	}
 
-	public Collection<MachineImage> getFavoriteImages()
-	{
-		return favoriteImages;
+	/**
+	 * @return A copy of all favorite images for this cloudprovider.
+	 */
+	public Collection<MachineImage> getFavoriteImages() {
+		return new ArrayList<MachineImage>(favoriteImages);
 	}
 
-	public void removeFromFavorites(final MachineImage image)
-	{
+	/**
+	 * Removes a MachineImage from the list of favorites (without storing).
+	 * 
+	 * @param image
+	 *            The image to remove from favorites.
+	 */
+	public void removeFromFavorites(final MachineImage image) {
 		favoriteImages.remove(image);
 	}
 
@@ -1195,15 +1165,12 @@ public class CloudProvider
 	 * @return True if testImage is a favorite image for this cloudprovider,
 	 *         false otherwise.
 	 */
-	public boolean imageInFavorites(final MachineImage testImage)
-	{
+	public boolean imageInFavorites(final MachineImage testImage) {
 		boolean found = false;
 
-		for (MachineImage image : favoriteImages)
-		{
+		for (final MachineImage image : favoriteImages) {
 			if (image.getProviderMachineImageId() == testImage
-					.getProviderMachineImageId())
-			{
+					.getProviderMachineImageId()) {
 				found = true;
 				break;
 			}

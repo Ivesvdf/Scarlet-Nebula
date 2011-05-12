@@ -35,8 +35,7 @@ import be.ac.ua.comp.scarletnebula.gui.ThrobberBarWithText;
 import be.ac.ua.comp.scarletnebula.gui.addserverwizard.ChooseImagePage;
 import be.ac.ua.comp.scarletnebula.misc.SwingWorkerWithThrobber;
 
-public class LinkUnlinkWindow extends JDialog
-{
+public class LinkUnlinkWindow extends JDialog {
 	private static final Log log = LogFactory.getLog(ChooseImagePage.class);
 
 	private static final long serialVersionUID = 1L;
@@ -46,8 +45,7 @@ public class LinkUnlinkWindow extends JDialog
 			CreateNewServerServer.NO_NEW_SERVER);
 	private final CollapsablePanel throbberPanel;
 
-	LinkUnlinkWindow(final JFrame parent)
-	{
+	LinkUnlinkWindow(final JFrame parent) {
 		super(parent, "Link/Unlink Providers", true);
 
 		setSize(500, 400);
@@ -74,8 +72,7 @@ public class LinkUnlinkWindow extends JDialog
 		setVisible(true);
 	}
 
-	private JPanel getBorderedThrobber(final ThrobberBarWithText throbber)
-	{
+	private JPanel getBorderedThrobber(final ThrobberBarWithText throbber) {
 		final JPanel borderedThrobber = new JPanel(new BorderLayout());
 		borderedThrobber.add(throbber, BorderLayout.CENTER);
 		borderedThrobber.setBorder(BorderFactory
@@ -83,17 +80,14 @@ public class LinkUnlinkWindow extends JDialog
 		return borderedThrobber;
 	}
 
-	private JPanel getBottomPanel()
-	{
+	private JPanel getBottomPanel() {
 		final JPanel bottomPanel = new JPanel();
 		bottomPanel.setLayout(new BoxLayout(bottomPanel, BoxLayout.X_AXIS));
 		bottomPanel.add(Box.createHorizontalGlue());
 		final JButton cancelButton = ButtonFactory.createCancelButton();
-		cancelButton.addActionListener(new ActionListener()
-		{
+		cancelButton.addActionListener(new ActionListener() {
 			@Override
-			public void actionPerformed(final ActionEvent e)
-			{
+			public void actionPerformed(final ActionEvent e) {
 				LinkUnlinkWindow.this.dispose();
 			}
 		});
@@ -101,11 +95,9 @@ public class LinkUnlinkWindow extends JDialog
 		bottomPanel.add(cancelButton);
 		bottomPanel.add(Box.createHorizontalStrut(10));
 		final JButton okButton = ButtonFactory.createOkButton();
-		okButton.addActionListener(new ActionListener()
-		{
+		okButton.addActionListener(new ActionListener() {
 			@Override
-			public void actionPerformed(final ActionEvent e)
-			{
+			public void actionPerformed(final ActionEvent e) {
 				actuallyLinkUnlink();
 				LinkUnlinkWindow.this.dispose();
 			}
@@ -116,8 +108,7 @@ public class LinkUnlinkWindow extends JDialog
 		return bottomPanel;
 	}
 
-	private final JPanel getMainPanel()
-	{
+	private final JPanel getMainPanel() {
 		final JPanel mainPanel = new JPanel(new GridBagLayout());
 		mainPanel.setBorder(BorderFactory.createEmptyBorder(10, 0, 0, 0));
 		final ServerList linkedServerList = new ServerList(
@@ -162,16 +153,13 @@ public class LinkUnlinkWindow extends JDialog
 		final JButton linkSelectionButton = new JButton("<");
 		final JButton unlinkSelectionButton = new JButton(">");
 
-		linkSelectionButton.addActionListener(new ActionListener()
-		{
+		linkSelectionButton.addActionListener(new ActionListener() {
 			@Override
-			public void actionPerformed(final ActionEvent e)
-			{
+			public void actionPerformed(final ActionEvent e) {
 				// Move selection from unlinked to linked list
 				final int selection = unlinkedServerList.getSelectedIndex();
 
-				if (selection < 0)
-				{
+				if (selection < 0) {
 					return;
 				}
 
@@ -184,16 +172,13 @@ public class LinkUnlinkWindow extends JDialog
 			}
 		});
 
-		unlinkSelectionButton.addActionListener(new ActionListener()
-		{
+		unlinkSelectionButton.addActionListener(new ActionListener() {
 			@Override
-			public void actionPerformed(final ActionEvent e)
-			{
+			public void actionPerformed(final ActionEvent e) {
 				// Move selection from linked to unlinked list
 				final int selection = linkedServerList.getSelectedIndex();
 
-				if (selection < 0)
-				{
+				if (selection < 0) {
 					return;
 				}
 
@@ -207,8 +192,7 @@ public class LinkUnlinkWindow extends JDialog
 								"Unlink Server", JOptionPane.YES_NO_OPTION,
 								JOptionPane.WARNING_MESSAGE, null, null, null);
 
-				if (answer != JOptionPane.YES_OPTION)
-				{
+				if (answer != JOptionPane.YES_OPTION) {
 					return;
 				}
 
@@ -242,15 +226,13 @@ public class LinkUnlinkWindow extends JDialog
 		return mainPanel;
 	}
 
-	protected void actuallyLinkUnlink()
-	{
+	protected void actuallyLinkUnlink() {
 		// Walk over all servers in the linked serverlist and link those that
 		// aren't linked
-		for (final Server server : linkedServerListModel.getVisibleServers())
-		{
-			if (!server.getCloud().isLinked(server))
-			{
-				server.getCloud().linkUnlinkedServer(server);
+		for (final Server server : linkedServerListModel.getVisibleServers()) {
+			if (!server.getCloud().isLinked(server)) {
+				server.store();
+				server.getCloud().linkServer(server);
 			}
 		}
 		// ///////// TODO: Removals and additions need to be reflected in the
@@ -258,39 +240,28 @@ public class LinkUnlinkWindow extends JDialog
 
 		// Walk over all servers in the unlinked serverlist and unlink those
 		// that are linked
-		for (final Server server : unlinkedServerListModel.getVisibleServers())
-		{
-			if (server.getCloud().isLinked(server))
-			{
+		for (final Server server : unlinkedServerListModel.getVisibleServers()) {
+			if (server.getCloud().isLinked(server)) {
 				server.getCloud().unlink(server);
 			}
 		}
 	}
 
-	private void fillUnlinkedList(final ServerListModel unlinkedServerListModel)
-	{
+	private void fillUnlinkedList(final ServerListModel unlinkedServerListModel) {
 		final SwingWorkerWithThrobber<ServerListModel, Server> fillUnlinkedListWorker = new SwingWorkerWithThrobber<ServerListModel, Server>(
-				throbberPanel)
-		{
+				throbberPanel) {
 			@Override
-			protected ServerListModel doInBackground() throws Exception
-			{
+			protected ServerListModel doInBackground() throws Exception {
 				for (final CloudProvider prov : CloudManager.get()
-						.getLinkedCloudProviders())
-				{
-					try
-					{
-						for (final Server server : prov.listUnlinkedServers())
-						{
+						.getLinkedCloudProviders()) {
+					try {
+						for (final Server server : prov.listUnlinkedServers()) {
 							unlinkedServerListModel.addServer(server);
-							if (isCancelled())
-							{
+							if (isCancelled()) {
 								break;
 							}
 						}
-					}
-					catch (final Exception e)
-					{
+					} catch (final Exception e) {
 						log.error("Error while querying unlinked servers.");
 					}
 				}
@@ -300,24 +271,19 @@ public class LinkUnlinkWindow extends JDialog
 		fillUnlinkedListWorker.execute();
 	}
 
-	private void fillLinkedList(final ServerListModel linkedServerListModel)
-	{
+	private void fillLinkedList(final ServerListModel linkedServerListModel) {
 		for (final CloudProvider prov : CloudManager.get()
-				.getLinkedCloudProviders())
-		{
-			for (final Server server : prov.listLinkedServers())
-			{
+				.getLinkedCloudProviders()) {
+			for (final Server server : prov.listLinkedServers()) {
 				linkedServerListModel.addServer(server);
 			}
 		}
 	}
 
 	@Override
-	protected void processWindowEvent(final WindowEvent e)
-	{
+	protected void processWindowEvent(final WindowEvent e) {
 		super.processWindowEvent(e);
-		if (e.getID() == WindowEvent.WINDOW_CLOSING)
-		{
+		if (e.getID() == WindowEvent.WINDOW_CLOSING) {
 			actuallyLinkUnlink();
 			LinkUnlinkWindow.this.dispose();
 		}

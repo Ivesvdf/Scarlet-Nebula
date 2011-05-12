@@ -21,20 +21,17 @@ import be.ac.ua.comp.scarletnebula.core.Server;
 import be.ac.ua.comp.scarletnebula.gui.BetterTextLabel;
 import be.ac.ua.comp.scarletnebula.gui.ButtonFactory;
 
-public class StatisticsPropertiesWindow extends JDialog
-{
+public class StatisticsPropertiesWindow extends JDialog {
 	private static final long serialVersionUID = 1L;
 	final private Collection<ActionListener> actionListeners = new ArrayList<ActionListener>();
 	final private JTextArea commandArea = new JTextArea();
 	private int maxEventId = 0;
 
 	public StatisticsPropertiesWindow(final JDialog parent,
-			final Collection<Server> servers)
-	{
+			final Collection<Server> servers) {
 		super(parent, "Statistics Properties", true);
 
-		if (servers.size() == 1)
-		{
+		if (servers.size() == 1) {
 			setTitle("Statistics Properties for "
 					+ servers.iterator().next().getFriendlyName());
 		}
@@ -52,28 +49,22 @@ public class StatisticsPropertiesWindow extends JDialog
 
 		boolean allCommandsAreEqual = true;
 
-		if (servers.size() > 1)
-		{
+		if (servers.size() > 1) {
 			final String firstServersText = servers.iterator().next()
 					.getStatisticsCommand();
 
-			for (final Server server : servers)
-			{
-				if (!server.getStatisticsCommand().equals(firstServersText))
-				{
+			for (final Server server : servers) {
+				if (!server.getStatisticsCommand().equals(firstServersText)) {
 					allCommandsAreEqual = false;
 					break;
 				}
 			}
 		}
 
-		if (allCommandsAreEqual)
-		{
+		if (allCommandsAreEqual) {
 			commandArea.setText(servers.iterator().next()
 					.getStatisticsCommand());
-		}
-		else
-		{
+		} else {
 			commandArea
 					.setText("The selected servers have differing Statistic commands.");
 		}
@@ -89,27 +80,21 @@ public class StatisticsPropertiesWindow extends JDialog
 
 	}
 
-	private JPanel getButtonPanel(final Collection<Server> servers)
-	{
+	private JPanel getButtonPanel(final Collection<Server> servers) {
 		final JPanel buttonPanel = new JPanel();
 		final JButton cancelButton = ButtonFactory.createCancelButton();
-		cancelButton.addActionListener(new ActionListener()
-		{
+		cancelButton.addActionListener(new ActionListener() {
 			@Override
-			public void actionPerformed(final ActionEvent e)
-			{
+			public void actionPerformed(final ActionEvent e) {
 				dispose();
 			}
 		});
 		final JButton okButton = ButtonFactory.createOkButton();
-		okButton.addActionListener(new ActionListener()
-		{
+		okButton.addActionListener(new ActionListener() {
 
 			@Override
-			public void actionPerformed(final ActionEvent e)
-			{
-				if (servers.size() > 1)
-				{
+			public void actionPerformed(final ActionEvent e) {
+				if (servers.size() > 1) {
 					final int result = JOptionPane
 							.showConfirmDialog(
 									StatisticsPropertiesWindow.this,
@@ -117,13 +102,10 @@ public class StatisticsPropertiesWindow extends JDialog
 									"Proceed?", JOptionPane.OK_CANCEL_OPTION,
 									JOptionPane.WARNING_MESSAGE);
 
-					if (result == JOptionPane.OK_OPTION)
-					{
+					if (result == JOptionPane.OK_OPTION) {
 						saveAndClose(servers);
 					}
-				}
-				else
-				{
+				} else {
 					saveAndClose(servers);
 				}
 
@@ -140,22 +122,18 @@ public class StatisticsPropertiesWindow extends JDialog
 		return buttonPanel;
 	}
 
-	public void addActionListener(final ActionListener listener)
-	{
+	public void addActionListener(final ActionListener listener) {
 		actionListeners.add(listener);
 	}
 
-	private void saveAndClose(final Collection<Server> servers)
-	{
-		for (final Server server : servers)
-		{
+	private void saveAndClose(final Collection<Server> servers) {
+		for (final Server server : servers) {
 			server.setStatisticsCommand(commandArea.getText());
 		}
 		dispose();
 		final ActionEvent actionEvent = new ActionEvent(this, maxEventId++,
 				"Window Closed");
-		for (final ActionListener listener : actionListeners)
-		{
+		for (final ActionListener listener : actionListeners) {
 			listener.actionPerformed(actionEvent);
 		}
 	}

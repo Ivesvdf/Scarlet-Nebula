@@ -15,20 +15,17 @@ import be.ac.ua.comp.scarletnebula.gui.BetterTextLabel;
 import be.ac.ua.comp.scarletnebula.wizard.DataRecorder;
 import be.ac.ua.comp.scarletnebula.wizard.WizardPage;
 
-public class SelectEndpointPage extends WizardPage
-{
+public class SelectEndpointPage extends WizardPage {
 	private static final long serialVersionUID = 1253358185847124985L;
 	JList endpoints = null;
 	CloudProviderTemplate template = null;
 
-	SelectEndpointPage(final CloudProviderTemplate template)
-	{
+	SelectEndpointPage(final CloudProviderTemplate template) {
 		this.template = template;
 
 		final Collection<String> endpointNames = new ArrayList<String>();
 
-		for (final CloudProviderTemplate.Endpoint e : template.getEndPoints())
-		{
+		for (final CloudProviderTemplate.Endpoint e : template.getEndPoints()) {
 			endpointNames.add(e.getName());
 		}
 
@@ -50,14 +47,11 @@ public class SelectEndpointPage extends WizardPage
 	}
 
 	@Override
-	public WizardPage next(final DataRecorder recorder)
-	{
+	public WizardPage next(final DataRecorder recorder) {
 		CloudProviderTemplate.Endpoint endpoint = null;
 
-		for (final CloudProviderTemplate.Endpoint e : template.getEndPoints())
-		{
-			if (e.getName().equals(endpoints.getSelectedValue()))
-			{
+		for (final CloudProviderTemplate.Endpoint e : template.getEndPoints()) {
+			if (e.getName().equals(endpoints.getSelectedValue())) {
 				endpoint = e;
 				break;
 			}

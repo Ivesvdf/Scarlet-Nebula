@@ -26,8 +26,7 @@ import be.ac.ua.comp.scarletnebula.misc.Utils;
  * 
  */
 public class LabelEditSwitcherPanel extends JPanel implements MouseListener,
-		KeyListener
-{
+		KeyListener {
 	private static final long serialVersionUID = 1L;
 	private String content;
 	private final Collection<ContentChangedListener> listeners = new ArrayList<ContentChangedListener>();
@@ -40,8 +39,7 @@ public class LabelEditSwitcherPanel extends JPanel implements MouseListener,
 	 * @param initialContent
 	 *            The text that will initially be shown by the JLabel
 	 */
-	public LabelEditSwitcherPanel(final String initialContent)
-	{
+	public LabelEditSwitcherPanel(final String initialContent) {
 		this(initialContent, new JTextField());
 	}
 
@@ -56,8 +54,7 @@ public class LabelEditSwitcherPanel extends JPanel implements MouseListener,
 	 *            display to edit mode
 	 */
 	public LabelEditSwitcherPanel(final String initialContent,
-			final JTextField theTextField)
-	{
+			final JTextField theTextField) {
 		super(new BorderLayout());
 		addMouseListener(this);
 		addKeyListener(this);
@@ -73,8 +70,7 @@ public class LabelEditSwitcherPanel extends JPanel implements MouseListener,
 	/**
 	 * Fills the component with everything required by display mode
 	 */
-	final private void fillWithLabel()
-	{
+	final private void fillWithLabel() {
 		setLayout(new GridBagLayout());
 
 		final GridBagConstraints c = new GridBagConstraints();
@@ -96,8 +92,7 @@ public class LabelEditSwitcherPanel extends JPanel implements MouseListener,
 	/**
 	 * Fills the component with everything required by edit mode
 	 */
-	final protected void fillWithEdit()
-	{
+	final protected void fillWithEdit() {
 		setLayout(new BorderLayout());
 		textField.setText(content);
 
@@ -111,8 +106,7 @@ public class LabelEditSwitcherPanel extends JPanel implements MouseListener,
 	 * @param listener
 	 *            The listener to be added
 	 */
-	public void addContentChangedListener(final ContentChangedListener listener)
-	{
+	public void addContentChangedListener(final ContentChangedListener listener) {
 		listeners.add(listener);
 	}
 
@@ -123,11 +117,9 @@ public class LabelEditSwitcherPanel extends JPanel implements MouseListener,
 	 * 
 	 */
 	private final class TryGoingBackToEditActionHandler implements
-			ActionListener
-	{
+			ActionListener {
 		@Override
-		public void actionPerformed(final ActionEvent e)
-		{
+		public void actionPerformed(final ActionEvent e) {
 			goToEdit();
 		}
 	}
@@ -139,23 +131,18 @@ public class LabelEditSwitcherPanel extends JPanel implements MouseListener,
 	 * 
 	 */
 	private final class TryGoingBackToLabelActionHandler implements
-			ActionListener
-	{
+			ActionListener {
 		private final JTextField edit;
 
-		private TryGoingBackToLabelActionHandler(final JTextField edit)
-		{
+		private TryGoingBackToLabelActionHandler(final JTextField edit) {
 			this.edit = edit;
 		}
 
 		@Override
-		public void actionPerformed(final ActionEvent e)
-		{
+		public void actionPerformed(final ActionEvent e) {
 			// Check if input is valid before switching
-			if (edit.getInputVerifier() != null)
-			{
-				if (!edit.getInputVerifier().verify(edit))
-				{
+			if (edit.getInputVerifier() != null) {
+				if (!edit.getInputVerifier().verify(edit)) {
 					return;
 				}
 			}
@@ -163,8 +150,7 @@ public class LabelEditSwitcherPanel extends JPanel implements MouseListener,
 
 			goToLabel();
 
-			for (final ContentChangedListener l : listeners)
-			{
+			for (final ContentChangedListener l : listeners) {
 				l.changed(content);
 			}
 		}
@@ -177,8 +163,7 @@ public class LabelEditSwitcherPanel extends JPanel implements MouseListener,
 	 * @author ives
 	 * 
 	 */
-	public interface ContentChangedListener
-	{
+	public interface ContentChangedListener {
 		void changed(String newContents);
 	}
 
@@ -186,21 +171,17 @@ public class LabelEditSwitcherPanel extends JPanel implements MouseListener,
 	 * @see MouseListener
 	 */
 	@Override
-	public void mouseClicked(final MouseEvent e)
-	{
+	public void mouseClicked(final MouseEvent e) {
 	}
 
 	/**
 	 * @see MouseListener
 	 */
 	@Override
-	public void mousePressed(final MouseEvent e)
-	{
-		if (e.getClickCount() == 2)
-		{
+	public void mousePressed(final MouseEvent e) {
+		if (e.getClickCount() == 2) {
 			// Hack to see if we're in labelmode
-			if (getComponentCount() == 2)
-			{
+			if (getComponentCount() == 2) {
 				goToEdit();
 			}
 		}
@@ -211,31 +192,27 @@ public class LabelEditSwitcherPanel extends JPanel implements MouseListener,
 	 * @see MouseListener
 	 */
 	@Override
-	public void mouseReleased(final MouseEvent e)
-	{
+	public void mouseReleased(final MouseEvent e) {
 	}
 
 	/**
 	 * @see MouseListener
 	 */
 	@Override
-	public void mouseEntered(final MouseEvent e)
-	{
+	public void mouseEntered(final MouseEvent e) {
 	}
 
 	/**
 	 * @see MouseListener
 	 */
 	@Override
-	public void mouseExited(final MouseEvent e)
-	{
+	public void mouseExited(final MouseEvent e) {
 	}
 
 	/**
 	 * Moves the component from display to edit mode
 	 */
-	private void goToEdit()
-	{
+	private void goToEdit() {
 		removeAll();
 		fillWithEdit();
 		revalidate();
@@ -245,8 +222,7 @@ public class LabelEditSwitcherPanel extends JPanel implements MouseListener,
 	 * Moves the component from edit to display mode if and only if it passes
 	 * validation.
 	 */
-	private void goToLabel()
-	{
+	private void goToLabel() {
 		removeAll();
 		fillWithLabel();
 		revalidate();
@@ -256,8 +232,7 @@ public class LabelEditSwitcherPanel extends JPanel implements MouseListener,
 	 * @see KeyListener
 	 */
 	@Override
-	public void keyTyped(final KeyEvent e)
-	{
+	public void keyTyped(final KeyEvent e) {
 		// TODO Auto-generated method stub
 
 	}
@@ -266,13 +241,10 @@ public class LabelEditSwitcherPanel extends JPanel implements MouseListener,
 	 * @see KeyListener
 	 */
 	@Override
-	public void keyPressed(final KeyEvent e)
-	{
-		if (e.getKeyCode() == KeyEvent.VK_ESCAPE)
-		{
+	public void keyPressed(final KeyEvent e) {
+		if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
 			// Hack to see if we're in edit mode
-			if (getComponentCount() == 1)
-			{
+			if (getComponentCount() == 1) {
 				goToLabel();
 			}
 		}
@@ -282,8 +254,7 @@ public class LabelEditSwitcherPanel extends JPanel implements MouseListener,
 	 * @see KeyListener
 	 */
 	@Override
-	public void keyReleased(final KeyEvent e)
-	{
+	public void keyReleased(final KeyEvent e) {
 		// TODO Auto-generated method stub
 
 	}

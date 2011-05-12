@@ -15,14 +15,12 @@ import be.ac.ua.comp.scarletnebula.wizard.WizardPage;
 import com.jgoodies.forms.builder.DefaultFormBuilder;
 import com.jgoodies.forms.layout.FormLayout;
 
-public class SelectNewKeynamePage extends WizardPage
-{
+public class SelectNewKeynamePage extends WizardPage {
 	private static final long serialVersionUID = 1L;
 	private final CloudProvider provider;
 	private final JTextField namefield = new JTextField();
 
-	public SelectNewKeynamePage(final CloudProvider provider)
-	{
+	public SelectNewKeynamePage(final CloudProvider provider) {
 		super(new BorderLayout());
 		final BetterTextLabel toptext = new BetterTextLabel(
 				"Choose a name for the SSH key you'll use to establish SSH connections to servers.");
@@ -49,16 +47,12 @@ public class SelectNewKeynamePage extends WizardPage
 	}
 
 	@Override
-	public WizardPage next(final DataRecorder recorder)
-	{
+	public WizardPage next(final DataRecorder recorder) {
 		WizardPage finalPage;
-		if (!namefield.getInputVerifier().verify(namefield))
-		{
+		if (!namefield.getInputVerifier().verify(namefield)) {
 			// do not proceed
 			finalPage = null;
-		}
-		else
-		{
+		} else {
 			finalPage = new FinalNewKeyPage(provider, namefield.getText());
 		}
 

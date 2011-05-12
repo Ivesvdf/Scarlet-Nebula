@@ -9,8 +9,7 @@ import javax.swing.JTextField;
 import be.ac.ua.comp.scarletnebula.core.CloudManager;
 import be.ac.ua.comp.scarletnebula.core.Server;
 
-public class ServernameInputVerifier extends LoudInputVerifier
-{
+public class ServernameInputVerifier extends LoudInputVerifier {
 	private final Server excludeServer;
 
 	/**
@@ -23,16 +22,14 @@ public class ServernameInputVerifier extends LoudInputVerifier
 	 *            ie the server whose name we're checking.
 	 */
 	public ServernameInputVerifier(final JTextField textfield,
-			final Server excludeServer)
-	{
+			final Server excludeServer) {
 		super(
 				textfield,
 				"A servername must be at least 1 character long and can only contain letters, numbers, parentheses and dashes.");
 		this.excludeServer = excludeServer;
 	}
 
-	public ServernameInputVerifier(final JTextField textfield)
-	{
+	public ServernameInputVerifier(final JTextField textfield) {
 		this(textfield, null);
 	}
 
@@ -40,19 +37,15 @@ public class ServernameInputVerifier extends LoudInputVerifier
 	 * @see InputVerifier
 	 */
 	@Override
-	public boolean verify(final JComponent input)
-	{
+	public boolean verify(final JComponent input) {
 		final String text = ((JTextField) input).getText();
 
 		boolean valid = true;
-		if (!Pattern.matches("[a-zA-Z0-9 )(-]+", text))
-		{
+		if (!Pattern.matches("[a-zA-Z0-9 )(-]+", text)) {
 			valid = false;
-		}
-		else if (((excludeServer != null && !text.equals(excludeServer
+		} else if (((excludeServer != null && !text.equals(excludeServer
 				.getFriendlyName())) || excludeServer == null)
-				&& CloudManager.get().serverExists(text))
-		{
+				&& CloudManager.get().serverExists(text)) {
 			valid = false;
 		}
 

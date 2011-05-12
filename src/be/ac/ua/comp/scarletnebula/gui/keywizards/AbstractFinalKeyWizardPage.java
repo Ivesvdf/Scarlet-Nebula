@@ -22,66 +22,53 @@ import be.ac.ua.comp.scarletnebula.misc.WorkerPropertyChangeListener;
 import be.ac.ua.comp.scarletnebula.wizard.DataRecorder;
 import be.ac.ua.comp.scarletnebula.wizard.WizardPage;
 
-public abstract class AbstractFinalKeyWizardPage extends WizardPage
-{
+public abstract class AbstractFinalKeyWizardPage extends WizardPage {
 	private final class TestKeyExistsWorker extends
-			SwingWorkerWithThrobber<Boolean, String>
-	{
+			SwingWorkerWithThrobber<Boolean, String> {
 		private final String checkKeyname;
 		private final CloudProvider provider;
 
 		private TestKeyExistsWorker(final Collapsable throbber,
-				final String checkKeyname, final CloudProvider provider)
-		{
+				final String checkKeyname, final CloudProvider provider) {
 			super(throbber);
 			this.checkKeyname = checkKeyname;
 			this.provider = provider;
 		}
 
 		@Override
-		protected Boolean doInBackground() throws Exception
-		{
-			final boolean exists = provider.unlinkedKeyExists(checkKeyname);
+		protected Boolean doInBackground() throws Exception {
+			final boolean exists = provider
+					.linkedUnlinkedKeyExists(checkKeyname);
 			return !exists;
 		}
 	}
 
 	private final class SetWarningMessagePropertyListener extends
-			WorkerPropertyChangeListener
-	{
+			WorkerPropertyChangeListener {
 		private final SwingWorkerWithThrobber<Boolean, String> checkKeyWorker;
 
 		private SetWarningMessagePropertyListener(
-				final SwingWorkerWithThrobber<Boolean, String> checkKeyWorker)
-		{
+				final SwingWorkerWithThrobber<Boolean, String> checkKeyWorker) {
 			this.checkKeyWorker = checkKeyWorker;
 		}
 
 		@Override
-		public void taskStarted(final PropertyChangeEvent evt)
-		{
+		public void taskStarted(final PropertyChangeEvent evt) {
 		}
 
 		@Override
-		public void taskIsFinished(final PropertyChangeEvent evt)
-		{
-			try
-			{
+		public void taskIsFinished(final PropertyChangeEvent evt) {
+			try {
 				final boolean goodkey = checkKeyWorker.get();
 
-				if (goodkey)
-				{
+				if (goodkey) {
 					keyValidityMessage
 							.setText("<html><font color=\"green\">This keyname is not in use and the key is ready to be created. </font></html>");
-				}
-				else
-				{
+				} else {
 					keyValidityMessage
 							.setText("<html><font color=\"red\"><b>Warning!</b> Keyname already in use! Proceed at your own risk.</font></html>");
 				}
-			}
-			catch (final Exception e)
-			{
+			} catch (final Exception e) {
 				log.error("The impossible happened ", e);
 			}
 
@@ -89,8 +76,7 @@ public abstract class AbstractFinalKeyWizardPage extends WizardPage
 
 		@Override
 		public void progressChanged(final Object source, final int newProgress,
-				final PropertyChangeEvent evt)
-		{
+				final PropertyChangeEvent evt) {
 		}
 	}
 
@@ -100,8 +86,7 @@ public abstract class AbstractFinalKeyWizardPage extends WizardPage
 	private final JLabel keyValidityMessage = new JLabel();
 
 	protected AbstractFinalKeyWizardPage(final CloudProvider provider,
-			final String toptext, final String checkKeyname)
-	{
+			final String toptext, final String checkKeyname) {
 		super(new BorderLayout());
 		final BetterTextLabel toptextLabel = new BetterTextLabel(toptext);
 		toptextLabel.setBorder(BorderFactory.createEmptyBorder(20, 20, 0, 20));
@@ -109,8 +94,7 @@ public abstract class AbstractFinalKeyWizardPage extends WizardPage
 		makeDefault = new JCheckBox("Make this the default keypair.", true);
 
 		if (KeyManager.getKeyNames(provider.getName()).isEmpty()
-				|| provider.getDefaultKeypair().isEmpty())
-		{
+				|| provider.getDefaultKeypair().isEmpty()) {
 			makeDefault.setEnabled(false);
 		}
 		makeDefault.setBorder(BorderFactory.createEmptyBorder(0, 20, 10, 20));
@@ -123,8 +107,7 @@ public abstract class AbstractFinalKeyWizardPage extends WizardPage
 		final JPanel textAndThrobber = new JPanel(new BorderLayout());
 
 		textAndThrobber.add(toptextLabel, BorderLayout.NORTH);
-		if (!checkKeyname.isEmpty())
-		{
+		if (!checkKeyname.isEmpty()) {
 			final ThrobberBarWithText throbber = new ThrobberBarWithText(
 					"Verifying key uniqueness...");
 			final CollapsablePanel throbberPanel = new CollapsablePanel(
@@ -143,18 +126,15 @@ public abstract class AbstractFinalKeyWizardPage extends WizardPage
 		add(textAndThrobber, BorderLayout.NORTH);
 	}
 
-	protected boolean makeKeyDefault()
-	{
+	protected boolean makeKeyDefault() {
 		return makeDefault.isSelected();
 	}
 
 	@Override
-	public WizardPage next(final DataRecorder recorder)
-	{
+	public WizardPage next(final DataRecorder recorder) {
 		performAction((KeyRecorder) recorder);
 
-		if (makeDefault.isSelected())
-		{
+		if (makeDefault.isSelected()) {
 			// Make this key the default key
 		}
 		return null;
@@ -163,14 +143,12 @@ public abstract class AbstractFinalKeyWizardPage extends WizardPage
 	protected abstract void performAction(KeyRecorder recorder);
 
 	@Override
-	public boolean nextIsEnabled()
-	{
+	public boolean nextIsEnabled() {
 		return false;
 	}
 
 	@Override
-	public boolean finishIsEnabled()
-	{
+	public boolean finishIsEnabled() {
 		return true;
 	}
 

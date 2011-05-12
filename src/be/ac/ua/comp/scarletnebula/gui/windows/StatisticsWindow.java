@@ -12,20 +12,17 @@ import be.ac.ua.comp.scarletnebula.core.Server;
 import be.ac.ua.comp.scarletnebula.gui.AllGraphsPanel;
 import be.ac.ua.comp.scarletnebula.misc.Utils;
 
-public class StatisticsWindow extends JDialog
-{
+public class StatisticsWindow extends JDialog {
 	private static final long serialVersionUID = 1L;
 
 	public StatisticsWindow(final JFrame parent,
-			final Collection<Server> servers)
-	{
+			final Collection<Server> servers) {
 		super(parent, false);
 
 		setLocationRelativeTo(parent);
 		setLocationByPlatform(true);
 		final List<String> servernames = new ArrayList<String>(servers.size());
-		for (final Server server : servers)
-		{
+		for (final Server server : servers) {
 			servernames.add(server.getFriendlyName());
 		}
 		setTitle("Statistics for " + Utils.implode(servernames, ","));

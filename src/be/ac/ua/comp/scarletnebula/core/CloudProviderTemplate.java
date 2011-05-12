@@ -3,50 +3,41 @@ package be.ac.ua.comp.scarletnebula.core;
 import java.util.ArrayList;
 import java.util.Collection;
 
-public class CloudProviderTemplate
-{
-	public class Endpoint
-	{
+public class CloudProviderTemplate {
+	public class Endpoint {
 		private final String url;
 		private String name;
 		private String shortname;
 
 		public Endpoint(final String name, final String shortname,
-				final String url)
-		{
+				final String url) {
 			this.name = name;
 			this.shortname = shortname;
 			this.url = url;
 		}
 
-		public String getName()
-		{
+		public String getName() {
 			return name;
 		}
 
-		public String getShortName()
-		{
+		public String getShortName() {
 			return shortname;
 		}
 
-		public String getURL()
-		{
+		public String getURL() {
 			return url;
 		}
 
-		public void setName(final String name)
-		{
+		public void setName(final String name) {
 			this.name = name;
 		}
 
-		public void setShortName(final String shortname)
-		{
+		public void setShortName(final String shortname) {
 			this.shortname = shortname;
 		}
 	}
 
-	public static enum AccessMethod
-	{
+	public static enum AccessMethod {
 		KEY, EMAILPASSWD
 	};
 
@@ -61,8 +52,7 @@ public class CloudProviderTemplate
 	boolean usesAccessKey = true;
 
 	public CloudProviderTemplate(final String name, final String shortname,
-			final String classname, final AccessMethod accessMethod)
-	{
+			final String classname, final AccessMethod accessMethod) {
 		this.name = name;
 		this.shortname = shortname;
 		this.classname = classname;
@@ -70,53 +60,43 @@ public class CloudProviderTemplate
 	}
 
 	public void addEndPoint(final String name, final String shortname,
-			final String url)
-	{
+			final String url) {
 		endpoints.add(new Endpoint(name, shortname, url));
 	}
 
-	public boolean getAllowCustomEndpoint()
-	{
+	public boolean getAllowCustomEndpoint() {
 		return allowCustomEndpoint;
 	}
 
-	public String getClassname()
-	{
+	public String getClassname() {
 		return classname;
 	}
 
-	public Collection<Endpoint> getEndPoints()
-	{
+	public Collection<Endpoint> getEndPoints() {
 		return endpoints;
 	}
 
-	public String getName()
-	{
+	public String getName() {
 		return name;
 	}
 
-	public boolean getUsesAccessKey()
-	{
+	public boolean getUsesAccessKey() {
 		return usesAccessKey;
 	}
 
-	public void setAllowCustomEndpoint(final boolean val)
-	{
+	public void setAllowCustomEndpoint(final boolean val) {
 		allowCustomEndpoint = val;
 	}
 
-	public void setUsesAccessKey(final boolean b)
-	{
+	public void setUsesAccessKey(final boolean b) {
 		usesAccessKey = b;
 	}
 
-	public String getShortName()
-	{
+	public String getShortName() {
 		return shortname;
 	}
 
-	public AccessMethod getAccessMethod()
-	{
+	public AccessMethod getAccessMethod() {
 		return accessMethod;
 	}
 }

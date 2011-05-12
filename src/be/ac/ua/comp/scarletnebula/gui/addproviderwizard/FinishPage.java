@@ -8,12 +8,10 @@ import be.ac.ua.comp.scarletnebula.gui.BetterTextLabel;
 import be.ac.ua.comp.scarletnebula.wizard.DataRecorder;
 import be.ac.ua.comp.scarletnebula.wizard.WizardPage;
 
-public class FinishPage extends WizardPage
-{
+public class FinishPage extends WizardPage {
 	private static final long serialVersionUID = 1L;
 
-	public FinishPage(final AddProviderWizardDataRecorder rec)
-	{
+	public FinishPage(final AddProviderWizardDataRecorder rec) {
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
 		String txt = "<html>Press the Finish button to create the CloudProvider "
@@ -32,12 +30,9 @@ public class FinishPage extends WizardPage
 
 		final boolean credentialsOk = tmpProvider.test();
 
-		if (credentialsOk)
-		{
+		if (credentialsOk) {
 			txt += "<br/><br/><font color=\"green\"><b>Succesfully connected to this CloudProvider. </font></html>";
-		}
-		else
-		{
+		} else {
 			txt += "<br/><br/><font color=\"red\"><b>Warning!</b> Could not connect to this CloudProvider! "
 					+ "Continue at your own risk or press the Previous button to try again. </font></html>";
 		}
@@ -48,20 +43,17 @@ public class FinishPage extends WizardPage
 	}
 
 	@Override
-	public boolean nextIsEnabled()
-	{
+	public boolean nextIsEnabled() {
 		return false;
 	}
 
 	@Override
-	public boolean finishIsEnabled()
-	{
+	public boolean finishIsEnabled() {
 		return true;
 	}
 
 	@Override
-	public WizardPage next(final DataRecorder recorder)
-	{
+	public WizardPage next(final DataRecorder recorder) {
 		return null;
 	}
 }
