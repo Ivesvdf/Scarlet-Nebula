@@ -80,18 +80,16 @@ public final class CloudManager {
 		providerTemplates.add(aws);
 
 		// Rackspace
-		final CloudProviderTemplate rackspace = new CloudProviderTemplate(
-				"Rackspace (not implemented)", "Rackspace",
-				"org.dasein.cloud.aws.AWSCloud", AccessMethod.KEY);
-		providerTemplates.add(rackspace);
+		// final CloudProviderTemplate rackspace = new CloudProviderTemplate(
+		// "Rackspace (not implemented)", "Rackspace",
+		// "org.dasein.cloud.aws.AWSCloud", AccessMethod.KEY);
+		// providerTemplates.add(rackspace);
 
-		// Radix
-		final CloudProviderTemplate radix = new CloudProviderTemplate(
-				"Mock Cloud Provider", "Radix",
-				"be.ac.ua.comp.scarletnebula.misc.RadixCloudProvider",
+		final CloudProviderTemplate mock = new CloudProviderTemplate(
+				"Mock Cloud Provider", "Mock",
+				"be.ac.ua.comp.scarletnebula.misc.MockCloudProvider",
 				AccessMethod.EMAILPASSWD);
-		radix.addEndPoint("default", "default", "radix.cmi.ua.ac.be");
-		providerTemplates.add(radix);
+		providerTemplates.add(mock);
 
 		final CloudProviderTemplate cloudSigma = new CloudProviderTemplate(
 				"CloudSigma", "CloudSigma",

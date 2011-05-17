@@ -28,7 +28,7 @@ public class BareGraph extends Graph {
 	private final NumberAxis range = new NumberAxis();
 
 	/**
-	 * Constructor
+	 * Constructor.
 	 * 
 	 * @param maximumAge
 	 *            The age after which data is no longer displayed in the graph
@@ -40,7 +40,9 @@ public class BareGraph extends Graph {
 		domain.setLowerMargin(0.0);
 		domain.setUpperMargin(0.0);
 		domain.setTickLabelsVisible(true);
-		domain.setTickUnit(new DateTickUnit(DateTickUnitType.SECOND, 30));
+		final int secondsBetweenTicks = 30;
+		domain.setTickUnit(new DateTickUnit(DateTickUnitType.SECOND,
+				secondsBetweenTicks));
 
 		range.setTickUnit(new NumberTickUnit(0.2, new DecimalFormat(), 5));
 		range.setRange(0, 1);

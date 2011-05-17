@@ -62,7 +62,7 @@ public class AllGraphsPanel extends JPanel implements NewDatastreamListener,
 			constraints.insets = new Insets(10, 0, 0, 0);
 
 			final DecoratedGraph graph = new DecoratedGraph(
-					(long) 30 * 60 * 1000,
+					(long) 10 * 60 * 1000,
 					statisticsManager.getDatastream(streamname));
 			graph.registerRelativeDatastream(server, streamname, Color.GREEN);
 			graph.addServerToRefresh(server);

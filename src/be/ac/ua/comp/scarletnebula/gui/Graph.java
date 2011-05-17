@@ -24,7 +24,7 @@ import be.ac.ua.comp.scarletnebula.core.ServerStatisticsManager;
 import be.ac.ua.comp.scarletnebula.core.TimedDatapoint;
 
 /**
- * An abstract Graph that displays streaming data
+ * An abstract Graph that displays streaming data.
  * 
  * @author ives
  * 
@@ -39,7 +39,7 @@ public abstract class Graph implements NewDatapointListener {
 	private final Collection<Server> serversToRefresh = new ArrayList<Server>();
 
 	/**
-	 * Constructor
+	 * Constructor.
 	 * 
 	 * @param maximumAge
 	 *            The age after which data is no longer displayed in the graph
@@ -61,8 +61,6 @@ public abstract class Graph implements NewDatapointListener {
 	 *            Server that generates this relative datastream
 	 * @param streamname
 	 *            The stream's short ID name (e.g. MEM)
-	 * @param streamtitle
-	 *            The stream's potentially longer nice name (e.g. Memory)
 	 * @param color
 	 *            The color this stream will be displayed in
 	 */
@@ -83,7 +81,7 @@ public abstract class Graph implements NewDatapointListener {
 
 	/**
 	 * Returns the JFreeChart ChartPanel that will be updated as this object is
-	 * updated
+	 * updated.
 	 * 
 	 * @return The ChartPanel containing the Graph
 	 */
@@ -91,12 +89,10 @@ public abstract class Graph implements NewDatapointListener {
 
 	/**
 	 * Registers a new datapoint for the stream named streamname, which was
-	 * measured at value, at the current time
+	 * measured at value, at the current time.
 	 * 
-	 * @param streamname
-	 *            Stream identifier name
-	 * @param value
-	 *            Current measurement for streamname
+	 * @param datapoint
+	 *            The datapoint to add (now).
 	 */
 	@Override
 	public void newDataPoint(final Datapoint datapoint) {
@@ -105,14 +101,21 @@ public abstract class Graph implements NewDatapointListener {
 
 	/**
 	 * Adds a new server to the list of servers to be refreshed when a new
-	 * datapoint is received
+	 * datapoint is received.
 	 * 
 	 * @param server
+	 *            Server that's refreshed.
 	 */
 	public void addServerToRefresh(final Server server) {
 		serversToRefresh.add(server);
 	}
 
+	/**
+	 * Adds a list of datapoints.
+	 * 
+	 * @param datapoints
+	 *            The timed datapoints to add.
+	 */
 	public void addListOfDatapoints(final List<TimedDatapoint> datapoints) {
 		for (final TimedDatapoint datapoint : datapoints) {
 			newDataPoint(new Millisecond(new Date(datapoint.getTimeMs())),

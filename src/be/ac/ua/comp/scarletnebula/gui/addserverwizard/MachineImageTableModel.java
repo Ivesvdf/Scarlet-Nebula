@@ -8,11 +8,23 @@ import javax.swing.table.AbstractTableModel;
 
 import org.dasein.cloud.compute.MachineImage;
 
+/**
+ * Model for a table containing MachineImages.
+ * 
+ * @author ives
+ * 
+ */
 public class MachineImageTableModel extends AbstractTableModel {
 	private static final long serialVersionUID = 1L;
 	private List<String> columnNames = null;
 	private List<MachineImage> rows = null;
 
+	/**
+	 * Constructor.
+	 * 
+	 * @param rows
+	 *            The initial rows to contain.
+	 */
 	public MachineImageTableModel(final List<MachineImage> rows) {
 		final String[] columns = { "Name", "Description", "Type" };
 		this.columnNames = Arrays.asList(columns);
@@ -44,6 +56,11 @@ public class MachineImageTableModel extends AbstractTableModel {
 		return String.class;
 	}
 
+	/**
+	 * @param rowIndex
+	 *            Model index
+	 * @return The MachineImage at that index.
+	 */
 	public MachineImage getRow(final int rowIndex) {
 		return rows.get(rowIndex);
 	}
@@ -60,11 +77,14 @@ public class MachineImageTableModel extends AbstractTableModel {
 				return img.getDescription();
 			case 2:
 				return img.getType().toString();
+			default:
+				return "";
 		}
-
-		return null;
 	}
 
+	/**
+	 * Removes all rows.
+	 */
 	public void clear() {
 		if (getRowCount() == 0) {
 			return;
@@ -75,6 +95,12 @@ public class MachineImageTableModel extends AbstractTableModel {
 		fireTableRowsDeleted(0, rowcount - 1);
 	}
 
+	/**
+	 * Adds a collection of images to the model.
+	 * 
+	 * @param images
+	 *            The images to add.
+	 */
 	public void addImages(final Collection<MachineImage> images) {
 		final int prevRowCount = getRowCount();
 		rows.addAll(images);
@@ -82,8 +108,13 @@ public class MachineImageTableModel extends AbstractTableModel {
 				prevRowCount - 1 + images.size());
 	}
 
-	public MachineImage getImage(final int identifier) {
-		return getRow(identifier);
+	/**
+	 * @param rowIndex
+	 *            The index of the row to return
+	 * @return The machineimage at that index.
+	 */
+	public MachineImage getImage(final int rowIndex) {
+		return getRow(rowIndex);
 	}
 
 }

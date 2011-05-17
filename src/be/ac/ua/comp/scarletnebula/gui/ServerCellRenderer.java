@@ -97,7 +97,7 @@ class ServerCellRenderer implements ListCellRenderer {
 
 	private ChartPanel createAndStoreBareChartPanel(final JList list,
 			final Server server) {
-		final BareGraph graph = new BareGraph((long) 30 * 60 * 1000);
+		final BareGraph graph = new BareGraph((long) 10 * 60 * 1000);
 		graph.registerRelativeDatastream(server,
 				server.getPreferredDatastream(), Color.GREEN);
 		graph.addServerToRefresh(server);

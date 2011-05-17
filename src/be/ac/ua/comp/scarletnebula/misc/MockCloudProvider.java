@@ -20,6 +20,7 @@ import org.dasein.cloud.compute.ComputeServices;
 import org.dasein.cloud.compute.MachineImage;
 import org.dasein.cloud.compute.MachineImageFormat;
 import org.dasein.cloud.compute.MachineImageSupport;
+import org.dasein.cloud.compute.MachineImageType;
 import org.dasein.cloud.compute.Platform;
 import org.dasein.cloud.compute.SnapshotSupport;
 import org.dasein.cloud.compute.VirtualMachine;
@@ -33,10 +34,10 @@ import org.dasein.cloud.identity.IdentityServices;
 import org.dasein.cloud.network.NetworkServices;
 import org.dasein.cloud.platform.PlatformServices;
 
-public class RadixCloudProvider extends CloudProvider {
+public class MockCloudProvider extends CloudProvider {
 	Map<UUID, VirtualMachine> createdServers = new HashMap<UUID, VirtualMachine>();
 
-	public class RadixMachineImageSupport implements MachineImageSupport {
+	public class MockImageSupport implements MachineImageSupport {
 
 		@Override
 		public void downloadImage(final String arg0, final OutputStream arg1)
@@ -148,8 +149,9 @@ public class RadixCloudProvider extends CloudProvider {
 				final Platform arg1, final Architecture arg2)
 				throws CloudException, InternalException {
 			final MachineImage foo = new MachineImage();
-			foo.setName("some name");
+			foo.setName("some namde");
 			foo.setDescription("some descr");
+			foo.setType(MachineImageType.STORAGE);
 			return Arrays.asList(foo);
 		}
 
@@ -201,7 +203,7 @@ public class RadixCloudProvider extends CloudProvider {
 
 	@Override
 	public ComputeServices getComputeServices() {
-		return new RadixComputeServices();
+		return new MockComputeServices();
 	}
 
 	@Override
@@ -234,7 +236,7 @@ public class RadixCloudProvider extends CloudProvider {
 		return null;
 	}
 
-	class RadixComputeServices implements ComputeServices {
+	class MockComputeServices implements ComputeServices {
 		@Override
 		public AutoScalingSupport getAutoScalingSupport() {
 			// TODO Auto-generated method stub
@@ -243,7 +245,7 @@ public class RadixCloudProvider extends CloudProvider {
 
 		@Override
 		public MachineImageSupport getImageSupport() {
-			return new RadixMachineImageSupport();
+			return new MockImageSupport();
 		}
 
 		@Override
@@ -254,7 +256,7 @@ public class RadixCloudProvider extends CloudProvider {
 
 		@Override
 		public VirtualMachineSupport getVirtualMachineSupport() {
-			return new RadixVirtualMachineSupport();
+			return new MockVirtualMachineSupport();
 		}
 
 		@Override
@@ -293,7 +295,7 @@ public class RadixCloudProvider extends CloudProvider {
 
 	}
 
-	class RadixVirtualMachineSupport implements VirtualMachineSupport {
+	class MockVirtualMachineSupport implements VirtualMachineSupport {
 
 		@Override
 		public void boot(final String arg0) throws InternalException,
@@ -391,7 +393,7 @@ public class RadixCloudProvider extends CloudProvider {
 				final String arg6, final boolean arg7, final boolean arg8,
 				final String[] arg9, final Tag... arg10)
 				throws InternalException, CloudException {
-			final RadixVirtualMachine vm = new RadixVirtualMachine();
+			final MockVirtualMachine vm = new MockVirtualMachine();
 			vm.setName(arg3);
 			final UUID uuid = UUID.randomUUID();
 			vm.setProviderVirtualMachineId(uuid.toString());
@@ -455,7 +457,7 @@ public class RadixCloudProvider extends CloudProvider {
 
 	};
 
-	class RadixVirtualMachine extends VirtualMachine {
+	class MockVirtualMachine extends VirtualMachine {
 		private static final long serialVersionUID = 1L;
 
 		@Override
