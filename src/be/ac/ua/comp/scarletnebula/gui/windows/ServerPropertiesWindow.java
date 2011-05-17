@@ -179,6 +179,7 @@ public class ServerPropertiesWindow extends JDialog {
 		Component sshLoginMethodComponent = null;
 		Component providerComponent = null;
 		Component vncComponent = null;
+		Component statisticsCommandComponent = null;
 
 		if (servers.size() == 1) {
 			final Server server = servers.iterator().next();
@@ -188,12 +189,14 @@ public class ServerPropertiesWindow extends JDialog {
 			sshLoginMethodComponent = getSingleServerSshLoginMethodComponent(server);
 			providerComponent = getSingleProviderComponent(server);
 			vncComponent = getSingleVNCComponent(server);
+			statisticsCommandComponent = getSingleStatisticsCommandComponent(server);
 		} else {
 			servernameComponent = getMultipleServerServerNameComponent(servers);
 			servertagComponent = getMultipleServerTagComponent(servers);
 			sshLoginMethodComponent = new JLabel("...");
 			providerComponent = getMultipleServersProviderComponent(servers);
 			vncComponent = new JLabel("...");
+			statisticsCommandComponent = new JLabel("...");
 		}
 
 		builder.append("Name", servernameComponent);
@@ -201,8 +204,7 @@ public class ServerPropertiesWindow extends JDialog {
 		builder.nextLine();
 
 		builder.append("SSH Login", sshLoginMethodComponent);
-		builder.append("Status", statusLabel);
-
+		builder.append("Statistics Command", statisticsCommandComponent);
 		builder.nextLine();
 
 		builder.append("Provider", providerComponent);
@@ -214,8 +216,10 @@ public class ServerPropertiesWindow extends JDialog {
 		builder.nextLine();
 
 		builder.append("DNS Address", dnsLabel);
-
 		builder.append("IP Address", ipLabel);
+		builder.nextLine();
+
+		builder.append("Status", statusLabel);
 		builder.nextLine();
 
 		builder.appendSeparator("Cloud Specific Information");
@@ -229,6 +233,36 @@ public class ServerPropertiesWindow extends JDialog {
 		final JScrollPane bodyScrollPane = new JScrollPane(builder.getPanel());
 		bodyScrollPane.setBorder(null);
 		overviewTab.add(bodyScrollPane);
+	}
+
+	private String getStatisticsCommandRep(Server server) {
+		String returnValue;
+
+		String statisticsCommand = server.getStatisticsCommand();
+		if (statisticsCommand.isEmpty()) {
+			returnValue = "(None)";
+		} else {
+			if (statisticsCommand.equals(server.getCloud()
+					.getDefaultStatisticsCommand())) {
+				returnValue = "(Default)";
+			} else {
+				returnValue = "(Custom)";
+			}
+		}
+		return returnValue;
+	}
+
+	private Component getSingleStatisticsCommandComponent(final Server server) {
+		return new ChangeableLabel(getStatisticsCommandRep(server),
+				new Executable<JLabel>() {
+					@Override
+					public void run(final JLabel text) {
+						new EditStatisticsCommandWindow(
+								ServerPropertiesWindow.this, server);
+
+						text.setText(getStatisticsCommandRep(server));
+					}
+				});
 	}
 
 	private String getVNCRep(final Server server) {

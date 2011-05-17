@@ -601,7 +601,7 @@ public class CloudProvider {
 	/**
 	 * @return The default statistics command for this cloudprovider.
 	 */
-	private String getDefaultStatisticsCommand() {
+	public String getDefaultStatisticsCommand() {
 		final StringBuffer sb = new StringBuffer();
 
 		try {
