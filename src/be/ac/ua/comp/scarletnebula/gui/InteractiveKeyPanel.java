@@ -1,4 +1,4 @@
-package be.ac.ua.comp.scarletnebula.gui.windows;
+package be.ac.ua.comp.scarletnebula.gui;
 
 import java.awt.BorderLayout;
 import java.awt.GridBagConstraints;
@@ -17,7 +17,6 @@ import javax.swing.SwingWorker;
 import javax.swing.border.BevelBorder;
 
 import be.ac.ua.comp.scarletnebula.core.CloudProvider;
-import be.ac.ua.comp.scarletnebula.gui.KeylistWithDefault;
 import be.ac.ua.comp.scarletnebula.gui.keywizards.ImportKeyWizard;
 import be.ac.ua.comp.scarletnebula.gui.keywizards.KeyRecorder;
 import be.ac.ua.comp.scarletnebula.gui.keywizards.NewKeyWizard;

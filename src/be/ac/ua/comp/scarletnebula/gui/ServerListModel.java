@@ -10,6 +10,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import be.ac.ua.comp.scarletnebula.core.Server;
+import be.ac.ua.comp.scarletnebula.misc.SearchHelper;
 
 public class ServerListModel extends AbstractListModel {
 	public static enum CreateNewServerServer {

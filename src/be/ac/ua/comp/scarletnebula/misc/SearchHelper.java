@@ -1,4 +1,4 @@
-package be.ac.ua.comp.scarletnebula.gui;
+package be.ac.ua.comp.scarletnebula.misc;
 
 import java.util.Collection;
 import java.util.LinkedList;

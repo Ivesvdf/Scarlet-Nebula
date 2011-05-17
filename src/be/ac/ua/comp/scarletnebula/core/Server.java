@@ -19,7 +19,7 @@ import org.dasein.cloud.compute.VirtualMachine;
 import org.dasein.cloud.compute.VmState;
 
 import be.ac.ua.comp.scarletnebula.gui.GraphPanelCache;
-import be.ac.ua.comp.scarletnebula.gui.SearchHelper;
+import be.ac.ua.comp.scarletnebula.misc.SearchHelper;
 import be.ac.ua.comp.scarletnebula.misc.Utils;
 
 import com.jcraft.jsch.UserInfo;

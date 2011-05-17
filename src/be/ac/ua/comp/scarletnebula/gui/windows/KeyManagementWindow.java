@@ -5,6 +5,7 @@ import java.awt.BorderLayout;
 import javax.swing.JDialog;
 
 import be.ac.ua.comp.scarletnebula.core.CloudProvider;
+import be.ac.ua.comp.scarletnebula.gui.InteractiveKeyPanel;
 
 public class KeyManagementWindow extends JDialog {
 	private static final long serialVersionUID = 1L;

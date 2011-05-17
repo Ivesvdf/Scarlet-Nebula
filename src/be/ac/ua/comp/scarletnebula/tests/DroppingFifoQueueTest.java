@@ -1,10 +1,12 @@
-package be.ac.ua.comp.scarletnebula.misc;
+package be.ac.ua.comp.scarletnebula.tests;
 
 import static org.junit.Assert.assertEquals;
 
 import java.util.Arrays;
 
 import org.junit.Test;
+
+import be.ac.ua.comp.scarletnebula.misc.DroppingFifoQueue;
 
 public class DroppingFifoQueueTest {
 	@Test

@@ -8,6 +8,7 @@ import javax.swing.JTabbedPane;
 import be.ac.ua.comp.scarletnebula.core.CloudProvider;
 import be.ac.ua.comp.scarletnebula.gui.FavoriteImagesPanel;
 import be.ac.ua.comp.scarletnebula.gui.InteractiveFirewallPanel;
+import be.ac.ua.comp.scarletnebula.gui.InteractiveKeyPanel;
 
 public class ProviderPropertiesWindow extends JDialog {
 	private static final long serialVersionUID = 1L;

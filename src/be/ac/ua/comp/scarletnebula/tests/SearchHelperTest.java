@@ -1,4 +1,4 @@
-package be.ac.ua.comp.scarletnebula.gui.tests;
+package be.ac.ua.comp.scarletnebula.tests;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -11,7 +11,7 @@ import java.util.Collection;
 import org.dasein.cloud.compute.VmState;
 import org.junit.Test;
 
-import be.ac.ua.comp.scarletnebula.gui.SearchHelper;
+import be.ac.ua.comp.scarletnebula.misc.SearchHelper;
 
 public class SearchHelperTest {
 	@Test

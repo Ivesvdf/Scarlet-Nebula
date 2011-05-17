@@ -1,4 +1,4 @@
-package be.ac.ua.comp.scarletnebula.core.tests;
+package be.ac.ua.comp.scarletnebula.tests;
 
 import static org.junit.Assert.assertEquals;
 
