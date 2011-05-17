@@ -20,14 +20,26 @@ import be.ac.ua.comp.scarletnebula.core.ServerStatisticsManager;
 import be.ac.ua.comp.scarletnebula.core.ServerStatisticsManager.DeleteDatastreamListener;
 import be.ac.ua.comp.scarletnebula.core.ServerStatisticsManager.NewDatastreamListener;
 
+/**
+ * Panel that displays all available graphs for some server.
+ * 
+ * @author ives
+ * 
+ */
 public class AllGraphsPanel extends JPanel implements NewDatastreamListener,
 		DeleteDatastreamListener {
 	private static final long serialVersionUID = 1L;
-	final private static Log log = LogFactory.getLog(AllGraphsPanel.class);
+	private static final Log LOG = LogFactory.getLog(AllGraphsPanel.class);
 
-	final private Server server;
+	private final Server server;
 	private final ServerStatisticsManager statisticsManager;
 
+	/**
+	 * Constructor.
+	 * 
+	 * @param server
+	 *            The server whose statistics to display.
+	 */
 	public AllGraphsPanel(final Server server) {
 		super(new GridBagLayout());
 		this.server = server;
@@ -43,6 +55,9 @@ public class AllGraphsPanel extends JPanel implements NewDatastreamListener,
 
 	}
 
+	/**
+	 * Places all components (graphs) in the panel.
+	 */
 	private void placeComponents() {
 		final GridBagConstraints constraints = new GridBagConstraints();
 
@@ -54,7 +69,7 @@ public class AllGraphsPanel extends JPanel implements NewDatastreamListener,
 		final Collection<String> datastreams = statisticsManager
 				.getAvailableDatastreams();
 		for (final String streamname : datastreams) {
-			log.info("drawing stream");
+			LOG.info("drawing stream");
 			constraints.fill = GridBagConstraints.HORIZONTAL;
 			constraints.weightx = 0.5;
 			constraints.gridx = currXPos;
@@ -84,6 +99,9 @@ public class AllGraphsPanel extends JPanel implements NewDatastreamListener,
 		resetPanel();
 	}
 
+	/**
+	 * Removes and redisplays all graphs.
+	 */
 	private void resetPanel() {
 		removeAll();
 		placeComponents();
