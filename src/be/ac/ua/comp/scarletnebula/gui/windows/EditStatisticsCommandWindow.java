@@ -20,7 +20,7 @@ import be.ac.ua.comp.scarletnebula.gui.ButtonFactory;
 public class EditStatisticsCommandWindow extends JDialog {
 	private final class CancelActionListener implements ActionListener {
 		@Override
-		public void actionPerformed(ActionEvent e) {
+		public void actionPerformed(final ActionEvent e) {
 			dispose();
 		}
 	}
@@ -29,13 +29,14 @@ public class EditStatisticsCommandWindow extends JDialog {
 		private final Server server;
 		private final JTextArea textArea;
 
-		private SaveAndCloseActionListener(Server server, JTextArea textArea) {
+		private SaveAndCloseActionListener(final Server server,
+				final JTextArea textArea) {
 			this.server = server;
 			this.textArea = textArea;
 		}
 
 		@Override
-		public void actionPerformed(ActionEvent e) {
+		public void actionPerformed(final ActionEvent e) {
 			server.setStatisticsCommand(textArea.getText());
 			server.store();
 			dispose();
@@ -44,7 +45,7 @@ public class EditStatisticsCommandWindow extends JDialog {
 
 	private static final long serialVersionUID = 1L;
 
-	public EditStatisticsCommandWindow(JDialog parent, final Server server) {
+	public EditStatisticsCommandWindow(final JDialog parent, final Server server) {
 		super(parent,
 				"Edit statistics command for " + server.getFriendlyName(), true);
 
@@ -54,14 +55,14 @@ public class EditStatisticsCommandWindow extends JDialog {
 		setLayout(new BorderLayout());
 
 		final JTextArea textArea = new JTextArea(server.getStatisticsCommand());
-		JScrollPane scrollPane = new JScrollPane(textArea);
+		final JScrollPane scrollPane = new JScrollPane(textArea);
 		scrollPane.setBorder(BorderFactory.createCompoundBorder(
 				BorderFactory.createEmptyBorder(20, 20, 10, 20),
 				BorderFactory.createBevelBorder(BevelBorder.LOWERED)));
 
 		add(scrollPane, BorderLayout.CENTER);
 
-		JPanel buttonPanel = new JPanel();
+		final JPanel buttonPanel = new JPanel();
 		buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.LINE_AXIS));
 		buttonPanel.add(Box.createHorizontalGlue());
 		final JButton cancelButton = ButtonFactory.createCancelButton();

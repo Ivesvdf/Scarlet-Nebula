@@ -235,10 +235,10 @@ public class ServerPropertiesWindow extends JDialog {
 		overviewTab.add(bodyScrollPane);
 	}
 
-	private String getStatisticsCommandRep(Server server) {
+	private String getStatisticsCommandRep(final Server server) {
 		String returnValue;
 
-		String statisticsCommand = server.getStatisticsCommand();
+		final String statisticsCommand = server.getStatisticsCommand();
 		if (statisticsCommand.isEmpty()) {
 			returnValue = "(None)";
 		} else {

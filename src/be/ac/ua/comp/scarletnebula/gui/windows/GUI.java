@@ -109,11 +109,11 @@ public class GUI extends JFrame implements ListSelectionListener,
 					CloudManager.get().loadAllLinkedServers();
 
 					// now start refreshing all servers if necessary
-					for (CloudProvider cloudprovider : CloudManager.get()
+					for (final CloudProvider cloudprovider : CloudManager.get()
 							.getLinkedCloudProviders()) {
 						{
 
-							for (Server server : cloudprovider
+							for (final Server server : cloudprovider
 									.listLinkedServers()) {
 								if (server.getStatus() == VmState.PENDING) {
 									server.refreshUntilServerHasState(VmState.RUNNING);

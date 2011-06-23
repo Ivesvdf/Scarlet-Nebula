@@ -18,8 +18,8 @@ public class CloudProviderTemplate {
 	 */
 	public class Endpoint {
 		private final String url;
-		private String name;
-		private String shortname;
+		private final String name;
+		private final String shortname;
 
 		/**
 		 * Ctor.
@@ -78,7 +78,6 @@ public class CloudProviderTemplate {
 	private final Collection<Endpoint> endpoints = new ArrayList<Endpoint>();
 
 	private boolean allowCustomEndpoint = false;
-	private boolean usesAccessKey = true;
 
 	/**
 	 * Constructor.
@@ -141,13 +140,6 @@ public class CloudProviderTemplate {
 	 */
 	public String getName() {
 		return name;
-	}
-
-	/**
-	 * @return True if a Key is used to access, false otherwise.
-	 */
-	public boolean getUsesAccessKey() {
-		return usesAccessKey;
 	}
 
 	/**

@@ -21,7 +21,7 @@ final public class SmartImageModelContextMenuMouseListener implements
 	private final CloudProvider provider;
 	private final MachineImageTableModel model;
 	private final JTable table;
-	private MachineImageTableModel favoritesModel;
+	private final MachineImageTableModel favoritesModel;
 
 	public SmartImageModelContextMenuMouseListener(
 			final CloudProvider provider, final MachineImageTableModel model,

@@ -22,7 +22,7 @@ public class FavoriteImagesPanel extends JPanel {
 			new ArrayList<MachineImage>());
 	private final JTable favoriteImagesTable = new JTable(favoriteImagesModel);
 
-	public FavoriteImagesPanel(CloudProvider provider) {
+	public FavoriteImagesPanel(final CloudProvider provider) {
 		super(new BorderLayout());
 		final TableRowSorter<MachineImageTableModel> sorter = new TableRowSorter<MachineImageTableModel>(
 				favoriteImagesModel);
