@@ -1,6 +1,5 @@
 package be.ac.ua.comp.scarletnebula.gui.windows;
 
-import java.awt.AWTEvent;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
@@ -18,12 +17,9 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.WindowConstants;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -49,8 +45,6 @@ public class ServerPropertiesWindow extends JDialog {
 	private static Log log = LogFactory.getLog(ServerPropertiesWindow.class);
 
 	private final JPanel overviewTab = new JPanel();
-	private final JPanel statisticsTab = new JPanel();
-	private final JPanel communicationTab = new JPanel();
 
 	private final JLabel statusLabel = new JLabel();
 	private final JLabel dnsLabel = new JLabel();
@@ -73,9 +67,7 @@ public class ServerPropertiesWindow extends JDialog {
 		super(gui, true);
 
 		setLayout(new BorderLayout());
-		setSize(550, 500);
-		// This really needs to be here...
-		enableEvents(AWTEvent.KEY_EVENT_MASK);
+		setSize(550, 400);
 
 		if (selectedServers.size() > 1) {
 			setTitle("Server Properties - Scarlet Nebula");
@@ -84,7 +76,8 @@ public class ServerPropertiesWindow extends JDialog {
 					+ " Properties - Scarlet Nebula");
 		}
 
-		add(createTopPartition(selectedServers), BorderLayout.CENTER);
+		createOverviewPanel(selectedServers);
+		add(overviewTab, BorderLayout.CENTER);
 
 		add(getBottomPanel(), BorderLayout.SOUTH);
 
@@ -112,55 +105,6 @@ public class ServerPropertiesWindow extends JDialog {
 		bottomPanel.add(okButton);
 		bottomPanel.setBorder(BorderFactory.createEmptyBorder(0, 20, 20, 20));
 		return bottomPanel;
-	}
-
-	private JPanel createTopPartition(final Collection<Server> servers) {
-		final JPanel total = new JPanel();
-		total.setLayout(new BorderLayout());
-
-		final JTabbedPane tabbedPane = new JTabbedPane();
-
-		createOverviewPanel(servers);
-		createCommunicationPanel();
-
-		tabbedPane.addTab("Overview", overviewTab);
-		tabbedPane.addTab("Communication", communicationTab);
-		tabbedPane.addTab("Statistics", statisticsTab);
-
-		tabbedPane.addChangeListener(new ChangeListener() {
-
-			@Override
-			public void stateChanged(final ChangeEvent e) {
-				final JTabbedPane tabSource = (JTabbedPane) e.getSource();
-				final JPanel selectedPanel = (JPanel) tabSource
-						.getSelectedComponent();
-
-				if (selectedPanel == communicationTab) {
-					ServerPropertiesWindow.this
-							.communicationTabGotFocus(servers);
-				}
-				if (selectedPanel == statisticsTab) {
-					ServerPropertiesWindow.this.statisticsTabGotFocus(servers);
-				}
-			}
-
-		});
-
-		total.add(tabbedPane);
-		return total;
-	}
-
-	protected void statisticsTabGotFocus(final Collection<Server> servers) {
-		if (statisticsTabIsFilled) {
-			return;
-		} else {
-			statisticsTabIsFilled = true;
-			statisticsTab.setLayout(new BorderLayout());
-			statisticsTab.add(getStatisticsPanel(servers), BorderLayout.CENTER);
-		}
-	}
-
-	private void createCommunicationPanel() {
 	}
 
 	private void createOverviewPanel(final Collection<Server> servers) {
@@ -283,7 +227,7 @@ public class ServerPropertiesWindow extends JDialog {
 								"Enter the password you'd like to use to establish VNC connections to this server.",
 								server.getVNCPassword());
 
-				if (!result.isEmpty()) {
+				if (result != null && !result.isEmpty()) {
 					server.setVNCPassword(result);
 					server.store();
 					text.setText(result);
@@ -423,10 +367,6 @@ public class ServerPropertiesWindow extends JDialog {
 							@Override
 							public void windowClosed(
 									final Collection<String> newTags) {
-								for (final String t : newTags) {
-									log.warn(t);
-								}
-
 								label.setText(Utils.implode(
 										new ArrayList<String>(newTags), ", "));
 								server.setTags(newTags);
@@ -465,18 +405,6 @@ public class ServerPropertiesWindow extends JDialog {
 					}
 				});
 		return servername;
-	}
-
-	protected void communicationTabGotFocus(
-			final Collection<Server> selectedServers) {
-		if (decoratedCommunicationPanel == null) {
-			decoratedCommunicationPanel = new DecoratedCommunicationPanel(this,
-					selectedServers);
-
-			communicationTab.setLayout(new BorderLayout());
-			communicationTab.add(decoratedCommunicationPanel,
-					BorderLayout.CENTER);
-		}
 	}
 
 	private void updateOverviewTab(final Collection<Server> selectedServers) {

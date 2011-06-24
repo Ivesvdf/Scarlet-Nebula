@@ -9,6 +9,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Random;
 
@@ -395,15 +396,6 @@ public class GUI extends JFrame implements ListSelectionListener,
 		noHelpItem.setEnabled(false);
 		helpMenu.add(noHelpItem);
 
-		final JMenuItem aboutItem = new JMenuItem("About...");
-		aboutItem.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(final ActionEvent e) {
-				openAboutBox();
-			}
-		});
-
-		helpMenu.add(aboutItem);
 		return helpMenu;
 	}
 
@@ -442,13 +434,27 @@ public class GUI extends JFrame implements ListSelectionListener,
 		// fillRightPartition();
 	}
 
-	private void openAboutBox() {
-		final AboutWindow aboutWindow = new AboutWindow(this);
-		aboutWindow.setVisible(true);
-	}
-
 	public void terminateSelectedServers() {
 		final Collection<Server> servers = serverList.getSelectedServers();
+
+		if (servers.isEmpty())
+			return;
+
+		String deleteMessage = "You are about to terminate "
+				+ servers.size()
+				+ " server(s). \n"
+				+ "Terminating a server will permanently destroy the server. This operation cannot be undone.\n\n"
+				+ "Do you wish to proceed?";
+
+		String deleteTitle = "Terminate " + servers.size() + " server(s)";
+		String buttonString = deleteTitle;
+		int result = JOptionPane.showOptionDialog(this, deleteMessage,
+				deleteTitle, JOptionPane.OK_CANCEL_OPTION,
+				JOptionPane.WARNING_MESSAGE, null,
+				Arrays.asList(buttonString, "Cancel").toArray(), "Cancel");
+
+		if (result != JOptionPane.OK_OPTION)
+			return;
 
 		(new SwingWorker<Exception, Object>() {
 			@Override

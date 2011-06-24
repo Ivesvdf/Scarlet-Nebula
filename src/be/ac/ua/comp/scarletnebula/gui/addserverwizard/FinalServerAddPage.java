@@ -70,14 +70,6 @@ public class FinalServerAddPage extends WizardPage {
 		// builder.append("VLAN id", new LabelEditSwitcherPanel("(None)",
 		// vlanField));
 
-		builder.append("Availability zone", new ChangeableLabel("(default)",
-				new Executable<JLabel>() {
-					@Override
-					public void run(final JLabel param) {
-
-					}
-				}));
-
 		if (rec.provider.supportsSSHKeys()) {
 			rec.keypairOrPassword = rec.provider.getDefaultKeypair();
 			final ChangeableLabel sshKeyLabel = new ChangeableLabel(
