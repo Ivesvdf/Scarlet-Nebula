@@ -746,13 +746,30 @@ public class GUI extends JFrame implements ListSelectionListener,
 		final Collection<Server> selectedServers = serverList
 				.getSelectedServers();
 
+		final String unlinkString = "Unlink " + selectedServers.size()
+				+ " servers";
+		int result = JOptionPane
+				.showOptionDialog(
+						this,
+						"You are about to unlink "
+								+ selectedServers.size()
+								+ " server(s).\n"
+								+ "Unlinked servers are not terminated and will keep running.",
+						unlinkString, JOptionPane.OK_CANCEL_OPTION,
+						JOptionPane.WARNING_MESSAGE, null,
+						Arrays.asList(unlinkString, "Cancel").toArray(),
+						"Cancel");
+
+		if (result != JOptionPane.OK_OPTION) {
+			return;
+		}
+
 		for (final Server server : selectedServers) {
 			// Server will be automatically removed from the view on the left
 			// because of the hooked observers
 			server.unlink();
 		}
 
-		// fillRightPartition();
 	}
 
 	private void removeServer(final Server server) {
