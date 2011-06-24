@@ -18,7 +18,6 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
-import javax.swing.ScrollPaneConstants;
 import javax.swing.WindowConstants;
 
 import org.apache.commons.logging.Log;
@@ -26,10 +25,9 @@ import org.apache.commons.logging.LogFactory;
 import org.dasein.cloud.compute.Platform;
 
 import be.ac.ua.comp.scarletnebula.core.Server;
-import be.ac.ua.comp.scarletnebula.gui.AllGraphsPanel;
 import be.ac.ua.comp.scarletnebula.gui.ButtonFactory;
 import be.ac.ua.comp.scarletnebula.gui.ChangeableLabel;
-import be.ac.ua.comp.scarletnebula.gui.DecoratedCommunicationPanel;
+import be.ac.ua.comp.scarletnebula.gui.CopyableLabel;
 import be.ac.ua.comp.scarletnebula.gui.LabelEditSwitcherPanel;
 import be.ac.ua.comp.scarletnebula.gui.inputverifiers.ServernameInputVerifier;
 import be.ac.ua.comp.scarletnebula.misc.Executable;
@@ -47,8 +45,8 @@ public class ServerPropertiesWindow extends JDialog {
 	private final JPanel overviewTab = new JPanel();
 
 	private final JLabel statusLabel = new JLabel();
-	private final JLabel dnsLabel = new JLabel();
-	private final JLabel ipLabel = new JLabel();
+	private final JLabel dnsLabel = new CopyableLabel();
+	private final JLabel ipLabel = new CopyableLabel();
 	private final JLabel cloudLabel = new JLabel();
 	private final JLabel unfriendlyNameLabel = new JLabel();
 	private final JLabel sizeLabel = new JLabel();
@@ -56,11 +54,7 @@ public class ServerPropertiesWindow extends JDialog {
 	private final JLabel architectureLabel = new JLabel();
 	private final JLabel platformLabel = new JLabel();
 
-	private boolean statisticsTabIsFilled = false;
-
 	private ChangeableLabel sshLabel;
-
-	private DecoratedCommunicationPanel decoratedCommunicationPanel = null;
 
 	public ServerPropertiesWindow(final GUI gui,
 			final Collection<Server> selectedServers) {
@@ -271,55 +265,6 @@ public class ServerPropertiesWindow extends JDialog {
 								ServerPropertiesWindow.this, server.getCloud());
 					}
 				});
-	}
-
-	private JScrollPane getStatisticsPanel(final Collection<Server> servers) {
-		final JPanel statisticsPanel = new JPanel(new BorderLayout());
-		final JPanel propertiesPart = new JPanel();
-		propertiesPart.setLayout(new BoxLayout(propertiesPart,
-				BoxLayout.LINE_AXIS));
-		propertiesPart.add(Box.createHorizontalGlue());
-		final JButton statisticsPropertiesButton = new JButton("Properties",
-				Utils.icon("modify16.png"));
-		statisticsPropertiesButton.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(final ActionEvent e) {
-				final StatisticsPropertiesWindow win = new StatisticsPropertiesWindow(
-						ServerPropertiesWindow.this, servers);
-				win.addActionListener(new ActionListener() {
-					@Override
-					public void actionPerformed(final ActionEvent e) {
-
-					}
-				});
-				win.setVisible(true);
-			}
-		});
-		propertiesPart.add(statisticsPropertiesButton);
-		propertiesPart.add(Box.createHorizontalStrut(10));
-		propertiesPart.setBorder(BorderFactory.createEmptyBorder(10, 0, 0, 0));
-
-		if (servers.size() > 1) {
-			log.fatal("more than one server in statisticspanel");
-		}
-
-		final Server server = servers.iterator().next();
-
-		if (server.sshWillFail()) {
-			final AllGraphsPanel allGraphsPanel = new AllGraphsPanel(server);
-
-			final JPanel graphCollectionWrapper = new JPanel(new BorderLayout());
-			graphCollectionWrapper.setBorder(BorderFactory.createEmptyBorder(
-					10, 20, 10, 20));
-			graphCollectionWrapper.add(allGraphsPanel, BorderLayout.CENTER);
-			statisticsPanel.add(graphCollectionWrapper, BorderLayout.CENTER);
-		}
-
-		statisticsPanel.add(propertiesPart, BorderLayout.NORTH);
-		final JScrollPane scrollPanel = new JScrollPane(statisticsPanel,
-				ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
-				ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-		return scrollPanel;
 	}
 
 	private Component getSingleServerSshLoginMethodComponent(final Server server) {
