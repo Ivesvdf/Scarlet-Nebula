@@ -765,8 +765,6 @@ public class GUI extends JFrame implements ListSelectionListener,
 		}
 
 		for (final Server server : selectedServers) {
-			// Server will be automatically removed from the view on the left
-			// because of the hooked observers
 			server.unlink();
 		}
 

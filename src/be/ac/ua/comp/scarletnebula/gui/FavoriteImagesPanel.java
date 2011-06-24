@@ -41,6 +41,9 @@ public class FavoriteImagesPanel extends JPanel {
 		add(tableScrollPane, BorderLayout.CENTER);
 
 		favoriteImagesModel.addImages(provider.getFavoriteImages());
+
+		if (favoriteImagesModel.getRowCount() > 0)
+			favoriteImagesTable.setRowSelectionInterval(0, 0);
 	}
 
 	public MachineImage getSelection() {
