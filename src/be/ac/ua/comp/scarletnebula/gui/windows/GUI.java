@@ -41,6 +41,8 @@ import javax.swing.event.ListSelectionListener;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.dasein.cloud.compute.MachineImage;
+import org.dasein.cloud.compute.VirtualMachineProduct;
 import org.dasein.cloud.compute.VmState;
 
 import be.ac.ua.comp.scarletnebula.core.CloudManager;
@@ -49,16 +51,21 @@ import be.ac.ua.comp.scarletnebula.core.Server;
 import be.ac.ua.comp.scarletnebula.core.ServerChangedObserver;
 import be.ac.ua.comp.scarletnebula.core.ServerDisappearedException;
 import be.ac.ua.comp.scarletnebula.core.ServerLinkUnlinkObserver;
+import be.ac.ua.comp.scarletnebula.gui.CollapsablePanel;
 import be.ac.ua.comp.scarletnebula.gui.GraphPanelCache;
 import be.ac.ua.comp.scarletnebula.gui.SearchField;
 import be.ac.ua.comp.scarletnebula.gui.ServerList;
 import be.ac.ua.comp.scarletnebula.gui.ServerListModel;
 import be.ac.ua.comp.scarletnebula.gui.ServerListModel.CreateNewServerServer;
 import be.ac.ua.comp.scarletnebula.gui.ServerListMouseListener;
+import be.ac.ua.comp.scarletnebula.gui.ThrobberFactory;
 import be.ac.ua.comp.scarletnebula.gui.addproviderwizard.AddProviderWizard;
 import be.ac.ua.comp.scarletnebula.gui.addserverwizard.AddServerWizard;
+import be.ac.ua.comp.scarletnebula.gui.addserverwizard.AddServerWizardDataRecorder;
 import be.ac.ua.comp.scarletnebula.gui.welcomewizard.WelcomeWizard;
+import be.ac.ua.comp.scarletnebula.misc.SwingWorkerWithThrobber;
 import be.ac.ua.comp.scarletnebula.misc.Utils;
+import be.ac.ua.comp.scarletnebula.wizard.DataRecorder;
 
 public class GUI extends JFrame implements ListSelectionListener,
 		ServerChangedObserver, ServerLinkUnlinkObserver {
@@ -69,8 +76,10 @@ public class GUI extends JFrame implements ListSelectionListener,
 	private ServerListModel serverListModel;
 
 	private final JPanel searchPanel = new JPanel(new FlowLayout());
-
 	private final JTextField filterTextField = new JTextField(15);
+
+	private final JPanel throbberPanel = new JPanel(new GridBagLayout());
+	private int throbberCount = 0;
 
 	public GUI() {
 		chooseLookAndFeel();
@@ -102,7 +111,8 @@ public class GUI extends JFrame implements ListSelectionListener,
 		// servers so we can update the serverlist.
 		CloudManager.get().addServerLinkUnlinkObserver(this);
 
-		(new SwingWorker<Object, Object>() {
+		(new SwingWorkerWithThrobber<Object, Object>(
+				newThrobber("Loading servers...")) {
 
 			@Override
 			protected Object doInBackground() throws Exception {
@@ -151,6 +161,22 @@ public class GUI extends JFrame implements ListSelectionListener,
 		}
 	}
 
+	private CollapsablePanel newThrobber(String string) {
+		CollapsablePanel throbber = ThrobberFactory.getCollapsableThrobber(
+				string, 2, 2);
+		GridBagConstraints c = new GridBagConstraints();
+
+		c.weightx = 1.0;
+		c.weighty = 0.0;
+
+		c.fill = GridBagConstraints.HORIZONTAL;
+		c.gridx = 0;
+		c.gridy = throbberCount++;
+
+		throbberPanel.add(throbber, c);
+		return throbber;
+	}
+
 	private JPanel getMainPanel() {
 		final JPanel mainPanel = new JPanel() {
 			private static final long serialVersionUID = 1L;
@@ -162,11 +188,13 @@ public class GUI extends JFrame implements ListSelectionListener,
 		};
 		mainPanel.setLayout(new OverlayLayout(mainPanel));
 
-		final JPanel serverListPanel = getServerListPanel();
+		JPanel underlayPanel = new JPanel(new BorderLayout());
+		underlayPanel.add(getServerListPanel(), BorderLayout.CENTER);
+		underlayPanel.add(throbberPanel, BorderLayout.NORTH);
 		final JPanel overlayPanel = getOverlayPanel();
 
 		mainPanel.add(overlayPanel);
-		mainPanel.add(serverListPanel);
+		mainPanel.add(underlayPanel);
 		return mainPanel;
 	}
 
@@ -456,7 +484,9 @@ public class GUI extends JFrame implements ListSelectionListener,
 		if (result != JOptionPane.OK_OPTION)
 			return;
 
-		(new SwingWorker<Exception, Object>() {
+		(new SwingWorkerWithThrobber<Exception, Object>(
+				newThrobber("Terminating server"
+						+ ((servers.size() > 1) ? "s" : ""))) {
 			@Override
 			protected Exception doInBackground() throws Exception {
 				for (final Server server : servers) {
@@ -602,7 +632,7 @@ public class GUI extends JFrame implements ListSelectionListener,
 			final AddProviderWizard wiz = new AddProviderWizard();
 			wiz.startModal(this);
 		} else {
-			new AddServerWizard(this);
+			new AddServerWizard(this, this);
 		}
 	}
 
@@ -644,7 +674,9 @@ public class GUI extends JFrame implements ListSelectionListener,
 		final Collection<Server> selectedServers = serverList
 				.getSelectedServers();
 
-		(new SwingWorker<Exception, Object>() {
+		(new SwingWorkerWithThrobber<Exception, Object>(
+				newThrobber("Pausing server"
+						+ ((selectedServers.size() > 1) ? "s" : ""))) {
 			@Override
 			protected Exception doInBackground() throws Exception {
 				try {
@@ -679,7 +711,9 @@ public class GUI extends JFrame implements ListSelectionListener,
 		final Collection<Server> selectedServers = serverList
 				.getSelectedServers();
 
-		(new SwingWorker<Exception, Object>() {
+		(new SwingWorkerWithThrobber<Exception, Object>(
+				newThrobber("Resuming server"
+						+ ((selectedServers.size() > 1) ? "s" : ""))) {
 			@Override
 			protected Exception doInBackground() throws Exception {
 				try {
@@ -713,7 +747,9 @@ public class GUI extends JFrame implements ListSelectionListener,
 		final Collection<Server> selectedServers = serverList
 				.getSelectedServers();
 
-		(new SwingWorker<Exception, Object>() {
+		(new SwingWorkerWithThrobber<Exception, Object>(
+				newThrobber("Rebooting server"
+						+ ((selectedServers.size() > 1) ? "s" : ""))) {
 			@Override
 			protected Exception doInBackground() throws Exception {
 				try {
@@ -789,5 +825,83 @@ public class GUI extends JFrame implements ListSelectionListener,
 			final Server srv) {
 		removeServer(srv);
 		GraphPanelCache.get().clearBareServerCache(srv);
+	}
+
+	public void startServer(final AddServerWizard addServerWizard,
+			final DataRecorder recorder) {
+		final AddServerWizardDataRecorder rec = (AddServerWizardDataRecorder) recorder;
+		final String instancename = rec.instanceName;
+		final VirtualMachineProduct instancesize = rec.instanceSize;
+		final MachineImage image = rec.image;
+		final CloudProvider provider = rec.provider;
+		final Collection<String> tags = rec.tags;
+		final String keypairOrPassword;
+
+		if (provider.supportsSSHKeys()) {
+			keypairOrPassword = rec.keypairOrPassword != null ? rec.keypairOrPassword
+					: provider.getDefaultKeypair();
+		} else {
+			keypairOrPassword = Utils.getRandomString(8);
+		}
+		final Collection<String> firewallIds = rec.firewallIds;
+		final int instanceCount = rec.instanceCount;
+
+		if (Server.exists(instancename)) {
+			JOptionPane.showMessageDialog(addServerWizard.parent,
+					"A server with this name already exists.",
+					"Server already exists", JOptionPane.ERROR_MESSAGE);
+			return;
+		}
+
+		final CollapsablePanel throbber = newThrobber("Starting server"
+				+ (instanceCount > 1 ? "s" : ""));
+
+		SwingWorkerWithThrobber<Exception, Server> worker = new SwingWorkerWithThrobber<Exception, Server>(
+				throbber) {
+			@Override
+			protected Exception doInBackground() throws Exception {
+				for (int serverStarted = 0; serverStarted < instanceCount; serverStarted++) {
+
+					try {
+						final String localServername;
+
+						if (instanceCount == 1) {
+							localServername = instancename;
+						} else {
+							localServername = instancename + " "
+									+ serverStarted;
+						}
+
+						final Server server = provider.startServer(
+								localServername, instancesize, image, tags,
+								keypairOrPassword, firewallIds);
+						server.refreshUntilServerHasState(VmState.RUNNING);
+					} catch (final Exception e) {
+						return e;
+					}
+				}
+				return null;
+			}
+
+			@Override
+			public void done() {
+				try {
+					final Exception result = get();
+
+					if (result != null) {
+						AddServerWizard.log.error("Could not start server",
+								result);
+						JOptionPane.showMessageDialog(null,
+								result.getLocalizedMessage(), "Error",
+								JOptionPane.ERROR_MESSAGE);
+					}
+				} catch (final Exception ignore) {
+				}
+
+			}
+		};
+
+		worker.execute();
+
 	}
 }
