@@ -22,7 +22,7 @@ public class CopyableLabel extends JLabel {
 		init();
 	}
 
-	public CopyableLabel(String text) {
+	public CopyableLabel(final String text) {
 		super(text);
 		init();
 	}
@@ -30,21 +30,21 @@ public class CopyableLabel extends JLabel {
 	private void init() {
 		addMouseListener(new MouseListener() {
 			@Override
-			public void mouseReleased(MouseEvent e) {
+			public void mouseReleased(final MouseEvent e) {
 			}
 
 			@Override
-			public void mousePressed(MouseEvent e) {
+			public void mousePressed(final MouseEvent e) {
 				if (e.isPopupTrigger()) {
 					final JPopupMenu popup = new JPopupMenu();
 					final JMenuItem copy = new JMenuItem("Copy",
 							Utils.icon("copy16.png"));
 					copy.addActionListener(new ActionListener() {
 						@Override
-						public void actionPerformed(ActionEvent e) {
-							StringSelection stringSelection = new StringSelection(
+						public void actionPerformed(final ActionEvent e) {
+							final StringSelection stringSelection = new StringSelection(
 									CopyableLabel.this.getText());
-							Clipboard clipboard = Toolkit.getDefaultToolkit()
+							final Clipboard clipboard = Toolkit.getDefaultToolkit()
 									.getSystemClipboard();
 							clipboard.setContents(stringSelection, null);
 						}
@@ -55,15 +55,15 @@ public class CopyableLabel extends JLabel {
 			}
 
 			@Override
-			public void mouseExited(MouseEvent e) {
+			public void mouseExited(final MouseEvent e) {
 			}
 
 			@Override
-			public void mouseEntered(MouseEvent e) {
+			public void mouseEntered(final MouseEvent e) {
 			}
 
 			@Override
-			public void mouseClicked(MouseEvent e) {
+			public void mouseClicked(final MouseEvent e) {
 			}
 		});
 	}

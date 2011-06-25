@@ -161,10 +161,10 @@ public class GUI extends JFrame implements ListSelectionListener,
 		}
 	}
 
-	private CollapsablePanel newThrobber(String string) {
-		CollapsablePanel throbber = ThrobberFactory.getCollapsableThrobber(
+	private CollapsablePanel newThrobber(final String string) {
+		final CollapsablePanel throbber = ThrobberFactory.getCollapsableThrobber(
 				string, 2, 2);
-		GridBagConstraints c = new GridBagConstraints();
+		final GridBagConstraints c = new GridBagConstraints();
 
 		c.weightx = 1.0;
 		c.weighty = 0.0;
@@ -188,7 +188,7 @@ public class GUI extends JFrame implements ListSelectionListener,
 		};
 		mainPanel.setLayout(new OverlayLayout(mainPanel));
 
-		JPanel underlayPanel = new JPanel(new BorderLayout());
+		final JPanel underlayPanel = new JPanel(new BorderLayout());
 		underlayPanel.add(getServerListPanel(), BorderLayout.CENTER);
 		underlayPanel.add(throbberPanel, BorderLayout.NORTH);
 		final JPanel overlayPanel = getOverlayPanel();
@@ -465,24 +465,26 @@ public class GUI extends JFrame implements ListSelectionListener,
 	public void terminateSelectedServers() {
 		final Collection<Server> servers = serverList.getSelectedServers();
 
-		if (servers.isEmpty())
+		if (servers.isEmpty()) {
 			return;
+		}
 
-		String deleteMessage = "You are about to terminate "
+		final String deleteMessage = "You are about to terminate "
 				+ servers.size()
 				+ " server(s). \n"
 				+ "Terminating a server will permanently destroy the server. This operation cannot be undone.\n\n"
 				+ "Do you wish to proceed?";
 
-		String deleteTitle = "Terminate " + servers.size() + " server(s)";
-		String buttonString = deleteTitle;
-		int result = JOptionPane.showOptionDialog(this, deleteMessage,
+		final String deleteTitle = "Terminate " + servers.size() + " server(s)";
+		final String buttonString = deleteTitle;
+		final int result = JOptionPane.showOptionDialog(this, deleteMessage,
 				deleteTitle, JOptionPane.OK_CANCEL_OPTION,
 				JOptionPane.WARNING_MESSAGE, null,
 				Arrays.asList(buttonString, "Cancel").toArray(), "Cancel");
 
-		if (result != JOptionPane.OK_OPTION)
+		if (result != JOptionPane.OK_OPTION) {
 			return;
+		}
 
 		(new SwingWorkerWithThrobber<Exception, Object>(
 				newThrobber("Terminating server"
@@ -784,7 +786,7 @@ public class GUI extends JFrame implements ListSelectionListener,
 
 		final String unlinkString = "Unlink " + selectedServers.size()
 				+ " servers";
-		int result = JOptionPane
+		final int result = JOptionPane
 				.showOptionDialog(
 						this,
 						"You are about to unlink "
@@ -856,7 +858,7 @@ public class GUI extends JFrame implements ListSelectionListener,
 		final CollapsablePanel throbber = newThrobber("Starting server"
 				+ (instanceCount > 1 ? "s" : ""));
 
-		SwingWorkerWithThrobber<Exception, Server> worker = new SwingWorkerWithThrobber<Exception, Server>(
+		final SwingWorkerWithThrobber<Exception, Server> worker = new SwingWorkerWithThrobber<Exception, Server>(
 				throbber) {
 			@Override
 			protected Exception doInBackground() throws Exception {

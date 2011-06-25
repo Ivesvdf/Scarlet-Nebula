@@ -16,8 +16,8 @@ import org.jfree.chart.axis.NumberAxis;
 import org.jfree.chart.axis.NumberTickUnit;
 import org.jfree.chart.plot.XYPlot;
 
-import be.ac.ua.comp.scarletnebula.core.Datastream;
 import be.ac.ua.comp.scarletnebula.core.Datapoint.Type;
+import be.ac.ua.comp.scarletnebula.core.Datastream;
 import be.ac.ua.comp.scarletnebula.core.TimedDatapoint;
 
 public class DecoratedGraph extends Graph {
@@ -81,7 +81,7 @@ public class DecoratedGraph extends Graph {
 				sum += dp.getValue();
 			}
 			range.setTickUnit(new NumberTickUnit((int) (sum / (datapoints
-					.size() * 5)), new DecimalFormat(), 1));
+					.size() * 5)) + 1, new DecimalFormat(), 1));
 		}
 
 		final JFreeChart chart = new JFreeChart(stream.getStreamname(),

@@ -36,13 +36,6 @@ while true; do
   PREV_TOTAL="$TOTAL"
   PREV_IDLE="$IDLE"
 
-  if [[ 0 == 1 ]]; then
-    # Number of processes
-    if (( $IT_COUNT % 10 == 0 )); then
-  	  echo "{\"datapointType\":\"ABSOLUTE\",\"datastream\":\"NUMPROC\",\"value\":$(ps axue | grep -vE "^USER|grep|ps" | wc -l)}"
-    fi
-  fi
-
   # Memory usage
   if (( $IT_COUNT % 10 == 0 || $IT_COUNT == 1 )); then
 	  echo "{\"datapointType\":\"ABSOLUTE\",\"datastream\":\"MEM\",\"value\":$(free -mto | grep Mem: | awk '{ print $3 }'),\"max\":$(free -mto | grep Mem: | awk '{ print $2 }')}"
@@ -50,6 +43,10 @@ while true; do
 
   # Open connections
   echo "{\"datapointType\":\"ABSOLUTE\",\"datastream\":\"Open connections\",\"value\":$(netstat --protocol=inet -n | grep tcp | wc -l)}"
+
+  # Number of processes
+  echo "{\"datapointType\":\"ABSOLUTE\",\"datastream\":\"Nr of processes\",\"value\":$(ps ax | wc -l | tr -d " ")}"
+
   
   # Wait before checking again.
   sleep 5
