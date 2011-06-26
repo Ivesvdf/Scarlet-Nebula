@@ -594,10 +594,11 @@ public class Server {
 					return false;
 				}
 			} else {
-				return SearchHelper
-						.matchName(token, getFriendlyName(), negated)
+				return SearchHelper.matchName(token.toLowerCase(),
+						getFriendlyName().toLowerCase(), negated)
 						|| SearchHelper.matchTags(token, getTags(), negated)
-						|| SearchHelper.matchSize(token, getSize(), negated)
+						|| SearchHelper.matchSize(token.toLowerCase(),
+								getSize(), negated)
 						|| SearchHelper
 								.matchStatus(token, getStatus(), negated)
 						|| SearchHelper.matchCloudProvider(token, getCloud()

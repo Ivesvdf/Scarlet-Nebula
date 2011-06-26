@@ -84,7 +84,9 @@ public class SearchHelper {
 
 	public static boolean matchName(final String term,
 			final String friendlyName, final boolean negated) {
-		return foundToMatch(friendlyName.contains(term), negated);
+		return foundToMatch(
+				friendlyName.toLowerCase().contains(term.toLowerCase()),
+				negated);
 	}
 
 	public static boolean matchSize(final String term, final String size,
