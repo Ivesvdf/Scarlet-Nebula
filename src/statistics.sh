@@ -49,6 +49,6 @@ while true; do
 
   
   # Wait before checking again.
-  sleep 5
+  sleep 1
   let "IT_COUNT=IT_COUNT+1"
 done

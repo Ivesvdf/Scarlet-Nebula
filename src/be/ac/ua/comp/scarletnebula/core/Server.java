@@ -106,12 +106,52 @@ public class Server {
 			serverStatisticsManager = new ServerStatisticsManager(this);
 			serverStatisticsManager
 					.addNoStatisticsListener(new ServerStatisticsManager.NoStatisticsListener() {
+						boolean firstTime = true;
+
 						@Override
 						public void connectionFailed(
 								final ServerStatisticsManager manager) {
 							log.info("Being notified of server statistics failure.");
 							noConnection = true;
 							serverChanged();
+
+							if (!firstTime)
+								return;
+
+							firstTime = false;
+
+							log.info("Starting timer that will retry statistics in 120 sec");
+							final java.util.Timer twoMin = new java.util.Timer();
+							twoMin.schedule(new java.util.TimerTask() {
+								@Override
+								public void run() {
+									if (getServerStatistics() != null
+											&& getServerStatistics()
+													.getAvailableDatastreams()
+													.size() > 0)
+										return;
+
+									log.info("Retrying statistics (after 120 sec)");
+									noConnection = false;
+									serverStatisticsManager = getServerStatistics();
+									serverChanged();
+									cancel();
+								}
+							}, (120 * 1000));
+
+							log.info("Starting timer that will retry statistics in 30 sec");
+							final java.util.Timer thirtySecs = new java.util.Timer();
+							thirtySecs.schedule(new java.util.TimerTask() {
+								@Override
+								public void run() {
+									log.info("Retrying statistics (after 30 sec)");
+									noConnection = false;
+									serverStatisticsManager = getServerStatistics();
+									serverChanged();
+									cancel();
+								}
+							}, (30 * 1000));
+
 						}
 					});
 		}

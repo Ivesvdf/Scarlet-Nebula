@@ -31,6 +31,7 @@ import org.jfree.chart.ChartPanel;
 import be.ac.ua.comp.scarletnebula.core.Datastream;
 import be.ac.ua.comp.scarletnebula.core.Server;
 import be.ac.ua.comp.scarletnebula.core.ServerStatisticsManager;
+import be.ac.ua.comp.scarletnebula.core.ServerStatisticsManager.NoStatisticsListener;
 import be.ac.ua.comp.scarletnebula.misc.Colors;
 import be.ac.ua.comp.scarletnebula.misc.Utils;
 
@@ -103,6 +104,14 @@ class ServerCellRenderer implements ListCellRenderer {
 		graph.addServerToRefresh(server);
 		final ChartPanel chartPanel = graph.getChartPanel();
 		log.info("Making new baregraph for server " + server);
+
+		server.getServerStatistics().addNoStatisticsListener(
+				new NoStatisticsListener() {
+					@Override
+					public void connectionFailed(ServerStatisticsManager manager) {
+						GraphPanelCache.get().clearBareServerCache(server);
+					}
+				});
 
 		GraphPanelCache.get().addToBareServerCache(server, chartPanel);
 		return chartPanel;

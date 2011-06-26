@@ -209,7 +209,6 @@ public final class CloudManager {
 	public void deleteCloudProvider(final String provname) {
 		final CloudProvider provider = providers.get(provname);
 		providers.remove(provname);
-		System.out.println(getLinkedCloudProviders().size());
 
 		// Remove all of his servers
 		final Collection<Server> linkedServers = provider.listLinkedServers();

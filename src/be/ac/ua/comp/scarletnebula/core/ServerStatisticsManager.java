@@ -83,6 +83,7 @@ public class ServerStatisticsManager {
 							+ e.getCause().getLocalizedMessage());
 				}
 			}
+
 		}
 
 		public void pleaseStop() {
@@ -104,7 +105,6 @@ public class ServerStatisticsManager {
 
 	ServerStatisticsManager(final Server server) {
 		this.server = server;
-
 		startPolling();
 	}
 

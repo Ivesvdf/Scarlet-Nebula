@@ -194,20 +194,16 @@ public class SSHCommandConnection extends CommandConnection {
 					while (result.indexOf("\n") >= 0) {
 						final int nlPos = result.indexOf("\n");
 						final String before = result.substring(0, nlPos);
-						System.out.println("Newline detected: came before it:"
-								+ before);
 						final String after = result.substring(nlPos + 1);
 
 						result = new StringBuilder(after);
 					}
 				}
 				if (channel.isClosed()) {
-					System.out.println("ow ...");
 					break;
 
 				}
 				try {
-					System.out.println("sleeping");
 					Thread.sleep(1000);
 				} catch (final Exception ee) {
 				}
