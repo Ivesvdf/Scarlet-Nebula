@@ -31,6 +31,7 @@ public class CopyableLabel extends JLabel {
 		addMouseListener(new MouseListener() {
 			@Override
 			public void mouseReleased(final MouseEvent e) {
+				mousePressed(e);
 			}
 
 			@Override
@@ -44,8 +45,8 @@ public class CopyableLabel extends JLabel {
 						public void actionPerformed(final ActionEvent e) {
 							final StringSelection stringSelection = new StringSelection(
 									CopyableLabel.this.getText());
-							final Clipboard clipboard = Toolkit.getDefaultToolkit()
-									.getSystemClipboard();
+							final Clipboard clipboard = Toolkit
+									.getDefaultToolkit().getSystemClipboard();
 							clipboard.setContents(stringSelection, null);
 						}
 					});

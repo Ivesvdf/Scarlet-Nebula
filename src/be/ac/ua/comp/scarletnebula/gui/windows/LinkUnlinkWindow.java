@@ -48,7 +48,7 @@ public class LinkUnlinkWindow extends JDialog {
 	LinkUnlinkWindow(final JFrame parent) {
 		super(parent, "Link/Unlink Providers", true);
 
-		setSize(500, 400);
+		setSize(650, 400);
 		setLocationByPlatform(true);
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 
@@ -256,7 +256,25 @@ public class LinkUnlinkWindow extends JDialog {
 						.getLinkedCloudProviders()) {
 					try {
 						for (final Server server : prov.listUnlinkedServers()) {
-							unlinkedServerListModel.addServer(server);
+							boolean found = false;
+							for (final CloudProvider prov2 : CloudManager.get()
+									.getLinkedCloudProviders()) {
+								for (final Server server2 : prov
+										.listLinkedServers()) {
+									if (server2.getUnfriendlyName() == server
+											.getUnfriendlyName()
+											&& prov.getName() == prov2
+													.getName()) {
+										found = true;
+										break;
+									}
+									if (found)
+										break;
+								}
+							}
+
+							if (!found)
+								unlinkedServerListModel.addServer(server);
 							if (isCancelled()) {
 								break;
 							}

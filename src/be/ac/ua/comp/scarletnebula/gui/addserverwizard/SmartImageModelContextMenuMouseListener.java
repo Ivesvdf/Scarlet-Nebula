@@ -34,52 +34,56 @@ final public class SmartImageModelContextMenuMouseListener implements
 
 	@Override
 	public void mouseReleased(final MouseEvent e) {
-
+		if (e.isPopupTrigger()) {
+			showPopup(e);
+		}
 	}
 
 	@Override
 	public void mousePressed(final MouseEvent e) {
 		if (e.isPopupTrigger()) {
-			final JPopupMenu popup = new JPopupMenu();
-			final int indexOfSelectedServer = table.rowAtPoint(e.getPoint());
-
-			final int modelIndex = table
-					.convertRowIndexToModel(indexOfSelectedServer);
-
-			final MachineImage image = model.getImage(modelIndex);
-
-			if (provider.imageInFavorites(image)) {
-				final JMenuItem removeFromFavorites = new JMenuItem(
-						"Remove from favorites");
-				removeFromFavorites.addActionListener(new ActionListener() {
-					@Override
-					public void actionPerformed(final ActionEvent e) {
-						provider.removeFromFavorites(image);
-
-						if (favoritesModel != null) {
-							favoritesModel.clear();
-							favoritesModel.addImages(provider
-									.getFavoriteImages());
-						}
-
-						provider.store();
-					}
-				});
-				popup.add(removeFromFavorites);
-			} else {
-				final JMenuItem addToFavorites = new JMenuItem(
-						"Add to favorites");
-				addToFavorites.addActionListener(new ActionListener() {
-					@Override
-					public void actionPerformed(final ActionEvent e) {
-						provider.addToFavorites(image);
-						provider.store();
-					}
-				});
-				popup.add(addToFavorites);
-			}
-			popup.show(e.getComponent(), e.getX(), e.getY());
+			showPopup(e);
 		}
+	}
+
+	private void showPopup(final MouseEvent e) {
+		final JPopupMenu popup = new JPopupMenu();
+		final int indexOfSelectedServer = table.rowAtPoint(e.getPoint());
+
+		final int modelIndex = table
+				.convertRowIndexToModel(indexOfSelectedServer);
+
+		final MachineImage image = model.getImage(modelIndex);
+
+		if (provider.imageInFavorites(image)) {
+			final JMenuItem removeFromFavorites = new JMenuItem(
+					"Remove from favorites");
+			removeFromFavorites.addActionListener(new ActionListener() {
+				@Override
+				public void actionPerformed(final ActionEvent e) {
+					provider.removeFromFavorites(image);
+
+					if (favoritesModel != null) {
+						favoritesModel.clear();
+						favoritesModel.addImages(provider.getFavoriteImages());
+					}
+
+					provider.store();
+				}
+			});
+			popup.add(removeFromFavorites);
+		} else {
+			final JMenuItem addToFavorites = new JMenuItem("Add to favorites");
+			addToFavorites.addActionListener(new ActionListener() {
+				@Override
+				public void actionPerformed(final ActionEvent e) {
+					provider.addToFavorites(image);
+					provider.store();
+				}
+			});
+			popup.add(addToFavorites);
+		}
+		popup.show(e.getComponent(), e.getX(), e.getY());
 	}
 
 	@Override
