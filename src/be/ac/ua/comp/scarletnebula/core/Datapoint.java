@@ -8,7 +8,7 @@ import com.google.gson.Gson;
  * @author ives
  * 
  */
-public class Datapoint {
+public class Datapoint implements Comparable {
 
 	/**
 	 * Type of datapoint.
@@ -47,6 +47,17 @@ public class Datapoint {
 
 		if (datapointType == Type.RELATIVE) {
 			this.max = 1.0;
+		}
+	}
+
+	@Override
+	public int compareTo(Object o) {
+		if (!(o instanceof Datapoint)) {
+			return 0;
+		} else {
+			Double myValue = value;
+			Double hisValue = ((Datapoint) o).value;
+			return myValue.compareTo(hisValue);
 		}
 	}
 

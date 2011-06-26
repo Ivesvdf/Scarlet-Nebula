@@ -32,4 +32,5 @@ public class TimedDatapoint extends Datapoint {
 		final Calendar c = Calendar.getInstance();
 		timeMs = c.getTimeInMillis();
 	}
+
 }

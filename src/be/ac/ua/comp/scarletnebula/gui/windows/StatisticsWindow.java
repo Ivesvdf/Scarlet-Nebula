@@ -26,12 +26,14 @@ public class StatisticsWindow extends JDialog {
 			servernames.add(server.getFriendlyName());
 		}
 		setTitle("Statistics for " + Utils.implode(servernames, ","));
-		setSize(500, 400);
 
 		final Server server = servers.iterator().next();
 
 		final AllGraphsPanel allGraphsPanel = new AllGraphsPanel(server);
 		add(new JScrollPane(allGraphsPanel));
+
+		setSize(500, 180 * (int) Math.ceil(1.0 * allGraphsPanel
+				.getComponentCount() / 2.0));
 
 		setVisible(true);
 

@@ -19,6 +19,7 @@ import org.jfree.chart.plot.XYPlot;
 import be.ac.ua.comp.scarletnebula.core.Datapoint.Type;
 import be.ac.ua.comp.scarletnebula.core.Datastream;
 import be.ac.ua.comp.scarletnebula.core.TimedDatapoint;
+import be.ac.ua.comp.scarletnebula.misc.Utils;
 
 public class DecoratedGraph extends Graph {
 	final private static Log log = LogFactory.getLog(DecoratedGraph.class);
@@ -77,11 +78,9 @@ public class DecoratedGraph extends Graph {
 			double sum = 0;
 			final List<TimedDatapoint> datapoints = stream
 					.getRecentlyProcessedDatapoints();
-			for (final TimedDatapoint dp : datapoints) {
-				sum += dp.getValue();
-			}
-			range.setTickUnit(new NumberTickUnit((int) (sum / (datapoints
-					.size() * 5)) + 1, new DecimalFormat(), 1));
+
+			range.setTickUnit(new NumberTickUnit((int) (Utils.max(datapoints)
+					.getValue() / 5) + 1, new DecimalFormat(), 1));
 		}
 
 		final JFreeChart chart = new JFreeChart(stream.getStreamname(),
