@@ -121,20 +121,37 @@ public class InteractiveFirewallPanel extends JPanel implements
 		@Override
 		public void actionPerformed(final ActionEvent e) {
 			for (final Firewall firewall : getSelectedFirewalls()) {
-				(new SwingWorker<Object, Object>() {
+				(new SwingWorker<Exception, Object>() {
 					@Override
-					protected Object doInBackground() throws Exception {
-						final int selectedRow = ruleList.getSelectedRow();
-						final PortRange range = new PortRange(
-								ruleList.getPort(selectedRow));
-						final Protocol protocol = ruleList
-								.getProtocol(selectedRow);
-						final String ip = ruleList.getSource(selectedRow);
+					protected Exception doInBackground() throws Exception {
+						try {
+							final int selectedRow = ruleList.getSelectedRow();
+							final PortRange range = new PortRange(
+									ruleList.getPort(selectedRow));
+							final Protocol protocol = ruleList
+									.getProtocol(selectedRow);
+							final String ip = ruleList.getSource(selectedRow);
 
-						ruleList.datamodel.removeRow(selectedRow);
-						provider.deleteFirewallRule(firewall, range.startPort,
-								range.endPort, protocol, ip);
-						return null;
+							ruleList.datamodel.removeRow(selectedRow);
+							provider.deleteFirewallRule(firewall,
+									range.startPort, range.endPort, protocol,
+									ip);
+							return null;
+						} catch (Exception e) {
+							return e;
+						}
+					}
+
+					@Override
+					public void done() {
+						try {
+							final Exception result = get();
+
+							if (result != null) {
+								log.error("Error while removing rule", result);
+							}
+						} catch (final Exception ignore) {
+						}
 					}
 				}).execute();
 			}
@@ -457,7 +474,7 @@ public class InteractiveFirewallPanel extends JPanel implements
 		}
 
 		public Protocol getProtocol(final int row) {
-			return Protocol.valueOf((String) getValueAt(row, 1));
+			return (Protocol) getValueAt(row, 1);
 		}
 
 		public String getSource(final int row) {

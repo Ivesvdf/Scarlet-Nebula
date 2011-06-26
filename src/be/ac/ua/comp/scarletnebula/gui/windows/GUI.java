@@ -162,8 +162,8 @@ public class GUI extends JFrame implements ListSelectionListener,
 	}
 
 	private CollapsablePanel newThrobber(final String string) {
-		final CollapsablePanel throbber = ThrobberFactory.getCollapsableThrobber(
-				string, 2, 2);
+		final CollapsablePanel throbber = ThrobberFactory
+				.getCollapsableThrobber(string, 2, 2);
 		final GridBagConstraints c = new GridBagConstraints();
 
 		c.weightx = 1.0;
@@ -589,7 +589,7 @@ public class GUI extends JFrame implements ListSelectionListener,
 					final Exception result = get();
 
 					if (result != null) {
-						log.error("Error while refreshing");
+						log.error("Error while refreshing", result);
 						error(result.getLocalizedMessage());
 					}
 				} catch (final Exception ignore) {
