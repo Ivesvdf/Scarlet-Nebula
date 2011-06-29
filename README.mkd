@@ -1,0 +1,23 @@
+# Scarlet Nebula #
+Scarlet Nebula is an all-in-one tool for administrating IaaS clouds. It comes
+with a built-in SSH client and VNC viewer and currently supports both Amazon
+EC2 and CloudSigma clouds. 
+
+If you're interested, take a look at thesis.pdf for more information on
+Scarlet Nebula. 
+
+
+## License ##
+Scarlet Nebula is available under a GPLv3 license.
+
+## FAQ ##
+### Why do you have such a sucky license? ###
+I don't like it any more than you do, if you find a less restricting license
+that's legal (note that TightVNC is licensed under the GPL and I'm using about 50
+other libraries) let me know and I'll change it right away. 
+
+### You seem to be using a custom version of TightVNC, where can I find the
+source? ###
+https://github.com/Ivesvdf/TightVNC
+
+
