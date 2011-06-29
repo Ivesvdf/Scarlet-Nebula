@@ -16,8 +16,7 @@ I don't like it any more than you do, if you find a less restricting license
 that's legal (note that TightVNC is licensed under the GPL and I'm using about 50
 other libraries) let me know and I'll change it right away. 
 
-### You seem to be using a custom version of TightVNC, where can I find the
-source? ###
+### You seem to be using a custom version of TightVNC, where can I find the source? ###
 https://github.com/Ivesvdf/TightVNC
 
 
